@@ -1,4 +1,9 @@
 import HomeHero from "@/components/blocks/home/home-hero";
+import HomeAbout from "@/components/blocks/home/home-about";
+import HomeProduct from "@/components/blocks/home/home-product";
+import HomeJourney from "@/components/blocks/home/home-journey";
+import HomeProject from "@/components/blocks/home/home-project";
+import HomeCalculator from "@/components/blocks/home/home-calculator";
 
 const local_data = {
   homeData: [
@@ -73,12 +78,265 @@ const local_data = {
       },
     },
   ],
+  aboutData: {
+    media: {
+      type: "image",
+      path: "/images/home-about-2.png",
+      alt: "home-about-1",
+    },
+    title: "Crafting Innovative Workspace Solutions Since 2012",
+    description:
+      "<p>BOSQ started in India in 2012, specializing in ergonomic seating for top corporations. Known for design, innovation, and quality, we’ve earned the trust of clients like BMW, Audi, and Siemens. Now a leading brand in the UAE, we're poised for expansion across the GCC.</p>",
+    button: {
+      type: "link",
+      label: "Read More ",
+      link: "/",
+    },
+  },
+  productData: {
+    title: "Featured Products",
+    description: null,
+    button: null,
+    product: [
+      {
+        id: "01",
+        media: {
+          type: "image",
+          path: "/images/pro-1.jpg",
+          alt: "pro-1",
+        },
+        name: "Continue Table",
+        slug: "continue-table",
+        shortDescription:
+          "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
+        description:
+          "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
+        productType: ["Office Chairs", "Ergonomic Chairs"],
+      },
+      {
+        id: "02",
+        media: {
+          type: "image",
+          path: "/images/pro-2.jpg",
+          alt: "pro-1",
+        },
+        name: "Okidoki Too Stool",
+        slug: "okidoki-too-stool",
+        shortDescription:
+          "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
+        description:
+          "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
+        productType: ["Office Chairs", "Ergonomic Chairs"],
+      },
+      {
+        id: "03",
+        media: {
+          type: "image",
+          path: "/images/pro-3.jpg",
+          alt: "pro-1",
+        },
+        name: "360 Chair",
+        slug: "360-chair",
+        shortDescription:
+          "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
+        description:
+          "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
+        productType: ["Office Chairs", "Ergonomic Chairs"],
+      },
+      {
+        id: "04",
+        media: {
+          type: "image",
+          path: "/images/pro-4.jpg",
+          alt: "pro-1",
+        },
+        name: "ergonomic chair",
+        slug: "ergonomic-chair",
+        shortDescription:
+          "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
+        description:
+          "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
+        productType: ["Office Chairs", "Ergonomic Chairs"],
+      },
+      {
+        id: "04",
+        media: {
+          type: "image",
+          path: "/images/pro-4.jpg",
+          alt: "pro-1",
+        },
+        name: "ergonomic chair",
+        slug: "ergonomic-chair",
+        shortDescription:
+          "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
+        description:
+          "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
+        productType: ["Office Chairs", "Ergonomic Chairs"],
+      },
+      {
+        id: "04",
+        media: {
+          type: "image",
+          path: "/images/pro-4.jpg",
+          alt: "pro-1",
+        },
+        name: "ergonomic chair",
+        slug: "ergonomic-chair",
+        shortDescription:
+          "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
+        description:
+          "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
+        productType: ["Office Chairs", "Ergonomic Chairs"],
+      },
+    ],
+  },
+  journeyData: {
+    media: {
+      type: "video",
+      mobile: {
+        path: "/videos/home-journey-bg.mp4",
+        alt: "journey",
+      },
+      desktop: {
+        path: "/videos/home-journey-bg.mp4",
+        alt: "journey",
+      },
+    },
+    title: "The journey: From Concept <br /> to Craft",
+    description:
+      "<p>At BOSQ, every piece starts with a purpose-driven vision. From initial sketch to final polish, we blend creativity and craftsmanship, obsessing over every detail to ensure our furniture is not just made—but designed.</p>",
+    button: {
+      type: "link",
+      label: "View Details",
+      link: "/",
+    },
+  },
+  projectData: {
+    title: "Projects",
+    description: null,
+    button: null,
+    product: [
+      {
+        id: "01",
+        media: {
+          type: "image",
+          path: "/images/home-project-1.jpg",
+          alt: "home-project-1",
+        },
+        name: "Office space",
+        slug: "office-space",
+        button: {
+          type: "link",
+          label: "View Product",
+          link: "/",
+        },
+      },
+      {
+        id: "02",
+        media: {
+          type: "image",
+          path: "/images/home-project-2.jpg",
+          alt: "home-project-2",
+        },
+        name: "Office space",
+        slug: "office-space",
+        button: {
+          type: "link",
+          label: "View Product",
+          link: "/",
+        },
+      },
+      {
+        id: "03",
+        media: {
+          type: "image",
+          path: "/images/home-project-3.jpg",
+          alt: "home-project-2",
+        },
+        name: "Office space",
+        slug: "office-space",
+        button: {
+          type: "link",
+          label: "View Product",
+          link: "/",
+        },
+      },
+      {
+        id: "04",
+        media: {
+          type: "image",
+          path: "/images/home-project-1.jpg",
+          alt: "home-project-2",
+        },
+        name: "Office space",
+        slug: "office-space",
+        button: {
+          type: "link",
+          label: "View Product",
+          link: "/",
+        },
+      },
+      {
+        id: "05",
+        media: {
+          type: "image",
+          path: "/images/home-project-2.jpg",
+          alt: "home-project-5",
+        },
+        name: "Office space",
+        slug: "office-space",
+        button: {
+          type: "link",
+          label: "View Product",
+          link: "/",
+        },
+      },
+    ],
+  },
+  calculatorData: {
+    media: {
+      type: "image",
+      path: "/images/home-calculator-1.png",
+      alt: "home-calculator-1",
+    },
+    title: "Smart Space Calculator",
+    description:
+      "<p>The BOSQ UAE you see today has deep roots in India, where we began our journey in 2012 crafting ergonomic seating solutions for leading corporations. Fueled by a deep understanding of design trends and a spirit of innovation, we’ve established ourselves as a provider of top-quality office furniture and workspace solutions.</p>",
+    button: {
+      type: "link",
+      label: "Calculate Now",
+      link: "/",
+    },
+  },
+  customizeData: {
+    media: {
+      type: "image",
+      path: "/images/home-calculator-2.png",
+      alt: "home-calculator-1",
+    },
+    title: "Customize Your space",
+    description:
+      "<p>At BOSQ, customization isn’t limited by quantity. Whether it’s one piece or an entire collection, every product is crafted to reflect your unique style.</p>",
+    button: {
+      type: "link",
+      label: "Customize",
+      link: "/",
+    },
+  },
 };
 
 export default function Home() {
   return (
     <>
-      <HomeHero data={local_data.homeData} />
+      <HomeHero data={local_data?.homeData} />
+      <HomeAbout data={local_data?.aboutData} />
+      <HomeProduct data={local_data?.productData} />
+      <HomeJourney data={local_data?.journeyData} />
+      <HomeProject data={local_data?.projectData} />
+      <HomeCalculator
+        calculatorData={local_data?.calculatorData}
+        customizeData={local_data?.customizeData}
+      />
       <div className="h-[1000px]" />
     </>
   );

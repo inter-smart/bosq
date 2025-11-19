@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useCallback } from "react";
 
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
@@ -115,16 +114,6 @@ export default function HomeHero({ data }) {
     Fade(),
   ]);
 
-  //   const scrollPrev = useCallback(() => {
-  //     if (emblaApi) emblaApi.scrollPrev();
-  //   }, [emblaApi]);
-
-  //   const scrollNext = useCallback(() => {
-  //     if (emblaApi) emblaApi.scrollNext();
-  //   }, [emblaApi]);
-
-  //   console.log(emblaApi.slideNodes());
-
   const {
     prevBtnDisabled,
     nextBtnDisabled,
@@ -134,7 +123,7 @@ export default function HomeHero({ data }) {
 
   return (
     <section className="w-full h-auto block bg-black relative z-0">
-      <div className="max-w-full">
+      <div className="w-full max-w-full">
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex touch-pan-y touch-pinch-zoom -mx-1">
             {data?.map((item, index) => (

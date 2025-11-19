@@ -8,6 +8,8 @@ const headingVariants = cva("leading-tight font-light", {
         "text-[20px] sm:text-[24px] lg:text-[28px] xl:text-[32px] 2xl:text-[40px] 3xl:text-[50px]",
       heading2:
         "text-[14px] sm:text-[16px] lg:text-[18px] xl:text-[20px] 2xl:text-[24px] 3xl:text-[30px]",
+      heading3:
+        "text-[13px] sm:text-[14px] lg:text-[15px] xl:text-[16px] 2xl:text-[18px] 3xl:text-[20px]",
       // heading4:
       //   "text-[13px] sm:text-[14px] lg:text-[15px] xl:text-[16px] 2xl:text-[20px] 3xl:text-[24px]",
       // heading5:
