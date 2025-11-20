@@ -34,7 +34,7 @@ export default function HomeAbout({ data }) {
             <div className="w-full sm:w-[calc(100%-220px)] xl:w-[calc(100%-480px)] 2xl:w-[calc(100%-468px)] 3xl:w-[calc(100%-568px)] max-sm:mb-[20px]">
               <div className="w-full">
                 <Heading
-                  as="h1"
+                  as="h2"
                   size="heading1"
                   className="line-clamp-2 text-black mb-2 xl:mb-4 2xl:mb-6"
                 >

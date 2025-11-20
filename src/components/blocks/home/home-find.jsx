@@ -1,0 +1,125 @@
+"use client";
+import { Button } from "@/components/ui/button";
+import { Heading } from "@/components/utils/heading";
+import { Text } from "@/components/utils/text";
+import Image from "next/image";
+import Link from "next/link";
+import parse from "html-react-parser";
+
+import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+
+export default function HomeFind({ data }) {
+  const [emblaRef] = useEmblaCarousel({ loop: false, align: "start" }, [
+    Autoplay({ delay: 3000, stopOnInteraction: true }),
+  ]);
+
+  const [activeIndex, setActiveIndex] = useState(0);
+  return (
+    <section className="w-full h-auto block py-[30px] sm:py-[40px] xl:py-[50px] 2xl:py-[70px] bg-[#f4f4f4] rounded-[15px] xl:rounded-[30px] overflow-hidden relative z-0">
+      <div className="container">
+        <div className="xl:max-w-[1040px] 2xl:max-w-[1260px] 3xl:max-w-[1620px] mx-auto">
+          <div className="flex flex-wrap sm:items-center max-sm:flex-col-reverse">
+            <div className="w-full sm:w-[220px] xl:w-[280px] 2xl:w-[468px] 3xl:w-[568px]">
+              <div className="w-full max-w-[80%]">
+                <Heading
+                  as="h2"
+                  size="heading1"
+                  className="line-clamp-2 text-black mb-2 xl:mb-4 2xl:mb-6"
+                >
+                  {parse(data?.title)}
+                  <span className="text-[#f17423]">.</span>
+                </Heading>
+                <Text
+                  as="div"
+                  size="text1"
+                  className="line-clamp-6 font-light text-black mb-4 xl:mb-8 2xl:mb-10"
+                >
+                  {parse(data?.description)}
+                </Text>
+                <Button
+                  variant={"white"}
+                  className="bg-white min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-40"
+                  asChild
+                >
+                  <Link href={data?.button?.link}>{data?.button?.label}</Link>
+                </Button>
+              </div>
+            </div>
+
+            <div className="w-full sm:w-[calc(100%-220px)] xl:w-[calc(100%-280px)] 2xl:w-[calc(100%-468px)] 3xl:w-[calc(100%-568px)] max-sm:mb-[20px] ">
+              <div className="w-full max-w-full">
+                <div className="overflow-hidden" ref={emblaRef}>
+                  <div className="flex touch-pan-y touch-pinch-zoom">
+                    {data?.project?.map((item, index) => {
+                      return (
+                        <div
+                          key={"project" + index}
+                          className={cn(
+                            "flex-[0_0_33.33%] min-w-0 p-1 xl:p-3 select-none transition-all duration-600 nth-[even]:[&>div]:flex-col-reverse"
+                          )}
+                        >
+                          <div
+                            className={cn(
+                              "w-full h-auto flex flex-col justify-between gap-y-1.5 xl:gap-y-3 bg-none p-1 xl:p-3 transition-all duration-600",
+                              activeIndex === index &&
+                                "bg-white shadow-[0px_0px_15px_0_rgba(0,0,0,0.1)]"
+                            )}
+                            onMouseEnter={() => setActiveIndex(index)}
+                          >
+                            <div className="w-full py-1.5 xl:py-3.5">
+                              <Heading
+                                as="div"
+                                size="heading2"
+                                className="font-light capitalize text-[#282828] mb-2 xl:mb-3 2xl:mb-4"
+                              >
+                                {parse(item?.title)}
+                                <span className="text-[#f17423]">.</span>
+                              </Heading>
+                              <Text
+                                as="div"
+                                size="text1"
+                                className="line-clamp-6 font-light text-black mb-3 xl:mb-5 2xl:mb-6"
+                              >
+                                {parse(item?.description)}
+                              </Text>
+                              <Button
+                                variant={
+                                  activeIndex === index ? "black" : "white"
+                                }
+                                className={cn(
+                                  " min-w-[90px] sm:min-w-[100px] xl:min-w-[110px] 2xl:min-w-36 transition duration-400",
+                                  activeIndex !== index && "bg-white"
+                                )}
+                                asChild
+                              >
+                                <Link href={item?.button?.link}>
+                                  {item?.button?.label}
+                                </Link>
+                              </Button>
+                            </div>
+                            <div className="w-full aspect-[22/30] overflow-hidden">
+                              <Image
+                                src={item?.media?.path}
+                                alt={item?.media?.alt}
+                                width={350}
+                                height={440}
+                                className="w-full h-full object-cover hover:scale-110 transition duration-300"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

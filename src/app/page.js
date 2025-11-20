@@ -4,6 +4,9 @@ import HomeProduct from "@/components/blocks/home/home-product";
 import HomeJourney from "@/components/blocks/home/home-journey";
 import HomeProject from "@/components/blocks/home/home-project";
 import HomeCalculator from "@/components/blocks/home/home-calculator";
+import HomeFind from "@/components/blocks/home/home-find";
+import HomeBrand from "@/components/blocks/home/home-brand";
+import HomeEnquiry from "@/components/blocks/home/home-enquiry";
 
 const local_data = {
   homeData: [
@@ -215,7 +218,7 @@ const local_data = {
     title: "Projects",
     description: null,
     button: null,
-    product: [
+    project: [
       {
         id: "01",
         media: {
@@ -223,7 +226,8 @@ const local_data = {
           path: "/images/home-project-1.jpg",
           alt: "home-project-1",
         },
-        name: "Office space",
+        title: "Office space",
+        description: null,
         slug: "office-space",
         button: {
           type: "link",
@@ -238,7 +242,8 @@ const local_data = {
           path: "/images/home-project-2.jpg",
           alt: "home-project-2",
         },
-        name: "Office space",
+        title: "Office space",
+        description: null,
         slug: "office-space",
         button: {
           type: "link",
@@ -253,7 +258,8 @@ const local_data = {
           path: "/images/home-project-3.jpg",
           alt: "home-project-2",
         },
-        name: "Office space",
+        title: "Office space",
+        description: null,
         slug: "office-space",
         button: {
           type: "link",
@@ -268,7 +274,8 @@ const local_data = {
           path: "/images/home-project-1.jpg",
           alt: "home-project-2",
         },
-        name: "Office space",
+        title: "Office space",
+        description: null,
         slug: "office-space",
         button: {
           type: "link",
@@ -283,7 +290,8 @@ const local_data = {
           path: "/images/home-project-2.jpg",
           alt: "home-project-5",
         },
-        name: "Office space",
+        title: "Office space",
+        description: null,
         slug: "office-space",
         button: {
           type: "link",
@@ -295,9 +303,9 @@ const local_data = {
   },
   calculatorData: {
     media: {
-      type: "image",
-      path: "/images/home-calculator-1.png",
-      alt: "home-calculator-1",
+      media_type: "image",
+      media_path: "/images/home-calculator-1.png",
+      media_alt: "home-calculator-1",
     },
     title: "Smart Space Calculator",
     description:
@@ -310,9 +318,9 @@ const local_data = {
   },
   customizeData: {
     media: {
-      type: "image",
-      path: "/images/home-calculator-2.png",
-      alt: "home-calculator-1",
+      media_type: "image",
+      media_path: "/images/home-calculator-2.png",
+      media_alt: "home-calculator-1",
     },
     title: "Customize Your space",
     description:
@@ -323,12 +331,240 @@ const local_data = {
       link: "/",
     },
   },
+  findData: {
+    title: "Find Your Fit",
+    description:
+      "<p>as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem</p>",
+    button: {
+      type: "link",
+      label: "View all projects",
+      link: "/",
+    },
+    project: [
+      {
+        id: "01",
+        media: {
+          type: "image",
+          path: "/images/home-find-1.jpg",
+          alt: "home-find-1",
+        },
+        title: "Meeting Room",
+        description:
+          "<p>The BOSQ UAE you see today has deep roots in India, where we began our journey in 2012 crafting ergonomic seating solutions for leading corporations</p>",
+        slug: "meeting-room",
+        button: {
+          type: "link",
+          label: "View Details",
+          link: "/",
+        },
+      },
+      {
+        id: "02",
+        media: {
+          type: "image",
+          path: "/images/home-find-2.jpg",
+          alt: "home-find-2",
+        },
+        title: "Office Space",
+        description:
+          "<p>The BOSQ UAE you see today has deep roots in India, where we began our journey in 2012 crafting ergonomic seating solutions for leading corporations</p>",
+        slug: "meeting-room",
+        button: {
+          type: "link",
+          label: "View Details",
+          link: "/",
+        },
+      },
+      {
+        id: "03",
+        media: {
+          type: "image",
+          path: "/images/home-find-3.jpg",
+          alt: "home-find-1",
+        },
+        title: "Work from Home",
+        description:
+          "<p>The BOSQ UAE you see today has deep roots in India, where we began our journey in 2012 crafting ergonomic seating solutions for leading corporations</p>",
+        slug: "meeting-room",
+        button: {
+          type: "link",
+          label: "View Details",
+          link: "/",
+        },
+      },
+      {
+        id: "01",
+        media: {
+          type: "image",
+          path: "/images/home-find-1.jpg",
+          alt: "home-find-1",
+        },
+        title: "Meeting Room",
+        description:
+          "<p>The BOSQ UAE you see today has deep roots in India, where we began our journey in 2012 crafting ergonomic seating solutions for leading corporations</p>",
+        slug: "meeting-room",
+        button: {
+          type: "link",
+          label: "View Details",
+          link: "/",
+        },
+      },
+      {
+        id: "02",
+        media: {
+          type: "image",
+          path: "/images/home-find-2.jpg",
+          alt: "home-find-2",
+        },
+        title: "Office Space",
+        description:
+          "<p>The BOSQ UAE you see today has deep roots in India, where we began our journey in 2012 crafting ergonomic seating solutions for leading corporations</p>",
+        slug: "meeting-room",
+        button: {
+          type: "link",
+          label: "View Details",
+          link: "/",
+        },
+      },
+      {
+        id: "03",
+        media: {
+          type: "image",
+          path: "/images/home-find-3.jpg",
+          alt: "home-find-1",
+        },
+        title: "Work from Home",
+        description:
+          "<p>The BOSQ UAE you see today has deep roots in India, where we began our journey in 2012 crafting ergonomic seating solutions for leading corporations</p>",
+        slug: "meeting-room",
+        button: {
+          type: "link",
+          label: "View Details",
+          link: "/",
+        },
+      },
+    ],
+  },
+  brandData: {
+    title: "Discover our Brands",
+    description: null,
+    button: null,
+    brand: [
+      {
+        id: "01",
+        media: {
+          type: "image",
+          path: "/images/brand-1.png",
+          alt: "brand-1",
+        },
+      },
+      {
+        id: "02",
+        media: {
+          type: "image",
+          path: "/images/brand-2.png",
+          alt: "brand-2",
+        },
+      },
+      {
+        id: "03",
+        media: {
+          type: "image",
+          path: "/images/brand-3.png",
+          alt: "brand-3",
+        },
+      },
+      {
+        id: "04",
+        media: {
+          type: "image",
+          path: "/images/brand-4.png",
+          alt: "brand-4",
+        },
+      },
+      {
+        id: "01",
+        media: {
+          type: "image",
+          path: "/images/brand-1.png",
+          alt: "brand-1",
+        },
+      },
+      {
+        id: "02",
+        media: {
+          type: "image",
+          path: "/images/brand-2.png",
+          alt: "brand-2",
+        },
+      },
+      {
+        id: "03",
+        media: {
+          type: "image",
+          path: "/images/brand-3.png",
+          alt: "brand-3",
+        },
+      },
+      {
+        id: "04",
+        media: {
+          type: "image",
+          path: "/images/brand-4.png",
+          alt: "brand-4",
+        },
+      },
+      {
+        id: "01",
+        media: {
+          type: "image",
+          path: "/images/brand-1.png",
+          alt: "brand-1",
+        },
+      },
+      {
+        id: "02",
+        media: {
+          type: "image",
+          path: "/images/brand-2.png",
+          alt: "brand-2",
+        },
+      },
+      {
+        id: "03",
+        media: {
+          type: "image",
+          path: "/images/brand-3.png",
+          alt: "brand-3",
+        },
+      },
+      {
+        id: "04",
+        media: {
+          type: "image",
+          path: "/images/brand-4.png",
+          alt: "brand-4",
+        },
+      },
+    ],
+  },
+  enquiryData: {
+    media: {
+      media_type: "image",
+      media_path: "/images/home-enquiry-1.jpg",
+      media_alt: "home-enquiry-1",
+    },
+    title: "Let's Get in Touch",
+    description:
+      "<p>Let's work together to find the most effective solution for your business.</p>",
+    button: null,
+  },
 };
 
 export default function Home() {
   return (
     <>
-      <HomeHero data={local_data?.homeData} />
+      {/* <HomeHero data={local_data?.homeData} />
       <HomeAbout data={local_data?.aboutData} />
       <HomeProduct data={local_data?.productData} />
       <HomeJourney data={local_data?.journeyData} />
@@ -337,7 +573,9 @@ export default function Home() {
         calculatorData={local_data?.calculatorData}
         customizeData={local_data?.customizeData}
       />
-      <div className="h-[1000px]" />
+      <HomeFind data={local_data?.findData} />
+      <HomeBrand data={local_data?.brandData} /> */}
+      <HomeEnquiry data={local_data?.enquiryData} />
     </>
   );
 }

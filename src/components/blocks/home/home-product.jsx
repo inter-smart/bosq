@@ -1,9 +1,6 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/utils/heading";
-import { Text } from "@/components/utils/text";
 import Image from "next/image";
-import Link from "next/link";
 import parse from "html-react-parser";
 import useEmblaCarousel from "embla-carousel-react";
 import {
@@ -11,13 +8,12 @@ import {
   PrevButton,
   usePrevNextButtons,
 } from "@/components/utils/embla-carousel-arrow-button";
+import Autoplay from "embla-carousel-autoplay";
 
 export default function HomeProduct({ data }) {
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { loop: false, align: "start" },
-    [
-      // Autoplay({ delay: 3000, stopOnInteraction: true }),
-    ]
+    [Autoplay({ delay: 3000, stopOnInteraction: true })]
   );
 
   const {
@@ -31,7 +27,7 @@ export default function HomeProduct({ data }) {
     <section className="w-full h-auto block py-[30px] sm:py-[40px] xl:py-[60px] 2xl:py-[80px]">
       <div className="container">
         <Heading
-          as="h1"
+          as="h2"
           size="heading1"
           className="line-clamp-2 text-black mb-2 xl:mb-4 2xl:mb-6"
         >

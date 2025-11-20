@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 export default function HomeCalculator({ calculatorData, customizeData }) {
   return (
-    <section className="w-full h-auto block py-[10px] sm:py-[20px] xl:py-[30px] 2xl:py-[40px] relative z-0">
+    <section className="w-full h-auto block py-[10px_30px] sm:py-[20px_40px] xl:py-[25px_80px] 2xl:py-[40px_100px] relative z-0">
       <Image
         src={"/images/home-calculator-dvd.png"}
         alt={"home-calculator-dvd"}
@@ -18,7 +18,7 @@ export default function HomeCalculator({ calculatorData, customizeData }) {
       />
       <div className="container">
         <div className="xl:max-w-[1040px] 2xl:max-w-[1260px] 3xl:max-w-[1620px] mx-auto">
-          <div className="flex flex-wrap [&>*]:p-[20px] sm:[&>*]:p-[40px] xl:[&>*]:p-[60px]">
+          <div className="flex flex-wrap [&>*]:p-[15px_20px] sm:[&>*]:p-[20px_40px] xl:[&>*]:p-[25px_60px]">
             <div className="w-full sm:w-1/2">
               <CardComp data={calculatorData} />
             </div>
@@ -42,8 +42,8 @@ function CardComp({ data, variant }) {
     >
       <div className="w-full aspect-4/3 hover:scale-105 transition duration-300">
         <Image
-          src={data?.media?.path}
-          alt={data?.media?.alt}
+          src={data?.media?.media_path}
+          alt={data?.media?.media_alt}
           width={620}
           height={500}
           className="w-full h-full object-contain"
@@ -51,7 +51,7 @@ function CardComp({ data, variant }) {
       </div>
       <div className="w-full">
         <Heading
-          as="h1"
+          as="h2"
           size="heading1"
           className="line-clamp-2 text-[#282828] mb-2 xl:mb-4 2xl:mb-6"
         >

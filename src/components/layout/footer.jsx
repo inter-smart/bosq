@@ -1,57 +1,129 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import parse from "html-react-parser";
-import useMedia from "use-media";
+import { Heading } from "../utils/heading";
+import { Button } from "../ui/button";
+import { Text } from "../utils/text";
+// import useMedia from "use-media";
 
-export default function Footer() {
-  const [footerData, setFooterData] = useState(null);
-  const isDesktop = useMedia({ minWidth: "640px" });
-
-  if (!footerData) {
-    return null; // or add a skeleton loader here
-  }
+export default function Footer({ footerData, socialLinkData }) {
+  // const isDesktop = useMedia({ minWidth: "640px" });
+  const isDesktop = true;
 
   return (
-    <footer className="w-full pt-[30px] sm:pt-[40px] xl:pt-[80px] 2xl:pt-[100px] bg-[#171717] overflow-hidden relative z-0">
-      <div className="w-full h-px absolute z-1 inset-x-0 top-0 mx-auto bg-linear-to-r from-transparent via-primary to-transparent opacity-100" />
-      <Image
-        src="/images/footer-bg-1.png"
-        alt="footer-bg-1"
-        width={868}
-        height={419}
-        className="w-[376px] sm:w-[468px] xl:w-[576px] 2xl:w-[676px] 3xl:w-[868px] absolute -z-1 top-[30px] sm:top-[40px] xl:top-[80px] 2xl:top-[50px] 3xl:top-[60px] left-[6%] xl:left-[calc((100%-var(--container-xl))/2)] 2xl:left-[calc((100%-var(--container-2xl))/2)] 3xl:left-[calc((100%-var(--container-3xl))/2)] ml-4"
-      />
+    <footer className="w-full pt-[30px] sm:pt-[40px] xl:pt-[60px] 2xl:pt-[80px] bg-[#282828] overflow-hidden relative z-0">
       <div className="container">
-        <div className="flex flex-wrap -mx-[15px] sm:-mx-[15px] xl:-mx-[20px] 2xl:-mx-[40px] [&>*]:p-[15px] sm:[&>*]:p-[15px] xl:[&>*]:p-[20px] 2xl:[&>*]:p-[40px]">
-          {!isDesktop && (
-            <CompanyInfoCard logoImage={logoImage} address={address} />
-          )}
-
-          {/* Navigation Sections */}
-          {navigationSection.map((section, index) => (
-            <div
-              key={index}
-              className="w-1/2 sm:sm:w-1/3 md:w-1/5 lg:w-[calc((100%-240px)/4)] xl:w-[calc((100%-276px)/4)] 2xl:w-[calc((100%-368px)/4)] 3xl:w-[calc((100%-476px)/4)]"
+        <div className="flex flex-wrap -mx-[10px] sm:-mx-[15px] xl:-mx-[20px] 2xl:-mx-[30px] [&>*]:p-[10px] sm:[&>*]:p-[15px] xl:[&>*]:p-[20px] 2xl:[&>*]:p-[30px]">
+          <div className="w-full sm:w-1/2 lg:w-[28%]">
+            <Link
+              href="/"
+              className="w-[100px] xl:w-[120px] 2xl:w-[176px] block mb-2 xl:mb-4 2xl:mb-6"
             >
-              <div>
-                <Heading
-                  as="h6"
-                  size="none"
-                  className="text-[12px] sm:text-[10px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-tight font-semibold text-primary mb-[10px] sm:mb-[15px] xl:mb-[20px] 2xl:mb-[30px]"
-                >
-                  {section?.title}
-                </Heading>
-                {section?.navItems?.map((item, index) => (
-                  <div key={"navigation_item_list" + index}>
+              <Image
+                src={footerData?.logoWhiteUrl}
+                alt={footerData?.name}
+                width={145}
+                height={42}
+                unoptimized
+                className="w-full h-full object-contain block"
+              />
+            </Link>
+
+            <Text
+              as="div"
+              size="text1"
+              className="text-white mb-3 xl:mb-5 2xl:mb-7"
+            >
+              {parse(footerData?.address)}
+            </Text>
+
+            <div className="flex flex-wrap items-center gap-x-[15px] xl:gap-x-[20px]">
+              {socialLinkData?.map((item, index) => (
+                <div key={"social_link" + index}>
+                  <Button variant="link" size="none" asChild>
+                    <a href={item?.link || "#"} target="_blank">
+                      <Image
+                        src={item?.media?.media_path}
+                        alt={item?.media?.media_alt}
+                        width={10}
+                        height={10}
+                        unoptimized
+                        className="w-[13px] xl:w-[15px] aspect-square block hover:scale-110 transition"
+                      />
+                    </a>
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="w-1/2 sm:sm:w-1/3 lg:w-[18%]">
+            <div>
+              <Heading
+                as="h6"
+                size="none"
+                className="text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-normal text-white mb-4 xl:mb-7 2xl:mb-10"
+              >
+                Shop
+              </Heading>
+              {footerData?.shop_navigation?.map((item, index) => (
+                <div key={"shop_navigation" + index}>
+                  <Button
+                    variant="link"
+                    size="none"
+                    className="text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-white transition [&>a]:hover:text-primary inline-block mb-1 xl:mb-2"
+                    asChild
+                  >
+                    <Link href={item?.link || "#"}>{item?.label}</Link>
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="w-1/2 sm:sm:w-1/3 lg:w-[18%]">
+            <div>
+              <Heading
+                as="h6"
+                size="none"
+                className="text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-normal text-white mb-4 xl:mb-7 2xl:mb-10"
+              >
+                Quick links
+              </Heading>
+              {footerData?.quick_link_navigation?.map((item, index) => (
+                <div key={"quick_link_navigation" + index}>
+                  <Button
+                    variant="link"
+                    size="none"
+                    className="text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-white transition [&>a]:hover:text-primary inline-block mb-1 xl:mb-2"
+                    asChild
+                  >
+                    <Link href={item?.link || "#"}>{item?.label}</Link>
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="w-1/2 sm:sm:w-1/3 lg:w-[36%]">
+            <div>
+              <Heading
+                as="h6"
+                size="none"
+                className="text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-normal text-white mb-4 xl:mb-7 2xl:mb-10"
+              >
+                Other links
+              </Heading>
+              <div className="flex flex-wrap">
+                {footerData?.other_link_navigation?.map((item, index) => (
+                  <div key={"other_link_navigation" + index} className="w-1/2">
                     <Button
                       variant="link"
                       size="none"
-                      animate={false}
+                      className="text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-white transition [&>a]:hover:text-primary inline-block mb-1 xl:mb-2"
                       asChild
-                      className="text-[10px] sm:text-[10px] xl:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-none font-medium text-[#b9b9b9] transition [&>a]:hover:text-primary block my-[10px] xl:my-[15px] 2xl:my-[20px]"
                     >
                       <Link href={item?.link || "#"}>{item?.label}</Link>
                     </Button>
@@ -59,115 +131,57 @@ export default function Footer() {
                 ))}
               </div>
             </div>
-          ))}
-
-          {/* Office Location + Social Links */}
-          <div className="w-1/2 sm:w-1/2 md:w-1/5 lg:w-[calc((100%-240px)/4)] xl:w-[calc((100%-276px)/4)] 2xl:w-[calc((100%-368px)/4)] 3xl:w-[calc((100%-476px)/4)]">
-            <div className="w-full mb-[15px] xl:mb-[25px] 2xl:mb-[30px]">
-              <Heading
-                as="h6"
-                size="none"
-                className="text-[12px] sm:text-[10px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-tight font-semibold text-primary mb-[10px] sm:mb-[15px] xl:mb-[20px] 2xl:mb-[30px]"
-              >
-                {officeLocation?.title}
-              </Heading>
-              {officeLocation?.officeItems?.map((loc, index) => (
-                <div key={"office_location_item_list" + index}>
-                  <Button
-                    variant="link"
-                    size="none"
-                    animate={false}
-                    asChild
-                    className="text-[10px] sm:text-[10px] xl:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-none font-medium text-[#b9b9b9] transition [&>a]:hover:text-primary block my-[10px] xl:my-[15px] 2xl:my-[20px] justify-start"
-                  >
-                    {loc?.isExternal ? (
-                      <a
-                        href={loc?.link || "#"}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-x-[10px]"
-                      >
-                        {loc?.icon?.url && (
-                          <Image
-                            src={`${STRAPI_URL}${loc.icon.url}`}
-                            alt={loc?.icon?.alternativeText || ""}
-                            width={38}
-                            height={24}
-                            unoptimized
-                            className="w-[20px] xl:w-[24px] 2xl:w-[35px]"
-                          />
-                        )}
-                        {loc?.label}
-                      </a>
-                    ) : (
-                      <Link
-                        href={loc?.link || "#"}
-                        className="flex items-center gap-x-[10px]"
-                      >
-                        {loc?.icon?.url && (
-                          <Image
-                            src={`${STRAPI_URL}${loc.icon.url}`}
-                            alt={loc?.icon?.alternativeText || ""}
-                            width={38}
-                            height={24}
-                            unoptimized
-                            className="w-[20px] xl:w-[24px] 2xl:w-[35px]"
-                          />
-                        )}
-                        {loc?.label}
-                      </Link>
-                    )}
-                  </Button>
-                </div>
-              ))}
-            </div>
-
-            <div className="w-full">
-              <Heading
-                as="h6"
-                className="text-[12px] sm:text-[10px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-tight font-semibold text-primary mb-[5px] sm:mb-[5px] xl:mb-[10px] 2xl:mb-[15px]"
-              >
-                {socialLinks?.title}
-              </Heading>
-              <div className="flex flex-wrap items-center -mx-[4px] xl:-mx-[10px] 2xl:-mx-[14px] [&>*]:px-[4px] xl:[&>*]:px-[10px] 2xl:[&>*]:px-[14px]">
-                {socialLinks?.itemList?.map((item, index) => (
-                  <div key={"social_link_item_list" + index}>
-                    <Button
-                      variant="link"
-                      size="none"
-                      asChild
-                      className="justify-start"
-                    >
-                      <a href={item?.link || "#"} target="_blank">
-                        {item?.icon?.url && (
-                          <Image
-                            src={`${STRAPI_URL}${item?.icon?.url}`}
-                            alt={item?.label}
-                            width={15}
-                            height={11}
-                            unoptimized
-                            className="w-[10px] xl:w-[12px] 2xl:w-[14px] 3xl:w-[20px] block hover:scale-110 transition"
-                          />
-                        )}
-                      </a>
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
-
-          {isDesktop && (
-            <CompanyInfoCard logoImage={logoImage} address={address} />
-          )}
         </div>
 
-        <div className="w-full my-[15px] sm:my-[30px] xl:my-[40px] 2xl:my-[60px]">
+        <hr className="border-[#333] my-3 xl:my-6 2xl:my-8" />
+
+        <div className="flex flex-wrap -mx-[10px] sm:-mx-[15px] xl:-mx-[20px] 2xl:-mx-[30px] [&>*]:p-[10px] sm:[&>*]:p-[15px] xl:[&>*]:p-[20px] 2xl:[&>*]:p-[30px]">
+          <div className="w-full sm:w-1/2 lg:w-[28%]">
+            <Text
+              as="div"
+              size="text1"
+              className="text-white [&_span]:text-normal mb-3 xl:mb-5 2xl:mb-7"
+            >
+              <span>{footerData?.sale_enquiry?.title} :</span>
+              Ph: {footerData?.sale_enquiry?.phone}
+              Email: {footerData?.sale_enquiry?.email}
+            </Text>
+            <Text
+              as="div"
+              size="text1"
+              className="text-white [&_span]:text-normal mb-3 xl:mb-5 2xl:mb-7"
+            >
+              <span>{footerData?.support_enquiry?.title} :</span>
+              Ph: {footerData?.support_enquiry?.phone}
+              Email: {footerData?.support_enquiry?.email}
+            </Text>
+          </div>
+          <div className="w-full sm:w-1/2 lg:w-[28%]">
+            <div className="flex flex-wrap">
+              <Text
+                as="div"
+                size="text1"
+                className="text-white mb-3 xl:mb-5 2xl:mb-7"
+              >
+                {footerData?.subscription_title}
+              </Text>
+              <PlaceholdersAndVanishInput
+                placeholders={placeholders}
+                onChange={handleChange}
+                onSubmit={onSubmit}
+              />
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      {/* <div className="w-full my-[15px] sm:my-[30px] xl:my-[40px] 2xl:my-[60px]">
           <div className="text-[8px] sm:text-[8px] xl:text-[10px] 2xl:text-[11px] 3xl:text-[12px] leading-normal font-normal text-[#b9b9b9]">
             {parse(description)}
           </div>
         </div>
-        <hr className="border-[#323232]" />
 
         <div className="flex flex-wrap justify-between py-[15px] xl:py-[20px] 2xl:py-[30px]">
           <div className="text-[10px] sm:text-[10px] xl:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-medium text-right text-[#b9b9b9] [&>span]:text-primary">
@@ -185,24 +199,23 @@ export default function Footer() {
               />
             </a>
           </div>
-        </div>
-      </div>
+        </div> */}
     </footer>
   );
 }
 
 function CompanyInfoCard({ logoImage, address }) {
   return (
-    <div className="w-full sm:w-1/2 md:w-1/5 lg:w-[240px] xl:w-[276px] 2xl:w-[368px] 3xl:w-[476px]">
+    <div className="w-full sm:w-1/2 lg:w-[30%]">
       <div className="w-[140px] sm:w-[120px] lg:w-[180px] xl:w-[200px] 2xl:w-[240px] 3xl:w-[300px] sm:ml-auto mb-[10px] xl:mb-[15px] 2xl:mb-[20px]">
         {logoImage && (
           <Link href="/">
             <Image
-              src={`${STRAPI_URL}${logoImage?.url}`}
-              alt={logoImage?.alternativeText || "Footer Logo"}
-              width={200}
-              height={80}
-              className="w-full h-full"
+              src={item?.media?.path}
+              alt={item?.media?.alt}
+              width={145}
+              height={42}
+              className="w-full h-full object-contain block"
             />
           </Link>
         )}
