@@ -40,7 +40,7 @@ function CardComp({ data, variant }) {
         variant === "reverse" ? "flex-col" : "flex-col-reverse"
       )}
     >
-      <div className="w-full xl:max-w-[90%] aspect-4/3 hover:scale-105 transition duration-300">
+      <div className="w-full max-w-[90%] aspect-4/3 hover:scale-105 transition duration-300">
         <Image
           src={data?.media?.media_path}
           alt={data?.media?.media_alt}

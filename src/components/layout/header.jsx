@@ -11,6 +11,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
   SheetHeader,
@@ -18,7 +19,6 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "../ui/button";
-import { useMediaQuery } from "react-responsive";
 import { usePathname } from "next/navigation";
 import {
   NavigationMenu,
@@ -27,6 +27,13 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
+
+import dynamic from "next/dynamic";
+import { Menu } from "lucide-react";
+
+const MediaQuery = dynamic(() => import("react-responsive"), {
+  ssr: false,
+});
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -43,25 +50,11 @@ const itemVariants = {
   exit: { opacity: 0, x: -20, transition: { duration: 0.2 } },
 };
 
-const Mobile = ({ children }) => {
-  const isMobile = useMediaQuery({ maxWidth: 639 });
-  return isMobile ? children : null;
-};
-
-const Default = ({ children }) => {
-  const isNotMobile = useMediaQuery({ minWidth: 640 });
-  return isNotMobile ? children : null;
-};
-
 export default function Header({ headerData, navigationData }) {
   const { scrollYProgress } = useScroll();
   const [visible, setVisible] = useState(true);
   const [bg, setBg] = useState(false);
-  const [sheetOpen, setSheetOpen] = useState(false);
-  const [brandLogo, setBrandLogo] = useState("");
-  const [brandUrl, setBrandUrl] = useState("/");
-  const [loginButton, setLoginButton] = useState(null);
-  const [menuItems, setMenuItems] = useState([]);
+  const [sheetOpen, setSheetOpen] = useState(true);
 
   const pathname = usePathname();
 
@@ -94,7 +87,65 @@ export default function Header({ headerData, navigationData }) {
         )}
       >
         <div className="container">
-          <div className="flex justify-between items-center gap-x-8">
+          <div className="flex justify-between items-center gap-x-3 lg:gap-x-8">
+            <MediaQuery maxWidth={1023}>
+              <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+                <SheetTrigger className="flex items-center gap-x-2">
+                  <Menu
+                    size={18}
+                    strokeWidth={1}
+                    className="size-5 text-white"
+                  />
+                  <div className="w-[1px] h-6 bg-white/10" />
+                </SheetTrigger>
+                <SheetContent
+                  className="max-w-[320px] sm:max-w-[320px] bg-white"
+                  side="left"
+                >
+                  <SheetHeader className="sr-only">
+                    <SheetTitle>Navigation</SheetTitle>
+                    <SheetDescription>Navigation</SheetDescription>
+                  </SheetHeader>
+                  <Link
+                    href={"/"}
+                    className="text-[14px] leading-none font-light text-white h-(--header-y) bg-gray-800 flex items-center gap-x-2 px-4"
+                  >
+                    <Image
+                      src="/images/icon-user.svg"
+                      alt="user"
+                      width={12}
+                      height={12}
+                      unoptimized
+                      className="w-[15px]"
+                    />
+                    Login/Sign Up
+                  </Link>
+                  <div className="w-full h-[calc(100%_-_var(--header-y)} overflow-y-auto">
+                    <AnimatePresence mode="wait">
+                      {sheetOpen && (
+                        <motion.div
+                          key="menu-anim"
+                          variants={containerVariants}
+                          initial="hidden"
+                          animate="show"
+                          exit="exit"
+                        >
+                          <NavigationMenuBar
+                            pathname={pathname}
+                            menuItems={navigationData}
+                            onNavigationClick={handleNavigationLinkClick}
+                          />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                  <SheetClose asChild>
+                    <Button variant="outline">Close</Button>
+                  </SheetClose>
+                </SheetContent>
+              </Sheet>
+            </MediaQuery>
+
             {/* Brand Logo */}
             <div className="w-[100px] xl:w-[120px] 2xl:w-[140px] 3xl:w-[176px]">
               <Link href={headerData?.slug}>
@@ -115,43 +166,43 @@ export default function Header({ headerData, navigationData }) {
                 "flex-1 flex items-center justify-between transition"
               )}
             >
-              <Default>
+              <MediaQuery minWidth={1024}>
                 <NavigationMenuBar
                   pathname={pathname}
                   menuItems={navigationData}
                   onNavigationClick={handleNavigationLinkClick}
                 />
-                <Button variant="none" size="none" className="">
-                  <Image
-                    src="/images/icon-search.svg"
-                    alt="search"
-                    width={12}
-                    height={12}
-                    unoptimized
-                    className="w-[15px]"
-                  />
-                </Button>
-                <Button variant="none" size="none" className="">
-                  <Image
-                    src="/images/icon-bag.svg"
-                    alt="bag"
-                    width={12}
-                    height={12}
-                    unoptimized
-                    className="w-[15px]"
-                  />
-                </Button>
-                <Button variant="none" size="none" className="">
-                  <Image
-                    src="/images/icon-user.svg"
-                    alt="user"
-                    width={12}
-                    height={12}
-                    unoptimized
-                    className="w-[15px]"
-                  />
-                </Button>
-              </Default>
+              </MediaQuery>
+              <Button variant="none" size="none" className="">
+                <Image
+                  src="/images/icon-search.svg"
+                  alt="search"
+                  width={12}
+                  height={12}
+                  unoptimized
+                  className="w-[15px]"
+                />
+              </Button>
+              <Button variant="none" size="none" className="">
+                <Image
+                  src="/images/icon-bag.svg"
+                  alt="bag"
+                  width={12}
+                  height={12}
+                  unoptimized
+                  className="w-[15px]"
+                />
+              </Button>
+              <Button variant="none" size="none" className="">
+                <Image
+                  src="/images/icon-user.svg"
+                  alt="user"
+                  width={12}
+                  height={12}
+                  unoptimized
+                  className="w-[15px]"
+                />
+              </Button>
 
               <Button
                 variant="outline"
@@ -165,52 +216,8 @@ export default function Header({ headerData, navigationData }) {
                   unoptimized
                   className="w-[15px]"
                 />
-                العربية
+                English
               </Button>
-
-              {/* Mobile Menu */}
-              <Mobile>
-                <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-                  <SheetTrigger>
-                    <div className="text-[12px] font-normal text-center text-white flex items-center justify-center">
-                      <Image
-                        src="/images/header-hamburger.svg"
-                        alt="Menu"
-                        width={24}
-                        height={10}
-                        unoptimized
-                        className="w-[15px] mr-[6px]"
-                      />
-                      <span>Menu</span>
-                    </div>
-                  </SheetTrigger>
-                  <SheetContent className="w-[320px] bg-[#030303]">
-                    <SheetHeader>
-                      <SheetTitle className="sr-only">Navigation</SheetTitle>
-                      <SheetDescription className="sr-only">
-                        Navigation
-                      </SheetDescription>
-                      <AnimatePresence mode="wait">
-                        {sheetOpen && (
-                          <motion.div
-                            key="menu-anim"
-                            variants={containerVariants}
-                            initial="hidden"
-                            animate="show"
-                            exit="exit"
-                          >
-                            <NavigationMenuBar
-                              pathname={pathname}
-                              menuItems={menuItems}
-                              onNavigationClick={handleNavigationLinkClick}
-                            />
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </SheetHeader>
-                  </SheetContent>
-                </Sheet>
-              </Mobile>
             </div>
           </div>
         </div>
@@ -225,14 +232,17 @@ export default function Header({ headerData, navigationData }) {
 function NavigationMenuBar({ pathname, menuItems, onNavigationClick }) {
   const getNavigationMenuTriggerStyle = (isActive) => {
     const baseStyle =
-      "text-[14px] sm:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-normal font-normal text-center w-full h-auto p-[4px_10px] xl:p-[6px_12px] 2xl:p-[10px_15px] 2xl:p-[15px_25px] bg-transparent border border-transparent hover:text-white focus:text-primary hover:bg-black/10 focus:bg-black/50 ring-0 hover:border-white/10 data-[state=open]:border-white/10 data-[state=open]:hover:bg-black/10 data-[state=open]:text-white data-[state=open]:focus:bg-black/10 data-[state=open]:bg-black/10 transition-all duration-200";
+      "text-[14px] lg:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-normal font-normal text-start lg:text-center w-full h-auto p-[5px_15px] lg:p-[6px_12px] 2xl:p-[10px_15px] 2xl:p-[15px_25px] bg-transparent border border-transparent hover:text-white focus:text-primary hover:bg-black/10 focus:bg-black/50 ring-0 hover:border-white/10 data-[state=open]:border-white/10 data-[state=open]:hover:bg-black/10 data-[state=open]:text-white data-[state=open]:focus:bg-black/10 data-[state=open]:bg-black/10 transition-all duration-200";
     return `${baseStyle} ${
-      isActive ? "text-primary border-transparent" : "text-white"
+      isActive ? "text-primary border-transparent" : "text-black lg:text-white"
     }`;
   };
   return (
-    <NavigationMenu viewport={false} className="max-w-full justify-center">
-      <NavigationMenuList className="xl:gap-x-3 2xl:gap-x-4 max-lg:flex-col max-lg:items-start max-lg:gap-[20px] max-lg:py-[20px]">
+    <NavigationMenu
+      viewport={false}
+      className="w-full max-w-full justify-start lg:justify-center max-lg:[&>div]:w-full"
+    >
+      <NavigationMenuList className="xl:gap-x-3 2xl:gap-x-4 max-lg:flex-col max-lg:[&>div]:w-full">
         {menuItems.map((item, i) => {
           const isActive = pathname === item.url;
           return (
@@ -240,7 +250,7 @@ function NavigationMenuBar({ pathname, menuItems, onNavigationClick }) {
               <NavigationMenuItem>
                 <NavigationMenuLink
                   asChild
-                  className={getNavigationMenuTriggerStyle(isActive)}
+                  className={cn(getNavigationMenuTriggerStyle(isActive))}
                 >
                   <Link href={item.url || "#"} onClick={onNavigationClick}>
                     {item.name}

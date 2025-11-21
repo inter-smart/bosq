@@ -58,12 +58,12 @@ export default function HomeFind({ data }) {
                         <div
                           key={"project" + index}
                           className={cn(
-                            "flex-[0_0_33.33%] min-w-0 p-1 xl:p-3 select-none transition-all duration-600 nth-[even]:[&>div]:flex-col-reverse"
+                            "flex-[0_0_50%] lg:flex-[0_0_33.33%] min-w-0 p-1 xl:p-3 select-none transition-all duration-600 nth-[even]:[&>div]:flex-col-reverse"
                           )}
                         >
                           <div
                             className={cn(
-                              "w-full h-auto flex flex-col justify-between gap-y-1.5 xl:gap-y-3 bg-none p-1 xl:p-3 2xl:p-4 transition-all duration-600",
+                              "w-full h-auto flex flex-col justify-between gap-y-1.5 xl:gap-y-3 bg-none p-1 sm:p-2 xl:p-3 2xl:p-4 transition-all duration-600",
                               activeIndex === index &&
                                 "bg-white shadow-[0px_0px_15px_0_rgba(0,0,0,0.1)]"
                             )}
@@ -100,7 +100,7 @@ export default function HomeFind({ data }) {
                                 </Link>
                               </Button>
                             </div>
-                            <div className="w-full aspect-[22/30] overflow-hidden">
+                            <div className="w-full aspect-[3/4] xl:aspect-[22/30] overflow-hidden">
                               <Image
                                 src={item?.media?.path}
                                 alt={item?.media?.alt}

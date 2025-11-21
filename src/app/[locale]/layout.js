@@ -1,47 +1,47 @@
 import localFont from "next/font/local";
-import "./globals.css";
+import "./../globals.css";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 
 const heroNew = localFont({
   src: [
     {
-      path: "../../public/fonts/HeroNew-Thin.woff2",
+      path: "../../../public/fonts/HeroNew-Thin.woff2",
       weight: "100",
       style: "normal",
     },
     {
-      path: "../../public/fonts/HeroNew-UltraLight.woff2",
+      path: "../../../public/fonts/HeroNew-UltraLight.woff2",
       weight: "200",
       style: "normal",
     },
     {
-      path: "../../public/fonts/HeroNew-Light.woff2",
+      path: "../../../public/fonts/HeroNew-Light.woff2",
       weight: "300",
       style: "normal",
     },
     {
-      path: "../../public/fonts/HeroNew-Regular.woff2",
+      path: "../../../public/fonts/HeroNew-Regular.woff2",
       weight: "400",
       style: "normal",
     },
     {
-      path: "../../public/fonts/HeroNew-Medium.woff2",
+      path: "../../../public/fonts/HeroNew-Medium.woff2",
       weight: "500",
       style: "italic",
     },
     {
-      path: "../../public/fonts/HeroNew-SemiBold.woff2",
+      path: "../../../public/fonts/HeroNew-SemiBold.woff2",
       weight: "600",
       style: "normal",
     },
     {
-      path: "../../public/fonts/HeroNew-Bold.woff2",
+      path: "../../../public/fonts/HeroNew-Bold.woff2",
       weight: "700",
       style: "italic",
     },
     {
-      path: "../../public/fonts/HeroNew-ExtraBold.woff2",
+      path: "../../../public/fonts/HeroNew-ExtraBold.woff2",
       weight: "800",
       style: "italic",
     },
@@ -269,9 +269,14 @@ const local_data = {
   ],
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const locale = "en";
   return (
-    <html lang="en" className={`${heroNew.className} antialiased`}>
+    <html
+      lang={locale}
+      dir={locale === "ar" ? "rtl" : "ltr"}
+      className={`${heroNew.className} antialiased`}
+    >
       <body>
         <Header
           headerData={local_data.header_data}
