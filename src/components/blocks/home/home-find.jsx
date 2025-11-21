@@ -20,28 +20,28 @@ export default function HomeFind({ data }) {
   return (
     <section className="w-full h-auto block py-[30px] sm:py-[40px] xl:py-[50px] 2xl:py-[70px] bg-[#f4f4f4] rounded-[15px] xl:rounded-[30px] overflow-hidden relative z-0">
       <div className="container">
-        <div className="xl:max-w-[1040px] 2xl:max-w-[1260px] 3xl:max-w-[1620px] mx-auto">
-          <div className="flex flex-wrap sm:items-center max-sm:flex-col-reverse">
-            <div className="w-full sm:w-[220px] xl:w-[280px] 2xl:w-[468px] 3xl:w-[568px]">
-              <div className="w-full max-w-[80%]">
+        <div className="xl:max-w-[1120px] 2xl:max-w-[1320px] 3xl:max-w-[1700px] mx-auto">
+          <div className="flex flex-wrap sm:items-center">
+            <div className="w-full sm:w-[220px] xl:w-[280px] 2xl:w-[420px] 3xl:w-[468px]">
+              <div className="w-full xl:max-w-[70%]">
                 <Heading
                   as="h2"
                   size="heading1"
-                  className="line-clamp-2 text-black mb-2 xl:mb-4 2xl:mb-6"
+                  className="line-clamp-2 text-black mb-2 xl:mb-3 2xl:mb-5"
                 >
                   {parse(data?.title)}
-                  <span className="text-[#f17423]">.</span>
+                  <span className="w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 " />
                 </Heading>
                 <Text
                   as="div"
                   size="text1"
-                  className="line-clamp-6 font-light text-black mb-4 xl:mb-8 2xl:mb-10"
+                  className="line-clamp-6 font-light text-black mb-4 xl:mb-6 2xl:mb-6"
                 >
                   {parse(data?.description)}
                 </Text>
                 <Button
                   variant={"white"}
-                  className="bg-white min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-40"
+                  className="bg-white min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-[160px]"
                   asChild
                 >
                   <Link href={data?.button?.link}>{data?.button?.label}</Link>
@@ -49,7 +49,7 @@ export default function HomeFind({ data }) {
               </div>
             </div>
 
-            <div className="w-full sm:w-[calc(100%-220px)] xl:w-[calc(100%-280px)] 2xl:w-[calc(100%-468px)] 3xl:w-[calc(100%-568px)] max-sm:mb-[20px] ">
+            <div className="w-full sm:w-[calc(100%-220px)] xl:w-[calc(100%-280px)] 2xl:w-[calc(100%-420px)] 3xl:w-[calc(100%-468px)]">
               <div className="w-full max-w-full">
                 <div className="overflow-hidden" ref={emblaRef}>
                   <div className="flex touch-pan-y touch-pinch-zoom">
@@ -63,7 +63,7 @@ export default function HomeFind({ data }) {
                         >
                           <div
                             className={cn(
-                              "w-full h-auto flex flex-col justify-between gap-y-1.5 xl:gap-y-3 bg-none p-1 xl:p-3 transition-all duration-600",
+                              "w-full h-auto flex flex-col justify-between gap-y-1.5 xl:gap-y-3 bg-none p-1 xl:p-3 2xl:p-4 transition-all duration-600",
                               activeIndex === index &&
                                 "bg-white shadow-[0px_0px_15px_0_rgba(0,0,0,0.1)]"
                             )}
@@ -73,15 +73,15 @@ export default function HomeFind({ data }) {
                               <Heading
                                 as="div"
                                 size="heading2"
-                                className="font-light capitalize text-[#282828] mb-2 xl:mb-3 2xl:mb-4"
+                                className="font-light capitalize text-[#282828] mb-2 xl:mb-3"
                               >
                                 {parse(item?.title)}
-                                <span className="text-[#f17423]">.</span>
+                                <span className="w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 " />
                               </Heading>
                               <Text
                                 as="div"
                                 size="text1"
-                                className="line-clamp-6 font-light text-black mb-3 xl:mb-5 2xl:mb-6"
+                                className="line-clamp-6 leading-normal font-light text-black mb-3 xl:mb-5 2xl:mb-6"
                               >
                                 {parse(item?.description)}
                               </Text>

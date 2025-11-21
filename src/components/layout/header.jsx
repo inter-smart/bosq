@@ -87,16 +87,16 @@ export default function Header({ headerData, navigationData }) {
         animate={{ y: visible ? 0 : -100, opacity: visible ? 1 : 0 }}
         transition={{ duration: 0.2 }}
         className={cn(
-          "w-full h-(--header-y) z-10 top-0 inset-x-0 flex items-center",
+          "w-full h-(--header-y) z-10 top-0 inset-x-0 flex items-center bg-black",
           bg
             ? "border-b border-white/10 bg-black/80 shadow-[0px_10px_4px_0px_rgba(0,0,0,0.1)] backdrop-blur-sm fixed"
             : "absolute"
         )}
       >
         <div className="container">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center gap-x-8">
             {/* Brand Logo */}
-            <div className="w-[100px] xl:w-[120px] 2xl:w-[176px]">
+            <div className="w-[100px] xl:w-[120px] 2xl:w-[140px] 3xl:w-[176px]">
               <Link href={headerData?.slug}>
                 <Image
                   src={headerData?.logoWhiteUrl}
@@ -104,7 +104,7 @@ export default function Header({ headerData, navigationData }) {
                   width={173}
                   height={58}
                   unoptimized
-                  className="w-full h-full"
+                  className="w-full h-full block object-contain"
                   priority
                 />
               </Link>
@@ -112,7 +112,7 @@ export default function Header({ headerData, navigationData }) {
 
             <div
               className={cn(
-                "flex items-center justify-between space-x-[20px] xl:space-x-[25px] 2xl:space-x-[35px] transition"
+                "flex-1 flex items-center justify-between transition"
               )}
             >
               <Default>
@@ -152,6 +152,7 @@ export default function Header({ headerData, navigationData }) {
                   />
                 </Button>
               </Default>
+
               <Button
                 variant="outline"
                 className="min-w-[70px] sm:min-w-[80px] xl:min-w-[80px] 2xl:min-w-[100px] 3xl:min-w-[120px]"
@@ -230,8 +231,8 @@ function NavigationMenuBar({ pathname, menuItems, onNavigationClick }) {
     }`;
   };
   return (
-    <NavigationMenu viewport={false} className="max-w-full justify-normal">
-      <NavigationMenuList className="max-lg:flex-col max-lg:items-start max-lg:gap-[20px] max-lg:py-[20px]">
+    <NavigationMenu viewport={false} className="max-w-full justify-center">
+      <NavigationMenuList className="xl:gap-x-3 2xl:gap-x-4 max-lg:flex-col max-lg:items-start max-lg:gap-[20px] max-lg:py-[20px]">
         {menuItems.map((item, i) => {
           const isActive = pathname === item.url;
           return (

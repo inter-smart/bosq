@@ -18,20 +18,21 @@ export default function HomeAbout({ data }) {
 
       <div className="container">
         <div className="xl:max-w-[1040px] 2xl:max-w-[1260px] 3xl:max-w-[1620px] mx-auto">
-          <div className="flex flex-wrap sm:items-center max-sm:flex-col-reverse">
-            <div className="w-full sm:w-[220px] xl:w-[480px] 2xl:w-[468px] 3xl:w-[568px]">
-              <div className="w-full sm:w-[168px] xl:w-[200px] 2xl:w-[268px] 3xl:w-[300px] aspect-[20/34] mx-auto">
+          <div className="flex flex-wrap sm:items-center">
+            <div className="w-full sm:w-[220px] xl:w-[480px] 2xl:w-[576px] 3xl:w-[720px]">
+              <div className="group w-full sm:w-[168px] xl:w-[200px] 2xl:w-[268px] 3xl:w-[320px] aspect-[20/34] mx-auto hover:scale-110  transition duration-300 relative z-0">
                 <Image
                   src={data?.media?.path}
                   alt={data?.media?.alt}
                   width={308}
                   height={517}
-                  className="w-full h-full object-contain hover:scale-110 transition duration-300"
+                  className="w-full h-full object-contain group-hover:-translate-y-2 transition duration-300"
                 />
+                <div className="w-full aspect-6/1 rounded-full bg-black absolute z-[-1] bottom-0 left-0 right-0 blur-2xl opacity-0 group-hover:opacity-40 group-hover:scale-80 transition duration-300" />
               </div>
             </div>
 
-            <div className="w-full sm:w-[calc(100%-220px)] xl:w-[calc(100%-480px)] 2xl:w-[calc(100%-468px)] 3xl:w-[calc(100%-568px)] max-sm:mb-[20px]">
+            <div className="w-full sm:w-[calc(100%-220px)] xl:w-[calc(100%-480px)] 2xl:w-[calc(100%-576px)] 3xl:w-[calc(100%-720px)]">
               <div className="w-full">
                 <Heading
                   as="h2"
@@ -39,8 +40,8 @@ export default function HomeAbout({ data }) {
                   className="line-clamp-2 text-black mb-2 xl:mb-4 2xl:mb-6"
                 >
                   {parse(data?.title)}
-                  <span className="text-[#f17423]">.</span>
-                  {/* <span className="w-2 2xl:w-2.5 aspect-square rounded-full bg-[#f17423] inline-block" /> */}
+
+                  <span className="w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 " />
                 </Heading>
                 <Text
                   as="div"

@@ -6,34 +6,49 @@ import parse from "html-react-parser";
 import { Heading } from "../utils/heading";
 import { Button } from "../ui/button";
 import { Text } from "../utils/text";
+import { PlaceholdersAndVanishInput } from "../ui/placeholders-and-vanish-input";
 // import useMedia from "use-media";
 
 export default function Footer({ footerData, socialLinkData }) {
   // const isDesktop = useMedia({ minWidth: "640px" });
   const isDesktop = true;
 
+  const placeholders = [
+    "Enter Your Email",
+    "Enter Your Email Address",
+    "Subscribe to our newsletter",
+  ];
+
+  const handleChange = (e) => {
+    console.log(e.target.value);
+  };
+  const onSubmit = (e) => {
+    e.preventDefault();
+    console.log("submitted");
+  };
+
   return (
-    <footer className="w-full pt-[30px] sm:pt-[40px] xl:pt-[60px] 2xl:pt-[80px] bg-[#282828] overflow-hidden relative z-0">
+    <footer className="w-full py-[20px_10px] xl:py-[40px_10px] 2xl:py-[60px_15px] bg-[#282828] overflow-hidden relative z-0">
       <div className="container">
         <div className="flex flex-wrap -mx-[10px] sm:-mx-[15px] xl:-mx-[20px] 2xl:-mx-[30px] [&>*]:p-[10px] sm:[&>*]:p-[15px] xl:[&>*]:p-[20px] 2xl:[&>*]:p-[30px]">
           <div className="w-full sm:w-1/2 lg:w-[28%]">
             <Link
               href="/"
-              className="w-[100px] xl:w-[120px] 2xl:w-[176px] block mb-2 xl:mb-4 2xl:mb-6"
+              className="w-[90px] xl:w-[100px] 2xl:w-[140px] block mb-2 xl:mb-4 2xl:mb-6"
             >
               <Image
                 src={footerData?.logoWhiteUrl}
                 alt={footerData?.name}
-                width={145}
-                height={42}
+                width={114}
+                height={37}
                 unoptimized
-                className="w-full h-full object-contain block"
+                className="w-full h-full block"
               />
             </Link>
 
             <Text
               as="div"
-              size="text1"
+              size="text3"
               className="text-white mb-3 xl:mb-5 2xl:mb-7"
             >
               {parse(footerData?.address)}
@@ -50,7 +65,7 @@ export default function Footer({ footerData, socialLinkData }) {
                         width={10}
                         height={10}
                         unoptimized
-                        className="w-[13px] xl:w-[15px] aspect-square block hover:scale-110 transition"
+                        className="w-[13px] xl:w-[15px] 2xl:w-[17px] aspect-square block hover:scale-110 transition"
                       />
                     </a>
                   </Button>
@@ -70,14 +85,13 @@ export default function Footer({ footerData, socialLinkData }) {
               </Heading>
               {footerData?.shop_navigation?.map((item, index) => (
                 <div key={"shop_navigation" + index}>
-                  <Button
-                    variant="link"
-                    size="none"
-                    className="text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-white transition [&>a]:hover:text-primary inline-block mb-1 xl:mb-2"
-                    asChild
+                  <Text
+                    as="div"
+                    size="text3"
+                    className="text-white transition [&>a]:hover:text-[#f17423] mb-1 xl:mb-3"
                   >
                     <Link href={item?.link || "#"}>{item?.label}</Link>
-                  </Button>
+                  </Text>
                 </div>
               ))}
             </div>
@@ -94,14 +108,13 @@ export default function Footer({ footerData, socialLinkData }) {
               </Heading>
               {footerData?.quick_link_navigation?.map((item, index) => (
                 <div key={"quick_link_navigation" + index}>
-                  <Button
-                    variant="link"
-                    size="none"
-                    className="text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-white transition [&>a]:hover:text-primary inline-block mb-1 xl:mb-2"
-                    asChild
+                  <Text
+                    as="div"
+                    size="text3"
+                    className="text-white transition [&>a]:hover:text-[#f17423] mb-1 xl:mb-3"
                   >
                     <Link href={item?.link || "#"}>{item?.label}</Link>
-                  </Button>
+                  </Text>
                 </div>
               ))}
             </div>
@@ -119,14 +132,13 @@ export default function Footer({ footerData, socialLinkData }) {
               <div className="flex flex-wrap">
                 {footerData?.other_link_navigation?.map((item, index) => (
                   <div key={"other_link_navigation" + index} className="w-1/2">
-                    <Button
-                      variant="link"
-                      size="none"
-                      className="text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-white transition [&>a]:hover:text-primary inline-block mb-1 xl:mb-2"
-                      asChild
+                    <Text
+                      as="div"
+                      size="text3"
+                      className="text-white transition [&>a]:hover:text-[#f17423] mb-1 xl:mb-3"
                     >
                       <Link href={item?.link || "#"}>{item?.label}</Link>
-                    </Button>
+                    </Text>
                   </div>
                 ))}
               </div>
@@ -134,95 +146,139 @@ export default function Footer({ footerData, socialLinkData }) {
           </div>
         </div>
 
-        <hr className="border-[#333] my-3 xl:my-6 2xl:my-8" />
+        <hr className="border-[#333] my-1 xl:my-2 2xl:my-4" />
 
-        <div className="flex flex-wrap -mx-[10px] sm:-mx-[15px] xl:-mx-[20px] 2xl:-mx-[30px] [&>*]:p-[10px] sm:[&>*]:p-[15px] xl:[&>*]:p-[20px] 2xl:[&>*]:p-[30px]">
-          <div className="w-full sm:w-1/2 lg:w-[28%]">
-            <Text
-              as="div"
-              size="text1"
-              className="text-white [&_span]:text-normal mb-3 xl:mb-5 2xl:mb-7"
-            >
-              <span>{footerData?.sale_enquiry?.title} :</span>
-              Ph: {footerData?.sale_enquiry?.phone}
-              Email: {footerData?.sale_enquiry?.email}
-            </Text>
-            <Text
-              as="div"
-              size="text1"
-              className="text-white [&_span]:text-normal mb-3 xl:mb-5 2xl:mb-7"
-            >
-              <span>{footerData?.support_enquiry?.title} :</span>
-              Ph: {footerData?.support_enquiry?.phone}
-              Email: {footerData?.support_enquiry?.email}
-            </Text>
+        <div className="flex flex-wrap items-center -mx-[10px] [&>*]:p-[10px] ">
+          <div className="w-full sm:w-1/2 lg:w-[36%]">
+            {footerData?.sale_enquiry && (
+              <Text
+                as="div"
+                size="text3"
+                className="text-white [&_span]:text-normal mb-1 [&_a]:hover:text-[#f47123]"
+              >
+                <span>{footerData.sale_enquiry.title} :</span>&nbsp;
+                {footerData.sale_enquiry.phone && (
+                  <>
+                    Ph:{" "}
+                    <a
+                      href={`tel:${footerData.sale_enquiry.phone}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {footerData.sale_enquiry.phone}
+                    </a>
+                    &nbsp;
+                  </>
+                )}
+                {footerData.sale_enquiry.email && (
+                  <>
+                    Email:{" "}
+                    <a
+                      href={`mailto:${footerData.sale_enquiry.email}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {footerData.sale_enquiry.email}
+                    </a>
+                  </>
+                )}
+              </Text>
+            )}
+
+            {footerData?.support_enquiry && (
+              <Text
+                as="div"
+                size="text3"
+                className="text-white [&_span]:text-normal [&_a]:hover:text-[#f47123]"
+              >
+                <span>{footerData.support_enquiry.title} :</span>&nbsp;
+                {footerData.support_enquiry.phone && (
+                  <>
+                    Ph:{" "}
+                    <a
+                      href={`tel:${footerData.support_enquiry.phone}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {footerData.support_enquiry.phone}
+                    </a>
+                    &nbsp;
+                  </>
+                )}
+                {footerData.support_enquiry.email && (
+                  <>
+                    Email:{" "}
+                    <a
+                      href={`mailto:${footerData.support_enquiry.email}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {footerData.support_enquiry.email}
+                    </a>
+                  </>
+                )}
+              </Text>
+            )}
           </div>
-          <div className="w-full sm:w-1/2 lg:w-[28%]">
+
+          <div className="w-full sm:w-1/2 lg:w-[44%]">
             <div className="flex flex-wrap">
               <Text
                 as="div"
-                size="text1"
-                className="text-white mb-3 xl:mb-5 2xl:mb-7"
+                size="text3"
+                className="text-white w-[40%] pr-[15px] xl:pr-[30px]"
               >
-                {footerData?.subscription_title}
+                {parse(footerData?.subscription_title)}
               </Text>
-              <PlaceholdersAndVanishInput
-                placeholders={placeholders}
-                onChange={handleChange}
-                onSubmit={onSubmit}
-              />
+              <div className="w-[60%]">
+                <PlaceholdersAndVanishInput
+                  placeholders={placeholders}
+                  onChange={handleChange}
+                  onSubmit={onSubmit}
+                />
+              </div>
             </div>
           </div>
-        </div>
-
-      </div>
-
-      {/* <div className="w-full my-[15px] sm:my-[30px] xl:my-[40px] 2xl:my-[60px]">
-          <div className="text-[8px] sm:text-[8px] xl:text-[10px] 2xl:text-[11px] 3xl:text-[12px] leading-normal font-normal text-[#b9b9b9]">
-            {parse(description)}
+          <div className="w-full sm:w-1/2 lg:w-[20%] flex flex-wrap">
+            {footerData?.card?.map((item, index) => (
+              <div key={"card" + index} className="ml-auto">
+                <Image
+                  src={item?.media?.media_path}
+                  alt={item?.media?.media_alt}
+                  width={120}
+                  height={16}
+                  className="w-[100px] xl:w-[120px] 2xl:w-[150px] block"
+                />
+              </div>
+            ))}
           </div>
         </div>
 
-        <div className="flex flex-wrap justify-between py-[15px] xl:py-[20px] 2xl:py-[30px]">
-          <div className="text-[10px] sm:text-[10px] xl:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-medium text-right text-[#b9b9b9] [&>span]:text-primary">
-            {parse(copyright)}
-          </div>
-          <div className="text-[10px] sm:text-[10px] xl:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-medium text-right text-[#b9b9b9] [&>span]:text-primary">
-            Designed By{" "}
+        <hr className="border-[#333] my-1 xl:my-2 2xl:my-4" />
+
+        <div className="flex flex-wrap justify-between -mx-[10px] [&>*]:p-[10px]">
+          <Text as="div" size="text3" className="text-white">
+            {parse(footerData?.copyright)}
+          </Text>
+          <Text
+            as="div"
+            size="text3"
+            className="whitespace-nowrap text-end text-white flex"
+          >
+            Designed By:{" "}
             <a href="https://www.intersmartsolution.com/" target="_blank">
               <Image
-                src="/icons/icon-intersmart.svg"
+                src="/images/icon-intersmart.svg"
                 alt="Intersmart"
                 width={100}
                 height={15}
-                className="w-[70px] xl:w-[90px] 3xl:w-[100px] inline ml-1"
+                unoptimized
+                className="w-[50px] xl:w-[70px] 3xl:w-[90px] inline ml-1"
               />
             </a>
-          </div>
-        </div> */}
-    </footer>
-  );
-}
-
-function CompanyInfoCard({ logoImage, address }) {
-  return (
-    <div className="w-full sm:w-1/2 lg:w-[30%]">
-      <div className="w-[140px] sm:w-[120px] lg:w-[180px] xl:w-[200px] 2xl:w-[240px] 3xl:w-[300px] sm:ml-auto mb-[10px] xl:mb-[15px] 2xl:mb-[20px]">
-        {logoImage && (
-          <Link href="/">
-            <Image
-              src={item?.media?.path}
-              alt={item?.media?.alt}
-              width={145}
-              height={42}
-              className="w-full h-full object-contain block"
-            />
-          </Link>
-        )}
-        <div className="text-[10px] sm:text-[10px] xl:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-medium sm:text-right text-[#b9b9b9] justify-start">
-          {parse(address)}
+          </Text>
         </div>
       </div>
-    </div>
+    </footer>
   );
 }

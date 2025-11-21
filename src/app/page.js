@@ -26,7 +26,7 @@ const local_data = {
       },
       title: "Designed for Comfort.<br/> Engineered for Your <br /> Workspace",
       description:
-        "<p>Shaping the future of work environments across the world</p>",
+        "<p>Shaping the future of work environments across the world </p>",
       ctaText: "View Product",
       button: {
         type: "link",
@@ -48,7 +48,7 @@ const local_data = {
           alt: "hero",
         },
       },
-      title: "22 Designed for Comfort. Engineered for Your Workspace",
+      title: "22 Designed for Comfort.<br/> Engineered for Your<br/> Workspace",
       description:
         "<p>Shaping the future of work environments across the world</p>",
       button: {
@@ -71,7 +71,7 @@ const local_data = {
           alt: "hero",
         },
       },
-      title: "33 Designed for Comfort. Engineered for Your Workspace",
+      title: "33 Designed for Comfort.<br/> Engineered for Your<br/> Workspace",
       description:
         "<p>Shaping the future of work environments across the world</p>",
       button: {
@@ -564,7 +564,7 @@ const local_data = {
 export default function Home() {
   return (
     <>
-      {/* <HomeHero data={local_data?.homeData} />
+      <HomeHero data={local_data?.homeData} />
       <HomeAbout data={local_data?.aboutData} />
       <HomeProduct data={local_data?.productData} />
       <HomeJourney data={local_data?.journeyData} />
@@ -574,7 +574,7 @@ export default function Home() {
         customizeData={local_data?.customizeData}
       />
       <HomeFind data={local_data?.findData} />
-      <HomeBrand data={local_data?.brandData} /> */}
+      <HomeBrand data={local_data?.brandData} />
       <HomeEnquiry data={local_data?.enquiryData} />
     </>
   );

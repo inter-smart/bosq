@@ -8,6 +8,8 @@ const textVariants = cva("leading-normal font-light", {
         "text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px]",
       text2:
         "text-[12px] xl:text-[13px] 2xl:text-[16px] 3xl:text-[20px]",
+      text3:
+        "text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[16px]",
     },
   },
   defaultVariants: {

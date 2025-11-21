@@ -22,14 +22,14 @@ export default function HomeEnquiry({ data }) {
           </div>
 
           <div className="w-full sm:w-[calc(100%-468px)] xl:w-[calc(100%-520px)] 2xl:w-[calc(100%-640px)] 3xl:w-[calc(100%-800px)]">
-            <div className="w-full px-[30px] sm:px-[40px] xl:px-[80px] 2xl:px-[100px]">
+            <div className="w-full px-[30px] sm:px-[40px] xl:px-[60px] 2xl:px-[80px]">
               <Heading
                 as="h2"
                 size="heading1"
                 className="line-clamp-2 text-black mb-1"
               >
                 {parse(data?.title)}
-                <span className="text-[#f17423]">.</span>
+                <span className="w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 " />
               </Heading>
               <Text
                 as="div"

@@ -24,7 +24,7 @@ export default function HomeProduct({ data }) {
   } = usePrevNextButtons(emblaApi);
 
   return (
-    <section className="w-full h-auto block py-[30px] sm:py-[40px] xl:py-[60px] 2xl:py-[80px]">
+    <section className="w-full h-auto block py-[30px] sm:py-[40px_60px] xl:py-[60px_80px] 2xl:py-[80px_100px]">
       <div className="container">
         <Heading
           as="h2"
@@ -32,7 +32,7 @@ export default function HomeProduct({ data }) {
           className="line-clamp-2 text-black mb-2 xl:mb-4 2xl:mb-6"
         >
           {parse(data?.title)}
-          <span className="text-[#f17423]">.</span>
+          <span className="w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 " />
         </Heading>
         <div className="w-full max-w-full relative z-0">
           <div className="overflow-hidden" ref={emblaRef}>
@@ -43,7 +43,7 @@ export default function HomeProduct({ data }) {
                   className="flex-[0_0_25%] min-w-0 px-1 select-none"
                 >
                   <div className="w-full h-auto block">
-                    <div className="w-full aspect-440/576 overflow-hidden mb-3 xl:mb-7">
+                    <div className="w-full aspect-440/576 overflow-hidden mb-1 xl:mb-3 2xl:mb-5">
                       <Image
                         src={item?.media?.path}
                         alt={item?.media?.alt}

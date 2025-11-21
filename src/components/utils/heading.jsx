@@ -1,7 +1,7 @@
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
-const headingVariants = cva("leading-tight font-light", {
+const headingVariants = cva("leading-tight tracking-tight font-light", {
   variants: {
     size: {
       heading1:

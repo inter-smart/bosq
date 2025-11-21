@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 export default function HomeBrand({ data }) {
   const [emblaRef] = useEmblaCarousel({ loop: false, align: "center" }, [
     ClassNames(),
-    Autoplay({ delay: 3000, stopOnInteraction: true }),
+    Autoplay({ delay: 1500, stopOnInteraction: true }),
   ]);
 
   return (
@@ -23,16 +23,16 @@ export default function HomeBrand({ data }) {
           className="line-clamp-2 text-black mb-4 xl:mb-8 2xl:mb-10"
         >
           {parse(data?.title)}
-          <span className="text-[#f17423]">.</span>
+          <span className="w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 " />
         </Heading>
         <div className="w-full max-w-full xl:max-w-[1040px] 2xl:max-w-[1260px] 3xl:max-w-[1620px] mx-auto">
           <div className="overflow-visible" ref={emblaRef}>
-            <div className="flex items-center touch-pan-y touch-pinch-zoom -mx-3 xl:-mx-6">
+            <div className="flex items-center touch-pan-y touch-pinch-zoom -mx-3 xl:-mx-6 2xl:-mx-8">
               {data?.brand?.map((item, index) => (
                 <div
                   key={"brand" + index}
                   className={cn(
-                    "flex-[0_0_14.285%] min-w-0 px-3 sm:px-6 select-none transition",
+                    "flex-[0_0_14.285%] min-w-0 px-3 xl:px-6 2xl:px-8 select-none transition",
                     "not-[.is-in-view]:opacity-50 not-[.is-in-view]:scale-80"
                   )}
                 >

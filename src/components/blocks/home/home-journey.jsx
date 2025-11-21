@@ -7,7 +7,7 @@ import parse from "html-react-parser";
 
 export default function HomeJourney({ data }) {
   return (
-    <section className="w-full h-auto block py-[30px] sm:py-[100px] xl:py-[160px] 2xl:py-[220px] bg-black overflow-hidden relative z-0">
+    <section className="w-full h-auto block py-[40px] sm:py-[100px] xl:py-[160px] 2xl:py-[240px] bg-black overflow-hidden relative z-0">
       <div className="w-full h-full bg-linear-to-l from-transparent via-30% via-transparent to-[#f4f4f4] absolute -z-1 inset-0 " />
       {data?.media?.type === "video" ? (
         <>
@@ -16,7 +16,7 @@ export default function HomeJourney({ data }) {
             loop
             muted
             playsInline
-            className="w-full h-full object-cover absolute -z-2 inset-0 block sm:hidden"
+            className="w-full h-full object-cover absolute -z-2 inset-0 opacity-80 block sm:hidden"
           >
             <source src={data?.media?.mobile?.path} type="video/mp4" />
           </video>
@@ -25,7 +25,7 @@ export default function HomeJourney({ data }) {
             loop
             muted
             playsInline
-            className="w-full h-full object-cover absolute -z-2 inset-0 hidden sm:block"
+            className="w-full h-full object-cover absolute -z-2 inset-0 opacity-80 hidden sm:block"
           >
             <source src={data?.media?.desktop?.path} type="video/mp4" />
           </video>
@@ -41,7 +41,7 @@ export default function HomeJourney({ data }) {
             alt={data?.media?.desktop?.alt}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 80vw"
-            className="-z-2"
+            className="-z-2 object-cover opacity-80"
             placeholder="blur"
             blurDataURL="/images/placeholder.jpg"
           />
@@ -56,7 +56,7 @@ export default function HomeJourney({ data }) {
             className="line-clamp-2 text-black mb-2 xl:mb-4 2xl:mb-6"
           >
             {parse(data?.title)}
-            <span className="text-[#f17423]">.</span>
+            <span className="w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 " />
           </Heading>
           <Text
             as="div"

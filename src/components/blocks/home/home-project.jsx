@@ -30,10 +30,10 @@ export default function HomeProject({ data }) {
   return (
     <section className="w-full h-auto block py-[30px] sm:py-[40px] xl:py-[60px] 2xl:py-[80px]">
       <div className="container">
-        <div className="flex flex-wrap items-end justify-between mb-4 xl:mb-7 2xl:mb-8">
-          <Heading as="h1" size="heading1" className="line-clamp-2 text-black">
+        <div className="flex flex-wrap items-end justify-between mb-3 xl:mb-4 2xl:mb-6">
+          <Heading as="h2" size="heading1" className="text-black">
             {parse(data?.title)}
-            <span className="text-[#f17423]">.</span>
+            <span className="w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 " />
           </Heading>
           <div className="flex py-2 gap-1 xl:gap-3">
             {scrollSnaps.map((_, index) => (
@@ -70,11 +70,11 @@ export default function HomeProject({ data }) {
                         alt={item?.media?.alt}
                         width={308}
                         height={517}
-                        className="w-full h-full object-cover absolute z-0 inset-0 hover:scale-110 opacity-80 transition duration-300"
+                        className="w-full h-full object-cover hover:scale-110 opacity-80 transition duration-300"
                       />
                       <div
                         className={cn(
-                          "w-full absolute z-0 inset-[20px] xl:inset-[40px] opacity-0 invisible translate-x-10 transition duration-500",
+                          "w-full absolute z-0 inset-0 p-[20px] xl:p-[40px] 2xl:p-[50px] opacity-0 invisible translate-x-10 transition duration-500",
                           isActive && "opacity-100 visible translate-x-0"
                         )}
                       >

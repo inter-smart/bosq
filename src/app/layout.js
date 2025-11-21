@@ -216,6 +216,7 @@ const local_data = {
       {
         id: "01",
         name: "card",
+        link: "https://www.bosq.ae/",
         media: {
           media_type: "image",
           media_path: "/images/footer-card.png",

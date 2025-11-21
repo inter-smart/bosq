@@ -32,7 +32,7 @@
   /* Header Sizes */
   --header-y-sm: 60px;
   --header-y-lg: 60px;
-  --header-y-2xl: 70px;
+  --header-y-2xl: 80px;
   --header-y-3xl: 90px;
 
   --animate-scroll: scroll 40s forwards linear infinite;

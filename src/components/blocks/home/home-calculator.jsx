@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 export default function HomeCalculator({ calculatorData, customizeData }) {
   return (
-    <section className="w-full h-auto block py-[10px_30px] sm:py-[20px_40px] xl:py-[25px_80px] 2xl:py-[40px_100px] relative z-0">
+    <section className="w-full h-auto block py-[10px_30px] sm:py-[20px_40px] xl:py-[30px_80px] 2xl:py-[50px_100px] relative z-0">
       <Image
         src={"/images/home-calculator-dvd.png"}
         alt={"home-calculator-dvd"}
@@ -18,7 +18,7 @@ export default function HomeCalculator({ calculatorData, customizeData }) {
       />
       <div className="container">
         <div className="xl:max-w-[1040px] 2xl:max-w-[1260px] 3xl:max-w-[1620px] mx-auto">
-          <div className="flex flex-wrap [&>*]:p-[15px_20px] sm:[&>*]:p-[20px_40px] xl:[&>*]:p-[25px_60px]">
+          <div className="flex flex-wrap [&>*]:p-[15px_20px] sm:[&>*]:p-[20px_40px] xl:[&>*]:p-[25px_60px] 2xl:[&>*]:p-[30px_80px]">
             <div className="w-full sm:w-1/2">
               <CardComp data={calculatorData} />
             </div>
@@ -36,11 +36,11 @@ function CardComp({ data, variant }) {
   return (
     <div
       className={cn(
-        "w-full h-auto flex flex-wrap [&>*]:py-[10px] xl:[&>*]:py-[15px]",
+        "w-full h-auto flex flex-wrap [&>*]:py-[10px] 2xl:[&>*]:py-[15px]",
         variant === "reverse" ? "flex-col" : "flex-col-reverse"
       )}
     >
-      <div className="w-full aspect-4/3 hover:scale-105 transition duration-300">
+      <div className="w-full xl:max-w-[90%] aspect-4/3 hover:scale-105 transition duration-300">
         <Image
           src={data?.media?.media_path}
           alt={data?.media?.media_alt}
@@ -53,10 +53,10 @@ function CardComp({ data, variant }) {
         <Heading
           as="h2"
           size="heading1"
-          className="line-clamp-2 text-[#282828] mb-2 xl:mb-4 2xl:mb-6"
+          className="line-clamp-2 text-[#282828] mb-2 xl:mb-3 2xl:mb-5"
         >
           {parse(data?.title)}
-          <span className="text-[#f17423]">.</span>
+          <span className="w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 " />
         </Heading>
         <Text
           as="div"
@@ -67,7 +67,7 @@ function CardComp({ data, variant }) {
         </Text>
         <Button
           variant={"black"}
-          className="min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-40"
+          className="min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-[160px]"
           asChild
         >
           <Link href={data?.button?.link}>{data?.button?.label}</Link>

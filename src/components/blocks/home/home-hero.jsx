@@ -110,7 +110,7 @@ const buttonContainerVariants = {
 
 export default function HomeHero({ data }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false }, [
-    // Autoplay({ delay: 3000, stopOnInteraction: true }),
+    Autoplay({ delay: 6000, stopOnInteraction: true, pauseOnHover: true }),
     Fade(),
   ]);
 
@@ -125,11 +125,11 @@ export default function HomeHero({ data }) {
     <section className="w-full h-auto block bg-black relative z-0">
       <div className="w-full max-w-full">
         <div className="overflow-hidden" ref={emblaRef}>
-          <div className="flex touch-pan-y touch-pinch-zoom -mx-1">
+          <div className="flex touch-pan-y touch-pinch-zoom">
             {data?.map((item, index) => (
               <div
                 key={"gallery" + index}
-                className="flex-[0_0_100%] min-w-0 px-1 select-none relative z-0"
+                className="flex-[0_0_100%] min-w-0 select-none relative z-0"
               >
                 <div className="w-full h-full bg-linear-to-l from-transparent to-black/20 absolute -z-1 inset-0 " />
                 {item?.media?.type === "video" ? (
@@ -163,19 +163,19 @@ export default function HomeHero({ data }) {
 
                 <div className="container">
                   <div className="w-full h-[520px] sm:h-[576px] xl:h-screen min-h-[520px] sm:min-h-[468px] xl:min-h-[576px] 2xl:min-h-[768px] 3xl:min-h-[900px] flex items-center py-[calc(30px+var(--header-y))_30px] sm:py-[calc(40px+var(--header-y))_40px] xl:py-[calc(60px+var(--header-y))_60px] 2xl:py-[calc(80px+var(--header-y))_80px]">
-                    <div className="w-full">
+                    <div className="w-full xl:max-w-1/2">
                       <Heading
                         as="h1"
                         size="heading1"
-                        className="line-clamp-4 text-white mb-3 xl:mb-5 2xl:mb-10"
+                        className="line-clamp-4 leading-tight text-white mb-2 xl:mb-4 2xl:mb-6"
                       >
                         {parse(item?.title)}
-                        <span className="w-2 2xl:w-2.5 aspect-square rounded-full bg-[#f17423] inline-block" />
+                        <span className="w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 " />
                       </Heading>
                       <Text
                         as="div"
                         size="text1"
-                        className="line-clamp-2 font-light text-white max-w-[80%] mb-3 xl:mb-5 2xl:mb-10"
+                        className="line-clamp-2 font-light text-white max-w-[80%] mb-4 xl:mb-7 2xl:mb-10"
                       >
                         {parse(item?.description)}
                       </Text>
@@ -198,7 +198,7 @@ export default function HomeHero({ data }) {
         <PrevButton
           onClick={onPrevButtonClick}
           disabled={prevBtnDisabled}
-          className="absolute z-1 top-1/2 left-3 -translate-y-1/2 disabled:opacity-50"
+          className="absolute z-1 top-1/2 left-3 -translate-y-1/2 disabled:opacity-50 not-disabled:hover:scale-110"
         >
           <Image
             src="/images/icon-embla-prev.svg"
@@ -210,7 +210,7 @@ export default function HomeHero({ data }) {
         <NextButton
           onClick={onNextButtonClick}
           disabled={nextBtnDisabled}
-          className="absolute z-1 top-1/2 right-3 -translate-y-1/2 disabled:opacity-50"
+          className="absolute z-1 top-1/2 right-3 -translate-y-1/2 disabled:opacity-50 not-[:dis]: hover:scale-110"
         >
           <Image
             src="/images/icon-embla-next.svg"
