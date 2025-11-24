@@ -8,6 +8,7 @@ export function PlaceholdersAndVanishInput({
   placeholders,
   onChange,
   onSubmit,
+  locale,
 }) {
   const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
 
@@ -173,16 +174,16 @@ export function PlaceholdersAndVanishInput({
   return (
     <form
       className={cn(
-        "w-full relative max-w-xl mx-auto bg-none border-b border-white dark:bg-zinc-800 h-7 2xl:h-8 overflow-hidden transition duration-200",
+        "w-full relative max-w-full mx-auto bg-none border-b border-white dark:bg-zinc-800 h-7 2xl:h-8 overflow-hidden transition duration-200",
         value && "bg-none"
       )}
       onSubmit={handleSubmit}
     >
       <canvas
         className={cn(
-          "absolute pointer-events-none text-base transform scale-50 top-0 left-0 origin-top-left filter pr-20",
-          // "invert dark:invert-0",
-          !animating ? "opacity-0" : "opacity-100"
+          "absolute pointer-events-none text-base transform scale-50 top-0 origin-top-left filter",
+          !animating ? "opacity-0" : "opacity-100",
+          locale === "ar" ? "right-0 pl-20" : "left-0 pr-20"
         )}
         ref={canvasRef}
       />
@@ -198,14 +199,18 @@ export function PlaceholdersAndVanishInput({
         value={value}
         type="text"
         className={cn(
-          "text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[16px] leading-none font-light text-white w-full relative z-50 border-none dark:text-white bg-transparent h-full rounded-full focus:outline-none focus:ring-0 pl-0 pr-20",
-          animating && "text-transparent dark:text-transparent"
+          "text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[16px] leading-tight font-light text-white w-full relative z-50 border-none dark:text-white bg-transparent h-full focus:outline-none focus:ring-0 selection:bg-white selection:text-black ",
+          animating && "text-transparent dark:text-transparent",
+          locale === "ar" ? "pr-0 pl-20" : "pl-0 pr-20"
         )}
       />
       <button
         disabled={!value}
         type="submit"
-        className="w-3.5 absolute right-0 top-1/2 z-50 -translate-y-1/2 rounded-full transition duration-200 flex items-center justify-center"
+        className={cn(
+          "w-3.5 absolute top-1/2 z-50 -translate-y-1/2 rounded-full transition duration-200 flex items-center justify-center",
+          locale === "ar" ? "left-0 rotate-180" : "right-0 rotate-0"
+        )}
       >
         <motion.svg
           width="18"
@@ -247,7 +252,7 @@ export function PlaceholdersAndVanishInput({
                 duration: 0.3,
                 ease: "linear",
               }}
-              className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[16px] leading-none font-light text-white dark:text-zinc-500 pl-0 text-left w-[calc(100%-2rem)] truncate"
+              className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[16px] leading-none font-light text-white/50 dark:text-zinc-500 pl-0 text-start w-[calc(100%-2rem)] truncate"
             >
               {placeholders[currentPlaceholder]}
             </motion.p>

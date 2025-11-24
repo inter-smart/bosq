@@ -17,6 +17,7 @@ import {
   PrevButton,
   usePrevNextButtons,
 } from "@/components/utils/embla-carousel-arrow-button";
+import { cn } from "@/lib/utils";
 
 const slideContentVariants = {
   initial: {
@@ -108,11 +109,14 @@ const buttonContainerVariants = {
   },
 };
 
-export default function HomeHero({ data }) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false }, [
-    Autoplay({ delay: 6000, stopOnInteraction: true, pauseOnHover: true }),
-    Fade(),
-  ]);
+export default function HomeHero({ data, locale }) {
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { loop: false, direction: locale === "ar" ? "rtl" : "ltr" },
+    [
+      Autoplay({ delay: 6000, stopOnInteraction: true, pauseOnHover: true }),
+      Fade(),
+    ]
+  );
 
   const {
     prevBtnDisabled,
@@ -131,7 +135,12 @@ export default function HomeHero({ data }) {
                 key={"gallery" + index}
                 className="flex-[0_0_100%] min-w-0 select-none relative z-0"
               >
-                <div className="w-full h-full bg-linear-to-l from-transparent to-black/20 absolute -z-1 inset-0 " />
+                <div
+                  className={cn(
+                    "w-full h-full from-transparent to-black/40 absolute -z-1 inset-0 ",
+                    locale === "ar" ? "bg-linear-to-r" : "bg-linear-to-l"
+                  )}
+                />
                 {item?.media?.type === "video" ? (
                   <video
                     autoPlay
@@ -153,7 +162,7 @@ export default function HomeHero({ data }) {
                       alt={item?.media?.desktop?.alt}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 80vw"
-                      className="-z-2"
+                      className="-z-2 object-cover"
                       placeholder="blur"
                       blurDataURL="/images/placeholder.jpg"
                       priority={index === 0}
@@ -162,15 +171,22 @@ export default function HomeHero({ data }) {
                 )}
 
                 <div className="container">
-                  <div className="w-full h-[520px] sm:h-[576px] xl:h-screen min-h-[520px] sm:min-h-[468px] xl:min-h-[576px] 2xl:min-h-[768px] 3xl:min-h-[900px] flex items-center py-[calc(30px+var(--header-y))_30px] sm:py-[calc(40px+var(--header-y))_40px] xl:py-[calc(60px+var(--header-y))_60px] 2xl:py-[calc(80px+var(--header-y))_80px]">
-                    <div className="w-full xl:max-w-1/2">
+                  <div className="w-full h-[468px] sm:h-[576px] xl:h-screen min-h-[468px] sm:min-h-[468px] xl:min-h-[576px] 2xl:min-h-[768px] 3xl:min-h-[900px] flex items-center py-[calc(30px+var(--header-y))_30px] sm:py-[calc(40px+var(--header-y))_40px] xl:py-[calc(60px+var(--header-y))_60px] 2xl:py-[calc(80px+var(--header-y))_80px]">
+                    <div className="w-full xl:max-w-1/2 max-lg:px-4">
                       <Heading
                         as="h1"
                         size="heading1"
                         className="line-clamp-4 leading-tight text-white mb-2 xl:mb-4 2xl:mb-6"
                       >
                         {parse(item?.title)}
-                        <span className="w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 " />
+                        <span
+                          className={cn(
+                            "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
+                            locale === "ar"
+                              ? "-translate-x-1 xl:-translate-x-2 "
+                              : "translate-x-1 xl:translate-x-2 "
+                          )}
+                        />
                       </Heading>
                       <Text
                         as="div"

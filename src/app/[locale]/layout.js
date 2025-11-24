@@ -1,7 +1,11 @@
 import localFont from "next/font/local";
+import { Cairo } from "next/font/google";
 import "./../globals.css";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
+import { NextIntlClientProvider } from "next-intl";
+import { notFound } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 const heroNew = localFont({
   src: [
@@ -46,6 +50,14 @@ const heroNew = localFont({
       style: "italic",
     },
   ],
+});
+
+// Arabic Google Font - Cairo
+const cairo = Cairo({
+  subsets: ["arabic", "latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-cairo",
+  display: "swap",
 });
 
 export const metadata = {
@@ -271,22 +283,32 @@ const local_data = {
 
 export default async function RootLayout({ children }) {
   const locale = "en";
+
+  const dir = locale === "ar" ? "rtl" : "ltr";
+
   return (
     <html
       lang={locale}
-      dir={locale === "ar" ? "rtl" : "ltr"}
-      className={`${heroNew.className} antialiased`}
+      dir={dir}
+      className={cn(
+        locale === "ar" ? cairo.className : heroNew.className,
+        "antialiased"
+      )}
     >
-      <body>
+      <body className={locale === "ar" ? "font-cairo" : "font-hero"}>
+        {/* <NextIntlClientProvider locale={locale}> */}
         <Header
           headerData={local_data.header_data}
           navigationData={local_data.navigation_data}
+          locale={locale}
         />
         <main>{children}</main>
         <Footer
           footerData={local_data.footer_data}
           socialLinkData={local_data.social_link_data}
+          locale={locale}
         />
+        {/* </NextIntlClientProvider> */}
       </body>
     </html>
   );

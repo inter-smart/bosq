@@ -8,14 +8,18 @@ import Autoplay from "embla-carousel-autoplay";
 import ClassNames from "embla-carousel-class-names";
 import { cn } from "@/lib/utils";
 
-export default function HomeBrand({ data }) {
-  const [emblaRef] = useEmblaCarousel({ loop: false, align: "center" }, [
-    ClassNames(),
-    Autoplay({ delay: 1500, stopOnInteraction: true }),
-  ]);
+export default function HomeBrand({ data, locale }) {
+  const [emblaRef] = useEmblaCarousel(
+    {
+      loop: true,
+      align: "start",
+      direction: locale === "ar" ? "rtl" : "ltr",
+    },
+    [ClassNames(), Autoplay({ delay: 1500, stopOnInteraction: true })]
+  );
 
   return (
-    <section className="w-full h-auto block py-[30px_40px] sm:py-[40px_60px] xl:py-[60px_100px] 2xl:py-[80px_120px] overflow-hidden">
+    <section className="w-full h-auto block py-[30px] sm:py-[40px_60px] xl:py-[60px_100px] 2xl:py-[80px_120px] overflow-hidden">
       <div className="container">
         <Heading
           as="h2"
@@ -23,8 +27,24 @@ export default function HomeBrand({ data }) {
           className="line-clamp-2 text-black mb-4 xl:mb-8 2xl:mb-10"
         >
           {parse(data?.title)}
-          <span className="w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 " />
+          <span
+            className={cn(
+              "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
+              locale === "ar"
+                ? "-translate-x-1 xl:-translate-x-2 "
+                : "translate-x-1 xl:translate-x-2 "
+            )}
+          />
         </Heading>
+      </div>
+      <div
+        className={cn(
+          "container",
+          locale === "ar"
+            ? "max-sm:[mask-image:linear-gradient(to_left,white_0%,white_90%,transparent_100%)] max-sm:pl-0"
+            : "max-sm:[mask-image:linear-gradient(to_right,white_0%,white_90%,transparent_100%)] max-sm:pr-0"
+        )}
+      >
         <div className="w-full max-w-full xl:max-w-[1040px] 2xl:max-w-[1260px] 3xl:max-w-[1620px] mx-auto">
           <div className="overflow-visible" ref={emblaRef}>
             <div className="flex items-center touch-pan-y touch-pinch-zoom -mx-3 xl:-mx-6 2xl:-mx-8">
@@ -32,7 +52,7 @@ export default function HomeBrand({ data }) {
                 <div
                   key={"brand" + index}
                   className={cn(
-                    "flex-[0_0_14.285%] min-w-0 px-3 xl:px-6 2xl:px-8 select-none transition",
+                    "flex-[0_0_20%] sm:flex-[0_0_14.285%] min-w-0 px-3 xl:px-6 2xl:px-8 select-none transition",
                     "not-[.is-in-view]:opacity-50 not-[.is-in-view]:scale-80"
                   )}
                 >

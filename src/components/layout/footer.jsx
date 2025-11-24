@@ -7,12 +7,16 @@ import { Heading } from "../utils/heading";
 import { Button } from "../ui/button";
 import { Text } from "../utils/text";
 import { PlaceholdersAndVanishInput } from "../ui/placeholders-and-vanish-input";
-// import useMedia from "use-media";
+import { cn } from "@/lib/utils";
+import { ChevronDown } from "lucide-react";
+import dynamic from "next/dynamic";
+import { useState } from "react";
 
-export default function Footer({ footerData, socialLinkData }) {
-  // const isDesktop = useMedia({ minWidth: "640px" });
-  const isDesktop = true;
+const MediaQuery = dynamic(() => import("react-responsive"), {
+  ssr: false,
+});
 
+export default function Footer({ footerData, socialLinkData, locale }) {
   const placeholders = [
     "Enter Your Email",
     "Enter Your Email Address",
@@ -26,15 +30,14 @@ export default function Footer({ footerData, socialLinkData }) {
     e.preventDefault();
     console.log("submitted");
   };
-
   return (
     <footer className="w-full py-[20px_10px] xl:py-[40px_10px] 2xl:py-[60px_15px] bg-[#282828] overflow-hidden relative z-0">
       <div className="container">
         <div className="flex flex-wrap -mx-[10px] sm:-mx-[15px] xl:-mx-[20px] 2xl:-mx-[30px] [&>*]:p-[10px] sm:[&>*]:p-[15px] xl:[&>*]:p-[20px] 2xl:[&>*]:p-[30px]">
-          <div className="w-full sm:w-1/2 lg:w-[28%]">
+          <div className="w-full lg:w-[28%]">
             <Link
               href="/"
-              className="w-[90px] xl:w-[100px] 2xl:w-[140px] block mb-2 xl:mb-4 2xl:mb-6"
+              className="w-[90px] xl:w-[100px] 2xl:w-[140px] block mb-3 xl:mb-4 2xl:mb-6"
             >
               <Image
                 src={footerData?.logoWhiteUrl}
@@ -49,7 +52,7 @@ export default function Footer({ footerData, socialLinkData }) {
             <Text
               as="div"
               size="text3"
-              className="text-white mb-3 xl:mb-5 2xl:mb-7"
+              className="text-white mb-4 xl:mb-5 2xl:mb-7"
             >
               {parse(footerData?.address)}
             </Text>
@@ -65,7 +68,7 @@ export default function Footer({ footerData, socialLinkData }) {
                         width={10}
                         height={10}
                         unoptimized
-                        className="w-[13px] xl:w-[15px] 2xl:w-[17px] aspect-square block hover:scale-110 transition"
+                        className="w-[15px] lg:w-[13px] xl:w-[15px] 2xl:w-[17px] aspect-square block hover:scale-110 transition"
                       />
                     </a>
                   </Button>
@@ -74,64 +77,18 @@ export default function Footer({ footerData, socialLinkData }) {
             </div>
           </div>
 
-          <div className="w-1/2 sm:sm:w-1/3 lg:w-[18%]">
-            <div>
-              <Heading
-                as="h6"
-                size="none"
-                className="text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-normal text-white mb-4 xl:mb-7 2xl:mb-10"
-              >
-                Shop
-              </Heading>
-              {footerData?.shop_navigation?.map((item, index) => (
-                <div key={"shop_navigation" + index}>
-                  <Text
-                    as="div"
-                    size="text3"
-                    className="text-white transition [&>a]:hover:text-[#f17423] mb-1 xl:mb-3"
-                  >
-                    <Link href={item?.link || "#"}>{item?.label}</Link>
-                  </Text>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="w-1/2 sm:sm:w-1/3 lg:w-[18%]">
-            <div>
-              <Heading
-                as="h6"
-                size="none"
-                className="text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-normal text-white mb-4 xl:mb-7 2xl:mb-10"
-              >
-                Quick links
-              </Heading>
-              {footerData?.quick_link_navigation?.map((item, index) => (
-                <div key={"quick_link_navigation" + index}>
-                  <Text
-                    as="div"
-                    size="text3"
-                    className="text-white transition [&>a]:hover:text-[#f17423] mb-1 xl:mb-3"
-                  >
-                    <Link href={item?.link || "#"}>{item?.label}</Link>
-                  </Text>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="w-1/2 sm:sm:w-1/3 lg:w-[36%]">
-            <div>
-              <Heading
-                as="h6"
-                size="none"
-                className="text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-normal text-white mb-4 xl:mb-7 2xl:mb-10"
-              >
-                Other links
-              </Heading>
-              <div className="flex flex-wrap">
-                {footerData?.other_link_navigation?.map((item, index) => (
-                  <div key={"other_link_navigation" + index} className="w-1/2">
+          <div className="w-full lg:w-[18%]">
+            <MediaQuery minWidth={1024}>
+              <div>
+                <Heading
+                  as="h6"
+                  size="none"
+                  className="text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-normal text-white mb-4 xl:mb-7 2xl:mb-10"
+                >
+                  Shop
+                </Heading>
+                {footerData?.shop_navigation?.map((item, index) => (
+                  <div key={"shop_navigation" + index}>
                     <Text
                       as="div"
                       size="text3"
@@ -142,14 +99,119 @@ export default function Footer({ footerData, socialLinkData }) {
                   </div>
                 ))}
               </div>
-            </div>
+            </MediaQuery>
+            <MediaQuery maxWidth={1023}>
+              <AccordionItem title="Shop" section="shop">
+                {footerData?.shop_navigation?.map((item, index) => (
+                  <div key={"shop_navigation" + index}>
+                    <Text
+                      as="div"
+                      size="text3"
+                      className="text-white transition [&>a]:hover:text-[#f17423] mb-2"
+                    >
+                      <Link href={item?.link || "#"}>{item?.label}</Link>
+                    </Text>
+                  </div>
+                ))}
+              </AccordionItem>
+            </MediaQuery>
+          </div>
+
+          <div className="w-full lg:w-[18%]">
+            <MediaQuery minWidth={1024}>
+              <div>
+                <Heading
+                  as="h6"
+                  size="none"
+                  className="text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-normal text-white mb-4 xl:mb-7 2xl:mb-10"
+                >
+                  Quick links
+                </Heading>
+                {footerData?.quick_link_navigation?.map((item, index) => (
+                  <div key={"quick_link_navigation" + index}>
+                    <Text
+                      as="div"
+                      size="text3"
+                      className="text-white transition [&>a]:hover:text-[#f17423] mb-1 xl:mb-3"
+                    >
+                      <Link href={item?.link || "#"}>{item?.label}</Link>
+                    </Text>
+                  </div>
+                ))}
+              </div>
+            </MediaQuery>
+            <MediaQuery maxWidth={1023}>
+              <AccordionItem title="Quick links" section="quick">
+                {footerData?.quick_link_navigation?.map((item, index) => (
+                  <div key={"quick_link_navigation" + index}>
+                    <Text
+                      as="div"
+                      size="text3"
+                      className="text-white transition [&>a]:hover:text-[#f17423] mb-2"
+                    >
+                      <Link href={item?.link || "#"}>{item?.label}</Link>
+                    </Text>
+                  </div>
+                ))}
+              </AccordionItem>
+            </MediaQuery>
+          </div>
+
+          <div className="w-full lg:w-[36%]">
+            <MediaQuery minWidth={1024}>
+              <div>
+                <Heading
+                  as="h6"
+                  size="none"
+                  className="text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-normal text-white mb-4 xl:mb-7 2xl:mb-10"
+                >
+                  Other links
+                </Heading>
+                <div className="flex flex-wrap">
+                  {footerData?.other_link_navigation?.map((item, index) => (
+                    <div
+                      key={"other_link_navigation" + index}
+                      className="w-full lg:w-1/2"
+                    >
+                      <Text
+                        as="div"
+                        size="text3"
+                        className="text-white transition [&>a]:hover:text-[#f17423] mb-1 xl:mb-3"
+                      >
+                        <Link href={item?.link || "#"}>{item?.label}</Link>
+                      </Text>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </MediaQuery>
+            <MediaQuery maxWidth={1023}>
+              <AccordionItem title="Other links" section="other">
+                <div className="flex flex-wrap">
+                  {footerData?.other_link_navigation?.map((item, index) => (
+                    <div
+                      key={"other_link_navigation" + index}
+                      className="w-full"
+                    >
+                      <Text
+                        as="div"
+                        size="text3"
+                        className="text-white transition [&>a]:hover:text-[#f17423] mb-2"
+                      >
+                        <Link href={item?.link || "#"}>{item?.label}</Link>
+                      </Text>
+                    </div>
+                  ))}
+                </div>
+              </AccordionItem>
+            </MediaQuery>
           </div>
         </div>
 
         <hr className="border-[#333] my-1 xl:my-2 2xl:my-4" />
 
         <div className="flex flex-wrap items-center -mx-[10px] [&>*]:p-[10px] ">
-          <div className="w-full sm:w-1/2 lg:w-[36%]">
+          <div className="w-full lg:w-[36%]">
             {footerData?.sale_enquiry && (
               <Text
                 as="div"
@@ -221,33 +283,38 @@ export default function Footer({ footerData, socialLinkData }) {
             )}
           </div>
 
-          <div className="w-full sm:w-1/2 lg:w-[44%]">
+          <div className="w-full lg:w-[44%]">
             <div className="flex flex-wrap">
               <Text
                 as="div"
                 size="text3"
-                className="text-white w-[40%] pr-[15px] xl:pr-[30px]"
+                className="text-white w-full sm:w-[40%] pr-[15px] xl:pr-[30px] max-sm:mb-4"
               >
                 {parse(footerData?.subscription_title)}
               </Text>
-              <div className="w-[60%]">
+              <div className="w-full sm:w-[60%]">
                 <PlaceholdersAndVanishInput
                   placeholders={placeholders}
                   onChange={handleChange}
                   onSubmit={onSubmit}
+                  locale={locale}
                 />
               </div>
             </div>
           </div>
-          <div className="w-full sm:w-1/2 lg:w-[20%] flex flex-wrap">
+
+          <div className="w-full lg:w-[20%] flex flex-wrap">
             {footerData?.card?.map((item, index) => (
-              <div key={"card" + index} className="ml-auto">
+              <div
+                key={"card" + index}
+                className={cn(locale === "ar" ? "mr-auto" : "ml-auto")}
+              >
                 <Image
                   src={item?.media?.media_path}
                   alt={item?.media?.media_alt}
                   width={120}
                   height={16}
-                  className="w-[100px] xl:w-[120px] 2xl:w-[150px] block"
+                  className="w-[160px] lg:w-[100px] xl:w-[120px] 2xl:w-[150px] block"
                 />
               </div>
             ))}
@@ -256,7 +323,7 @@ export default function Footer({ footerData, socialLinkData }) {
 
         <hr className="border-[#333] my-1 xl:my-2 2xl:my-4" />
 
-        <div className="flex flex-wrap justify-between -mx-[10px] [&>*]:p-[10px]">
+        <div className="flex flex-wrap justify-center sm:justify-between -mx-[5px] lg:-mx-[10px] [&>*]:p-[5px] lg:[&>*]:p-[10px]">
           <Text as="div" size="text3" className="text-white">
             {parse(footerData?.copyright)}
           </Text>
@@ -280,5 +347,46 @@ export default function Footer({ footerData, socialLinkData }) {
         </div>
       </div>
     </footer>
+  );
+}
+
+// Accordion Item Component
+function AccordionItem({ title, children, section }) {
+  const [openAccordion, setOpenAccordion] = useState(null);
+  const toggleAccordion = (section) => {
+    setOpenAccordion(openAccordion === section ? null : section);
+  };
+
+  const isOpen = openAccordion === section;
+
+  return (
+    <div className="border-t border-[#333]">
+      <button
+        onClick={() => toggleAccordion(section)}
+        className="w-full flex items-center justify-between pt-4 text-start"
+      >
+        <Heading
+          as="h6"
+          size="none"
+          className="text-[14px] leading-none font-normal text-white"
+        >
+          {title}
+        </Heading>
+        <ChevronDown
+          className={cn(
+            "w-4 h-4 text-white transition-transform duration-200",
+            isOpen && "rotate-180"
+          )}
+        />
+      </button>
+      <div
+        className={cn(
+          "overflow-hidden transition-all duration-300",
+          isOpen ? "max-h-[500px] mt-5" : "max-h-0"
+        )}
+      >
+        {children}
+      </div>
+    </div>
   );
 }

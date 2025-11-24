@@ -562,20 +562,21 @@ const local_data = {
 };
 
 export default function Home() {
+  const locale = "en";
   return (
     <>
-      <HomeHero data={local_data?.homeData} />
-      <HomeAbout data={local_data?.aboutData} />
-      <HomeProduct data={local_data?.productData} />
-      <HomeJourney data={local_data?.journeyData} />
-      <HomeProject data={local_data?.projectData} />
-      <HomeCalculator
+      <HomeHero locale={locale} data={local_data?.homeData} />
+      <HomeAbout locale={locale} data={local_data?.aboutData} />
+      <HomeProduct locale={locale} data={local_data?.productData} />
+      <HomeJourney locale={locale} data={local_data?.journeyData} />
+      <HomeProject locale={locale} data={local_data?.projectData} />
+      <HomeCalculator locale={locale}
         calculatorData={local_data?.calculatorData}
         customizeData={local_data?.customizeData}
       />
-      <HomeFind data={local_data?.findData} />
-      <HomeBrand data={local_data?.brandData} />
-      <HomeEnquiry data={local_data?.enquiryData} />
+      <HomeFind locale={locale} data={local_data?.findData} />
+      <HomeBrand locale={locale} data={local_data?.brandData} />
+      <HomeEnquiry locale={locale} data={local_data?.enquiryData} />
     </>
   );
 }
