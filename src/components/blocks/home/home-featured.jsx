@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function HomeProduct({ data, locale }) {
+export default function HomeFeatured({ data, locale }) {
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { loop: false, align: "start", direction: locale === "ar" ? "rtl" : "ltr" },
     [Autoplay({ delay: 3000, stopOnInteraction: true })]
@@ -61,7 +61,7 @@ export default function HomeProduct({ data, locale }) {
                   key={"product" + index}
                   className="flex-[0_0_176px] sm:flex-[0_0_25%] min-w-0 px-1 select-none"
                 >
-                  <Suspense fallback={<ProductCard />}>
+                  <Suspense fallback={<FeaturedCard />}>
                     <div className="w-full h-auto block">
                       <div className="w-full aspect-440/576 overflow-hidden mb-1 xl:mb-3 2xl:mb-5">
                         <Image
@@ -117,7 +117,7 @@ export default function HomeProduct({ data, locale }) {
   );
 }
 
-function ProductCard() {
+function FeaturedCard() {
   return (
     <div className="w-full h-auto block">
       <Skeleton className="w-full aspect-440/576 overflow-hidden mb-1 xl:mb-3 2xl:mb-5" />

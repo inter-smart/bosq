@@ -1,0 +1,49 @@
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import parse from "html-react-parser";
+import { cn } from "@/lib/utils";
+import { Heading } from "@/components/utils/heading";
+
+export default function ProductHero({ data, locale }) {
+  return (
+    <section className="w-full pt-(--header-y) py-[10px]">
+      <div className="container">
+        <Breadcrumb className="mb-4">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/">Home</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator>/</BreadcrumbSeparator>
+            {/* <BreadcrumbItem>
+              <BreadcrumbLink href="/components">Components</BreadcrumbLink>
+            </BreadcrumbItem> */}
+            <BreadcrumbItem>
+              <BreadcrumbPage>Office Chairs</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        <Heading
+          as="h2"
+          size="heading1"
+          className="line-clamp-2 text-black mb-2 xl:mb-4 2xl:mb-6"
+        >
+          {parse(data?.title)}
+          <span
+            className={cn(
+              "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
+              locale === "ar"
+                ? "-translate-x-1 xl:-translate-x-2 "
+                : "translate-x-1 xl:translate-x-2 "
+            )}
+          />
+        </Heading>
+      </div>
+    </section>
+  );
+}

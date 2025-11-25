@@ -70,7 +70,7 @@ const local_data = {
     id: "uuid PRIMARY KEY",
     name: "Bosq Ergonomics",
     slug: "/",
-    logoUrl: "images/brand-logo.svg",
+    logoUrl: "images/brand-logo-primary.svg",
     logoWhiteUrl: "images/brand-logo.svg",
     description: "text",
     websiteUrl: "https://bosq.ae/",
@@ -121,7 +121,7 @@ const local_data = {
     id: "uuid PRIMARY KEY",
     name: "Bosq Ergonomics",
     slug: "/",
-    logoUrl: "images/brand-logo.svg",
+    logoUrl: "images/brand-logo-primary.svg",
     logoWhiteUrl: "images/brand-logo.svg",
     address:
       "<p>AYN MUSK FOR FURNITURE CO.L.L.C<br /> Office No 133, KML Business Tower,Meydan Road,<br /> Al Qouz, Dubai P.O Box: 294568</p>",
