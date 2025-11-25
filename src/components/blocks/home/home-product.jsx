@@ -10,6 +10,8 @@ import useEmblaCarousel from "embla-carousel-react";
 // } from "@/components/utils/embla-carousel-arrow-button";
 import Autoplay from "embla-carousel-autoplay";
 import { cn } from "@/lib/utils";
+import { Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function HomeProduct({ data, locale }) {
   const [emblaRef, emblaApi] = useEmblaCarousel(
@@ -47,8 +49,8 @@ export default function HomeProduct({ data, locale }) {
         className={cn(
           "container",
           locale === "ar"
-            ? "max-sm:[mask-image:linear-gradient(to_left,white_0%,white_98%,transparent_100%)] max-sm:pl-0"
-            : "max-sm:[mask-image:linear-gradient(to_right,white_0%,white_98%,transparent_100%)] max-sm:pr-0"
+            ? "max-sm:mask-[linear-gradient(to_left,white_0%,white_98%,transparent_100%)] max-sm:pl-0"
+            : "max-sm:mask-[linear-gradient(to_right,white_0%,white_98%,transparent_100%)] max-sm:pr-0"
         )}
       >
         <div className="w-full max-w-full relative z-0 ">
@@ -59,26 +61,28 @@ export default function HomeProduct({ data, locale }) {
                   key={"product" + index}
                   className="flex-[0_0_176px] sm:flex-[0_0_25%] min-w-0 px-1 select-none"
                 >
-                  <div className="w-full h-auto block">
-                    <div className="w-full aspect-440/576 overflow-hidden mb-1 xl:mb-3 2xl:mb-5">
-                      <Image
-                        src={item?.media?.path}
-                        alt={item?.media?.alt}
-                        width={308}
-                        height={517}
-                        className="w-full h-full object-cover hover:scale-110 transition duration-300"
-                      />
+                  <Suspense fallback={<ProductCard />}>
+                    <div className="w-full h-auto block">
+                      <div className="w-full aspect-440/576 overflow-hidden mb-1 xl:mb-3 2xl:mb-5">
+                        <Image
+                          src={item?.media?.path}
+                          alt={item?.media?.alt}
+                          width={308}
+                          height={517}
+                          className="w-full h-full object-cover hover:scale-110 transition duration-300"
+                        />
+                      </div>
+                      <div className="w-full">
+                        <Heading
+                          as="div"
+                          size="heading3"
+                          className="font-normal capitalize text-[#282828]"
+                        >
+                          {parse(item?.name)}
+                        </Heading>
+                      </div>
                     </div>
-                    <div className="w-full">
-                      <Heading
-                        as="div"
-                        size="heading3"
-                        className="font-normal capitalize text-[#282828]"
-                      >
-                        {parse(item?.name)}
-                      </Heading>
-                    </div>
-                  </div>
+                  </Suspense>
                 </div>
               ))}
             </div>
@@ -110,5 +114,14 @@ export default function HomeProduct({ data, locale }) {
         </div>
       </div>
     </section>
+  );
+}
+
+function ProductCard() {
+  return (
+    <div className="w-full h-auto block">
+      <Skeleton className="w-full aspect-440/576 overflow-hidden mb-1 xl:mb-3 2xl:mb-5" />
+      <Skeleton className="h-4 w-[250px]" />
+    </div>
   );
 }

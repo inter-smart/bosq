@@ -41,8 +41,8 @@ export default function HomeBrand({ data, locale }) {
         className={cn(
           "container",
           locale === "ar"
-            ? "max-sm:[mask-image:linear-gradient(to_left,white_0%,white_90%,transparent_100%)] max-sm:pl-0"
-            : "max-sm:[mask-image:linear-gradient(to_right,white_0%,white_90%,transparent_100%)] max-sm:pr-0"
+            ? "max-sm:mask-[linear-gradient(to_left,white_0%,white_90%,transparent_100%)] max-sm:pl-0"
+            : "max-sm:mask-[linear-gradient(to_right,white_0%,white_90%,transparent_100%)] max-sm:pr-0"
         )}
       >
         <div className="w-full max-w-full xl:max-w-[1040px] 2xl:max-w-[1260px] 3xl:max-w-[1620px] mx-auto">

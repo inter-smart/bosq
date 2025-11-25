@@ -8,8 +8,9 @@ import parse from "html-react-parser";
 
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { cn } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function HomeFind({ data, locale }) {
   const [emblaRef] = useEmblaCarousel(
@@ -60,7 +61,9 @@ export default function HomeFind({ data, locale }) {
             <div
               className={cn(
                 "w-full sm:w-[calc(100%-220px)] xl:w-[calc(100%-280px)] 2xl:w-[calc(100%-420px)] 3xl:w-[calc(100%-468px)] ",
-                locale === "ar" ? "max-sm:[mask-image:linear-gradient(to_left,white_0%,white_98%,transparent_100%)] max-sm:pr-4" : "max-sm:[mask-image:linear-gradient(to_right,white_0%,white_98%,transparent_100%)] max-sm:pl-4"
+                locale === "ar"
+                  ? "max-sm:[mask-image:linear-gradient(to_left,white_0%,white_98%,transparent_100%)] max-sm:pr-4"
+                  : "max-sm:[mask-image:linear-gradient(to_right,white_0%,white_98%,transparent_100%)] max-sm:pl-4"
               )}
             >
               <div className="w-full max-w-full">
@@ -74,62 +77,64 @@ export default function HomeFind({ data, locale }) {
                             "flex-[0_0_220px] sm:flex-[0_0_50%] lg:flex-[0_0_33.33%] min-w-0 p-0.5 sm:p-1 xl:p-3 select-none transition-all duration-600 sm:nth-[even]:[&>div]:flex-col-reverse max-sm:[&>div]:flex-col-reverse"
                           )}
                         >
-                          <div
-                            className={cn(
-                              "w-full h-auto flex flex-col justify-between gap-y-1.5 xl:gap-y-3 bg-none p-2 sm:p-2 xl:p-3 2xl:p-4 transition-all duration-600 max-sm:bg-white",
-                              activeIndex === index &&
-                                "bg-white shadow-[0px_0px_15px_0_rgba(0,0,0,0.1)]"
-                            )}
-                            onMouseEnter={() => setActiveIndex(index)}
-                          >
-                            <div className="w-full py-1.5 xl:py-3.5">
-                              <Heading
-                                as="div"
-                                size="heading2"
-                                className="font-light capitalize text-[#282828] mb-2 xl:mb-3"
-                              >
-                                {parse(item?.title)}
-                                <span
+                          <Suspense fallback={<FindCard />}>
+                            <div
+                              className={cn(
+                                "w-full h-auto flex flex-col justify-between gap-y-1.5 xl:gap-y-3 bg-none p-2 sm:p-2 xl:p-3 2xl:p-4 transition-all duration-600 max-sm:bg-white",
+                                activeIndex === index &&
+                                  "bg-white shadow-[0px_0px_15px_0_rgba(0,0,0,0.1)]"
+                              )}
+                              onMouseEnter={() => setActiveIndex(index)}
+                            >
+                              <div className="w-full py-1.5 xl:py-3.5">
+                                <Heading
+                                  as="div"
+                                  size="heading2"
+                                  className="font-light capitalize text-[#282828] mb-2 xl:mb-3"
+                                >
+                                  {parse(item?.title)}
+                                  <span
+                                    className={cn(
+                                      "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
+                                      locale === "ar"
+                                        ? "-translate-x-1 xl:-translate-x-2 "
+                                        : "translate-x-1 xl:translate-x-2 "
+                                    )}
+                                  />
+                                </Heading>
+                                <Text
+                                  as="div"
+                                  size="text1"
+                                  className="line-clamp-6 leading-normal font-light text-black mb-3 xl:mb-5 2xl:mb-6"
+                                >
+                                  {parse(item?.description)}
+                                </Text>
+                                <Button
+                                  variant={
+                                    activeIndex === index ? "black" : "white"
+                                  }
                                   className={cn(
-                                    "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
-                                    locale === "ar"
-                                      ? "-translate-x-1 xl:-translate-x-2 "
-                                      : "translate-x-1 xl:translate-x-2 "
+                                    " min-w-[90px] sm:min-w-[100px] xl:min-w-[110px] 2xl:min-w-36 transition duration-400",
+                                    activeIndex !== index && "bg-white"
                                   )}
+                                  asChild
+                                >
+                                  <Link href={item?.button?.link}>
+                                    {item?.button?.label}
+                                  </Link>
+                                </Button>
+                              </div>
+                              <div className="w-full aspect-[3/4] xl:aspect-[22/30] overflow-hidden">
+                                <Image
+                                  src={item?.media?.path}
+                                  alt={item?.media?.alt}
+                                  width={350}
+                                  height={440}
+                                  className="w-full h-full object-cover hover:scale-110 transition duration-300"
                                 />
-                              </Heading>
-                              <Text
-                                as="div"
-                                size="text1"
-                                className="line-clamp-6 leading-normal font-light text-black mb-3 xl:mb-5 2xl:mb-6"
-                              >
-                                {parse(item?.description)}
-                              </Text>
-                              <Button
-                                variant={
-                                  activeIndex === index ? "black" : "white"
-                                }
-                                className={cn(
-                                  " min-w-[90px] sm:min-w-[100px] xl:min-w-[110px] 2xl:min-w-36 transition duration-400",
-                                  activeIndex !== index && "bg-white"
-                                )}
-                                asChild
-                              >
-                                <Link href={item?.button?.link}>
-                                  {item?.button?.label}
-                                </Link>
-                              </Button>
+                              </div>
                             </div>
-                            <div className="w-full aspect-[3/4] xl:aspect-[22/30] overflow-hidden">
-                              <Image
-                                src={item?.media?.path}
-                                alt={item?.media?.alt}
-                                width={350}
-                                height={440}
-                                className="w-full h-full object-cover hover:scale-110 transition duration-300"
-                              />
-                            </div>
-                          </div>
+                          </Suspense>
                         </div>
                       );
                     })}
@@ -141,5 +146,22 @@ export default function HomeFind({ data, locale }) {
         </div>
       </div>
     </section>
+  );
+}
+
+function FindCard() {
+  return (
+    <div
+      className={cn(
+        "w-full h-auto flex flex-col justify-between gap-y-1.5 xl:gap-y-3 bg-none p-2 sm:p-2 xl:p-3 2xl:p-4"
+      )}
+    >
+      <div className="w-full py-1.5 xl:py-3.5">
+        <Skeleton className="h-4 w-[250px] bg-white mb-1" />
+        <Skeleton className="h-4 w-[250px] bg-white mb-1" />
+        <Skeleton className="h-10 max-w-[90px] sm:max-w-[100px] xl:max-w-[110px] 2xl:max-w-36  bg-white mb-1" />
+      </div>
+      <Skeleton className="w-full aspect-[3/4] xl:aspect-[22/30] overflow-hidden bg-white" />
+    </div>
   );
 }

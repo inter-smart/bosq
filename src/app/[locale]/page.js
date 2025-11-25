@@ -1,12 +1,23 @@
-import HomeHero from "@/components/blocks/home/home-hero";
-import HomeAbout from "@/components/blocks/home/home-about";
-import HomeProduct from "@/components/blocks/home/home-product";
-import HomeJourney from "@/components/blocks/home/home-journey";
-import HomeProject from "@/components/blocks/home/home-project";
-import HomeCalculator from "@/components/blocks/home/home-calculator";
-import HomeFind from "@/components/blocks/home/home-find";
-import HomeBrand from "@/components/blocks/home/home-brand";
-import HomeEnquiry from "@/components/blocks/home/home-enquiry";
+// import HomeHero from "@/components/blocks/home/home-hero";
+// import HomeAbout from "@/components/blocks/home/home-about";
+// import HomeProduct from "@/components/blocks/home/home-product";
+// import HomeJourney from "@/components/blocks/home/home-journey";
+// import HomeProject from "@/components/blocks/home/home-project";
+// import HomeCalculator from "@/components/blocks/home/home-calculator";
+// import HomeFind from "@/components/blocks/home/home-find";
+// import HomeBrand from "@/components/blocks/home/home-brand";
+// import HomeEnquiry from "@/components/blocks/home/home-enquiry";
+import dynamic from "next/dynamic";
+import HomeHero from "@/components/blocks/home/home-hero"; // keep SSR for SEO
+
+const HomeAbout = dynamic(() => import("@/components/blocks/home/home-about"));
+const HomeProduct = dynamic(() => import("@/components/blocks/home/home-product"));
+const HomeJourney = dynamic(() => import("@/components/blocks/home/home-journey"));
+const HomeProject = dynamic(() => import("@/components/blocks/home/home-project"));
+const HomeCalculator = dynamic(() => import("@/components/blocks/home/home-calculator"));
+const HomeFind = dynamic(() => import("@/components/blocks/home/home-find"));
+const HomeBrand = dynamic(() => import("@/components/blocks/home/home-brand"));
+const HomeEnquiry = dynamic(() => import("@/components/blocks/home/home-enquiry"));
 
 const local_data = {
   homeData: [
