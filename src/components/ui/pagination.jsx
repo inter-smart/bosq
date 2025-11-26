@@ -46,6 +46,7 @@ function PaginationLink({ className, isActive, size = "icon", ...props }) {
           size,
         }),
         "text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-none font-medium text-black",
+        "data-[active=true]:bg-[#f17423]/10",
         className
       )}
       {...props}

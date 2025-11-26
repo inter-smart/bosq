@@ -144,7 +144,7 @@ export default function Header({ headerData, navigationData, locale }) {
                   </div>
                   <SheetClose
                     className={cn(
-                      "w-14 h-(--header-y) bg-[#121212] absolute z-1 top-0 !rounded-none flex items-center justify-center",
+                      "w-14 h-(--header-y) bg-[#121212] absolute z-1 top-0 rounded-none! flex items-center justify-center",
                       locale === "ar" ? "left-0" : "right-0"
                     )}
                     asChild

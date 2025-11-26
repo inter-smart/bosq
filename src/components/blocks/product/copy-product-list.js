@@ -295,271 +295,276 @@ export default function ProductList({ data, locale }) {
 
   return (
     <section className="w-full block py-[15px_30px] xl:py-[30px_60px] 2xl:py-[40px_100px]">
-      <div className="container max-sm:bg-white max-sm:py-2 max-sm:px-4 max-sm:shadow-sm max-sm:sticky top-0 left-0 right-0 z-1 max-sm:mb-2">
+      <div className="container">
         {/* Filters and Sort Section */}
-        <div className="flex flex-row justify-between items-center gap-4 sm:mb-4 2xl:mb-6 ">
-          <div className="flex flex-wrap items-center gap-2 xl:gap-3 2xl:gap-4 ">
-            {/* Filter Button */}
+        <MediaQuery minWidth={640}>
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4 2xl:mb-6">
+            <div className="flex flex-wrap items-center gap-2 xl:gap-3 2xl:gap-4">
+              {/* Filter Button */}
 
-            <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-              <SheetTrigger asChild>
-                <button className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-none font-medium text-[#282828] flex items-center gap-x-2">
-                  <Image
-                    src="/images/icon-filter.svg"
-                    alt="Filter"
-                    width={20}
-                    height={20}
-                    className="w-[10px] xl:w-[15px] block"
-                  />
-                  <span>Filters</span>
-                  {activeFilterCount > 0 && (
-                    <span className="text-[8px] sm:text-[10px] leading-normal bg-black text-white px-2 py-0.5 rounded-full">
-                      {activeFilterCount}
-                    </span>
-                  )}
-                </button>
-              </SheetTrigger>
-              <SheetContent side="left">
-                <SheetHeader className="min-h-(--header-y) border-b border-[#eee] px-4 sm:px-7 justify-center">
-                  <SheetTitle>Filters</SheetTitle>
-                  <SheetDescription className="sr-only">
-                    Select your preferences
-                  </SheetDescription>
-                </SheetHeader>
+              <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+                <SheetTrigger asChild>
+                  <button className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-none font-medium text-[#282828] flex items-center gap-x-2">
+                    <Image
+                      src="/images/icon-filter.svg"
+                      alt="Filter"
+                      width={20}
+                      height={20}
+                      className="w-[10px] xl:w-[15px] block"
+                    />
+                    <span>Filters</span>
+                    {activeFilterCount > 0 && (
+                      <span className="bg-black text-white text-xs px-2 py-0.5 rounded-full">
+                        {activeFilterCount}
+                      </span>
+                    )}
+                  </button>
+                </SheetTrigger>
+                <SheetContent side="left">
+                  <SheetHeader className="min-h-(--header-y) border-b border-[#eee] px-7 justify-center">
+                    <SheetTitle>Filters</SheetTitle>
+                    <SheetDescription className="sr-only">
+                      Select your preferences
+                    </SheetDescription>
+                  </SheetHeader>
 
-                <div className="w-full sm:max-w-md min-h-[calc(100vh-240px)] overflow-y-scroll px-2 sm:px-5">
-                  <Accordion
-                    type="single"
-                    collapsible
-                    className="w-full"
-                    defaultValue="item-1"
+                  <div className="w-full sm:max-w-md min-h-[calc(100vh-240px)] overflow-y-scroll px-5">
+                    <Accordion
+                      type="single"
+                      collapsible
+                      className="w-full"
+                      defaultValue="item-1"
+                    >
+                      {/* Categories */}
+                      <AccordionItem value="item-1" className="py-3">
+                        <AccordionTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-5 [&>svg]:h-5 [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-1 ">
+                          Categories
+                        </AccordionTrigger>
+                        <AccordionContent className="p-2">
+                          <div className="flex flex-col gap-4">
+                            {FILTER_OPTIONS.categories.map((cat) => (
+                              <div
+                                key={cat}
+                                className="flex items-center gap-2"
+                              >
+                                <Checkbox
+                                  id={`cat-${cat}`}
+                                  checked={tempFilters.categories.includes(cat)}
+                                  onCheckedChange={() =>
+                                    toggleTempFilter("categories", cat)
+                                  }
+                                  className="rounded-none"
+                                />
+                                <Label
+                                  htmlFor={`cat-${cat}`}
+                                  className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
+                                >
+                                  {cat}
+                                </Label>
+                              </div>
+                            ))}
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      {/* Sub Categories */}
+                      <AccordionItem value="item-2" className="py-3">
+                        <AccordionTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-5 [&>svg]:h-5 [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-1 ">
+                          Sub Categories
+                        </AccordionTrigger>
+                        <AccordionContent className="p-2">
+                          <div className="flex flex-col gap-4">
+                            {FILTER_OPTIONS.subCategories.map((subCat) => (
+                              <div
+                                key={subCat}
+                                className="flex items-center gap-2"
+                              >
+                                <Checkbox
+                                  id={`subcat-${subCat}`}
+                                  checked={tempFilters.subCategories.includes(
+                                    subCat
+                                  )}
+                                  onCheckedChange={() =>
+                                    toggleTempFilter("subCategories", subCat)
+                                  }
+                                  className="rounded-none"
+                                />
+                                <Label
+                                  htmlFor={`subcat-${subCat}`}
+                                  className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
+                                >
+                                  {subCat}
+                                </Label>
+                              </div>
+                            ))}
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      {/* Sectors */}
+                      <AccordionItem value="item-3" className="py-3">
+                        <AccordionTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-5 [&>svg]:h-5 [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-1 ">
+                          Sectors
+                        </AccordionTrigger>
+                        <AccordionContent className="p-2">
+                          <div className="flex flex-col gap-4">
+                            {FILTER_OPTIONS.sectors.map((sector) => (
+                              <div
+                                key={sector}
+                                className="flex items-center gap-2"
+                              >
+                                <Checkbox
+                                  id={`sector-${sector}`}
+                                  checked={tempFilters.sectors.includes(sector)}
+                                  onCheckedChange={() =>
+                                    toggleTempFilter("sectors", sector)
+                                  }
+                                  className="rounded-none"
+                                />
+                                <Label
+                                  htmlFor={`sector-${sector}`}
+                                  className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
+                                >
+                                  {sector}
+                                </Label>
+                              </div>
+                            ))}
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      {/* Price Range */}
+                      <AccordionItem value="item-4" className="py-3">
+                        <AccordionTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-5 [&>svg]:h-5 [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-1 ">
+                          Price Range
+                        </AccordionTrigger>
+                        <AccordionContent className="p-2">
+                          <div className="flex flex-col gap-4">
+                            {FILTER_OPTIONS.priceRanges.map((range) => (
+                              <div
+                                key={range.label}
+                                className="flex items-center gap-2"
+                              >
+                                <Checkbox
+                                  id={`price-${range.label}`}
+                                  checked={tempFilters.priceRanges.includes(
+                                    range.label
+                                  )}
+                                  onCheckedChange={() =>
+                                    toggleTempFilter("priceRanges", range.label)
+                                  }
+                                  className="rounded-none"
+                                />
+                                <Label
+                                  htmlFor={`price-${range.label}`}
+                                  className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
+                                >
+                                  {range.label}
+                                </Label>
+                              </div>
+                            ))}
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      {/* Color Option */}
+                      <AccordionItem value="item-5" className="py-3">
+                        <AccordionTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-5 [&>svg]:h-5 [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-1 ">
+                          Color
+                        </AccordionTrigger>
+                        <AccordionContent className="p-2">
+                          <div className="flex flex-col gap-4">
+                            {FILTER_OPTIONS.colors.map((color) => (
+                              <div
+                                key={color}
+                                className="flex items-center gap-2"
+                              >
+                                <Checkbox
+                                  id={`color-${color}`}
+                                  checked={tempFilters.colors.includes(color)}
+                                  onCheckedChange={() =>
+                                    toggleTempFilter("colors", color)
+                                  }
+                                  className="rounded-none"
+                                />
+                                <Label
+                                  htmlFor={`color-${color}`}
+                                  className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
+                                >
+                                  {color}
+                                </Label>
+                              </div>
+                            ))}
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      {/* Pattern */}
+                      <AccordionItem value="item-6" className="py-3">
+                        <AccordionTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-5 [&>svg]:h-5 [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-1 ">
+                          Pattern
+                        </AccordionTrigger>
+                        <AccordionContent className="p-2">
+                          <div className="flex flex-col gap-4">
+                            {FILTER_OPTIONS.patterns.map((pattern) => (
+                              <div
+                                key={pattern}
+                                className="flex items-center gap-2"
+                              >
+                                <Checkbox
+                                  id={`pattern-${pattern}`}
+                                  checked={tempFilters.patterns.includes(
+                                    pattern
+                                  )}
+                                  onCheckedChange={() =>
+                                    toggleTempFilter("patterns", pattern)
+                                  }
+                                  className="rounded-none"
+                                />
+                                <Label
+                                  htmlFor={`pattern-${pattern}`}
+                                  className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
+                                >
+                                  {pattern}
+                                </Label>
+                              </div>
+                            ))}
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
+                  </div>
+
+                  <SheetFooter className="flex flex-row justify-between gap-2">
+                    <Button
+                      onClick={clearTempFilters}
+                      variant="white"
+                      className="min-w-[100px] sm:min-w-[45%]"
+                    >
+                      Clear
+                    </Button>
+                    <Button
+                      onClick={applyFilters}
+                      variant="black"
+                      className="min-w-[100px] sm:min-w-[45%]"
+                    >
+                      Apply Filters
+                    </Button>
+                  </SheetFooter>
+                  <SheetClose
+                    className={cn(
+                      "w-14 h-(--header-y) bg-white border-b border-[#eee] absolute z-1 top-0 rounded-none! flex items-center justify-center",
+                      locale === "ar" ? "left-0" : "right-0"
+                    )}
+                    asChild
                   >
-                    {/* Categories */}
-                    <AccordionItem value="item-1" className="py-2 sm:py-3">
-                      <AccordionTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-5 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5 sm:[&>svg]:p-1 ">
-                        Categories
-                      </AccordionTrigger>
-                      <AccordionContent className="p-2">
-                        <div className="flex flex-col gap-2 sm:gap-4">
-                          {FILTER_OPTIONS.categories.map((cat) => (
-                            <div key={cat} className="flex items-center gap-2">
-                              <Checkbox
-                                id={`cat-${cat}`}
-                                checked={tempFilters.categories.includes(cat)}
-                                onCheckedChange={() =>
-                                  toggleTempFilter("categories", cat)
-                                }
-                                className="rounded-none"
-                              />
-                              <Label
-                                htmlFor={`cat-${cat}`}
-                                className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
-                              >
-                                {cat}
-                              </Label>
-                            </div>
-                          ))}
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
+                    <Button variant="none" size="none">
+                      <X className="size-5 text-black" />
+                    </Button>
+                  </SheetClose>
+                </SheetContent>
+              </Sheet>
 
-                    {/* Sub Categories */}
-                    <AccordionItem value="item-2" className="py-2 sm:py-3">
-                      <AccordionTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-5 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5 sm:[&>svg]:p-1">
-                        Sub Categories
-                      </AccordionTrigger>
-                      <AccordionContent className="p-2">
-                        <div className="flex flex-col gap-2 sm:gap-4">
-                          {FILTER_OPTIONS.subCategories.map((subCat) => (
-                            <div
-                              key={subCat}
-                              className="flex items-center gap-2"
-                            >
-                              <Checkbox
-                                id={`subcat-${subCat}`}
-                                checked={tempFilters.subCategories.includes(
-                                  subCat
-                                )}
-                                onCheckedChange={() =>
-                                  toggleTempFilter("subCategories", subCat)
-                                }
-                                className="rounded-none"
-                              />
-                              <Label
-                                htmlFor={`subcat-${subCat}`}
-                                className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
-                              >
-                                {subCat}
-                              </Label>
-                            </div>
-                          ))}
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-
-                    {/* Sectors */}
-                    <AccordionItem value="item-3" className="py-2 sm:py-3">
-                      <AccordionTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-5 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5 sm:[&>svg]:p-1">
-                        Sectors
-                      </AccordionTrigger>
-                      <AccordionContent className="p-2">
-                        <div className="flex flex-col gap-2 sm:gap-4">
-                          {FILTER_OPTIONS.sectors.map((sector) => (
-                            <div
-                              key={sector}
-                              className="flex items-center gap-2"
-                            >
-                              <Checkbox
-                                id={`sector-${sector}`}
-                                checked={tempFilters.sectors.includes(sector)}
-                                onCheckedChange={() =>
-                                  toggleTempFilter("sectors", sector)
-                                }
-                                className="rounded-none"
-                              />
-                              <Label
-                                htmlFor={`sector-${sector}`}
-                                className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
-                              >
-                                {sector}
-                              </Label>
-                            </div>
-                          ))}
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-
-                    {/* Price Range */}
-                    <AccordionItem value="item-4" className="py-2 sm:py-3">
-                      <AccordionTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-5 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5 sm:[&>svg]:p-1">
-                        Price Range
-                      </AccordionTrigger>
-                      <AccordionContent className="p-2">
-                        <div className="flex flex-col gap-2 sm:gap-4">
-                          {FILTER_OPTIONS.priceRanges.map((range) => (
-                            <div
-                              key={range.label}
-                              className="flex items-center gap-2"
-                            >
-                              <Checkbox
-                                id={`price-${range.label}`}
-                                checked={tempFilters.priceRanges.includes(
-                                  range.label
-                                )}
-                                onCheckedChange={() =>
-                                  toggleTempFilter("priceRanges", range.label)
-                                }
-                                className="rounded-none"
-                              />
-                              <Label
-                                htmlFor={`price-${range.label}`}
-                                className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
-                              >
-                                {range.label}
-                              </Label>
-                            </div>
-                          ))}
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-
-                    {/* Color Option */}
-                    <AccordionItem value="item-5" className="py-2 sm:py-3">
-                      <AccordionTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-5 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5 sm:[&>svg]:p-1">
-                        Color
-                      </AccordionTrigger>
-                      <AccordionContent className="p-2">
-                        <div className="flex flex-col gap-2 sm:gap-4">
-                          {FILTER_OPTIONS.colors.map((color) => (
-                            <div
-                              key={color}
-                              className="flex items-center gap-2"
-                            >
-                              <Checkbox
-                                id={`color-${color}`}
-                                checked={tempFilters.colors.includes(color)}
-                                onCheckedChange={() =>
-                                  toggleTempFilter("colors", color)
-                                }
-                                className="rounded-none"
-                              />
-                              <Label
-                                htmlFor={`color-${color}`}
-                                className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
-                              >
-                                {color}
-                              </Label>
-                            </div>
-                          ))}
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-
-                    {/* Pattern */}
-                    <AccordionItem value="item-6" className="py-2 sm:py-3">
-                      <AccordionTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-5 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5 sm:[&>svg]:p-1">
-                        Pattern
-                      </AccordionTrigger>
-                      <AccordionContent className="p-2">
-                        <div className="flex flex-col gap-2 sm:gap-4">
-                          {FILTER_OPTIONS.patterns.map((pattern) => (
-                            <div
-                              key={pattern}
-                              className="flex items-center gap-2"
-                            >
-                              <Checkbox
-                                id={`pattern-${pattern}`}
-                                checked={tempFilters.patterns.includes(pattern)}
-                                onCheckedChange={() =>
-                                  toggleTempFilter("patterns", pattern)
-                                }
-                                className="rounded-none"
-                              />
-                              <Label
-                                htmlFor={`pattern-${pattern}`}
-                                className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
-                              >
-                                {pattern}
-                              </Label>
-                            </div>
-                          ))}
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
-                </div>
-
-                <SheetFooter className="flex flex-row justify-between gap-2">
-                  <Button
-                    onClick={clearTempFilters}
-                    variant="white"
-                    className="min-w-[100px] sm:min-w-[45%]"
-                  >
-                    Clear
-                  </Button>
-                  <Button
-                    onClick={applyFilters}
-                    variant="black"
-                    className="min-w-[100px] sm:min-w-[45%]"
-                  >
-                    Apply Filters
-                  </Button>
-                </SheetFooter>
-                <SheetClose
-                  className={cn(
-                    "w-14 h-(--header-y) bg-white border-b border-[#eee] absolute z-1 top-0 rounded-none! flex items-center justify-center",
-                    locale === "ar" ? "left-0" : "right-0"
-                  )}
-                  asChild
-                >
-                  <Button variant="none" size="none">
-                    <X className="size-5 text-black" />
-                  </Button>
-                </SheetClose>
-              </SheetContent>
-            </Sheet>
-
-            <MediaQuery minWidth={640}>
               {/* Active Filter Pills */}
               {filters.categories.map((cat) => (
                 <FilterPill
@@ -603,6 +608,7 @@ export default function ProductList({ data, locale }) {
                   onRemove={() => removeFilter("patterns", pattern)}
                 />
               ))}
+
               {/* Clear All Button */}
               {activeFilterCount > 0 && (
                 <button
@@ -612,71 +618,52 @@ export default function ProductList({ data, locale }) {
                   Clear All
                 </button>
               )}
-            </MediaQuery>
+            </div>
+
+            {/* Sort Dropdown */}
+            <div className="flex items-center gap-2">
+              <span className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-tight font-medium text-black">
+                Sort by:
+              </span>
+              <Select
+                value={sortBy}
+                onValueChange={(value) => setSortBy(value)}
+              >
+                <SelectTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-tight font-medium truncate text-black w-[100px] 2xl:w-[168px]  border-none bg-transparent p-0 [&>svg]:hidden focus-visible:ring-0 rounded-none shadow-none">
+                  <SelectValue placeholder="Default" />
+
+                  {/* Custom Dropdown Icon */}
+                  <SelectIcon>
+                    <Image
+                      src="/images/icon-dropdown.svg"
+                      alt="Dropdown"
+                      width={20}
+                      height={20}
+                      className="w-[10px] xl:w-[15px] block"
+                    />
+                  </SelectIcon>
+                </SelectTrigger>
+
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="default">Default</SelectItem>
+                    <SelectItem value="price-low-high">
+                      Price: Low to High
+                    </SelectItem>
+                    <SelectItem value="price-high-low">
+                      Price: High to Low
+                    </SelectItem>
+                    <SelectItem value="name-a-z">Name: A to Z</SelectItem>
+                    <SelectItem value="name-z-a">Name: Z to A</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
+        </MediaQuery>
 
-          {/* Sort Dropdown */}
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-tight font-medium text-black">
-              Sort by:
-            </span>
-            <Select value={sortBy} onValueChange={(value) => setSortBy(value)}>
-              <SelectTrigger className="text-[10px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-tight font-medium truncate text-black w-[80px] sm:w-[100px] 2xl:w-[168px] border-none bg-transparent p-0 [&>svg]:hidden focus-visible:ring-0 rounded-none shadow-none">
-                <SelectValue placeholder="Default" />
-
-                {/* Custom Dropdown Icon */}
-                <SelectIcon>
-                  <Image
-                    src="/images/icon-dropdown.svg"
-                    alt="Dropdown"
-                    width={20}
-                    height={20}
-                    className="w-[10px] xl:w-[15px] block"
-                  />
-                </SelectIcon>
-              </SelectTrigger>
-
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem
-                    className="text-[10px] sm:text-[12px] leading-tight font-medium text-black"
-                    value="default"
-                  >
-                    Default
-                  </SelectItem>
-                  <SelectItem
-                    className="text-[10px] sm:text-[12px] leading-tight font-medium text-black"
-                    value="price-low-high"
-                  >
-                    Price: Low to High
-                  </SelectItem>
-                  <SelectItem
-                    className="text-[10px] sm:text-[12px] leading-tight font-medium text-black"
-                    value="price-high-low"
-                  >
-                    Price: High to Low
-                  </SelectItem>
-                  <SelectItem
-                    className="text-[10px] sm:text-[12px] leading-tight font-medium text-black"
-                    value="name-a-z"
-                  >
-                    Name: A to Z
-                  </SelectItem>
-                  <SelectItem
-                    className="text-[10px] sm:text-[12px] leading-tight font-medium text-black"
-                    value="name-z-a"
-                  >
-                    Name: Z to A
-                  </SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-      </div>
-      <div className="container">
         {/* Products Grid */}
-        <div className="flex flex-wrap -mx-3 sm:-mx-2 xl:-mx-5 2xl:-mx-8 [&>*]:p-3 sm:[&>*]:p-2 xl:[&>*]:p-5 2xl:[&>*]:p-8">
+        <div className="flex flex-wrap -mx-2 xl:-mx-5 2xl:-mx-8 [&>*]:p-2 xl:[&>*]:p-5 2xl:[&>*]:p-8">
           {currentProducts.map((item) => (
             <div key={item.id} className="w-full 2xs:w-1/2 sm:w-1/2 md:w-1/3">
               <Suspense fallback={<ProductCardSkelton />}>
@@ -761,6 +748,40 @@ export default function ProductList({ data, locale }) {
           </div>
         )}
       </div>
+
+      <MediaQuery maxWidth={639}>
+        <div className="flex sticky bottom-0 bg-white w-full border-t border-gray-200 z-10">
+          <div className="w-1/2">
+            <button className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-none font-medium text-[#282828] flex items-center gap-x-2 p-4">
+              <Image
+                src="/images/icon-filter.svg"
+                alt="Filter"
+                width={20}
+                height={20}
+                className="w-[10px] xl:w-[15px] block"
+              />
+              <span>Filters</span>
+              {activeFilterCount > 0 && (
+                <span className="bg-black text-white text-xs px-2 py-0.5 rounded-full">
+                  {activeFilterCount}
+                </span>
+              )}
+            </button>
+          </div>
+          <div className="w-1/2">
+            <button className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-none font-medium text-[#282828] flex items-center gap-x-2 p-4">
+              <Image
+                src="/images/icon-filter.svg"
+                alt="Filter"
+                width={20}
+                height={20}
+                className="w-[10px] xl:w-[15px] block"
+              />
+              <span>Sort by</span>
+            </button>
+          </div>
+        </div>
+      </MediaQuery>
     </section>
   );
 }
@@ -901,5 +922,13 @@ function ProductCardSkelton() {
         </div>
       </div>
     </div>
+  );
+}
+
+function FilterComp() {
+  return (
+    <>
+      <div>aaaa</div>
+    </>
   );
 }

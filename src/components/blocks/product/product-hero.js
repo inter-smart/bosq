@@ -12,9 +12,9 @@ import { Heading } from "@/components/utils/heading";
 
 export default function ProductHero({ data, locale }) {
   return (
-    <section className="w-full pt-(--header-y) py-[10px]">
+    <section className="w-full pt-[calc(var(--header-y)_+_20px)] sm:pt-[calc(var(--header-y)_+_10px)] pb-1 sm:pb-2.5">
       <div className="container">
-        <Breadcrumb className="mb-4">
+        <Breadcrumb className="mb-2 sm:mb-4">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="/">Home</BreadcrumbLink>
@@ -31,7 +31,7 @@ export default function ProductHero({ data, locale }) {
         <Heading
           as="h2"
           size="heading1"
-          className="line-clamp-2 text-black mb-2 xl:mb-4 2xl:mb-6"
+          className="line-clamp-2 text-black"
         >
           {parse(data?.title)}
           <span
