@@ -28,21 +28,19 @@ export default function ProductHero({ data, locale }) {
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
-        <Heading
-          as="h2"
-          size="heading1"
-          className="line-clamp-2 text-black"
-        >
-          {parse(data?.title)}
-          <span
-            className={cn(
-              "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
-              locale === "ar"
-                ? "-translate-x-1 xl:-translate-x-2 "
-                : "translate-x-1 xl:translate-x-2 "
-            )}
-          />
-        </Heading>
+        {data?.title && (
+          <Heading as="h2" size="heading1" className="line-clamp-2 text-black">
+            {parse(data?.title)}
+            <span
+              className={cn(
+                "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
+                locale === "ar"
+                  ? "-translate-x-1 xl:-translate-x-2 "
+                  : "translate-x-1 xl:translate-x-2 "
+              )}
+            />
+          </Heading>
+        )}
       </div>
     </section>
   );

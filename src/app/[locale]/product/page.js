@@ -3,7 +3,7 @@ import ProductList from "@/components/blocks/product/product-list";
 
 const local_data = {
   heroData: {
-    title: "Office Chairs",
+    title: null,
     description: null,
   },
   productData: {
