@@ -20,9 +20,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { X } from "lucide-react";
 import Image from "next/image";
-import { Heading } from "@/components/utils/heading";
-import { Text } from "@/components/utils/text";
-import { motion } from "motion/react";
 import {
   Pagination,
   PaginationContent,
@@ -34,7 +31,6 @@ import {
 } from "@/components/ui/pagination";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   Select,
   SelectContent,
@@ -45,8 +41,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SelectIcon } from "@radix-ui/react-select";
-import Link from "next/link";
 import dynamic from "next/dynamic";
+import ProductCard from "@/components/blocks/product/product-card";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
@@ -297,7 +293,7 @@ export default function ProductList({ data, locale }) {
     <section className="w-full block py-[15px_30px] xl:py-[30px_60px] 2xl:py-[40px_100px]">
       <div className="container max-sm:bg-white max-sm:py-2 max-sm:px-4 max-sm:shadow-sm max-sm:sticky top-0 left-0 right-0 z-1 max-sm:mb-2">
         {/* Filters and Sort Section */}
-        <div className="flex flex-row justify-between items-center gap-4 sm:mb-4 2xl:mb-6 ">
+        <div className="flex flex-row justify-between items-center gap-4 sm:mb-4 2xl:mb-6">
           <div className="flex flex-wrap items-center gap-2 xl:gap-3 2xl:gap-4 ">
             {/* Filter Button */}
 
@@ -319,7 +315,10 @@ export default function ProductList({ data, locale }) {
                   )}
                 </button>
               </SheetTrigger>
-              <SheetContent side="left">
+              <SheetContent side="left"
+              
+              className={"max-w-[320px] sm:max-w-[320px] xl:max-w-[340px] 2xl:max-w-[468px]"}
+              >
                 <SheetHeader className="min-h-(--header-y) border-b border-[#eee] px-4 sm:px-7 justify-center">
                   <SheetTitle>Filters</SheetTitle>
                   <SheetDescription className="sr-only">
@@ -327,7 +326,7 @@ export default function ProductList({ data, locale }) {
                   </SheetDescription>
                 </SheetHeader>
 
-                <div className="w-full sm:max-w-md min-h-[calc(100vh-240px)] overflow-y-scroll px-2 sm:px-5">
+                <div className="w-full min-h-[calc(100vh-240px)] overflow-y-scroll px-2 sm:px-5">
                   <Accordion
                     type="single"
                     collapsible
@@ -336,7 +335,7 @@ export default function ProductList({ data, locale }) {
                   >
                     {/* Categories */}
                     <AccordionItem value="item-1" className="py-2 sm:py-3">
-                      <AccordionTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-5 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5 sm:[&>svg]:p-1 ">
+                      <AccordionTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-4 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5 ">
                         Categories
                       </AccordionTrigger>
                       <AccordionContent className="p-2">
@@ -365,7 +364,7 @@ export default function ProductList({ data, locale }) {
 
                     {/* Sub Categories */}
                     <AccordionItem value="item-2" className="py-2 sm:py-3">
-                      <AccordionTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-5 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5 sm:[&>svg]:p-1">
+                      <AccordionTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-4 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5">
                         Sub Categories
                       </AccordionTrigger>
                       <AccordionContent className="p-2">
@@ -399,7 +398,7 @@ export default function ProductList({ data, locale }) {
 
                     {/* Sectors */}
                     <AccordionItem value="item-3" className="py-2 sm:py-3">
-                      <AccordionTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-5 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5 sm:[&>svg]:p-1">
+                      <AccordionTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-4 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5">
                         Sectors
                       </AccordionTrigger>
                       <AccordionContent className="p-2">
@@ -431,7 +430,7 @@ export default function ProductList({ data, locale }) {
 
                     {/* Price Range */}
                     <AccordionItem value="item-4" className="py-2 sm:py-3">
-                      <AccordionTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-5 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5 sm:[&>svg]:p-1">
+                      <AccordionTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-4 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5">
                         Price Range
                       </AccordionTrigger>
                       <AccordionContent className="p-2">
@@ -465,7 +464,7 @@ export default function ProductList({ data, locale }) {
 
                     {/* Color Option */}
                     <AccordionItem value="item-5" className="py-2 sm:py-3">
-                      <AccordionTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-5 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5 sm:[&>svg]:p-1">
+                      <AccordionTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-4 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5">
                         Color
                       </AccordionTrigger>
                       <AccordionContent className="p-2">
@@ -497,7 +496,7 @@ export default function ProductList({ data, locale }) {
 
                     {/* Pattern */}
                     <AccordionItem value="item-6" className="py-2 sm:py-3">
-                      <AccordionTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-5 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5 sm:[&>svg]:p-1">
+                      <AccordionTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-4 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5">
                         Pattern
                       </AccordionTrigger>
                       <AccordionContent className="p-2">
@@ -621,7 +620,7 @@ export default function ProductList({ data, locale }) {
               Sort by:
             </span>
             <Select value={sortBy} onValueChange={(value) => setSortBy(value)}>
-              <SelectTrigger className="text-[10px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-tight font-medium truncate text-black w-[80px] sm:w-[100px] 2xl:w-[168px] border-none bg-transparent p-0 [&>svg]:hidden focus-visible:ring-0 rounded-none shadow-none">
+              <SelectTrigger className="text-[10px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-tight font-medium truncate text-black w-[80px] sm:w-[100px] 2xl:w-[130px] border-none bg-transparent p-0 [&>svg]:hidden focus-visible:ring-0 rounded-none shadow-none">
                 <SelectValue placeholder="Default" />
 
                 {/* Custom Dropdown Icon */}
@@ -679,9 +678,7 @@ export default function ProductList({ data, locale }) {
         <div className="flex flex-wrap -mx-3 sm:-mx-2 xl:-mx-5 2xl:-mx-8 [&>*]:p-3 sm:[&>*]:p-2 xl:[&>*]:p-5 2xl:[&>*]:p-8">
           {currentProducts.map((item) => (
             <div key={item.id} className="w-full 2xs:w-1/2 sm:w-1/2 md:w-1/3">
-              <Suspense fallback={<ProductCardSkelton />}>
-                <ProductCard product={item} />
-              </Suspense>
+              <ProductCard product={item} />
             </div>
           ))}
         </div>
@@ -776,130 +773,6 @@ function FilterPill({ label, onRemove }) {
       >
         <X className="size-2 xl:size-4 text-gray-600" />
       </button>
-    </div>
-  );
-}
-
-function ProductCard({ product }) {
-  const [wish, setWish] = useState(false);
-
-  return (
-    <div className="group w-full block">
-      <div className="w-full aspect-[550/440] overflow-hidden rounded-[4px] border border-[#f4f4f4] mb-3 2xl:mb-4 bg-[#f4f4f4] relative z-0">
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={() => setWish(!wish)}
-          className="absolute z-2 top-2 xl:top-4 right-2 xl:right-4"
-        >
-          <svg
-            width="15"
-            height="13"
-            viewBox="0 0 15 13"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M7.39062 2.03027C8.85818 0.419111 10.5094 0.0894194 11.749 0.544922C12.9908 1.00129 13.9263 2.28275 13.8955 4.12402C13.8676 5.78912 12.7686 7.51198 11.3096 9.04004C9.9379 10.4766 8.3011 11.6826 7.12598 12.4326C5.95106 11.6827 4.3155 10.4769 2.94434 9.04102C1.48523 7.51297 0.385558 5.78917 0.357422 4.12402C0.326449 2.28301 1.26218 1.00146 2.50391 0.544922C3.74349 0.0891915 5.39453 0.418918 6.8623 2.03027L7.12695 2.32031L7.39062 2.03027Z"
-              fill={wish ? "black" : "none"}
-              stroke="#282828"
-              strokeWidth="1"
-            />
-          </svg>
-        </motion.button>
-        <Image
-          src={product?.media?.path}
-          alt={product?.media?.alt}
-          width={550}
-          height={440}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-        />
-        {product?.hoverMedia && (
-          <Image
-            src={product?.hoverMedia?.path}
-            alt={product?.hoverMedia?.alt}
-            width={550}
-            height={440}
-            quality={100}
-            className="w-full h-full object-cover absolute z-1 inset-0 opacity-0 group-hover:opacity-100 group-hover:scale-105 transition duration-300"
-          />
-        )}
-      </div>
-      <div>
-        <Heading
-          as="div"
-          size="none"
-          className="text-[10px] xl:text-[8px] 2xl:text-[10px] 3xl:text-[12px] leading-normal font-light truncate text-[#bbbcbc] mb-1"
-        >
-          <Link href={product?.slug}>{product?.category}</Link>
-        </Heading>
-        <Heading
-          as="div"
-          size="none"
-          className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-normal truncate text-[#282828] mb-0.5"
-        >
-          <Link href={product?.slug}>{product?.name}</Link>
-        </Heading>
-        <Text
-          as="div"
-          size="none"
-          className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-normal truncate text-[#282828] mb-3 xl:mb-4 2xl:mb-6"
-        >
-          <Link href={product?.slug}>
-            AED {product?.price}{" "}
-            <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc] ">
-              Inc Tax
-            </span>
-          </Link>
-        </Text>
-        <div className="flex items-center gap-0.5 xl:gap-1">
-          {product?.colorVariant?.length > 0 ? (
-            <>
-              {product?.colorVariant?.slice(0, 3).map((color, index) => (
-                <Link
-                  key={"color" + index}
-                  href={product?.slug}
-                  className="w-2.5 h-2.5 rounded-full hover:scale-110 transition-transform duration-300 block"
-                  style={{ backgroundColor: color }}
-                ></Link>
-              ))}
-              {product?.colorVariant?.length > 3 && (
-                <div className="text-[8px] 2xl:text-[10px] leading-normal font-light text-[#28288] pt-0.5">
-                  <Link href={product?.slug}>+ More</Link>
-                </div>
-              )}
-            </>
-          ) : (
-            <Link
-              href={product?.slug}
-              className="text-[8px] 2xl:text-[10px] leading-normal font-light text-[#28288] hover:text-[#f17423]"
-            >
-              View Product
-            </Link>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ProductCardSkelton() {
-  return (
-    <div className="group w-full block">
-      <Skeleton className="w-full aspect-[550/440] mb-3 2xl:mb-4 " />
-      <div>
-        <Skeleton className="w-1/2 h-3 mb-1 " />
-        <Skeleton className="w-full h-4 mb-1 " />
-        <Skeleton className="w-full h-4 mb-3 xl:mb-4 2xl:mb-6 " />
-        <div className="flex gap-0.5 xl:gap-1">
-          {[1, 2, 3].map((index) => (
-            <Skeleton
-              key={"color" + index}
-              className="w-2.5 h-2.5 rounded-full hover:scale-110 transition-transform duration-300"
-            ></Skeleton>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }

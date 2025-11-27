@@ -87,30 +87,6 @@ export default function HomeFeatured({ data, locale }) {
               ))}
             </div>
           </div>
-          {/* <PrevButton
-            onClick={onPrevButtonClick}
-            disabled={prevBtnDisabled}
-            className="absolute z-1 top-1/2 left-3 -translate-y-1/2 disabled:opacity-50"
-          >
-            <Image
-              src="/images/icon-embla-prev.svg"
-              alt="arrow prev"
-              width={16}
-              height={32}
-            />
-          </PrevButton>
-          <NextButton
-            onClick={onNextButtonClick}
-            disabled={nextBtnDisabled}
-            className="absolute z-1 top-1/2 right-3 -translate-y-1/2 disabled:opacity-50"
-          >
-            <Image
-              src="/images/icon-embla-next.svg"
-              alt="arrow next"
-              width={16}
-              height={32}
-            />
-          </NextButton> */}
         </div>
       </div>
     </section>

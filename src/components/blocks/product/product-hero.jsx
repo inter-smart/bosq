@@ -10,7 +10,7 @@ import parse from "html-react-parser";
 import { cn } from "@/lib/utils";
 import { Heading } from "@/components/utils/heading";
 
-export default function ProductHero({ data, locale }) {
+export default function ProductHero({ data, locale, slug }) {
   return (
     <section className="w-full pt-[calc(var(--header-y)_+_20px)] sm:pt-[calc(var(--header-y)_+_10px)] pb-1 sm:pb-2.5">
       <div className="container">
@@ -23,9 +23,11 @@ export default function ProductHero({ data, locale }) {
             {/* <BreadcrumbItem>
               <BreadcrumbLink href="/components">Components</BreadcrumbLink>
             </BreadcrumbItem> */}
-            <BreadcrumbItem>
-              <BreadcrumbPage>Office Chairs</BreadcrumbPage>
-            </BreadcrumbItem>
+            {slug && (
+              <BreadcrumbItem>
+                <BreadcrumbPage className={"capitalize"}>{slug}</BreadcrumbPage>
+              </BreadcrumbItem>
+            )}
           </BreadcrumbList>
         </Breadcrumb>
         {data?.title && (
