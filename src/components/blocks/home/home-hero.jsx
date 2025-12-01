@@ -109,10 +109,13 @@ const buttonContainerVariants = {
 };
 
 export default function HomeHero({ data }) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false }, [
-    Autoplay({ delay: 6000, stopOnInteraction: true, pauseOnHover: true }),
-    Fade(),
-  ]);
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { loop: false, direction: "rtl" },
+    [
+      Autoplay({ delay: 6000, stopOnInteraction: true, pauseOnHover: true }),
+      Fade(),
+    ]
+  );
 
   const {
     prevBtnDisabled,

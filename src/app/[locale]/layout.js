@@ -270,7 +270,7 @@ const local_data = {
 };
 
 export default async function RootLayout({ children }) {
-  const locale = "en";
+  const locale = "ar";
   return (
     <html
       lang={locale}
