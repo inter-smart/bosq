@@ -4,11 +4,17 @@ import { Text } from "@/components/utils/text";
 import Image from "next/image";
 import Link from "next/link";
 import parse from "html-react-parser";
+import { cn } from "@/lib/utils";
 
-export default function HomeJourney({ data }) {
+export default function HomeJourney({ data, locale }) {
   return (
-    <section className="w-full h-auto block py-[40px] sm:py-[100px] xl:py-[160px] 2xl:py-[240px] bg-black overflow-hidden relative z-0">
-      <div className="w-full h-full bg-linear-to-l from-transparent via-30% via-transparent to-[#f4f4f4] absolute -z-1 inset-0 " />
+    <section className="w-full h-auto block py-[30px] sm:py-[100px] xl:py-[160px] 2xl:py-[240px] bg-black overflow-hidden relative z-0">
+      <div
+        className={cn(
+          "w-full h-full from-white/20 sm:from-transparent sm:via-30% sm:via-transparent to-[#f4f4f4] absolute -z-1 inset-0 ",
+          locale === "ar" ? "bg-gradient-to-r" : "bg-gradient-to-l"
+        )}
+      />
       {data?.media?.type === "video" ? (
         <>
           <video
@@ -56,7 +62,14 @@ export default function HomeJourney({ data }) {
             className="line-clamp-2 text-black mb-2 xl:mb-4 2xl:mb-6"
           >
             {parse(data?.title)}
-            <span className="w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 " />
+            <span
+              className={cn(
+                "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
+                locale === "ar"
+                  ? "-translate-x-1 xl:-translate-x-2 "
+                  : "translate-x-1 xl:translate-x-2 "
+              )}
+            />
           </Heading>
           <Text
             as="div"

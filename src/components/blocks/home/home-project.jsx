@@ -16,9 +16,9 @@ import {
   useDotButton,
 } from "@/components/utils/embla-carousel-dot-button";
 
-export default function HomeProject({ data }) {
+export default function HomeProject({ data, locale }) {
   const [emblaRef, emblaApi] = useEmblaCarousel(
-    { loop: false, align: "start" },
+    { loop: false, align: "start", direction: locale === "ar" ? "rtl" : "ltr" },
     [ClassNames(), Autoplay({ delay: 4000, stopOnInteraction: true })]
   );
 
@@ -33,7 +33,14 @@ export default function HomeProject({ data }) {
         <div className="flex flex-wrap items-end justify-between mb-3 xl:mb-4 2xl:mb-6">
           <Heading as="h2" size="heading1" className="text-black">
             {parse(data?.title)}
-            <span className="w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 " />
+            <span
+              className={cn(
+                "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
+                locale === "ar"
+                  ? "-translate-x-1 xl:-translate-x-2 "
+                  : "translate-x-1 xl:translate-x-2 "
+              )}
+            />
           </Heading>
           <div className="flex py-2 gap-1 xl:gap-3">
             {scrollSnaps.map((_, index) => (
@@ -48,21 +55,30 @@ export default function HomeProject({ data }) {
             ))}
           </div>
         </div>
+      </div>
+      <div
+        className={cn(
+          "container",
+          locale === "ar"
+            ? "max-sm:[mask-image:linear-gradient(to_left,white_0%,white_98%,transparent_100%)] max-sm:pl-0"
+            : "max-sm:[mask-image:linear-gradient(to_right,white_0%,white_98%,transparent_100%)] max-sm:pr-0"
+        )}
+      >
         <div className="w-full max-w-full">
           <div className="overflow-hidden" ref={emblaRef}>
-            <div className="flex touch-pan-y touch-pinch-zoom -mx-1">
+            <div className="flex touch-pan-y touch-pinch-zoom -mx-0.5 sm:-mx-1">
               {data?.project?.map((item, index) => {
                 const isActive = activeIndex === index;
                 return (
                   <div
                     key={"product" + index}
                     className={cn(
-                      "flex-[0_0_20%] min-w-0 px-1 select-none transition-all duration-600",
-                      isActive && "flex-[0_0_60%]"
+                      "flex-[0_0_40px] sm:flex-[0_0_20%] min-w-0 px-0.5 sm:px-1 select-none transition-all duration-600",
+                      isActive && "flex-[0_0_268px] sm:flex-[0_0_60%]"
                     )}
                   >
                     <div
-                      className="w-full h-[320px] sm:h-[368px] xl:h-[468px] 2xl:h-[576px] 3xl:h-[668px] bg-black overflow-hidden relative z-0"
+                      className="w-full h-[268px] sm:h-[368px] xl:h-[468px] 2xl:h-[576px] 3xl:h-[668px] bg-black overflow-hidden relative z-0"
                       onClick={() => setActiveIndex(index)}
                     >
                       <Image

@@ -3,14 +3,15 @@ import { Text } from "@/components/utils/text";
 import Image from "next/image";
 import parse from "html-react-parser";
 import EnquiryForm from "@/components/form/enquiry-form";
+import { cn } from "@/lib/utils";
 
-export default function HomeEnquiry({ data }) {
+export default function HomeEnquiry({ data, locale }) {
   return (
     <section className="w-full h-auto block py-[30px] sm:py-[40px] xl:py-[60px] 2xl:py-[80px] bg-[#ebebeb]">
       <div className="container">
         <div className="flex flex-wrap sm:items-center">
-          <div className="w-full sm:w-[468px] xl:w-[520px] 2xl:w-[640px] 3xl:w-[800px]">
-            <div className="w-full aspect-4/3 overflow-hidden">
+          <div className="w-full md:w-[268px] xl:w-[520px] 2xl:w-[640px] 3xl:w-[800px] max-md:mb-4">
+            <div className="w-full aspect-4/2 md:aspect-4/3 overflow-hidden">
               <Image
                 src={data?.media?.media_path}
                 alt={data?.media?.media_alt}
@@ -21,15 +22,25 @@ export default function HomeEnquiry({ data }) {
             </div>
           </div>
 
-          <div className="w-full sm:w-[calc(100%-468px)] xl:w-[calc(100%-520px)] 2xl:w-[calc(100%-640px)] 3xl:w-[calc(100%-800px)]">
-            <div className="w-full px-[30px] sm:px-[40px] xl:px-[60px] 2xl:px-[80px]">
+          <div className="w-full md:w-[calc(100%-268px)] xl:w-[calc(100%-520px)] 2xl:w-[calc(100%-640px)] 3xl:w-[calc(100%-800px)]">
+            <div className={cn("w-full",
+              locale === "ar" ? "md:px-[0_20px] xl:px-[60px] 2xl:px-[80px]" : "md:px-[20px_0] xl:px-[60px] 2xl:px-[80px]"
+            )}>
               <Heading
                 as="h2"
                 size="heading1"
                 className="line-clamp-2 text-black mb-1"
               >
                 {parse(data?.title)}
-                <span className="w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 " />
+
+                <span
+                  className={cn(
+                    "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
+                    locale === "ar"
+                      ? "-translate-x-1 xl:-translate-x-2 "
+                      : "translate-x-1 xl:translate-x-2 "
+                  )}
+                />
               </Heading>
               <Text
                 as="div"

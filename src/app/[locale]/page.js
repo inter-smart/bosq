@@ -1,12 +1,33 @@
-import HomeHero from "@/components/blocks/home/home-hero";
-import HomeAbout from "@/components/blocks/home/home-about";
-import HomeProduct from "@/components/blocks/home/home-product";
-import HomeJourney from "@/components/blocks/home/home-journey";
-import HomeProject from "@/components/blocks/home/home-project";
-import HomeCalculator from "@/components/blocks/home/home-calculator";
-import HomeFind from "@/components/blocks/home/home-find";
-import HomeBrand from "@/components/blocks/home/home-brand";
-import HomeEnquiry from "@/components/blocks/home/home-enquiry";
+// import HomeHero from "@/components/blocks/home/home-hero";
+// import HomeAbout from "@/components/blocks/home/home-about";
+// import HomeProduct from "@/components/blocks/home/home-product";
+// import HomeJourney from "@/components/blocks/home/home-journey";
+// import HomeProject from "@/components/blocks/home/home-project";
+// import HomeCalculator from "@/components/blocks/home/home-calculator";
+// import HomeFind from "@/components/blocks/home/home-find";
+// import HomeBrand from "@/components/blocks/home/home-brand";
+// import HomeEnquiry from "@/components/blocks/home/home-enquiry";
+import dynamic from "next/dynamic";
+import HomeHero from "@/components/blocks/home/home-hero"; // keep SSR for SEO
+
+const HomeAbout = dynamic(() => import("@/components/blocks/home/home-about"));
+const HomeFeatured = dynamic(() =>
+  import("@/components/blocks/home/home-featured")
+);
+const HomeJourney = dynamic(() =>
+  import("@/components/blocks/home/home-journey")
+);
+const HomeProject = dynamic(() =>
+  import("@/components/blocks/home/home-project")
+);
+const HomeCalculator = dynamic(() =>
+  import("@/components/blocks/home/home-calculator")
+);
+const HomeFind = dynamic(() => import("@/components/blocks/home/home-find"));
+const HomeBrand = dynamic(() => import("@/components/blocks/home/home-brand"));
+const HomeEnquiry = dynamic(() =>
+  import("@/components/blocks/home/home-enquiry")
+);
 
 const local_data = {
   homeData: [
@@ -96,13 +117,13 @@ const local_data = {
       link: "/",
     },
   },
-  productData: {
+  featuredData: {
     title: "Featured Products",
     description: null,
     button: null,
     product: [
       {
-        id: "01",
+        id: 1,
         media: {
           type: "image",
           path: "/images/pro-1.jpg",
@@ -110,14 +131,10 @@ const local_data = {
         },
         name: "Continue Table",
         slug: "continue-table",
-        shortDescription:
-          "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
-        description:
-          "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
         productType: ["Office Chairs", "Ergonomic Chairs"],
       },
       {
-        id: "02",
+        id: 2,
         media: {
           type: "image",
           path: "/images/pro-2.jpg",
@@ -125,14 +142,10 @@ const local_data = {
         },
         name: "Okidoki Too Stool",
         slug: "okidoki-too-stool",
-        shortDescription:
-          "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
-        description:
-          "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
         productType: ["Office Chairs", "Ergonomic Chairs"],
       },
       {
-        id: "03",
+        id: 3,
         media: {
           type: "image",
           path: "/images/pro-3.jpg",
@@ -140,14 +153,10 @@ const local_data = {
         },
         name: "360 Chair",
         slug: "360-chair",
-        shortDescription:
-          "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
-        description:
-          "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
         productType: ["Office Chairs", "Ergonomic Chairs"],
       },
       {
-        id: "04",
+        id: 4,
         media: {
           type: "image",
           path: "/images/pro-4.jpg",
@@ -155,14 +164,10 @@ const local_data = {
         },
         name: "ergonomic chair",
         slug: "ergonomic-chair",
-        shortDescription:
-          "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
-        description:
-          "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
         productType: ["Office Chairs", "Ergonomic Chairs"],
       },
       {
-        id: "04",
+        id: 5,
         media: {
           type: "image",
           path: "/images/pro-4.jpg",
@@ -170,14 +175,9 @@ const local_data = {
         },
         name: "ergonomic chair",
         slug: "ergonomic-chair",
-        shortDescription:
-          "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
-        description:
-          "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
-        productType: ["Office Chairs", "Ergonomic Chairs"],
       },
       {
-        id: "04",
+        id: 6,
         media: {
           type: "image",
           path: "/images/pro-4.jpg",
@@ -185,10 +185,6 @@ const local_data = {
         },
         name: "ergonomic chair",
         slug: "ergonomic-chair",
-        shortDescription:
-          "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
-        description:
-          "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
         productType: ["Office Chairs", "Ergonomic Chairs"],
       },
     ],
@@ -561,21 +557,23 @@ const local_data = {
   },
 };
 
-export default function Home() {
+export default function HomePage() {
+  const locale = "en";
   return (
     <>
-      <HomeHero data={local_data?.homeData} />
-      <HomeAbout data={local_data?.aboutData} />
-      <HomeProduct data={local_data?.productData} />
-      <HomeJourney data={local_data?.journeyData} />
-      <HomeProject data={local_data?.projectData} />
+      <HomeHero locale={locale} data={local_data?.homeData} />
+      <HomeAbout locale={locale} data={local_data?.aboutData} />
+      <HomeFeatured locale={locale} data={local_data?.featuredData} />
+      <HomeJourney locale={locale} data={local_data?.journeyData} />
+      <HomeProject locale={locale} data={local_data?.projectData} />
       <HomeCalculator
+        locale={locale}
         calculatorData={local_data?.calculatorData}
         customizeData={local_data?.customizeData}
       />
-      <HomeFind data={local_data?.findData} />
-      <HomeBrand data={local_data?.brandData} />
-      <HomeEnquiry data={local_data?.enquiryData} />
+      <HomeFind locale={locale} data={local_data?.findData} />
+      <HomeBrand locale={locale} data={local_data?.brandData} />
+      <HomeEnquiry locale={locale} data={local_data?.enquiryData} />
     </>
   );
 }

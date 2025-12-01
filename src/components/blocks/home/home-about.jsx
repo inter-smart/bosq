@@ -4,8 +4,9 @@ import { Text } from "@/components/utils/text";
 import Image from "next/image";
 import Link from "next/link";
 import parse from "html-react-parser";
+import { cn } from "@/lib/utils";
 
-export default function HomeAbout({ data }) {
+export default function HomeAbout({ data, locale }) {
   return (
     <section className="w-full h-auto block py-[30px] sm:py-[40px] xl:py-[100px] 2xl:py-[120px] bg-[#f4f4f4] overflow-hidden relative z-0">
       <Image
@@ -19,8 +20,8 @@ export default function HomeAbout({ data }) {
       <div className="container">
         <div className="xl:max-w-[1040px] 2xl:max-w-[1260px] 3xl:max-w-[1620px] mx-auto">
           <div className="flex flex-wrap sm:items-center">
-            <div className="w-full sm:w-[220px] xl:w-[480px] 2xl:w-[576px] 3xl:w-[720px]">
-              <div className="group w-full sm:w-[168px] xl:w-[200px] 2xl:w-[268px] 3xl:w-[320px] aspect-[20/34] mx-auto hover:scale-110  transition duration-300 relative z-0">
+            <div className="w-full sm:w-[220px] xl:w-[480px] 2xl:w-[576px] 3xl:w-[720px] max-sm:mb-2">
+              <div className="group w-[140px] sm:w-[168px] xl:w-[200px] 2xl:w-[268px] 3xl:w-[320px] aspect-[20/34] mx-auto hover:scale-110  transition duration-300 relative z-0">
                 <Image
                   src={data?.media?.path}
                   alt={data?.media?.alt}
@@ -33,7 +34,7 @@ export default function HomeAbout({ data }) {
             </div>
 
             <div className="w-full sm:w-[calc(100%-220px)] xl:w-[calc(100%-480px)] 2xl:w-[calc(100%-576px)] 3xl:w-[calc(100%-720px)]">
-              <div className="w-full">
+              <div className="w-full max-sm:text-center">
                 <Heading
                   as="h2"
                   size="heading1"
@@ -41,7 +42,14 @@ export default function HomeAbout({ data }) {
                 >
                   {parse(data?.title)}
 
-                  <span className="w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 " />
+                  <span
+                    className={cn(
+                      "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
+                      locale === "ar"
+                        ? "-translate-x-1 xl:-translate-x-2 "
+                        : "translate-x-1 xl:translate-x-2 "
+                    )}
+                  />
                 </Heading>
                 <Text
                   as="div"
