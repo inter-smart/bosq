@@ -1,10 +1,9 @@
-import ProductDetail from "@/components/blocks/product/product-detail";
-import ProductHero from "@/components/blocks/product/product-hero";
-import ProductSimilar from "@/components/blocks/product/product-similar";
+import CheckoutHero from "@/components/blocks/checkout/checkout-hero";
+import CheckoutList from "@/components/blocks/checkout/checkout-list";
 
 const local_data = {
   heroData: {
-    title: null,
+    title: "Shopping Cart",
     description: null,
   },
   productData: {
@@ -364,14 +363,16 @@ const local_data = {
   },
 };
 
-export default async function ProductDetailPage({ params }) {
+export default function CheckoutPage() {
   const locale = "en";
-  const { slug } = await params;
   return (
     <>
-      <ProductHero locale={locale} data={local_data?.heroData} slug={slug} />
-      <ProductDetail locale={locale} data={local_data?.productData} />
-      <ProductSimilar locale={locale} data={local_data?.similarData} />
+      <CheckoutHero
+        locale={locale}
+        data={local_data?.heroData}
+        slug={"Shopping cart"}
+      />
+      <CheckoutList locale={locale} data={local_data?.productData} />
     </>
   );
 }

@@ -44,6 +44,8 @@ const inputStyle = cn(
   "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#bababa] rounded-[4px] px-[15px] focus-visible:ring-1"
 );
 
+const errorStyle = cn("text-[#f17423]");
+
 const textareaStyle = cn(
   inputStyle,
   "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none"
@@ -99,7 +101,7 @@ export default function EnquiryForm() {
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                Name<span className="text-[#f17423]">*</span>
+                Name<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
@@ -120,7 +122,7 @@ export default function EnquiryForm() {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                Phone Number<span className="text-[#f17423]">*</span>
+                Phone Number<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
@@ -142,7 +144,7 @@ export default function EnquiryForm() {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                Email ID<span className="text-[#f17423]">*</span>
+                Email ID<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input

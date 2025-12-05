@@ -9,6 +9,7 @@ import { Text } from "@/components/utils/text";
 import { ChevronDown, ChevronUp, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 
 import {
   Accordion,
@@ -19,8 +20,12 @@ import {
 
 import useEmblaCarousel from "embla-carousel-react";
 
-import Lightbox from "yet-another-react-lightbox";
+const Lightbox = dynamic(() => import("yet-another-react-lightbox"));
+import Zoom from "yet-another-react-lightbox/plugins/zoom";
+import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+import Video from "yet-another-react-lightbox/plugins/video";
 import "yet-another-react-lightbox/styles.css";
+import "yet-another-react-lightbox/plugins/thumbnails.css";
 
 import {
   Sheet,
@@ -35,6 +40,8 @@ import {
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import EnquiryForm from "@/components/form/enquiry-form";
+import ProductEnquiryForm from "@/components/form/product-enquiry-form";
 
 const local_data = {
   id: 1,
@@ -127,7 +134,7 @@ const local_data = {
 };
 
 const accordionTriggerStyle = cn(
-  "text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-normal font-normal text-[#282828] py-5 [&>svg]:w-4 sm:[&>svg]:w-4 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5 [&[data-state=open]>svg]:invert-100"
+  "text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-normal font-normal text-[#282828] py-4 sm:py-4 xl:py-5 [&>svg]:w-4 sm:[&>svg]:w-4 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5 [&[data-state=open]>svg]:invert-100"
 );
 
 export default function ProductDetail({ locale, data = local_data }) {
@@ -135,6 +142,8 @@ export default function ProductDetail({ locale, data = local_data }) {
   const [emblaMainRef, emblaMainApi] = useEmblaCarousel(
     {
       dragFree: false,
+      align: "start",
+      direction: locale === "ar" ? "rtl" : "ltr",
     },
     [Fade()]
   );
@@ -183,18 +192,21 @@ export default function ProductDetail({ locale, data = local_data }) {
     setQuantity(numValue);
   };
 
-  const [open, setOpen] = useState(false);
-  const [index, setIndex] = useState(0);
+  const [openProduct, setOpenProduct] = useState(false);
+  const [openProject, setOpenProject] = useState(false);
+
+  const [indexProduct, setIndexProduct] = useState(0);
+  const [indexProject, setIndexProject] = useState(0);
 
   return (
     <section className="w-full block py-[15px_30px] xl:py-[30px_60px] 2xl:py-[40px_100px]">
       <div className="container">
         <div className="flex flex-wrap -mx-2.5 xl:-mx-4 2xl:-mx-5 [&>*]:p-2.5 xl:[&>*]:p-4 2xl:[&>*]:p-5">
-          <div className="w-full sm:w-[576px] xl:w-[668px] 2xl:w-[800px] 3xl:w-[1000px] ">
-            <div className="max-w-full flex gap-x-4">
-              <div className="w-[100px]">
+          <div className="w-full lg:w-[520px] xl:w-[668px] 2xl:w-[800px] 3xl:w-[1000px]">
+            <div className="max-w-[576px] xl:max-w-[1080px] flex flex-wrap sticky top-[var(--header-y)] max-lg:flex-direction-row-reverse ">
+              <div className="w-[60px] sm:w-[80px] xl:w-[100px] 2xl:w-[140px] mask-[linear-gradient(to_bottom,transparent_0%,white_5%,white_95%,transparent_100%)]">
                 <div className="overflow-hidden" ref={emblaThumbsRef}>
-                  <div className="flex flex-col h-[500px] touch-pan-x touch-pinch-zoom">
+                  <div className="flex flex-col h-[320px] sm:h-[376px] xl:h-[420px] 2xl:h-[576px] 3xl:h-[740px] touch-pan-x touch-pinch-zoom">
                     {data?.productMedia?.map((item, index) => (
                       <div
                         key={index}
@@ -223,32 +235,88 @@ export default function ProductDetail({ locale, data = local_data }) {
                   </div>
                 </div>
               </div>
-              <div className={cn("flex-1", true && "relative z-51")}>
+              <div
+                className={cn(
+                  "w-[calc(100%-60px)] sm:w-[calc(100%-80px)] xl:w-[calc(100%-100px)] 2xl:w-[calc(100%-140px)]",
+                  locale === "ar" ? "pr-2 xl:pr-4" : "pl-2 xl:pl-4",
+                  true && "relative z-51"
+                )}
+              >
                 <div className="overflow-hidden" ref={emblaMainRef}>
-                  <div className="flex h-[500px] touch-pan-y touch-pinch-zoom">
+                  <div className="flex h-[320px] sm:h-[376px] xl:h-[420px]  2xl:h-[576px] 3xl:h-[740px] touch-pan-y touch-pinch-zoom">
                     {data?.productMedia?.map((item, index) => (
-                      <div key={index} className="flex-[0_0_100%] min-w-0">
+                      <div
+                        key={index}
+                        className="flex-[0_0_100%] min-w-0"
+                        onClick={() => {
+                          setIndexProduct(index);
+                          setOpenProduct(true);
+                        }}
+                      >
                         <div
                           className={cn(
                             "w-full h-full rounded-lg overflow-hidden border transition-all duration-300 bg-white"
                           )}
                         >
-                          <Image
-                            src={item?.path || "/images/placeholder.jpg"}
-                            alt={item?.alt || "main"}
-                            width={1080}
-                            height={1080}
-                            className="w-full h-full object-contain"
-                          />
+                          {item?.type === "video" ? (
+                            <video
+                              autoPlay
+                              loop
+                              muted
+                              playsInline
+                              className="w-full h-full object-cover"
+                            >
+                              <source src={item?.path} type="video/mp4" />
+                            </video>
+                          ) : (
+                            <Image
+                              src={item?.path || "/images/placeholder.jpg"}
+                              alt={item?.alt || "main"}
+                              width={1080}
+                              height={1080}
+                              className="w-full h-full object-cover"
+                            />
+                          )}
                         </div>
                       </div>
                     ))}
+
+                    <Lightbox
+                      open={openProduct}
+                      close={() => setOpenProduct(false)}
+                      index={indexProduct}
+                      slides={data?.productMedia?.map((item) =>
+                        item.type === "video"
+                          ? {
+                              type: "video",
+                              width: 1280,
+                              height: 720,
+                              poster: item.thumbnail,
+                              autoPlay: true,
+                              sources: [
+                                {
+                                  src: item.path,
+                                  type: "video/mp4",
+                                },
+                              ],
+                            }
+                          : {
+                              src: item.path,
+                            }
+                      )}
+                      animation={{ fade: 10 }}
+                      controller={{
+                        closeOnPullDown: true,
+                        closeOnBackdropClick: true,
+                      }}
+                      plugins={[Video, Zoom]}
+                    />
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div className="w-full sm:w-[calc(100%-576px)] xl:w-[calc(100%-668px)] 2xl:w-[calc(100%-800px)] 3xl:w-[calc(100%-1000px)] max-sm:mb-2">
+          <div className="w-full lg:w-[calc(100%-520px)] xl:w-[calc(100%-668px)] 2xl:w-[calc(100%-800px)] 3xl:w-[calc(100%-1000px)] max-sm:mb-2">
             <div className="w-full xl:max-w-[376px] 2xl:max-w-[468px] 3xl:max-w-[576px]">
               <Heading
                 as="div"
@@ -260,7 +328,7 @@ export default function ProductDetail({ locale, data = local_data }) {
               <Heading
                 as="div"
                 size="heading2"
-                className="font-normal text-[#282828] mb-1 2xl:mb-2"
+                className="font-normal text-[#282828] mb-1 2xl:mb-2 max-sm:font-bold"
               >
                 Orca Mid Back Ergonomic Office Chair
               </Heading>
@@ -273,17 +341,19 @@ export default function ProductDetail({ locale, data = local_data }) {
                   "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>"
                 )}
               </Text>
-              <hr />
+
+              <hr className="my-3 sm:my-3 2xl:my-5 mx-[-5px]" />
+
               <Heading
                 as="div"
-                size="heading4"
+                size="heading5"
                 className="font-normal text-[#282828] mb-2 2xl:mb-3 mt-2.5 2xl:mt-4"
               >
                 Choose Your Design
               </Heading>
               {[1].map((index) => (
                 <div key={index} className="mb-2">
-                  <div className="w-full bg-[#f2f2f2] border border-[#dedede] flex items-center p-1 rounded-lg">
+                  <div className="w-full max-w-[468px] bg-[#f2f2f2] border border-[#dedede] flex items-center p-1 rounded-lg">
                     <div className="w-[40px] xl:w-[45px] 2xl:w-[55px] aspect-square rounded-lg overflow-hidden bg-white">
                       <Image
                         src={"/images/placeholder.jpg"}
@@ -293,7 +363,7 @@ export default function ProductDetail({ locale, data = local_data }) {
                         className="w-full h-full object-contain"
                       />
                     </div>
-                    <div className="flex-1 flex justify-between xl:p-2.5 2xl:p-[15px] ">
+                    <div className="flex-1 flex justify-between gap-2 p-2 xl:p-2.5 2xl:p-[15px] ">
                       <div className="text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#282828]">
                         light grey Frisco fabric with aquaclean 2063
                       </div>
@@ -301,7 +371,7 @@ export default function ProductDetail({ locale, data = local_data }) {
                         <Button
                           variant={"link"}
                           className={
-                            "text-[8px] 2xl:text-[10px] 3xl:text-[12px] leading-normal font-light text-[#282828] h-auto! "
+                            "text-[8px] xl:text-[10px] 2xl:text-[10px] 3xl:text-[12px] leading-normal font-light text-[#282828] h-auto! "
                           }
                         >
                           + More
@@ -318,7 +388,7 @@ export default function ProductDetail({ locale, data = local_data }) {
               >
                 <b>Bosq</b> : light grey Frisco fabric with aquaclean 2063
               </Heading>
-              <hr className="my-2 xl:my-3 2xl:my-5" />
+              <hr className="my-3 sm:my-3 2xl:my-5 mx-[-5px]" />
               <Heading
                 as="div"
                 size="none"
@@ -326,34 +396,34 @@ export default function ProductDetail({ locale, data = local_data }) {
               >
                 AED 458 <span>Inc Tax</span>
               </Heading>
-              <div className="w-full flex flex-wrap gap-2.5 mb-2 xl:mb-3 2xl:mb-5">
-                <div className="w-[80px] h-[35px] lg:h-[40px] 2xl:h-[45px] 3xl:h-[55px] flex items-center rounded-lg overflow-hidden bg-white border border-[#dedede]">
+              <div className="w-full flex flex-wrap gap-2.5 mb-3 xl:mb-3 2xl:mb-5">
+                <div className="w-[60px] xl:w-[60px] 2xl:w-[80px] h-[35px] lg:h-[40px] 2xl:h-[45px] 3xl:h-[55px] flex items-center rounded-[6px] overflow-hidden bg-white border border-[#dedede]">
                   <input
                     type="text"
                     value={quantity}
                     onChange={handleChange}
-                    className="text-[12px] xl:text-[14px] leading-none font-normal text-center text-black overflow-hidden w-[calc(100%-25px)] focus:outline-none"
+                    className="text-[12px] xl:text-[14px] leading-none font-normal text-center text-black w-8/10 overflow-hidden focus:outline-none"
                   />
-                  <div className="w-[25px] flex flex-col align-center">
+                  <div className="w-4/10 flex flex-col align-center justify-center">
                     <button
                       onClick={handleDecrement}
                       className="transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       disabled={quantity <= 1}
                     >
-                      <ChevronUp className="size-4 text-black" />
+                      <ChevronUp className="size-3 text-black" />
                     </button>
 
                     <button
                       onClick={handleIncrement}
                       className="transition-colors"
                     >
-                      <ChevronDown className="size-4 text-black" />
+                      <ChevronDown className="size-3 text-black" />
                     </button>
                   </div>
                 </div>
                 <Button
                   variant={"black"}
-                  className="flex-1 min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-40"
+                  className="flex-1 max-w-[768px]"
                   asChild
                 >
                   <Link href={"/"}>
@@ -369,9 +439,13 @@ export default function ProductDetail({ locale, data = local_data }) {
                 </Button>
               </div>
 
-              <div className="flex flex-wrap items-center justify-between gap-4 xl:gap-6 mb-2 xl:mb-3 2xl:mb-5">
-                <div className="flex-1">
-                  <Text as="div" size="text3" className="text-[#282828]">
+              <div className="flex flex-wrap items-center justify-between gap-4 xl:gap-6 mb-2 xl:mb-3 2xl:mb-5 max-lg:flex-wrap-reverse">
+                <div className="flex lg:flex-1">
+                  <Text
+                    as="div"
+                    size="text3"
+                    className="text-[#282828] max-w-[95%]"
+                  >
                     {parse(data?.purchaseTagline)}
                   </Text>
                 </div>
@@ -382,23 +456,25 @@ export default function ProductDetail({ locale, data = local_data }) {
                 >
                   <Link href={"/"}>Buy Now</Link>
                 </Button>
-                <Button
-                  variant={"link"}
-                  className={"font-normal underline h-auto"}
-                  asChild
-                >
-                  <Link href={"/"}>Enquire Now</Link>
-                </Button>
+                <EnquireModal locale={locale}>
+                  <Button
+                    variant={"link"}
+                    className={"font-normal underline h-auto"}
+                  >
+                    Enquire Now
+                  </Button>
+                </EnquireModal>
               </div>
 
-              <hr className="my-2 xl:my-3 2xl:my-5" />
-              <div className="flex flex-wrap justify-between gap-2.5 2xl:gap-5">
+              <hr className="my-3 sm:my-3 2xl:my-5 mx-[-5px]" />
+
+              <div className="flex flex-wrap sm:justify-between gap-1 sm:gap-2.5 2xl:gap-5">
                 {data?.specification.map((item, index) => (
                   <div key={"features" + index}>
                     <Text
                       as="div"
                       size="text3"
-                      className="text-[#282828] flex gap-x-2"
+                      className="text-[#282828] flex gap-x-2 max-sm:bg-[#f2f2f2] max-sm:border max-sm:border-[#dedede] max-sm:p-1.5 max-sm:rounded-lg"
                     >
                       <Image
                         src={item?.iconPath || "/images/placeholder.jpg"}
@@ -415,7 +491,7 @@ export default function ProductDetail({ locale, data = local_data }) {
                 ))}
               </div>
 
-              <hr className="my-2 xl:my-3 2xl:my-5" />
+              <hr className="my-3 sm:my-3 2xl:my-5 mx-[-5px]" />
 
               <Button
                 variant={"link"}
@@ -431,12 +507,15 @@ export default function ProductDetail({ locale, data = local_data }) {
                     alt={"icon-right-arrow"}
                     width={15}
                     height={15}
-                    className="w-[15px]"
+                    className={cn(
+                      "w-[15px] mx-1",
+                      locale === "ar" && "rotate-180"
+                    )}
                   />
                 </Link>
               </Button>
 
-              <hr className="my-2 xl:my-3 2xl:my-5" />
+              <hr className="my-3 sm:my-3 2xl:my-5 mx-[-5px]" />
 
               <div className="flex items-center gap-3">
                 <span className="text-sm text-gray-500">
@@ -449,125 +528,26 @@ export default function ProductDetail({ locale, data = local_data }) {
               </div>
             </div>
           </div>
-          <div className="w-full mt-20">
-            <Accordion
-              type="single"
-              collapsible
-              className="w-full"
-              defaultValue="item-1"
-            >
-              <hr />
-              <AccordionItem value="item-1">
-                <AccordionTrigger className={accordionTriggerStyle}>
-                  Product Details
-                </AccordionTrigger>
-                <AccordionContent className="px-2.5">
-                  <div className="typography flex flex-wrap justify-between">
-                    <div className="max-w-[540px] 2xl:max-w-[650px] 3xl:max-w-[820px]">
-                      <h6>
-                        Optron hash High-Back Task Chair | Latice Series|
-                        Product Details
-                      </h6>
-                      <p>
-                        Upgrade your workspace with the innovative OPTRON Hash
-                        Frame Ergonomic Mesh Office Chair, designed to deliver
-                        unmatched comfort and support for professionals
-                        in Dubai, UAE. Featuring a sleek and futuristic design,
-                        this chair combines style with cutting-edge ergonomic
-                        functionality.The independent height-adjustable
-                        backrest and sliding seat with depth adjustment ensure a
-                        customized fit for your body, providing superior comfort
-                        during long working hours. The dynamic variable lumbar
-                        support adapts perfectly to the natural curve of your
-                        back, promoting a healthy posture. Its breathable mesh
-                        backrest enhances air circulation, keeping you cool and
-                        focused throughout the day.
-                      </p>
-                    </div>
-                    <div className="max-w-[468px] 2xl:max-w-[576px] 3xl:max-w-[700px] border border-[#e9e9e9] rounded-lg p-2.5 xl:p-5 2xl:p-7.5">
-                      <ul>
-                        <li>
-                          <b>Adjustable Backrest:</b> Independent height
-                          adjustment for tailored support.
-                        </li>
-                        <li>
-                          <b>Seat Customization:</b> Sliding seat with depth
-                          adjustment for personalized comfort.
-                        </li>
-                        <li>
-                          <b>Lumbar Support:</b> Dynamic variable lumbar support
-                          adapts to your spine’s natural curve.
-                        </li>
-                        <li>
-                          <b>Breathable Mesh Backrest:</b> Enhances air
-                          circulation to keep you cool during long work hours.
-                        </li>
-                        <li>
-                          <b>Modern Aesthetic:</b> Sleek, futuristic design
-                          perfect for contemporary office setups.
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-              <hr />
-              <AccordionItem value="item-2">
-                <AccordionTrigger className={accordionTriggerStyle}>
-                  Projects
-                </AccordionTrigger>
-                <AccordionContent className="p-2">
-                  <div className="flex flex-wrap -mx-0.5 *:p-0.5 mt-4 mb-4 xl:mb-6 2xl:mb-10">
-                    {data?.projectGallery.map((item, index) => (
-                      <div
-                        key={index}
-                        onClick={() => {
-                          setIndex(index);
-                          setOpen(true);
-                        }}
-                        className="h-[240px] 2xl:h-[300px] 3xl:h-[376px] nth-[1]:w-35/100 nth-[2]:w-25/100 nth-[3]:w-40/100 nth-[4]:w-20/100 nth-[5]:w-20/100 nth-[6]:w-40/100 nth-[7]:w-20/100"
-                      >
-                        <div className="w-full h-full overflow-hidden">
-                          <Image
-                            src={`/images/product-detail-${index + 1}.jpg`}
-                            alt={"product-detail"}
-                            width={576}
-                            height={376}
-                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                          />
-                        </div>
-                      </div>
-                    ))}
-
-                    <Lightbox
-                      open={open}
-                      close={() => setOpen(false)}
-                      index={index}
-                      slides={data?.projectGallery.map((src) => ({
-                        // src: `/images/product-detail-${src}.jpg`,
-                        src: src.path,
-                      }))}
-                      animation={{ fade: 0 }}
-                      controller={{
-                        closeOnPullDown: true,
-                        closeOnBackdropClick: true,
-                      }}
-                    />
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-              <hr />
-              <AccordionItem value="item-3" className="py-2 sm:py-3">
-                <AccordionTrigger className={accordionTriggerStyle}>
-                  Additional Information
-                </AccordionTrigger>
-                <AccordionContent className="p-2">
-                  <div className="typography">
+        </div>
+        <div className="w-full mt-10 xl:mt-20">
+          <Accordion
+            type="single"
+            collapsible
+            className="w-full"
+            defaultValue="item-1"
+          >
+            <hr />
+            <AccordionItem value="item-1">
+              <AccordionTrigger className={accordionTriggerStyle}>
+                Product Details
+              </AccordionTrigger>
+              <AccordionContent className="sm:px-2">
+                <div className="typography flex flex-wrap justify-between">
+                  <div className="xl:max-w-[540px] 2xl:max-w-[650px] 3xl:max-w-[820px]">
                     <h6>
                       Optron hash High-Back Task Chair | Latice Series| Product
                       Details
                     </h6>
-
                     <p>
                       Upgrade your workspace with the innovative OPTRON Hash
                       Frame Ergonomic Mesh Office Chair, designed to deliver
@@ -584,44 +564,129 @@ export default function ProductDetail({ locale, data = local_data }) {
                       focused throughout the day.
                     </p>
                   </div>
-                </AccordionContent>
-              </AccordionItem>
-              <hr />
-              <AccordionItem value="item-4" className="py-2 sm:py-3">
-                <AccordionTrigger className={accordionTriggerStyle}>
-                  FAQ
-                </AccordionTrigger>
-                <AccordionContent className="p-2">
-                  <div className="typography">
-                    <h6>Q1: What is the return policy for this product?</h6>
-                    <p>
-                      Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                      Magni, ratione!
-                    </p>
-                    <br />
+                  <div className="xl:max-w-[468px] 2xl:max-w-[576px] 3xl:max-w-[700px] border border-[#e9e9e9] rounded-lg p-2.5 xl:p-5 2xl:p-7.5">
+                    <ul>
+                      <li>
+                        <b>Adjustable Backrest:</b> Independent height
+                        adjustment for tailored support.
+                      </li>
+                      <li>
+                        <b>Seat Customization:</b> Sliding seat with depth
+                        adjustment for personalized comfort.
+                      </li>
+                      <li>
+                        <b>Lumbar Support:</b> Dynamic variable lumbar support
+                        adapts to your spine’s natural curve.
+                      </li>
+                      <li>
+                        <b>Breathable Mesh Backrest:</b> Enhances air
+                        circulation to keep you cool during long work hours.
+                      </li>
+                      <li>
+                        <b>Modern Aesthetic:</b> Sleek, futuristic design
+                        perfect for contemporary office setups.
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+            <hr />
+            <AccordionItem value="item-2">
+              <AccordionTrigger className={accordionTriggerStyle}>
+                Projects
+              </AccordionTrigger>
+              <AccordionContent className="sm:p-2">
+                <div className="flex flex-wrap -mx-0.5 *:p-0.5 mt-4 mb-4 xl:mb-6 2xl:mb-10">
+                  {data?.projectGallery.map((item, index) => (
+                    <div
+                      key={index}
+                      onClick={() => {
+                        setIndexProject(index);
+                        setOpenProject(true);
+                      }}
+                      className="h-[100px] xs:h-[120px] sm:h-[200px] xl:h-[240px] 2xl:h-[300px] 3xl:h-[376px] nth-[1]:w-35/100 nth-[2]:w-25/100 nth-[3]:w-40/100 nth-[4]:w-20/100 nth-[5]:w-20/100 nth-[6]:w-40/100 nth-[7]:w-20/100"
+                    >
+                      <div className="w-full h-full overflow-hidden">
+                        <Image
+                          src={item?.path || "/images/placeholder.jpg"}
+                          alt={item?.alt}
+                          width={576}
+                          height={376}
+                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                    </div>
+                  ))}
+
+                  <Lightbox
+                    open={openProject}
+                    close={() => setOpenProject(false)}
+                    index={indexProject}
+                    slides={data?.projectGallery.map((src) => ({
+                      src: src.path,
+                    }))}
+                    animation={{ fade: 0 }}
+                    controller={{
+                      closeOnPullDown: true,
+                      closeOnBackdropClick: true,
+                    }}
+                    plugins={[Thumbnails]}
+                  />
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+            <hr />
+            <AccordionItem value="item-3">
+              <AccordionTrigger className={accordionTriggerStyle}>
+                Additional Information
+              </AccordionTrigger>
+              <AccordionContent className="sm:p-2">
+                <div className="typography">
+                  <h6>
+                    Optron hash High-Back Task Chair | Latice Series| Product
+                    Details
+                  </h6>
+
+                  <p>
+                    Upgrade your workspace with the innovative OPTRON Hash Frame
+                    Ergonomic Mesh Office Chair, designed to deliver unmatched
+                    comfort and support for professionals in Dubai, UAE.
+                    Featuring a sleek and futuristic design, this chair combines
+                    style with cutting-edge ergonomic functionality.The
+                    independent height-adjustable backrest and sliding seat with
+                    depth adjustment ensure a customized fit for your body,
+                    providing superior comfort during long working hours. The
+                    dynamic variable lumbar support adapts perfectly to the
+                    natural curve of your back, promoting a healthy posture. Its
+                    breathable mesh backrest enhances air circulation, keeping
+                    you cool and focused throughout the day.
+                  </p>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+            <hr />
+            <AccordionItem value="item-4">
+              <AccordionTrigger className={accordionTriggerStyle}>
+                FAQ
+              </AccordionTrigger>
+              <AccordionContent className="sm:p-2">
+                {[1, 2, 3, 4].map((index) => (
+                  <div key={"faq" + index} className="typography mb-4">
                     <h6>
-                      Q2: Lorem ipsum dolor, sit amet consectetur adipisicing
-                      elit.
-                    </h6>
-                    <p>
-                      Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                      Magni, ratione!
-                    </p>
-                    <br />
-                    <h6>
-                      Q3: Lorem ipsum dolor, sit amet consectetur adipisicing
-                      elit.
+                      Q{index}: Lorem ipsum dolor sit amet consectetur
+                      adipisicing?
                     </h6>
                     <p>
                       Lorem ipsum dolor sit, amet consectetur adipisicing elit.
                       Magni, ratione!
                     </p>
                   </div>
-                </AccordionContent>
-              </AccordionItem>
-              <hr />
-            </Accordion>
-          </div>
+                ))}
+              </AccordionContent>
+            </AccordionItem>
+            <hr />
+          </Accordion>
         </div>
       </div>
     </section>
@@ -632,7 +697,7 @@ function ChooseDesign({ children, data, locale }) {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   const sheetAccordionTriggerStyle = cn(
-    "text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-4 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5 [&[data-state=open]>svg]:invert-100"
+    "text-[12px] xl:text-[11px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-4 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5 [&[data-state=open]>svg]:invert-100"
   );
 
   const CHOOSE_DESIGN_OPTIONS = {
@@ -642,10 +707,14 @@ function ChooseDesign({ children, data, locale }) {
   };
 
   return (
-    <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+    <Sheet
+      dir={locale === "ar" ? "rtl" : "ltr"}
+      open={isSheetOpen}
+      onOpenChange={setIsSheetOpen}
+    >
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent
-        side="right"
+        side={locale === "ar" ? "left" : "right"}
         className={
           "max-w-[320px] sm:max-w-[320px] xl:max-w-[340px] 2xl:max-w-[468px]"
         }
@@ -672,17 +741,14 @@ function ChooseDesign({ children, data, locale }) {
               <AccordionContent className="p-2">
                 <div className="flex flex-wrap">
                   {data?.model.map((item, index) => (
-                    <div
-                      key={"chooseDesign" + index}
-                      className="w-full sm:w-1/2"
-                    >
+                    <div key={"chooseDesign" + index} className="w-1/2">
                       <div className="w-full h-full border border-[#28828] rounded-[6px] p-2">
                         <Image
                           src={item?.iconPath || "/images/placeholder.jpg"}
                           alt={item?.title}
                           width={75}
                           height={85}
-                          className="w-[70px] aspect-[75/85] mx-auto mb-1.5 block"
+                          className="w-[50px] xl:w-[70px] aspect-[75/85] mx-auto mb-1.5 block"
                         />
                         <div className="text-[8px] 2xl:text-[12px] leading-normal font-normal text-center text-[#282828] ">
                           {item?.title}
@@ -704,13 +770,12 @@ function ChooseDesign({ children, data, locale }) {
                     <div key={color} className="flex items-center gap-2">
                       <Checkbox
                         id={`color-${color}`}
-                        checked={null}
                         onCheckedChange={null}
                         className="rounded-none"
                       />
                       <Label
                         htmlFor={`color-${color}`}
-                        className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
+                        className="text-[12px] xl:text-[11px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
                       >
                         {color}
                       </Label>
@@ -730,13 +795,12 @@ function ChooseDesign({ children, data, locale }) {
                     <div key={material} className="flex items-center gap-2">
                       <Checkbox
                         id={`material-${material}`}
-                        checked={null}
                         onCheckedChange={null}
                         className="rounded-none"
                       />
                       <Label
                         htmlFor={`material-${material}`}
-                        className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
+                        className="text-[12px] xl:text-[11px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
                       >
                         {material}
                       </Label>
@@ -756,13 +820,12 @@ function ChooseDesign({ children, data, locale }) {
                     <div key={fabricName} className="flex items-center gap-2">
                       <Checkbox
                         id={`fabricName-${fabricName}`}
-                        checked={null}
                         onCheckedChange={null}
                         className="rounded-none"
                       />
                       <Label
                         htmlFor={`fabricName-${fabricName}`}
-                        className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
+                        className="text-[12px] xl:text-[11px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
                       >
                         {fabricName}
                       </Label>
@@ -779,6 +842,66 @@ function ChooseDesign({ children, data, locale }) {
             Apply Filters
           </Button>
         </SheetFooter>
+        <SheetClose
+          className={cn(
+            "w-14 h-(--header-y) bg-white border-b border-[#eee] absolute z-1 top-0 rounded-none! flex items-center justify-center",
+            locale === "ar" ? "left-0" : "right-0"
+          )}
+          asChild
+        >
+          <Button variant="none" size="none">
+            <X className="size-5 text-black" />
+          </Button>
+        </SheetClose>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
+function EnquireModal({ children, data, locale }) {
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  return (
+    <Sheet
+      dir={locale === "ar" ? "rtl" : "ltr"}
+      open={isSheetOpen}
+      onOpenChange={setIsSheetOpen}
+    >
+      <SheetTrigger asChild>{children}</SheetTrigger>
+      <SheetContent
+        side={locale === "ar" ? "left" : "right"}
+        className={
+          "max-w-[320px] sm:max-w-[320px] xl:max-w-[340px] 2xl:max-w-[468px]"
+        }
+      >
+        <SheetHeader className="min-h-(--header-y) border-b border-[#eee] px-4 sm:px-7 justify-center">
+          <SheetTitle>Enquire Now</SheetTitle>
+          <SheetDescription className="sr-only">
+            Select your preferences
+          </SheetDescription>
+        </SheetHeader>
+
+        <div className="w-full min-h-[calc(100vh-var(--header-y))] overflow-y-scroll px-2 sm:px-5">
+          <Heading
+            as="div"
+            size="heading5"
+            className="font-normal text-[#282828] mb-2 2xl:mb-3 mt-2.5 2xl:mt-4"
+          >
+            Bulk Orders & Customisation Available!
+          </Heading>
+          <Text as="div" size="text3" className="text-[#282828] mb-2 2xl:mb-4">
+            {parse(
+              "<p>Need 10 or 100 chairs? Want them in your brand colours or a unique design? No problem.Just tell us what you need below!</p>"
+            )}
+          </Text>
+          <ProductEnquiryForm />
+        </div>
+
+        {/* <SheetFooter className="flex flex-row justify-between">
+          <Button onClick={null} variant="black" className="min-w-full">
+            Submit Now
+          </Button>
+        </SheetFooter> */}
+
         <SheetClose
           className={cn(
             "w-14 h-(--header-y) bg-white border-b border-[#eee] absolute z-1 top-0 rounded-none! flex items-center justify-center",

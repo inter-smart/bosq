@@ -16,7 +16,14 @@ export default function ProductSimilar({ locale, data }) {
 
   return (
     <section className="w-full block py-[15px_30px] xl:py-[30px_60px] 2xl:py-[40px_100px]">
-      <div className="container">
+      <div
+        className={cn(
+          "container",
+          locale === "ar"
+            ? "max-sm:mask-[linear-gradient(to_left,white_0%,white_98%,transparent_100%)] max-sm:pl-0"
+            : "max-sm:mask-[linear-gradient(to_right,white_0%,white_98%,transparent_100%)] max-sm:pr-0"
+        )}
+      >
         <Heading
           as="h2"
           size="heading1"
@@ -34,7 +41,7 @@ export default function ProductSimilar({ locale, data }) {
         </Heading>
         <div className="w-full max-w-full relative z-0 ">
           <div className="overflow-hidden" ref={emblaRef}>
-            <div className="flex touch-pan-y touch-pinch-zoom -mx-3 sm:-mx-2 xl:-mx-5 2xl:-mx-8 *:p-3 sm:*:p-2 xl:*:p-5 2xl:*:p-8">
+            <div className="flex touch-pan-y touch-pinch-zoom -mx-1 sm:-mx-2 xl:-mx-5 2xl:-mx-8 *:p-1 sm:*:p-2 xl:*:p-5 2xl:*:p-8">
               {data?.product?.map((item, index) => (
                 <div
                   key={"product" + index}
