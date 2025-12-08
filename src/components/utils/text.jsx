@@ -5,11 +5,11 @@ const textVariants = cva("leading-normal font-light", {
   variants: {
     size: {
       text1:
-        "text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px]",
+        "text-[12px] lg:text-[12px] 2xl:text-[14px] 3xl:text-[18px]",
       text2:
-        "text-[12px] xl:text-[13px] 2xl:text-[16px] 3xl:text-[20px]",
+        "text-[12px] lg:text-[13px] 2xl:text-[16px] 3xl:text-[20px]",
       text3:
-        "text-[12px] xl:text-[11px] 2xl:text-[12px] 3xl:text-[14px]",
+        "text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[14px]",
     },
   },
   defaultVariants: {
