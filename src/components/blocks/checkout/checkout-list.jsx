@@ -4,24 +4,42 @@ import { Heading } from "@/components/utils/heading";
 import { Text } from "@/components/utils/text";
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import ProductEnquiryForm from "@/components/form/product-enquiry-form";
-import EnquiryForm from "@/components/form/enquiry-form";
 import SoftLoginForm from "@/components/form/soft-login-form";
 import AddressForm from "@/components/form/address-form";
-import Link from "next/link";
 import Image from "next/image";
+import { ChevronDown } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import Link from "next/link";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
 });
 
+const paymentMethods = [
+  {
+    id: 1,
+    name: "Cash On Delivery (COD)",
+    description: "Pay by card or another accepted payment method",
+  },
+  {
+    id: 2,
+    name: "Pay Online",
+    description: "You will be redirected to payment gateway.",
+  },
+];
+
 export default function CheckoutList({ locale, data }) {
   const [loading, setLoading] = useState(false);
+  const [checkoutList, setCheckoutList] = useState(false);
   return (
     <section className="w-full block py-[15px_30px] xl:py-[30px_60px] 2xl:py-[40px_100px] relative z-0">
       <div className="container">
         <div className="flex flex-wrap -mx-2.5 xl:-mx-8 2xl:-mx-10 [&>*]:p-2.5 xl:[&>*]:p-8 2xl:[&>*]:10">
-          <div className="w-full lg:w-[calc(100%-320px)] xl:w-[calc(100%-420px)] 2xl:w-[calc(100%-520px)] 3xl:w-[calc(100%-576px)] ">
+          <div className="w-full lg:w-[calc(100%-320px)] xl:w-[calc(100%-460px)] 2xl:w-[calc(100%-540px)] 3xl:w-[calc(100%-668px)] ">
             <div className="w-full h-auto block p-2 xl:p-5 2xl:p-7 rounded-lg border border-[#e0e0e0] mb-1 xl:mb-2.5 2xl:mb-4">
               <Heading
                 as="h4"
@@ -43,55 +61,76 @@ export default function CheckoutList({ locale, data }) {
               <AddressForm />
             </div>
           </div>
-          <div className="w-full lg:w-[320px] xl:w-[420px] 2xl:w-[520px] 3xl:w-[576px] xl:p-5">
-            <div className="w-full bg-[#f4f4f4] border border-[#e0e0e0] rounded-lg p-3 sm:p-4 xl:p-7 2xl:p-8 sticky top-[var(--header-y)] ">
+          <div className="w-full lg:w-[320px] xl:w-[460px] 2xl:w-[540px] 3xl:w-[668px]">
+            <div className="w-full bg-[#f4f4f4] border border-[#e0e0e0] rounded-lg p-3 sm:p-4 xl:p-7 2xl:p-8 mb-2 xl:mb-4">
               <Text
                 as="div"
                 size="text3"
-                className="font-normal text-[#282828] my-2 xl:my-3 2xl:my-4 [&_span]:font-light [&_span]:text-[#808080] flex justify-between"
+                className="text-[#808080] mb-1 xl:mb-2 2xl:mb-3"
               >
-                2 Items
+                {data?.items_count} Items
               </Text>
-              <div className="w-full bg-white">
-                <div className="group w-full flex flex-wrap items-center border border-[#e9e9e9] rounded-lg p-3 sm:p-3 xl:p-5 2xl:p-6 hover:shadow-sm transition-shadow ">
-                  <div className="w-[40px] xl:w-[45px] 2xl:w-[60px] aspect-3/4 rounded-lg bg-white border border-gray-100 sm:border-white max-sm:mb-3">
-                    <Image
-                      src={data?.product?.media?.path}
-                      alt={data?.product?.media?.alt}
-                      width={168}
-                      height={168}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                  <div className="w-full sm:w-[calc(100%-100px)] xl:w-[calc(100%-168px)] 2xl:w-[calc(100%-200px)] sm:px-2.5 xl:px-4 2xl:px-5">
-                    <Heading
-                      as="div"
-                      size="heading3"
-                      className="truncate text-[#282828] mb-1 xl:mb-2 max-lg:font-medium"
-                    >
-                      {data?.product?.name}
-                    </Heading>
-                    <Text
-                      as="div"
-                      size="text3"
-                      className="leading-tight truncate text-[#282828] mb-2 xl:mb-4"
-                    >
-                      {data?.product?.description}
-                    </Text>
-                    <div className="flex justify-between items-center gap-1 mb-2 sm:mb-3 xl:mb-4 2xl:mb-6">
-                      <Text
-                        as="div"
-                        size="text3"
-                        className="font-normal text-[#282828]"
-                      >
-                        AED {data?.product?.price}{" "}
-                        <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc]">
-                          Inc Tax
-                        </span>
-                      </Text>
+              <button
+                onClick={() => setCheckoutList((prev) => !prev)}
+                className="text-[10px] 2xl:text-[12px] leading-none font-light truncate text-black mb-2 xl:mb-2.5 flex hover:underline"
+              >
+                Show Details{" "}
+                <ChevronDown
+                  className={cn(
+                    "size-3 transition",
+                    checkoutList ? "rotate-180" : ""
+                  )}
+                />
+              </button>
+              <div
+                className={cn(
+                  "w-full bg-white rounded-lg border border-[#e0e0e0] p-1 xl:p-2 transition duration-300 ease-in-out ",
+                  checkoutList ? "h-auto block" : "h-0 hidden"
+                )}
+              >
+                {data?.items?.map((item, index) => (
+                  <div
+                    key={"checkout-item-" + index}
+                    className="group w-full flex flex-wrap items-center py-0.5"
+                  >
+                    <div className="w-[35px] xl:w-[30px] 2xl:w-[40px] aspect-3/4 rounded-lg bg-white  max-sm:mb-3 border border-gray-100 ">
+                      <Image
+                        src={item?.media?.path}
+                        alt={item?.media?.alt}
+                        width={168}
+                        height={168}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                    <div className="w-full sm:w-[calc(100%-35px)] xl:w-[calc(100%-30px)] 2xl:w-[calc(100%-40px)] sm:px-1 xl:px-1.5 flex justify-between gap-x-1 items-center">
+                      <div className="w-[calc(100%-50px)]">
+                        <Text
+                          as="div"
+                          size="text3"
+                          className="truncate leading-none text-[#282828] mb-0.5 xl:mb-1"
+                        >
+                          {item?.name}
+                        </Text>
+                        <Text
+                          as="div"
+                          size="none"
+                          className="text-[8px] 2xl:text-[10px] leading-none font-light truncate text-[#808080]"
+                        >
+                          {item?.description}
+                        </Text>
+                      </div>
+                      <div className="w-[50px]">
+                        <Text
+                          as="div"
+                          size="text3"
+                          className="font-normal text-[#282828]"
+                        >
+                          AED {item?.price}
+                        </Text>
+                      </div>
                     </div>
                   </div>
-                </div>
+                ))}
               </div>
               <Text
                 as="div"
@@ -124,16 +163,74 @@ export default function CheckoutList({ locale, data }) {
                 </span>
                 AED 1058
               </Text>
-              <MediaQuery minWidth={640}>
-                <Button
-                  variant={"black"}
-                  disabled={loading}
-                  className="min-w-full mt-2"
-                >
-                  {loading ? "Sending..." : "Checkout"}
-                </Button>
-              </MediaQuery>
             </div>
+
+            <div className="w-full bg-[#f4f4f4] border border-[#e0e0e0] rounded-lg p-3 sm:p-4 xl:p-7 2xl:p-8 mb-2 xl:mb-4">
+              <RadioGroup defaultValue="payment1" className={"grid-cols-2"}>
+                {paymentMethods?.map((method, idx) => (
+                  <div key={"paymentMethods" + idx} className="w-full">
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem
+                        value={"payment" + method?.id}
+                        id={"payment" + method?.id}
+                      />
+                      <Label
+                        htmlFor={"payment" + method?.id}
+                        className={
+                          "text-[12px] lg:text-[10px] 2xl:text-[14px] 3xl:text-[16px] leading-tight font-light text-[#282828]"
+                        }
+                      >
+                        {method?.name}
+                      </Label>
+                    </div>
+                    <Text
+                      as="div"
+                      size="none"
+                      className="text-[8px] lg:text-[9px] 2xl:text-[14px] leading-tight font-light text-[#808080] mt-1 xl:mt-2.5"
+                    >
+                      {method?.description}
+                    </Text>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
+
+            <Text
+              as="div"
+              size="text3"
+              className="leading-tight text-[#808080] [&_a]:underline mb-2 xl:mb-4"
+            >
+              Your personal data will be used to process your order, support
+              your experience throughout this website, and for other purposes
+              described in our{" "}
+              <Link href="/privacy-policy">Privacy Policy</Link>
+            </Text>
+
+            <div className="flex items-center gap-3 mb-2 xl:mb-4">
+              <Checkbox id="agree" />
+              <Label htmlFor="agree">
+                <Text
+                  as="span"
+                  size="text3"
+                  className="leading-tight text-[#282828] [&_a]:underline"
+                >
+                  I have read and agree to the website{" "}
+                  <Link href="/terms-and-conditions">
+                    Terms and Conditions *
+                  </Link>
+                </Text>
+              </Label>
+            </div>
+
+            <MediaQuery minWidth={640}>
+              <Button
+                variant={"black"}
+                disabled={loading}
+                className="min-w-full mt-2"
+              >
+                {loading ? "Placing order..." : "Place Order"}
+              </Button>
+            </MediaQuery>
           </div>
         </div>
       </div>
@@ -141,7 +238,7 @@ export default function CheckoutList({ locale, data }) {
         <hr />
         <div className="w-full py-1 px-4 pb-2 bg-white sticky z-1 bottom-0 left-0 right-0 shadow-[0px_-5px_10px_rgba(0,0,0,0.1)]">
           <Button variant={"black"} disabled={loading} className="min-w-full">
-            {loading ? "Sending..." : "Checkout"}
+            {loading ? "Placing order..." : "Place Order"}
           </Button>
         </div>
       </MediaQuery>

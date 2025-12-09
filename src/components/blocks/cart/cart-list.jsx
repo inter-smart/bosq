@@ -16,7 +16,7 @@ export default function CartList({ locale, data }) {
     <section className="w-full block py-[15px_30px] xl:py-[30px_60px] 2xl:py-[40px_100px] relative z-0">
       <div className="container">
         <div className="flex flex-wrap -mx-2.5 xl:-mx-8 2xl:-mx-10 [&>*]:p-2.5 xl:[&>*]:p-8 2xl:[&>*]:10">
-          <div className="w-full lg:w-[calc(100%-320px)] xl:w-[calc(100%-420px)] 2xl:w-[calc(100%-520px)] 3xl:w-[calc(100%-576px)] max-sm:mb-2">
+          <div className="w-full lg:w-[calc(100%-320px)] xl:w-[calc(100%-460px)] 2xl:w-[calc(100%-540px)] 3xl:w-[calc(100%-668px)] max-sm:mb-2">
             <div className="flex flex-wrap -m-[5px] *:p-[5px]">
               {data?.items?.map((item, index) => (
                 <div
@@ -46,7 +46,7 @@ export default function CartList({ locale, data }) {
               </Button>
             </div>
           </div>
-          <div className="w-full lg:w-[320px] xl:w-[420px] 2xl:w-[520px] 3xl:w-[576px] xl:p-5">
+          <div className="w-full lg:w-[320px] xl:w-[460px] 2xl:w-[540px] 3xl:w-[668px]">
             <div className="w-full bg-[#f4f4f4] border border-[#e0e0e0] rounded-lg p-3 sm:p-4 xl:p-7 2xl:p-8 sticky top-[var(--header-y)] ">
               <Heading
                 as="div"

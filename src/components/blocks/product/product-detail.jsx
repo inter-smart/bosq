@@ -40,7 +40,6 @@ import {
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import EnquiryForm from "@/components/form/enquiry-form";
 import ProductEnquiryForm from "@/components/form/product-enquiry-form";
 
 const local_data = {
