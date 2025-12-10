@@ -15,9 +15,6 @@ export default function CartEmpty() {
     <div className="py-[30px] sm:py-[40px] xl:py-[60px] 2xl:py-[100px]">
       <Empty>
         <EmptyHeader>
-          {/* <EmptyMedia variant="icon">
-          <Icon />
-        </EmptyMedia> */}
           <EmptyTitle>
             <Heading as="h1" size="heading1" className="text-[#121212]">
               Your Cart is Empty

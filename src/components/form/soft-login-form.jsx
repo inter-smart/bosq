@@ -43,7 +43,7 @@ const inputStyle = cn(
 
 const errorStyle = cn("text-[#f17423]");
 
-export default function SoftLoginForm() {
+export default function SoftLoginForm({ setIsAuth }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -60,33 +60,35 @@ export default function SoftLoginForm() {
     setLoading(true);
     setSuccess(null);
 
-    try {
-      const res = await fetch("http://localhost:1337/api/auth/local", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          identifier: values.username,
-          password: values.password,
-        }),
-      });
+    // try {
+    //   const res = await fetch("http://localhost:1337/api/auth/local", {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify({
+    //       identifier: values.username,
+    //       password: values.password,
+    //     }),
+    //   });
 
-      if (!res.ok) throw new Error("Login failed");
+    //   if (!res.ok) throw new Error("Login failed");
 
-      const data = await res.json();
+    //   const data = await res.json();
 
-      // Store token if remember me is checked
-      if (values.rememberMe) {
-        localStorage.setItem("token", data.jwt);
-      }
+    //   // Store token if remember me is checked
+    //   if (values.rememberMe) {
+    //     localStorage.setItem("token", data.jwt);
+    //   }
 
-      setSuccess("Login successful!");
+    //   setSuccess("Login successful!");
 
-      // Redirect or handle successful login here
-      // window.location.href = "/dashboard";
-    } catch (err) {
-      console.error(err);
-      setSuccess("Invalid username or password. Please try again.");
-    }
+    //   // Redirect or handle successful login here
+    //   // window.location.href = "/dashboard";
+    // } catch (err) {
+    //   console.error(err);
+    //   setSuccess("Invalid username or password. Please try again.");
+    // }
+
+    setIsAuth(true);
 
     setLoading(false);
   };
@@ -180,7 +182,7 @@ export default function SoftLoginForm() {
         {success && !loading && (
           <p
             className={cn(
-              "mt-1 w-full",
+              "text-[10px] mt-1 w-full",
               success.includes("successful") ? "text-green-600" : "text-red-600"
             )}
           >
