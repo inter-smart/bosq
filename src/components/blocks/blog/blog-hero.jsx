@@ -12,9 +12,9 @@ import { Heading } from "@/components/utils/heading";
 import { Text } from "@/components/utils/text";
 import Image from "next/image";
 
-export default function BlogHero({ data, locale, slug, itemsCount }) {
+export default function BlogHero({ data, locale, slug }) {
   return (
-    <section className="w-full pt-[calc(var(--header-y)_+_20px)] sm:pt-[calc(var(--header-y)_+_10px)] pb-1 sm:pb-2.5">
+    <section className="w-full pt-(--header-y)_+_20px)] sm:pt-[calc(var(--header-y)_+_10px)]">
       <div className="container mb-3 xl:mb-5 2xl:mb-8">
         <Breadcrumb className="mb-2 sm:mb-4">
           <BreadcrumbList>
@@ -92,13 +92,15 @@ export default function BlogHero({ data, locale, slug, itemsCount }) {
                 )}
               />
             </Heading>
-            <Text
-              as="div"
-              size="text1"
-              className="line-clamp-2 font-light text-white max-w-[80%] "
-            >
-              {parse(data?.heroDescription)}
-            </Text>
+            {data?.heroDescription && (
+              <Text
+                as="div"
+                size="text1"
+                className="line-clamp-2 font-light text-white max-w-[80%] "
+              >
+                {parse(data?.heroDescription)}
+              </Text>
+            )}
           </div>
         </div>
       </div>

@@ -26,7 +26,7 @@ export default function BlogCard({ data }) {
           className="w-full block aspect-580/290 overflow-hidden border border-gray-100 mb-3 xl:mb-5"
         >
           <Image
-            src={data?.media?.path}
+            src={data?.media?.path || "/images/placeholder.jpg"}
             alt={data?.media?.alt}
             width={583}
             height={290}
