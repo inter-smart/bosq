@@ -110,13 +110,13 @@
     --text-color: black;
 
     * {
-      @apply my-2.5 lg:my-3;
+      @apply my-2.5 lg:my-4;
     }
 
     p,
     &,
     li {
-      @apply text-[12px] xl:text-[11px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-(--text-color);
+      @apply text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-normal font-light text-(--text-color);
     }
 
     h1 {
@@ -140,7 +140,7 @@
     }
 
     h6 {
-      @apply text-[12px] xl:text-[11px] 2xl:text-[12px] 3xl:text-[14px] leading-tight font-normal text-(--text-color);
+      @apply text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-tight font-normal text-(--text-color);
     }
 
     ul,
