@@ -20,9 +20,14 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import BlogRelated from "./blog-related";
+import dynamic from "next/dynamic";
+
+const MediaQuery = dynamic(() => import("react-responsive"), {
+  ssr: false,
+});
 
 const navBtnStyle = cn(
-  "text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black flex items-center gap-0.5 disabled:opacity-50 not-disabled:hover:scale-110 transition"
+  "text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-white flex items-center gap-0.5 disabled:opacity-50 not-disabled:hover:scale-110 transition"
 );
 
 export default function BlogInfo({ data, popularData, relatedData, locale }) {
@@ -52,7 +57,7 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
 
   return (
     <section className="w-full block py-[10px] sm:py-[15px] xl:py-[20px] 2xl:py-[30px]">
-      <div className="w-full aspect-1920/740 overflow-hidden flex items-center relative z-0">
+      <div className="w-full aspect-6/5 sm:aspect-1920/740 overflow-hidden flex items-center relative z-0">
         <div className="w-full absolute -z-1 inset-0">
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex touch-pan-y touch-pinch-zoom">
@@ -60,10 +65,10 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
                 <div
                   key={"brand" + index}
                   className={cn(
-                    "flex-[0_0_100%] min-w-0 select-none transition aspect-1920/740"
+                    "flex-[0_0_100%] min-w-0 select-none transition aspect-6/5 sm:aspect-1920/740 bg-black"
                   )}
                 >
-                  <picture className="absolute -z-2 inset-0">
+                  <picture className="absolute -z-2 inset-0 opacity-95">
                     <source
                       media="(max-width: 640px)"
                       srcSet={item?.mobile?.path}
@@ -83,13 +88,15 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
               ))}
             </div>
           </div>
-          <div className="flex gap-4 xl:gap-8 absolute z-0 bottom-10 sm:right-[calc((100%-var(--container-sm))/2)] md:right-[calc((100%-var(--container-md))/2)] lg:right-[calc((100%-var(--container-lg))/2)] xl:right-[calc((100%-var(--container-xl))/2)] 2xl:right-[calc((100%-var(--container-2xl))/2)] 3xl:right-[calc((100%-var(--container-3xl))/2)] px-4">
+          <div className="flex gap-4 xl:gap-8 absolute z-0 bottom-5 sm:bottom-10 sm:right-[calc((100%-var(--container-sm))/2)] md:right-[calc((100%-var(--container-md))/2)] lg:right-[calc((100%-var(--container-lg))/2)] xl:right-[calc((100%-var(--container-xl))/2)] 2xl:right-[calc((100%-var(--container-2xl))/2)] 3xl:right-[calc((100%-var(--container-3xl))/2)] px-4">
             <PrevButton
               onClick={onPrevButtonClick}
               disabled={prevBtnDisabled}
               className={navBtnStyle}
             >
-              <ChevronLeft className="size-3.5" />
+              <ChevronLeft
+                className={cn("size-3.5", locale === "ar" && "rotate-180")}
+              />
               <span className="hidded sm:block">Previous </span>
             </PrevButton>
             <NextButton
@@ -98,13 +105,15 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
               className={navBtnStyle}
             >
               <span className="hidded sm:block">Next </span>
-              <ChevronRight className="size-3.5" />
+              <ChevronRight
+                className={cn("size-3.5", locale === "ar" && "rotate-180")}
+              />
             </NextButton>
           </div>
         </div>
 
         <div className="container">
-          <div className="w-full xl:max-w-1/2 py-[40px] xl:py-[60px] 2xl:py-[80px]">
+          <div className="w-full xl:max-w-1/2 py-[60px] xl:py-[80px] 2xl:py-[100px]">
             {formattedDate && (
               <Text
                 as="div"
@@ -135,12 +144,14 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
       <div className="w-full py-[15px] sm:py-[20px] xl:py-[30px] 2xl:py-[40px]">
         <div className="container">
           <div className="flex flex-wrap -mx-3 xl:-mx-7 2xl:-mx-9 [&>*]:p-3 xl:[&>*]:p-7 2xl:[&>*]:p-9">
-            <div className="w-full lg:w-[calc(100%-368px)] 2xl:w-[calc(100%-540px)]">
-              <div className="typography">{parse(data?.description)}</div>
+            <div className="w-full lg:w-[calc(100%-368px)] 2xl:w-[calc(100%-540px)] max-lg:mb-5">
+              <div dir={locale === "ar" ? "rtl" : "ltr"} className="typography">
+                {parse(data?.description)}
+              </div>
               <hr className="my-6 xl:my-8 2xl:my-10" />
               <div className="flex justify-between">
                 <div>
-                  <div className="flex items-center gap-1 xl:gap-2 2xl:gap-3">
+                  <div className="flex items-center gap-2 xl:gap-2 2xl:gap-3">
                     <div className="text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black">
                       Share :
                     </div>
@@ -159,7 +170,7 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
                               width={10}
                               height={10}
                               unoptimized
-                              className="w-[15px] lg:w-[13px] xl:w-[15px] 2xl:w-[17px] aspect-square block hover:scale-110 transition"
+                              className="w-[13px] xl:w-[15px] 2xl:w-[17px] aspect-square block hover:scale-110 transition"
                             />
                           </a>
                         </Button>
@@ -172,18 +183,28 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
                     <PrevButton
                       onClick={onPrevButtonClick}
                       disabled={prevBtnDisabled}
-                      className={cn(navBtnStyle, "text-white")}
+                      className={cn(navBtnStyle, "text-black")}
                     >
-                      <ChevronLeft className="size-3.5" />
+                      <ChevronLeft
+                        className={cn(
+                          "size-3.5",
+                          locale === "ar" && "rotate-180"
+                        )}
+                      />
                       <span className="hidded sm:block">Previous </span>
                     </PrevButton>
                     <NextButton
                       onClick={onNextButtonClick}
                       disabled={nextBtnDisabled}
-                      className={cn(navBtnStyle, "text-white")}
+                      className={cn(navBtnStyle, "text-black")}
                     >
                       <span className="hidded sm:block">Next </span>
-                      <ChevronRight className="size-3.5" />
+                      <ChevronRight
+                        className={cn(
+                          "size-3.5",
+                          locale === "ar" && "rotate-180"
+                        )}
+                      />
                     </NextButton>
                   </div>
                 </div>
@@ -191,75 +212,91 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
 
               <BlogRelated locale={locale} data={relatedData} />
             </div>
-            <div className="w-full lg:w-[368px] 2xl:w-[540px]">
-              <Heading
-                as="h2"
-                size="heading2"
-                className="text-black mt-2.5 lg:mt-4 mb-5 xl:mb-7 2xl:mb-9"
-              >
-                {popularData?.title}
-                <span
-                  className={cn(
-                    "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
-                    locale === "ar"
-                      ? "-translate-x-1 xl:-translate-x-2 "
-                      : "translate-x-1 xl:translate-x-2 "
-                  )}
-                />
-              </Heading>
-              {popularData?.blog?.slice(0, 3).map((item) => {
-                return (
-                  <div key={item.id} className="w-full">
-                    <Suspense fallback={<p>loading</p>}>
-                      <div className="group w-full h-auto flex flex-wrap items-center sm:mb-4 xl:mb-6 2xl:mb-8">
-                        <Link
-                          href={item?.slug}
-                          className="w-20 xl:w-[90px] 2xl:w-[140px] h-20 xl:h-[90px] 2xl:h-[140px] aspect-aquare overflow-hidden border border-gray-100 block"
-                        >
-                          <Image
-                            src={item?.media?.path || "/images/placeholder.jpg"}
-                            alt={item?.media?.alt}
-                            width={583}
-                            height={290}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
-                        </Link>
-                        <div className="flex-1 flex flex-col justify-between px-3 xl:px-5">
-                          <Heading
-                            as="div"
-                            size="heading5"
-                            className="leading-tight tracking-tight line-clamp-2 text-[#282828] mb-2 xl:mb-3 2xl:mb-4 hover:underline"
-                          >
-                            <Link href={item?.slug}>{item?.title}</Link>
-                          </Heading>
-                          <Text
-                            as="div"
-                            size="text3"
-                            className="truncate text-[#b1b3b4]"
-                          >
-                            {formattedDate}
-                          </Text>
-                        </div>
-                      </div>
-                    </Suspense>
-                  </div>
-                );
-              })}
+            <MediaQuery minWidth={1024}>
+              <div className="w-full lg:w-[368px] 2xl:w-[540px]">
+                <div className="w-full sticky top-[var(--header-y)]">
+                  <Heading
+                    as="h2"
+                    size="heading2"
+                    className="text-black mt-2.5 lg:mt-4 mb-5 xl:mb-7 3xl:mb-9"
+                  >
+                    {popularData?.title}
+                    <span
+                      className={cn(
+                        "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
+                        locale === "ar"
+                          ? "-translate-x-1 xl:-translate-x-2 "
+                          : "translate-x-1 xl:translate-x-2 "
+                      )}
+                    />
+                  </Heading>
 
-              {popularData?.blog?.length > 3 && (
-                <Button
-                  variant="link"
-                  size="none"
-                  className={"flex justify-start"}
-                  asChild
-                >
-                  <Link href={"/blogs"}>
-                    See all
-                    <ChevronRight className="size-3.5" />
-                  </Link>
-                </Button>
-              )}
-            </div>
+                  {popularData?.blog?.slice(0, 3).map((item) => {
+                    return (
+                      <div key={item.id} className="w-full">
+                        <Suspense fallback={<p>loading</p>}>
+                          <div className="group w-full h-auto flex flex-wrap items-center sm:mb-4 xl:mb-6 3xl:mb-8">
+                            <Link
+                              href={item?.slug}
+                              className="w-20 xl:w-[90px] 2xl:w-[140px] h-20 xl:h-[90px] 2xl:h-[140px] aspect-aquare overflow-hidden border border-gray-100 block"
+                            >
+                              <Image
+                                src={
+                                  item?.media?.path || "/images/placeholder.jpg"
+                                }
+                                alt={item?.media?.alt}
+                                width={583}
+                                height={290}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              />
+                            </Link>
+                            <div className="flex-1 flex flex-col justify-between px-3 xl:px-5">
+                              <Heading
+                                as="div"
+                                size="heading5"
+                                className="leading-tight tracking-tight line-clamp-2 text-[#282828] mb-2 xl:mb-3 2xl:mb-4 hover:underline"
+                              >
+                                <Link href={item?.slug}>{item?.title}</Link>
+                              </Heading>
+                              <Text
+                                as="div"
+                                size="text3"
+                                className="truncate text-[#b1b3b4]"
+                              >
+                                {formattedDate}
+                              </Text>
+                            </div>
+                          </div>
+                        </Suspense>
+                      </div>
+                    );
+                  })}
+
+                  {popularData?.blog?.length > 3 && (
+                    <Button
+                      variant="link"
+                      size="none"
+                      className={"text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black"}
+                      asChild
+                    >
+                      <Link href={"/blogs"}>
+                        See all
+                        <ChevronRight
+                          className={cn(
+                            "size-3.5",
+                            locale === "ar" && "rotate-180"
+                          )}
+                        />
+                      </Link>
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </MediaQuery>
+
+            <MediaQuery maxWidth={1023}>
+              <BlogRelated locale={locale} data={popularData} />
+            </MediaQuery>
           </div>
         </div>
       </div>

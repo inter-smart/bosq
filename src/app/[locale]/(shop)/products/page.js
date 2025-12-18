@@ -575,7 +575,7 @@ const local_data = {
   },
 };
 
-export default function ProductPage() {
+export default function ProductsPage() {
   const locale = "en";
 
   return (

@@ -23,7 +23,7 @@ export default function BlogCard({ data }) {
       <div className="group w-full h-full flex flex-col justify-between">
         <Link
           href={data?.slug}
-          className="w-full block aspect-580/290 overflow-hidden border border-gray-100 mb-3 xl:mb-5"
+          className="w-full block aspect-580/290 overflow-hidden border border-gray-100 mb-1.5 sm:mb-3 xl:mb-5"
         >
           <Image
             src={data?.media?.path || "/images/placeholder.jpg"}

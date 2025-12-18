@@ -22,11 +22,11 @@ const local_data = {
       {
         type: "image",
         mobile: {
-          path: "/images/placeholder.jpg",
+          path: "/images/blog-hero-1.jpg",
           alt: "placeholder",
         },
         desktop: {
-          path: "/images/placeholder.jpg",
+          path: "/images/blog-hero-1.jpg",
           alt: "placeholder",
         },
       },
@@ -44,11 +44,11 @@ const local_data = {
       {
         type: "image",
         mobile: {
-          path: "/images/placeholder.jpg",
+          path: "/images/blog-hero-1.jpg",
           alt: "placeholder",
         },
         desktop: {
-          path: "/images/placeholder.jpg",
+          path: "/images/blog-hero-1.jpg",
           alt: "placeholder",
         },
       },

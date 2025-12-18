@@ -143,9 +143,14 @@
       @apply text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-tight font-normal text-(--text-color);
     }
 
-    ul,
-    ol {
+    &[dir="ltr"] ul,
+    &[dir="ltr"] ol {
       @apply pl-5 lg:pl-[30px];
+    }
+
+    &[dir="rtl"] ul,
+    &[dir="rtl"] ol {
+      @apply pr-5 lg:pr-[30px];
     }
 
     ul > li,

@@ -282,7 +282,7 @@ const local_data = {
 };
 
 export default async function RootLayout({ children }) {
-  const locale = "en";
+  const locale = "ar";
 
   const dir = locale === "ar" ? "rtl" : "ltr";
 

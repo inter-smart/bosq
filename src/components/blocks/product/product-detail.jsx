@@ -541,7 +541,7 @@ export default function ProductDetail({ locale, data = local_data }) {
                 Product Details
               </AccordionTrigger>
               <AccordionContent className="sm:px-2">
-                <div className="typography flex flex-wrap justify-between">
+                <div dir={locale === "ar" ? "rtl" : "ltr"} className="typography flex flex-wrap justify-between">
                   <div className="xl:max-w-[540px] 2xl:max-w-[650px] 3xl:max-w-[820px]">
                     <h6>
                       Optron hash High-Back Task Chair | Latice Series| Product
@@ -641,7 +641,7 @@ export default function ProductDetail({ locale, data = local_data }) {
                 Additional Information
               </AccordionTrigger>
               <AccordionContent className="sm:p-2">
-                <div className="typography">
+                <div dir={locale === "ar" ? "rtl" : "ltr"} className="typography">
                   <h6>
                     Optron hash High-Back Task Chair | Latice Series| Product
                     Details

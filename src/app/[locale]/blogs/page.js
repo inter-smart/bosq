@@ -178,7 +178,7 @@ const local_data = {
   },
 };
 
-export default function BlogPage() {
+export default function BlogsPage() {
   const locale = "en";
   return (
     <>
