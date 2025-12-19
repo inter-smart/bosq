@@ -131,7 +131,7 @@ const local_data = {
   },
 };
 export default function FaqsPage() {
-  const locale = "ar";
+  const locale = "en";
   return (
     <>
       <ProductHero locale={locale} data={local_data?.heroData} slug={"FAQ"} />

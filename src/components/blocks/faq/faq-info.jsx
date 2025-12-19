@@ -35,7 +35,6 @@ export default function FaqInfo({ data, locale }) {
             className="-z-2 object-cover"
             placeholder="blur"
             blurDataURL="/images/placeholder.jpg"
-            priority
           />
         </picture>
 
