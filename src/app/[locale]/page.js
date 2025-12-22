@@ -1,24 +1,16 @@
 import dynamic from "next/dynamic";
 import HomeHero from "@/components/blocks/home/home-hero"; // keep SSR for SEO
+import { getHomeData } from "@/lib/api/home";
+import { notFound } from "next/navigation";
 
 const HomeAbout = dynamic(() => import("@/components/blocks/home/home-about"));
-const HomeFeatured = dynamic(() =>
-  import("@/components/blocks/home/home-featured")
-);
-const HomeJourney = dynamic(() =>
-  import("@/components/blocks/home/home-journey")
-);
-const HomeProject = dynamic(() =>
-  import("@/components/blocks/home/home-project")
-);
-const HomeCalculator = dynamic(() =>
-  import("@/components/blocks/home/home-calculator")
-);
+const HomeFeatured = dynamic(() => import("@/components/blocks/home/home-featured"));
+const HomeJourney = dynamic(() => import("@/components/blocks/home/home-journey"));
+const HomeProject = dynamic(() => import("@/components/blocks/home/home-project"));
+const HomeCalculator = dynamic(() => import("@/components/blocks/home/home-calculator"));
 const HomeFind = dynamic(() => import("@/components/blocks/home/home-find"));
 const HomeBrand = dynamic(() => import("@/components/blocks/home/home-brand"));
-const HomeEnquiry = dynamic(() =>
-  import("@/components/blocks/home/home-enquiry")
-);
+const HomeEnquiry = dynamic(() => import("@/components/blocks/home/home-enquiry"));
 
 const local_data = {
   homeData: [
@@ -37,8 +29,7 @@ const local_data = {
         },
       },
       title: "Designed for Comfort.<br/> Engineered for Your <br /> Workspace",
-      description:
-        "<p>Shaping the future of work environments across the world </p>",
+      description: "<p>Shaping the future of work environments across the world </p>",
       ctaText: "View Product",
       button: {
         type: "link",
@@ -61,8 +52,7 @@ const local_data = {
         },
       },
       title: "22 Designed for Comfort.<br/> Engineered for Your<br/> Workspace",
-      description:
-        "<p>Shaping the future of work environments across the world</p>",
+      description: "<p>Shaping the future of work environments across the world</p>",
       button: {
         type: "link",
         label: "View Product",
@@ -84,8 +74,7 @@ const local_data = {
         },
       },
       title: "33 Designed for Comfort.<br/> Engineered for Your<br/> Workspace",
-      description:
-        "<p>Shaping the future of work environments across the world</p>",
+      description: "<p>Shaping the future of work environments across the world</p>",
       button: {
         type: "link",
         label: "View Product",
@@ -542,26 +531,31 @@ const local_data = {
       media_alt: "home-enquiry-1",
     },
     title: "Let's Get in Touch",
-    description:
-      "<p>Let's work together to find the most effective solution for your business.</p>",
+    description: "<p>Let's work together to find the most effective solution for your business.</p>",
     button: null,
   },
 };
 
-export default function HomePage() {
-  const locale = "en";
+export default async function HomePage({ params }) {
+  const resolvedParams = await params;
+  const { locale } = resolvedParams;
+
+  const { data, error } = await getHomeData.getCmsData();
+
+  if (error) {
+    notFound();
+  }
+
+  const { sliders, aboutSection, formSection, journeySection, featuredSection, projectSection, fitsSection, brandsSection } = data;
+
   return (
     <>
-      <HomeHero locale={locale} data={local_data?.homeData} />
-      <HomeAbout locale={locale} data={local_data?.aboutData} />
-      <HomeFeatured locale={locale} data={local_data?.featuredData} />
-      <HomeJourney locale={locale} data={local_data?.journeyData} />
+      <HomeHero locale={locale} data={sliders} />
+      <HomeAbout locale={locale} data={aboutSection} />
+      <HomeFeatured locale={locale} products={local_data?.featuredData?.product} data={featuredSection} />
+      <HomeJourney locale={locale} data={journeySection} />
       <HomeProject locale={locale} data={local_data?.projectData} />
-      <HomeCalculator
-        locale={locale}
-        calculatorData={local_data?.calculatorData}
-        customizeData={local_data?.customizeData}
-      />
+      <HomeCalculator locale={locale} calculatorData={local_data?.calculatorData} customizeData={local_data?.customizeData} />
       <HomeFind locale={locale} data={local_data?.findData} />
       <HomeBrand locale={locale} data={local_data?.brandData} />
       <HomeEnquiry locale={locale} data={local_data?.enquiryData} />

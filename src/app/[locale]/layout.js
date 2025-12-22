@@ -6,6 +6,7 @@ import Footer from "@/components/layout/footer";
 import { NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { Locale, locales, localeDirection } from "../../il8n/config";
 
 const heroNew = localFont({
   src: [
@@ -51,6 +52,10 @@ const heroNew = localFont({
     },
   ],
 });
+
+export async function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
 
 // Arabic Google Font - Cairo
 const cairo = Cairo({
@@ -123,8 +128,7 @@ const local_data = {
     slug: "/",
     logoUrl: "images/brand-logo-primary.svg",
     logoWhiteUrl: "images/brand-logo.svg",
-    address:
-      "<p>AYN MUSK FOR FURNITURE CO.L.L.C<br /> Office No 133, KML Business Tower,Meydan Road,<br /> Al Qouz, Dubai P.O Box: 294568</p>",
+    address: "<p>AYN MUSK FOR FURNITURE CO.L.L.C<br /> Office No 133, KML Business Tower,Meydan Road,<br /> Al Qouz, Dubai P.O Box: 294568</p>",
     websiteUrl: "https://bosq.ae/",
     shop_navigation: [
       {
@@ -281,33 +285,22 @@ const local_data = {
   ],
 };
 
-export default async function RootLayout({ children }) {
-  const locale = "en";
+export default async function RootLayout({ children, params }) {
+  const resolvedParams = await params;
 
-  const dir = locale === "ar" ? "rtl" : "ltr";
+  const locale = resolvedParams.locale;
+  const dir = localeDirection[resolvedParams.locale];
+
+  console.log(locale);
+  console.log(dir);
 
   return (
-    <html
-      lang={locale}
-      dir={dir}
-      className={cn(
-        locale === "ar" ? cairo.className : heroNew.className,
-        "antialiased"
-      )}
-    >
+    <html lang={locale} dir={dir} className={cn(locale === "ar" ? cairo.className : heroNew.className, "antialiased")}>
       <body className={locale === "ar" ? "font-cairo" : "font-hero"}>
         {/* <NextIntlClientProvider locale={locale}> */}
-        <Header
-          headerData={local_data.header_data}
-          navigationData={local_data.navigation_data}
-          locale={locale}
-        />
+        <Header headerData={local_data.header_data} navigationData={local_data.navigation_data} locale={locale} />
         <main>{children}</main>
-        <Footer
-          footerData={local_data.footer_data}
-          socialLinkData={local_data.social_link_data}
-          locale={locale}
-        />
+        <Footer footerData={local_data.footer_data} socialLinkData={local_data.social_link_data} locale={locale} />
         {/* </NextIntlClientProvider> */}
       </body>
     </html>
