@@ -1,11 +1,11 @@
 import { Text } from "@/components/utils/text";
 import Link from "next/link";
-import AuthLoginForm from "@/components/form/auth-login-form";
+import AuthCreateForm from "@/components/form/auth-create-form";
 
-export default function AuthLogin() {
+export default function AuthSignup() {
   return (
     <>
-      <AuthLoginForm />
+      <AuthCreateForm />
       <Text
         as="div"
         size="text1"
@@ -19,11 +19,11 @@ export default function AuthLogin() {
       <Text
         as="div"
         size="text1"
-        className="line-clamp-4 font-light text-black"
+        className="line-clamp-4 font-light text-center text-black "
       >
-        Already have an account?{" "}
-        <Link href="/en/signup" className="font-normal hover:underline">
-          signup
+        New here?{" "}
+        <Link href="/signup" className="font-normal hover:underline">
+          Create an Account
         </Link>
       </Text>
     </>

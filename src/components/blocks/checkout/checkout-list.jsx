@@ -44,8 +44,8 @@ export default function CheckoutList({ locale, data }) {
   return (
     <section className="w-full block py-[15px_30px] xl:py-[30px_60px] 2xl:py-[40px_100px] relative z-0">
       <div className="container">
-        <div className="flex flex-wrap -mx-2.5 xl:-mx-8 2xl:-mx-10 [&>*]:p-2.5 xl:[&>*]:p-8 2xl:[&>*]:10">
-          <div className="w-full lg:w-[calc(100%-320px)] xl:w-[calc(100%-460px)] 2xl:w-[calc(100%-540px)] 3xl:w-[calc(100%-668px)] ">
+        <div className="flex flex-wrap -mx-2.5 xl:-mx-8 2xl:-mx-10 [&>*]:p-2.5 xl:[&>*]:p-8 2xl:[&>*]:p-10">
+          <div className="w-full lg:w-[calc(100%-320px)] xl:w-[calc(100%-460px)] 2xl:w-[calc(100%-540px)] 3xl:w-[calc(100%-668px)]">
             <div className="w-full h-auto block p-3 lg:p-4 xl:p-4 2xl:p-7 rounded-lg border border-[#e0e0e0] mb-1 xl:mb-2.5 2xl:mb-4">
               <Heading
                 as="h4"

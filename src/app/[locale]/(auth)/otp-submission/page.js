@@ -1,5 +1,5 @@
 import AuthLayout from "@/components/blocks/auth/auth-layout";
-import AuthLogin from "@/components/blocks/auth/auth-login";
+import AuthLogin from "@/components/blocks/auth/auth-signup";
 import AuthOtpForm from "@/components/form/auth-otp-form";
 
 const local_data = {
