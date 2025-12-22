@@ -7,7 +7,7 @@ import Image from "next/image";
 
 import parse from "html-react-parser";
 
-export default function AccountProfile({ data }) {
+export default function AccountOrders({ data }) {
   return (
     <section className="w-full block py-[15px_30px] xl:py-[30px_60px] 2xl:py-[40px_100px] relative z-0">
       <div className="container">
@@ -23,8 +23,9 @@ export default function AccountProfile({ data }) {
                 size={"heading5"}
                 className="font-semibold text-[#282828] mb-3 xl:mb-7"
               >
-                My Profile
+                My Orders
               </Heading>
+              
               <div className="w-full flex flex-wrap items-center mb-4 xl:mb-8">
                 <div className="w-[50px] 2xl:w-[70px] aspect-square overflow-hidden rounded-full border">
                   <Image
@@ -59,6 +60,7 @@ export default function AccountProfile({ data }) {
                   </Text>
                 </div>
               </div>
+
               <div className="flex flex-wrap">
                 <div className="w-full sm:w-1/2 max-sm:mb-3">
                   <Heading

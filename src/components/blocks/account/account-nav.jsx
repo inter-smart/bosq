@@ -24,7 +24,7 @@ const ASIDE_ITEMS = [
       alt: "account-nav",
     },
     title: "My Orders",
-    href: "/en/",
+    href: "/en/account/orders",
   },
   {
     id: 3,
@@ -99,8 +99,8 @@ export default function AccountNav() {
             key={"account-nav-" + item.id}
             href={item.href}
             className={cn(
-              "w-full flex gap-x-1.5 xl:gap-x-2.5 items-center py-2.5 xl:py-3 3xl:py-4.5 px-3 xl:px-5 3xl:px-6 hover:bg-gray-200 transition ",
-              isActive ? "bg-black" : "bg-transparent"
+              "w-full flex gap-x-1.5 xl:gap-x-2.5 items-center py-2.5 xl:py-3 3xl:py-4.5 px-3 xl:px-5 3xl:px-6 transition ",
+              isActive ? "bg-black" : "bg-transparent hover:bg-gray-200"
             )}
           >
             <Image
