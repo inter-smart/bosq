@@ -1,4 +1,6 @@
 export default function ContactMap({data}) {
+  if (!data?.embedUrl) return null;
+
   return (
     <iframe
       src={data?.embedUrl}

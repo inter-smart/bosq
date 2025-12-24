@@ -39,6 +39,7 @@
     "react-international-phone": "^4.6.1",
     "react-responsive": "^10.0.1",
     "react-responsive-masonry": "^2.7.1",
+    "sanitize-html": "^2.17.0",
     "tailwind-merge": "^3.4.0",
     "yet-another-react-lightbox": "^3.25.0",
     "zod": "^4.1.12"

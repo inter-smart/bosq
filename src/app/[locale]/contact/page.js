@@ -1,5 +1,7 @@
 import CartHero from "@/components/blocks/cart/cart-hero";
 import ContactInfo from "@/components/blocks/contact/contact-info";
+import { getContactData } from "@/lib/api/contact";
+import { notFound } from "next/navigation";
 
 const local_data = {
   heroData: {
@@ -118,12 +120,25 @@ const local_data = {
   },
 };
 
-export default function ContactPage() {
-  const locale = "en";
+export default async function ContactPage({ params }) {
+  const resolvedParams = await params;
+  const { locale } = resolvedParams;
+
+  const { data, error } = await getContactData.getCmsData();
+
+  if (error) {
+    notFound();
+  }
+
+  const { heroData, contactData } = data;
+
+  // const locale = "en";
   return (
     <>
-      <CartHero locale={locale} data={local_data?.heroData} slug={"contact"} />
-      <ContactInfo locale={locale} data={local_data?.contactData} />
+      <CartHero locale={locale} data={heroData} slug={"contact"} />
+      <ContactInfo locale={locale} data={contactData} />
     </>
   );
 }
+
+
