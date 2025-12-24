@@ -3,28 +3,25 @@ import parse from "html-react-parser";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { Text } from "@/components/utils/text";
-import AuthCreateForm from "@/components/form/auth-create-form";
-import Link from "next/link";
-import AuthLogin from "./auth-login";
 
 export default function AuthLayout({ locale, data, children }) {
   return (
     <section className="w-full block relative z-0">
-      <div className="w-full max-w-1/2 h-full absolute -z-1 inset-0 left-auto">
+      <div className="w-full lg:max-w-1/2 h-20 lg:h-full lg:absolute -z-1 inset-0 left-auto aspect-4/1 bg-black">
         <Image
           src={data?.media?.path}
           alt={data?.media?.alt}
           width={960}
           height={1000}
-          className="w-full h-full block object-cover"
+          className="w-full h-full block object-cover max-lg:opacity-60"
           placeholder="blur"
           blurDataURL="/images/placeholder.jpg"
         />
       </div>
       <div className="container">
-        <div className="sm:min-h-dvh flex flex-wrap items-center">
+        <div className="lg:min-h-dvh flex flex-wrap items-center">
           <div className="w-full lg:w-1/2">
-            <div className="w-full max-w-[320px] xl:max-w-[400px] 2xl:max-w-[476px] 3xl:max-w-[576px] xl:py-14 2xl:py-20">
+            <div className="w-full max-w-[368px] lg:max-w-[320px] xl:max-w-[400px] 2xl:max-w-[476px] 3xl:max-w-[576px] py-8 sm:py-10 lg:py-6 xl:py-14 2xl:py-20 max-xl:mx-auto">
               <Heading
                 as="h2"
                 size="none"

@@ -1,22 +1,22 @@
 import AuthLayout from "@/components/blocks/auth/auth-layout";
-import AuthSignup from "@/components/blocks/auth/auth-signup";
+import AuthLogin from "@/components/blocks/auth/auth-login";
 
 const local_data = {
   media: {
     type: "image",
     alt: "hero",
-    path: "/images/auth-login-1.jpg",
+    path: "/images/auth-login-2.jpg",
   },
-  title: "Create Your Account",
-  description: "<p>Fill the the fields below to login.</p>",
+  title: "Welcome Back",
+  description: "<p>Please Enter Your Details to Login.</p>",
 };
 
-export default function SignupPage() {
+export default function LoginPage() {
   const locale = "en";
   return (
     <>
       <AuthLayout locale={locale} data={local_data}>
-        <AuthSignup />
+        <AuthLogin />
       </AuthLayout>
     </>
   );

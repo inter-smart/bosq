@@ -15,26 +15,21 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
+import Link from "next/link";
 
 // Validation schema
-const formSchema = z
-  .object({
-    password: z
-      .string()
-      .min(8, "Password must be at least 8 characters")
-      .max(100, "Password cannot exceed 100 characters")
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-        "Password must contain at least one uppercase letter, one lowercase letter, and one number"
-      ),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
+const formSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .max(100, "Password is too long"),
+  rememberMe: z.boolean().default(false),
+});
 
 // Shared styles
 const labelStyle = cn(
@@ -47,43 +42,50 @@ const inputStyle = cn(
 
 const errorStyle = cn("text-[#f17423]");
 
-export default function AuthPasswordForm() {
+export default function AuthLoginForm() {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      email: "",
       password: "",
-      confirmPassword: "",
+      rememberMe: false,
     },
   });
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const onSubmit = async (values) => {
     setLoading(true);
     setSuccess("");
 
     try {
-      const res = await fetch(
-        "http://localhost:1337/api/auth/create-password",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ data: { password: values.password } }),
-        }
-      );
+      const res = await fetch("http://localhost:1337/api/auth/local", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          identifier: values.email,
+          password: values.password,
+        }),
+      });
 
-      if (!res.ok) throw new Error("Failed to create password");
+      if (!res.ok) throw new Error("Login failed");
 
-      setSuccess("Password created successfully!");
+      const data = await res.json();
 
-      // Redirect to login or dashboard
-      // window.location.href = "/login";
+      // Store token if remember me is checked
+      if (values.rememberMe) {
+        localStorage.setItem("token", data.jwt);
+      }
+
+      setSuccess("Login successful!");
+
+      // Redirect to dashboard
+      // window.location.href = "/dashboard";
     } catch (err) {
       console.error(err);
-      setSuccess("Something went wrong. Please try again.");
+      setSuccess("Invalid email or password. Please try again.");
     }
 
     setLoading(false);
@@ -95,6 +97,28 @@ export default function AuthPasswordForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-wrap items-start -mx-4 [&>*]:px-4 [&>*]:py-2"
       >
+        {/* Email */}
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem className="w-full">
+              <FormLabel className={labelStyle}>
+                Email<span className={errorStyle}>*</span>
+              </FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  type="email"
+                  className={inputStyle}
+                  placeholder="Enter your email"
+                />
+              </FormControl>
+              <FormMessage className={errorStyle} />
+            </FormItem>
+          )}
+        />
+
         {/* Password */}
         <FormField
           control={form.control}
@@ -110,12 +134,12 @@ export default function AuthPasswordForm() {
                     {...field}
                     type={showPassword ? "text" : "password"}
                     className={cn(inputStyle, "pr-10")}
-                    placeholder="Choose a strong password"
+                    placeholder="Enter your password"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-200 hover:text-gray-700"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
                   >
                     {showPassword ? (
                       <EyeOff className="h-4 w-4" />
@@ -130,40 +154,34 @@ export default function AuthPasswordForm() {
           )}
         />
 
-        {/* Confirm Password */}
-        <FormField
-          control={form.control}
-          name="confirmPassword"
-          render={({ field }) => (
-            <FormItem className="w-full">
-              <FormLabel className={labelStyle}>
-                Confirm Password<span className={errorStyle}>*</span>
-              </FormLabel>
-              <FormControl>
-                <div className="relative">
-                  <Input
-                    {...field}
-                    type={showConfirmPassword ? "text" : "password"}
-                    className={cn(inputStyle, "pr-10")}
-                    placeholder="Confirm your password"
+        {/* Remember Me & Forgot Password */}
+        <div className="w-full flex items-center justify-between">
+          <FormField
+            control={form.control}
+            name="rememberMe"
+            render={({ field }) => (
+              <FormItem className="flex items-center gap-3 space-y-0">
+                <FormControl>
+                  <Checkbox
+                    id="rememberMe"
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 hover:text-gray-700"
-                  >
-                    {showConfirmPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                  </button>
-                </div>
-              </FormControl>
-              <FormMessage className={errorStyle} />
-            </FormItem>
-          )}
-        />
+                </FormControl>
+                <Label htmlFor="rememberMe" className={labelStyle}>
+                  Remember Me
+                </Label>
+              </FormItem>
+            )}
+          />
+          <Button
+            variant="link"
+            className="font-normal underline h-auto! p-0 text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px]"
+            asChild
+          >
+            <Link href="/forgot-password">Forgot Password?</Link>
+          </Button>
+        </div>
 
         {/* Submit Button */}
         <div className="w-full mt-1">
@@ -173,7 +191,7 @@ export default function AuthPasswordForm() {
             disabled={loading}
             className="w-full"
           >
-            {loading ? "Creating..." : "Create Password"}
+            {loading ? "Logging in..." : "Login"}
           </Button>
         </div>
 
@@ -182,9 +200,7 @@ export default function AuthPasswordForm() {
           <p
             className={cn(
               "text-[10px] mt-1 w-full",
-              success.includes("successfully")
-                ? "text-green-600"
-                : "text-red-600"
+              success.includes("successful") ? "text-green-600" : "text-red-600"
             )}
           >
             {success}

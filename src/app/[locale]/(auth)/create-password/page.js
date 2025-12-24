@@ -1,6 +1,5 @@
 import AuthLayout from "@/components/blocks/auth/auth-layout";
-import AuthLogin from "@/components/blocks/auth/auth-login";
-import AuthOtpForm from "@/components/form/auth-otp-form";
+import AuthPasswordForm from "@/components/form/auth-password-form";
 
 const local_data = {
   media: {
@@ -8,7 +7,7 @@ const local_data = {
     alt: "hero",
     path: "/images/auth-login-1.jpg",
   },
-  title: "Create Your Account",
+  title: "Create Your Password",
   description:
     "<p>Enter the verification code we just sent you on your mail address.</p>",
 };
@@ -18,7 +17,7 @@ export default function CreatePassword() {
   return (
     <>
       <AuthLayout locale={locale} data={local_data}>
-        <AuthOtpForm />
+        <AuthPasswordForm />
       </AuthLayout>
     </>
   );
