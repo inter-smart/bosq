@@ -6,6 +6,14 @@ import Link from "next/link";
 import parse from "html-react-parser";
 import { cn } from "@/lib/utils";
 
+
+const localData = {
+  button: {
+    label: "Explore Our Journey",
+    link: "/journey",
+  },  
+}
+
 export default function HomeJourney({ data, locale }) {
   return (
     <section className="w-full h-auto block py-[30px] sm:py-[100px] xl:py-[160px] 2xl:py-[240px] bg-black overflow-hidden relative z-0">
@@ -83,7 +91,7 @@ export default function HomeJourney({ data, locale }) {
             className="min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-40"
             asChild
           >
-            <Link href={data?.button?.link}>{data?.button?.label}</Link>
+            <Link href={localData?.button?.link}>{localData?.button?.label}</Link>
           </Button>
         </div>
       </div>

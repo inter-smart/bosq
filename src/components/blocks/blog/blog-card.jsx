@@ -8,15 +8,15 @@ import parse from "html-react-parser";
 import { Skeleton } from "../../ui/skeleton";
 import { format } from "date-fns";
 
-export default function BlogCard({ data }) {
+export default function BlogCard({ data, isEn }) {
   
-    let formattedDate = "";
-    if (data?.publishedAt) {
-        const date = new Date(data.publishedAt);
-        if (!isNaN(date)) {
-        formattedDate = format(date, "dd MMMM yyyy");
-        }
-    }
+    // let formattedDate = "";
+    // if (data?.publishedAt) {
+    //     const date = new Date(data.publishedAt);
+    //     if (!isNaN(date)) {
+    //     formattedDate = format(date, "dd MMMM yyyy");
+    //     }
+    // }
 
   return (
     <Suspense fallback={<CartCardSkeleton />}>
@@ -27,7 +27,7 @@ export default function BlogCard({ data }) {
         >
           <Image
             src={data?.media?.path || "/images/placeholder.jpg"}
-            alt={data?.media?.alt}
+            alt={isEn? data?.media?.alt: data?.media?.alt_ar}
             width={583}
             height={290}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -39,14 +39,14 @@ export default function BlogCard({ data }) {
             size="heading4"
             className="tracking-tight line-clamp-2 text-[#282828] mb-1 xl:mb-2 hover:underline"
           >
-            <Link href={data?.slug}>{data?.title}</Link>
+            <Link href={data?.slug}>{isEn? data?.title: data?.title_ar}</Link>
           </Heading>
           <Text
             as="div"
             size="text3"
             className="truncate text-[#b1b3b4] mb-1 xl:mb-2"
           >
-            {formattedDate}
+            {data?.publishedAt}
           </Text>
         </div>
       </div>

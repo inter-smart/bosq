@@ -1,5 +1,6 @@
 import BlogHero from "@/components/blocks/blog/blog-hero";
 import BlogList from "@/components/blocks/blog/blog-list";
+import { getBlogsData } from "@/lib/api/blog";
 
 const local_data = {
   heroData: {
@@ -178,12 +179,22 @@ const local_data = {
   },
 };
 
-export default function BlogsPage() {
-  const locale = "en";
+export default async function BlogsPage({params}) {
+
+  const resolvedParams = await params;
+
+  const {locale} = resolvedParams;
+
+  const { data, error } = await getBlogsData.getCmsData();
+
+  const { heroData, blogData } = data;
+
+
+  // const locale = "en";
   return (
     <>
-      <BlogHero locale={locale} data={local_data?.heroData} slug={"Blogs"} />
-      <BlogList locale={locale} data={local_data?.blogData} />
+      <BlogHero locale={locale} data={heroData} slug={"Blogs"} />
+      <BlogList locale={locale} data={blogData} />
     </>
   );
 }

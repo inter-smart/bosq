@@ -13,13 +13,15 @@ import { Text } from "@/components/utils/text";
 import Image from "next/image";
 
 export default function BlogHero({ data, locale, slug }) {
+  const isEn = locale === "en";
+
   return (
     <section className="w-full pt-(--header-y)_+_20px)] sm:pt-[calc(var(--header-y)_+_10px)]">
       <div className="container mb-3 xl:mb-5 2xl:mb-8">
         <Breadcrumb className="mb-2 sm:mb-4">
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/">Home</BreadcrumbLink>
+              <BreadcrumbLink href={isEn ? "/en" : "/ar"}>Home</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>/</BreadcrumbSeparator>
             {slug && (
@@ -29,14 +31,14 @@ export default function BlogHero({ data, locale, slug }) {
             )}
           </BreadcrumbList>
         </Breadcrumb>
-        {data?.title && (
+        {(isEn ? data?.title : data?.title_ar) && (
           <Heading as="h2" size="heading1" className="line-clamp-2 text-black">
-            {parse(data?.title)}
+            {parse(isEn ? data?.title : data?.title_ar)}
 
             <span
               className={cn(
                 "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
-                locale === "ar"
+                !isEn
                   ? "-translate-x-1 xl:-translate-x-2 "
                   : "translate-x-1 xl:translate-x-2 "
               )}
@@ -64,7 +66,7 @@ export default function BlogHero({ data, locale, slug }) {
             />
             <Image
               src={data?.media?.desktop?.path}
-              alt={data?.media?.desktop?.alt}
+              alt={isEn ? data?.media?.desktop?.alt : data?.media?.desktop?.alt_ar}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 80vw"
               className="-z-2 object-cover"
@@ -82,7 +84,7 @@ export default function BlogHero({ data, locale, slug }) {
               size="heading1"
               className="line-clamp-4 leading-tight text-white mb-2 xl:mb-4 2xl:mb-6"
             >
-              {parse(data?.heroTitle)}
+              {parse(isEn ? data?.heroTitle : data?.heroTitle_ar)}
               <span
                 className={cn(
                   "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
@@ -92,13 +94,13 @@ export default function BlogHero({ data, locale, slug }) {
                 )}
               />
             </Heading>
-            {data?.heroDescription && (
+            {(isEn? data?.heroDescription : data?.heroDescription_ar) && (
               <Text
                 as="div"
                 size="text1"
                 className="line-clamp-2 font-light text-white max-w-[80%] "
               >
-                {parse(data?.heroDescription)}
+                {parse(isEn ? data?.heroDescription : data?.heroDescription_ar)}
               </Text>
             )}
           </div>
