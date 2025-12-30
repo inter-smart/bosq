@@ -1,0 +1,55 @@
+import { Button } from "@/components/ui/button";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+import Image from "next/image";
+import { Heading } from "@/components/utils/heading";
+import { Text } from "@/components/utils/text";
+import Link from "next/link";
+
+export function OrderEmpty(title, description) {
+  return (
+    <Empty>
+      <EmptyHeader>
+        <EmptyMedia>
+          <Image
+            src="/images/order-empty.svg"
+            alt="order-empty"
+            width={100}
+            height={90}
+            className="w-[60px] xl:w-[80px] 2xl:w-[100px]"
+          />
+        </EmptyMedia>
+        <EmptyTitle>
+          <Heading
+            as="h3"
+            size="heading3"
+            className="font-normal text-[#121212]"
+          >
+            {title}
+          </Heading>
+        </EmptyTitle>
+        <EmptyDescription>
+          <Text as="p" size="text3" className="text-[#282828]">
+            {description}
+          </Text>
+        </EmptyDescription>
+      </EmptyHeader>
+      <EmptyContent>
+        <Button
+          variant={"black"}
+          disabled={false}
+          className="min-w-[168px] xl:min-w-[190px] 2xl:min-w-[220px] mt-2"
+          asChild
+        >
+          <Link href="/en/products">Continue shopping</Link>
+        </Button>
+      </EmptyContent>
+    </Empty>
+  );
+}

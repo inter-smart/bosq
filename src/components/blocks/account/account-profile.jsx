@@ -1,4 +1,3 @@
-"use client";
 import { Button } from "@/components/ui/button";
 import AccountNav from "./account-nav";
 import { Heading } from "@/components/utils/heading";
@@ -17,7 +16,7 @@ export default function AccountProfile({ data }) {
           </div>
 
           <div className="w-full sm:w-[calc(100%-200px)] xl:w-[calc(100%-240px)] 2xl:w-[calc(100%-268px)] 3xl:w-[calc(100%-330px)] max-sm:mb-2">
-            <div className="w-full border border-[#e9e9e9] rounded-lg sm:rounded-e-lg py-3 xl:py-6 3xl:py-9 px-3 xl:px-4 3xl:px-5">
+            <div className="w-full border border-[#e9e9e9] sm:rounded-e-lg py-3 xl:py-6 3xl:py-9 px-3 xl:px-4 3xl:px-5">
               <Heading
                 as="h2"
                 size={"heading5"}

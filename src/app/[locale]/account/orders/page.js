@@ -263,8 +263,8 @@ const local_data = {
       shipping_address: {
         full_name: "John Doe",
         company: "ACME Corporation",
-        address_line_1: "123 Business Tower",
-        address_line_2: "Downtown",
+        address_line_1: "123 Business Tower, Downtown, Dubai",
+        address_line_2: "United Arab Emirates",
         city: "Dubai",
         state: "Dubai",
         country: "United Arab Emirates",
@@ -277,8 +277,8 @@ const local_data = {
       billing_address: {
         full_name: "John Doe",
         company: "ACME Corporation",
-        address_line_1: "123 Business Tower",
-        address_line_2: "Downtown",
+        address_line_1: "123 Business Tower, Downtown, Dubai",
+        address_line_2: "United Arab Emirates",
         city: "Dubai",
         state: "Dubai",
         country: "United Arab Emirates",

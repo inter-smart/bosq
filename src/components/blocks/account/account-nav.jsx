@@ -1,9 +1,9 @@
+"use client";
 import { Text } from "@/components/utils/text";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
 
 const ASIDE_ITEMS = [
   {
@@ -34,7 +34,7 @@ const ASIDE_ITEMS = [
       alt: "account-nav",
     },
     title: "Cancelled Orders",
-    href: "#",
+    href: "/en/account/cancelled-orders",
   },
   {
     id: 4,
@@ -44,7 +44,7 @@ const ASIDE_ITEMS = [
       alt: "account-nav",
     },
     title: "Manage Address",
-    href: "#",
+    href: "/en/account/manage-address",
   },
   {
     id: 5,
