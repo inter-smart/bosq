@@ -54,7 +54,7 @@ const ASIDE_ITEMS = [
       alt: "account-nav",
     },
     title: "Wishlist",
-    href: "#",
+    href: "/en/account/wishlist",
   },
   {
     id: 6,
@@ -64,7 +64,7 @@ const ASIDE_ITEMS = [
       alt: "account-nav",
     },
     title: "Coupons",
-    href: "#",
+    href: "/en/account/coupons",
   },
   {
     id: 7,

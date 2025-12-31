@@ -7,18 +7,24 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
-import Image from "next/image";
-import { Heading } from "@/components/utils/heading";
 import { Text } from "@/components/utils/text";
 import Link from "next/link";
+import { Heading } from "@/components/utils/heading";
+import Image from "next/image";
 
-export function OrderEmpty(title, description) {
+export function OrderEmpty({
+  mediaUrl = "/images/order-empty.svg",
+  title,
+  description,
+}) {
+  console.log(mediaUrl, title, description);
+
   return (
     <Empty>
       <EmptyHeader>
         <EmptyMedia>
           <Image
-            src="/images/order-empty.svg"
+            src={mediaUrl}
             alt="order-empty"
             width={100}
             height={90}

@@ -107,7 +107,7 @@ const textareaStyle = cn(
   "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none"
 );
 
-export default function AddressForm() {
+export default function UpdateAddressForm() {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -550,7 +550,7 @@ export default function AddressForm() {
             disabled={loading}
             className="min-w-[120px] 2xl:min-w-40"
           >
-            {loading ? "Submitting..." : "Add Address"}
+            {loading ? "Submitting..." : "Update Address"}
           </Button>
         </div>
 

@@ -6,9 +6,10 @@ import Link from "next/link";
 import { Suspense, useState } from "react";
 import { motion } from "motion/react";
 import { Skeleton } from "../../ui/skeleton";
+import { Button } from "@/components/ui/button";
 
 export default function ProductCard({ product }) {
-  const [wish, setWish] = useState(false);
+  const [wishlist, setWishlist] = useState(product?.isWishlisted || false);
 
   return (
     <Suspense fallback={<ProductCardSkelton />}>
@@ -17,7 +18,7 @@ export default function ProductCard({ product }) {
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            onClick={() => setWish(!wish)}
+            onClick={() => setWishlist(!wishlist)}
             className="absolute z-2 top-2 xl:top-4 right-2 xl:right-4"
           >
             <svg
@@ -29,12 +30,23 @@ export default function ProductCard({ product }) {
             >
               <path
                 d="M7.39062 2.03027C8.85818 0.419111 10.5094 0.0894194 11.749 0.544922C12.9908 1.00129 13.9263 2.28275 13.8955 4.12402C13.8676 5.78912 12.7686 7.51198 11.3096 9.04004C9.9379 10.4766 8.3011 11.6826 7.12598 12.4326C5.95106 11.6827 4.3155 10.4769 2.94434 9.04102C1.48523 7.51297 0.385558 5.78917 0.357422 4.12402C0.326449 2.28301 1.26218 1.00146 2.50391 0.544922C3.74349 0.0891915 5.39453 0.418918 6.8623 2.03027L7.12695 2.32031L7.39062 2.03027Z"
-                fill={wish ? "black" : "none"}
+                fill={wishlist ? "black" : "none"}
                 stroke="#282828"
                 strokeWidth="1"
               />
             </svg>
           </motion.button>
+          {!product?.isStock && (
+            <div className="w-full h-full bg-[#f4f4f4]/90 flex items-center justify-center absolute z-2 inset-0">
+              <Button
+                variant={"black"}
+                disabled={true}
+                className="min-w-[100px] xl:min-w-[120px] 2xl:min-w-[200px] disabled:opacity-100 rounded-[2px] m-auto"
+              >
+                Out of Stock
+              </Button>
+            </div>
+          )}
           <Image
             src={product?.media?.path}
             alt={product?.media?.alt}
