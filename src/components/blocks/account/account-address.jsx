@@ -70,7 +70,7 @@ export default function AccountAddress({ data, locale }) {
               <div className="w-full border border-[#e9e9e9] sm:rounded-e-lg py-3 xl:py-6 3xl:py-9 px-3 xl:px-4 3xl:px-5">
                 <Heading
                   as="h4"
-                  size="heading4"
+                  size="heading5"
                   className="font-normal text-[#282828] mb-3 xl:mb-5 2xl:mb-8"
                 >
                   Add New Address
@@ -100,7 +100,7 @@ export default function AccountAddress({ data, locale }) {
                         variant={"black"}
                         disabled={false}
                         onClick={() => setShowAddForm((prev) => !prev)}
-                        className="min-w-[130px] xl:min-w-[155px] 2xl:min-w-[240px]"
+                        className={cn("min-w-[130px] xl:min-w-[155px] 2xl:min-w-[240px]", showAddForm && "bg-[#f17423]")}
                       >
                         <Plus className="size-3" />
                         Add New Address
@@ -232,7 +232,7 @@ export default function AccountAddress({ data, locale }) {
                   <div className="w-full bg-white border border-[#dedede] p-2.5 xl:p-3.5 2xl:p-5 mb-5 xl:mb-10 2xl:mb-12">
                     <Heading
                       as="h4"
-                      size="heading4"
+                      size="heading5"
                       className="font-normal text-[#282828] mb-3 xl:mb-4 2xl:mb-6"
                     >
                       Add New Address

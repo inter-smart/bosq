@@ -1,4 +1,4 @@
-import AccountCoupons from "@/components/blocks/account/account-coupons";
+import AccountSettings from "@/components/blocks/account/account-settings";
 import ProductHero from "@/components/blocks/product/product-hero";
 
 const local_data = {
@@ -7,7 +7,7 @@ const local_data = {
     description: null,
   },
 
-  couponsData: {
+  settingsData: {
     customer_id: 1,
     customer_email: "john@example.com",
     total_coupons: 2,
@@ -106,7 +106,7 @@ const local_data = {
   },
 };
 
-export default function CouponsPage() {
+export default function SettingsPage() {
   const locale = "en";
   return (
     <>
@@ -115,7 +115,7 @@ export default function CouponsPage() {
         data={local_data?.heroData}
         slug={"My Profile"}
       />
-      <AccountCoupons locale={locale} data={local_data?.couponsData} />
+      <AccountSettings locale={locale} data={local_data?.settingsData} />
     </>
   );
 }

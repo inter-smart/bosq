@@ -1,17 +1,11 @@
-import { Button } from "@/components/ui/button";
 import AccountNav from "./account-nav";
 import { Heading } from "@/components/utils/heading";
 import { Text } from "@/components/utils/text";
 import Image from "next/image";
 import parse from "html-react-parser";
 
-import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { OrderEmpty } from "./order-empty";
-
-const btnStyle = cn(
-  "underline underline-offset-1 text-[#282828] h-auto! px-1 xl:px-1.5 gap-0.5"
-);
 
 export default function AccountCoupons({ data, locale }) {
   return (
@@ -23,10 +17,10 @@ export default function AccountCoupons({ data, locale }) {
           </div>
 
           <div className="w-full sm:w-[calc(100%-200px)] xl:w-[calc(100%-240px)] 2xl:w-[calc(100%-268px)] 3xl:w-[calc(100%-330px)] max-sm:mb-2">
-            {data?.length === 0 ? (
+            {data?.coupons?.length === 0 ? (
               <div className="w-full border border-[#e9e9e9] sm:rounded-e-lg py-3 xl:py-6 3xl:py-9 px-3 xl:px-4 3xl:px-5">
                 <OrderEmpty
-                  title={"You haven't cancelled any orders yet"}
+                  title={"No Coupons Available"}
                   description={
                     "Once you place your first order, you'll be able to track your deliveries and manage returns from here."
                   }
@@ -42,80 +36,63 @@ export default function AccountCoupons({ data, locale }) {
                   Coupons & Offers
                 </Heading>
 
-                <div className="flex flex-wrap -mx-2 xl:-mx-7 2xl:-mx-10 [&>*]:px-2 [&>*]:py-1 xl:[&>*]:px-7 xl:[&>*]:py-1.5 2xl:[&>*]:px-10 2xl:[&>*]:py-2">
-                  {data?.map((item, index) => (
+                <div className="flex flex-wrap -mx-1 xl:-mx-1.5 2xl:-mx-2 [&>*]:p-1 xl:[&>*]:p-1.5 2xl:[&>*]:p-2">
+                  {data?.coupons?.map((item, index) => (
                     <div key={"order-item" + index} className="w-full">
-                      <div className="w-full bg-[#f2f2f2] flex flex-wrap p-3 xl:py-4 2xl:p-2.5">
-                        <div className="w-[calc(100%-80px)] xl:w-[calc(100%-100px)] 2xl:w-[calc(100%-120px)] px-3 xl:px-5 *:my-1 2xl:*:my-1.5">
+                      <div
+                        className={cn(
+                          "w-full rounded-[4px] border border-[#dedede] flex flex-wrap p-3 xl:p-4 2xl:p-6 relative z-0 max-lg:gap-2",
+                          item?.status === "used"
+                            ? "bg-[#f17423]/20"
+                            : "bg-[#f2f2f2]",
+                          item?.status === "expired" &&
+                            "opacity-50 pointer-events-none"
+                        )}
+                      >
+                        <div className="w-full lg:w-1/12">
+                          <div className="text-[10px] 2xl:text-[12px] leading-normal font-semibold text-white bg-black rounded-[4px] py-0.5 px-1.5 inline-block">
+                            {item?.title}
+                          </div>
+                        </div>
+                        <div className="w-full lg:w-7/12">
                           <Text
                             as="div"
                             size="text3"
-                            className="truncate text-[#282828]"
+                            className="text-[#282828] mb-1"
                           >
-                            Order ID: {item?.order_number}
+                            {parse(item?.description)}
                           </Text>
-                          <Heading
-                            as="div"
-                            size="heading5"
-                            className="truncate text-[#282828] max-lg:font-medium"
-                          >
-                            {item?.name}
-                          </Heading>
                           <Text
                             as="div"
                             size="text3"
-                            className="text-[#282828]"
+                            className="font-normal truncate text-[#282828]"
                           >
-                            Qty: {""}
-                            {item?.quantity}
-                          </Text>
-                          <Text
-                            as="div"
-                            size="text3"
-                            className="font-normal text-[#282828] mt-2 xl:mt-3"
-                          >
-                            {item?.formatted_total}{" "}
-                            <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc]">
-                              Inc Tax
-                            </span>
+                            {parse(item?.expiry_text)}
+                            {item?.status === "used" && (
+                              <span className="text-[10px] xl:text-[12px] leading-normal font-normal text-center text-white bg-[#f17423] rounded-lg horizontal-center origin-top-left px-2 xl:px-4 mx-2">
+                                Used
+                              </span>
+                            )}
                           </Text>
                         </div>
-
-                        <div className="w-full flex justify-between gap-5 mt-2 xl:mt-4">
-                          <div>
-                            <Text
-                              as="div"
-                              size="text3"
-                              className="text-[#8d8d8d]"
-                            >
-                              Cancelled on {item?.formatted_cancelled_date}
-                            </Text>
-                            <Text
-                              as="div"
-                              size="text3"
-                              className="font-normal text-[#282828]"
-                            >
-                              {parse(item?.cancelledReason)}
-                            </Text>
-                          </div>
-                          <div>
-                            {item?.actions?.can_reorder && (
-                              <Button
-                                variant={"link"}
-                                className={btnStyle}
-                                asChild
-                              >
-                                <Link href={"/"}>
-                                  <Image
-                                    src={"/images/icon-reorder.svg"}
-                                    alt={"icon-reorder"}
-                                    width={10}
-                                    height={10}
-                                    className="w-2 xl:w-2.5"
-                                  />
-                                  Reorder
-                                </Link>
-                              </Button>
+                        <div className="w-full lg:w-4/12">
+                          <div className="flex flex-wrap justify-end gap-2.5 xl:gap-5">
+                            {item?.code && (
+                              <div className="text-[10px] xl:text-[12px] leading-normal font-light text-[#282828] bg-[#dedede] border border-[#ccc] rounded-[4px] py-0.5 px-2.5 hover:bg-[#cfcfcf] transition duration-300">
+                                {item?.code}
+                              </div>
+                            )}
+                            {item?.code && (
+                              <div className="text-[10px] xl:text-[12px] leading-normal font-medium text-[#282828] bg-[#f2f2f2] border border-[#ccc] rounded-[4px] py-0.5 px-2.5 flex gap-1 xl:gap-1.5 hover:bg-[#aaa] transition duration-300">
+                                <Image
+                                  src={"/images/icon-copy.svg"}
+                                  alt={"icon-copy"}
+                                  width={10}
+                                  height={10}
+                                  className="w-2 xl:w-2.5 hover:scale-105 transition duration-300"
+                                />
+                                COPY
+                              </div>
                             )}
                           </div>
                         </div>

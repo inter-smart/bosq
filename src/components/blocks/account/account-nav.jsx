@@ -74,7 +74,7 @@ const ASIDE_ITEMS = [
       alt: "account-nav",
     },
     title: "Account Settings",
-    href: "#",
+    href: "/en/account/settings",
   },
   {
     id: 8,
