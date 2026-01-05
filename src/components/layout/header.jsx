@@ -30,9 +30,7 @@ import { cn } from "@/lib/utils";
 
 import dynamic from "next/dynamic";
 import { Menu, X } from "lucide-react";
-import { PlaceholdersAndVanishInput } from "../ui/placeholders-and-vanish-input";
-import { Heading } from "../utils/heading";
-import { Text } from "../utils/text";
+import SearchDialog from "../common/search-dialog";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
@@ -59,7 +57,6 @@ export default function Header({ headerData, navigationData, locale }) {
   const [bg, setBg] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(true);
   const [lang, setLang] = useState(true);
-  const [command, setCommand] = useState(true);
 
   const pathname = usePathname();
 
@@ -186,21 +183,18 @@ export default function Header({ headerData, navigationData, locale }) {
                   onNavigationClick={handleNavigationLinkClick}
                 />
               </MediaQuery>
-              <Button
-                variant="none"
-                size="none"
-                onClick={() => setCommand(!command)}
-                className=""
-              >
-                <Image
-                  src="/images/icon-search.svg"
-                  alt="search"
-                  width={12}
-                  height={12}
-                  unoptimized
-                  className="w-[15px] 2xl:w-[18px]"
-                />
-              </Button>
+              <SearchDialog>
+                <Button variant="none" size="none">
+                  <Image
+                    src="/images/icon-search.svg"
+                    alt="search"
+                    width={12}
+                    height={12}
+                    unoptimized
+                    className="w-[15px] 2xl:w-[18px]"
+                  />
+                </Button>
+              </SearchDialog>
               <Button variant="none" size="none" className="">
                 <Image
                   src="/images/icon-bag.svg"
@@ -255,13 +249,6 @@ export default function Header({ headerData, navigationData, locale }) {
             </div>
           </div>
         </div>
-        {command && (
-          <SearchCammand
-            locale={locale}
-            command={command}
-            setCommand={setCommand}
-          />
-        )}
       </motion.header>
     </AnimatePresence>
   );
@@ -303,167 +290,5 @@ function NavigationMenuBar({ pathname, menuItems, onNavigationClick }) {
         })}
       </NavigationMenuList>
     </NavigationMenu>
-  );
-}
-
-/* ----------------------------------------
-   Search Component
----------------------------------------- */
-function SearchCammand({ command, setCommand, locale }) {
-  const placeholders = [
-    "Search by Category",
-    "Most trending products",
-    "Comfort, Funtionality & Style",
-  ];
-  const handleChange = (e) => {
-    console.log(e.target.value);
-  };
-  const onSubmit = (e) => {
-    e.preventDefault();
-    console.log("submitted");
-  };
-
-  const suggestionData = [
-    {
-      title: "Suggestions",
-      items: [
-        {
-          label: "Task Chairs",
-          url: "#",
-        },
-        {
-          label: "Leather Chairs",
-          url: "#",
-        },
-        {
-          label: "Meeting Chairs",
-          url: "#",
-        },
-        {
-          label: "Visitor Chairs",
-          url: "#",
-        },
-        {
-          label: "Ergonomic Chairs",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Category",
-      items: [
-        {
-          label: "Work From Home Chairs & Table",
-          url: "#",
-        },
-        {
-          label: "Hospital Chairs",
-          url: "#",
-        },
-        {
-          label: "Office Chairs",
-          url: "#",
-        },
-      ],
-    },
-  ];
-
-  return (
-    <div
-      className={cn(
-        "w-full min-h-10 lg:min-h-[calc(100vh-var(--header-y))] bg-[#f4f4f4] absolute z-10 top-(--header-y) left-0 right-0 transition duration-800 shadow-lg",
-        command ? "translate-y-0 visible" : "translate-y-full invisible"
-      )}
-    >
-      <div className="container">
-        <Button
-          variant="none"
-          size="none"
-          onClick={() => setCommand(false)}
-          className={cn("mt-10 block", locale === "ar" ? "mr-auto" : "ml-auto")}
-        >
-          <X className="size-4 text-black" />
-        </Button>
-        <div className="flex flex-wrap -mx-1 xl:-mx-4 2xl:-mx-6 [&>*]:p-1 xl:[&>*]:p-4 2xl:[&>*]:p-6">
-          <div className="w-full sm:w-[200px] lg:w-[220px] xl:w-[280px] 2xl:w-[400px]">
-            <Heading
-              as="h1"
-              size="heading1"
-              className="text-[#282828] mb-2 xl:mb-4 2xl:mb-6"
-            >
-              Search Now
-              <span
-                className={cn(
-                  "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
-                  locale === "ar"
-                    ? "-translate-x-1 xl:-translate-x-2 "
-                    : "translate-x-1 xl:translate-x-2 "
-                )}
-              />
-            </Heading>
-            <PlaceholdersAndVanishInput
-              placeholders={placeholders}
-              onChange={handleChange}
-              onSubmit={onSubmit}
-              autoFocus
-              locale={locale}
-              className="max-w-full bg-white "
-            />
-
-            {suggestionData.map((item, i) => (
-              <div
-                key={"suggesions-" + i}
-                className="w-full mt-3 xl:mt-6 2xl:mt-8"
-              >
-                <Heading
-                  as="div"
-                  size="heading4"
-                  className="text-[#282828] mb-2 xl:mb-3 2xl:mb-4"
-                >
-                  {item?.title}
-                </Heading>
-                {item?.items.map((item, idx) => (
-                  <Text
-                    key={"suggesions-item-" + idx}
-                    as="div"
-                    size="text3"
-                    className="text-black flex items-center gap-1 my-1 xl:my-1.5"
-                  >
-                    <Image
-                      src={"/images/search-right.svg"}
-                      alt={"search-right"}
-                      width={6}
-                      height={4}
-                      className="w-1.5"
-                    />
-                    <Link href={item.url}>{item.label}</Link>
-                  </Text>
-                ))}
-              </div>
-            ))}
-          </div>
-
-          <div className="w-full sm:w-[calc(100%-200px)] lg:w-[calc(100%-220px)] xl:w-[calc(100%-280px)] 2xl:w-[calc(100%-400px)]">
-            bbbb
-          </div>
-        </div>
-
-        <div className="w-full max-w-[calc(100%-40px)] xl:max-w-[calc(100%-40px)] ml-auto max-h-[168px] lg:max-h-[220px] overflow-y-scroll [mask-image:linear-gradient(to_bottom,transparent_0%,white_10%,white_85%,transparent_100%)]">
-          {[].map((item, i) => (
-            <>
-              <div key={i} className="">
-                <Link
-                  href="/"
-                  className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[16px]  leading-normal font-normal truncate text-white/80 block px-3 py-2 bg-black/10 hover:text-[#f17423] transition-all duration-200"
-                >
-                  Suggestion {i}{" "}
-                </Link>
-              </div>
-              <hr className="border-white/10" />
-            </>
-          ))}
-        </div>
-      </div>
-    </div>
   );
 }

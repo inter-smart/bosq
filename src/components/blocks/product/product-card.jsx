@@ -69,7 +69,7 @@ export default function ProductCard({ product }) {
           <Heading
             as="div"
             size="none"
-            className="text-[10px] xl:text-[8px] 2xl:text-[10px] 3xl:text-[12px] leading-normal font-light truncate text-[#bbbcbc] mb-1"
+            className="text-[10px] xl:text-[8px] 2xl:text-[10px] 3xl:text-[12px] leading-normal font-light truncate text-[#bbbcbc] mb-0.5"
           >
             <Link href={product?.slug}>{product?.category}</Link>
           </Heading>
