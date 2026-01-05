@@ -31,6 +31,8 @@ import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
 import { Menu, X } from "lucide-react";
 import { PlaceholdersAndVanishInput } from "../ui/placeholders-and-vanish-input";
+import { Heading } from "../utils/heading";
+import { Text } from "../utils/text";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
@@ -57,7 +59,7 @@ export default function Header({ headerData, navigationData, locale }) {
   const [bg, setBg] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(true);
   const [lang, setLang] = useState(true);
-  const [command, setCommand] = useState(false);
+  const [command, setCommand] = useState(true);
 
   const pathname = usePathname();
 
@@ -253,7 +255,13 @@ export default function Header({ headerData, navigationData, locale }) {
             </div>
           </div>
         </div>
-        {command && <SearchCammand locale={locale} command={command} setCommand={setCommand} />}
+        {command && (
+          <SearchCammand
+            locale={locale}
+            command={command}
+            setCommand={setCommand}
+          />
+        )}
       </motion.header>
     </AnimatePresence>
   );
@@ -299,7 +307,7 @@ function NavigationMenuBar({ pathname, menuItems, onNavigationClick }) {
 }
 
 /* ----------------------------------------
-   Navigation Component
+   Search Component
 ---------------------------------------- */
 function SearchCammand({ command, setCommand, locale }) {
   const placeholders = [
@@ -315,33 +323,131 @@ function SearchCammand({ command, setCommand, locale }) {
     console.log("submitted");
   };
 
+  const suggestionData = [
+    {
+      title: "Suggestions",
+      items: [
+        {
+          label: "Task Chairs",
+          url: "#",
+        },
+        {
+          label: "Leather Chairs",
+          url: "#",
+        },
+        {
+          label: "Meeting Chairs",
+          url: "#",
+        },
+        {
+          label: "Visitor Chairs",
+          url: "#",
+        },
+        {
+          label: "Ergonomic Chairs",
+          url: "#",
+        },
+      ],
+    },
+    {
+      title: "Category",
+      items: [
+        {
+          label: "Work From Home Chairs & Table",
+          url: "#",
+        },
+        {
+          label: "Hospital Chairs",
+          url: "#",
+        },
+        {
+          label: "Office Chairs",
+          url: "#",
+        },
+      ],
+    },
+  ];
+
   return (
     <div
       className={cn(
-        "w-full min-h-10 lg:min-h-14 flex items-center border-t border-white/10 bg-black/90 backdrop-blur-sm absolute z-10 top-(--header-y) left-0 right-0 transition duration-800 shadow-lg",
+        "w-full min-h-10 lg:min-h-[calc(100vh-var(--header-y))] bg-[#f4f4f4] absolute z-10 top-(--header-y) left-0 right-0 transition duration-800 shadow-lg",
         command ? "translate-y-0 visible" : "translate-y-full invisible"
       )}
     >
       <div className="container">
-        <div className="w-full max-w-full mx-auto flex justify-between items-center gap-x-4 px-1 py-3">
-          <Button
-            variant="none"
-            size="none"
-            onClick={() => setCommand(false)}
-            className=""
-          >
-            <X className="size-4 text-white" />
-          </Button>
-          <div className="w-[1px] h-5 bg-gray-800" />
-          <PlaceholdersAndVanishInput
-            placeholders={placeholders}
-            onChange={handleChange}
-            onSubmit={onSubmit}
-            autoFocus
-            locale={locale}
-            className="max-w-full"
-          />
+        <Button
+          variant="none"
+          size="none"
+          onClick={() => setCommand(false)}
+          className={cn("mt-10 block", locale === "ar" ? "mr-auto" : "ml-auto")}
+        >
+          <X className="size-4 text-black" />
+        </Button>
+        <div className="flex flex-wrap -mx-1 xl:-mx-4 2xl:-mx-6 [&>*]:p-1 xl:[&>*]:p-4 2xl:[&>*]:p-6">
+          <div className="w-full sm:w-[200px] lg:w-[220px] xl:w-[280px] 2xl:w-[400px]">
+            <Heading
+              as="h1"
+              size="heading1"
+              className="text-[#282828] mb-2 xl:mb-4 2xl:mb-6"
+            >
+              Search Now
+              <span
+                className={cn(
+                  "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
+                  locale === "ar"
+                    ? "-translate-x-1 xl:-translate-x-2 "
+                    : "translate-x-1 xl:translate-x-2 "
+                )}
+              />
+            </Heading>
+            <PlaceholdersAndVanishInput
+              placeholders={placeholders}
+              onChange={handleChange}
+              onSubmit={onSubmit}
+              autoFocus
+              locale={locale}
+              className="max-w-full bg-white "
+            />
+
+            {suggestionData.map((item, i) => (
+              <div
+                key={"suggesions-" + i}
+                className="w-full mt-3 xl:mt-6 2xl:mt-8"
+              >
+                <Heading
+                  as="div"
+                  size="heading4"
+                  className="text-[#282828] mb-2 xl:mb-3 2xl:mb-4"
+                >
+                  {item?.title}
+                </Heading>
+                {item?.items.map((item, idx) => (
+                  <Text
+                    key={"suggesions-item-" + idx}
+                    as="div"
+                    size="text3"
+                    className="text-black flex items-center gap-1 my-1 xl:my-1.5"
+                  >
+                    <Image
+                      src={"/images/search-right.svg"}
+                      alt={"search-right"}
+                      width={6}
+                      height={4}
+                      className="w-1.5"
+                    />
+                    <Link href={item.url}>{item.label}</Link>
+                  </Text>
+                ))}
+              </div>
+            ))}
+          </div>
+
+          <div className="w-full sm:w-[calc(100%-200px)] lg:w-[calc(100%-220px)] xl:w-[calc(100%-280px)] 2xl:w-[calc(100%-400px)]">
+            bbbb
+          </div>
         </div>
+
         <div className="w-full max-w-[calc(100%-40px)] xl:max-w-[calc(100%-40px)] ml-auto max-h-[168px] lg:max-h-[220px] overflow-y-scroll [mask-image:linear-gradient(to_bottom,transparent_0%,white_10%,white_85%,transparent_100%)]">
           {[].map((item, i) => (
             <>

@@ -56,7 +56,7 @@ const local_data = {
   deliveryInfo: {
     media: {
       type: "image",
-      media_path: "/images/delivery-info-1.jpg",
+      media_path: "/images/delivery-info-1.png",
       media_alt: "delivery-info-1",
     },
     title: "Now Delivering in and around UAE",
@@ -70,25 +70,25 @@ const local_data = {
       },
       {
         id: 2,
-        media_path: "/images/return-spec-2.svg",
+        media_path: "/images/return-spec-1.svg",
         title: "3-5 Days",
         description: "<p>Orders with customizations</p>",
       },
       {
         id: 3,
-        media_path: "/images/return-spec-3.svg",
+        media_path: "/images/return-spec-1.svg",
         title: "5-8 Days",
         description: "<p>Orders that are customized completely</p>",
       },
       {
         id: 4,
-        media_path: "/images/return-spec-4.svg",
+        media_path: "/images/return-spec-1.svg",
         title: "15-30 Days",
         description: "<p>Items that are procured perorder (bulk orders)</p>",
       },
       {
         id: 5,
-        media_path: "/images/return-spec-5.svg",
+        media_path: "/images/return-spec-1.svg",
         title: "30-45 Days",
         description:
           "<p>Fully customized items that are procured per order (bulk orders)</p>",
