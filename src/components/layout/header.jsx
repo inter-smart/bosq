@@ -106,7 +106,8 @@ export default function Header({ headerData, navigationData, locale }) {
           bg
             ? "border-b border-white/10 shadow-[0px_10px_4px_0px_rgba(0,0,0,0.1)] backdrop-blur-sm fixed"
             : "absolute",
-          bg && (pathname === "/en" ? "bg-black/80" : "bg-white/80")
+          bg && (pathname === "/en" ? "bg-black/90" : "bg-white/90"),
+          pathname === "/en" ? "bg-linear-to-b from-black/20 to-transparent" : "bg-linear-to-b from-white/20 to-transparent",
         )}
       >
         <div className="container">
