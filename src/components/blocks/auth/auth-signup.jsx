@@ -22,7 +22,7 @@ export default function AuthSignup() {
         className="line-clamp-4 font-light text-center text-black "
       >
         New here?{" "}
-        <Link href="/signup" className="font-normal hover:underline">
+        <Link href="/en/signup" className="font-normal hover:underline">
           Create an Account
         </Link>
       </Text>

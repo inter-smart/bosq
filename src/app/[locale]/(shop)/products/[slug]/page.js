@@ -78,8 +78,9 @@ const local_data = {
     name: "Orca Mid Back Ergonomic Office Chair",
     slug: "continue-table",
     price: 458,
+    formattedPrice: "AED 458",
     currency: "AED",
-    category: "Office Chair",
+    category: "OFFICE CHAIR",
     colorVariant: ["#bababa", "#333333", "#8db600", "#ff0000", "#000000"],
     shortDescription:
       "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
@@ -142,7 +143,7 @@ const local_data = {
     chooseDesign: {
       title: "Choose Your Design",
       selectedDesign: {
-        image: "/images/placeholder.jpg",
+        image: "/images/pro-detail-thumb-2.jpg",
         title: "light grey Frisco fabric with aquaclean 2063",
         subtitle: "<b>Bosq</b> : light grey Frisco fabric with aquaclean 2063",
       },
@@ -363,8 +364,8 @@ const local_data = {
 };
 
 export default async function ProductDetailPage({ params }) {
-  const locale = "en";
-  const { slug } = await params;
+  const resolvedParams = await params;
+  const { locale, slug } = resolvedParams;
   return (
     <>
       <ProductHero locale={locale} data={local_data?.heroData} slug={slug} />

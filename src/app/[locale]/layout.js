@@ -102,17 +102,17 @@ const local_data = {
     {
       id: "03",
       name: "Office Chairs",
-      slug: "/en/products",
+      slug: "/en/products/office-chair-1",
     },
     {
       id: "04",
       name: "Workstations",
-      slug: "/en/products",
+      slug: "/en/products/office-chair-2",
     },
     {
       id: "05",
       name: "Storage",
-      slug: "/en/products",
+      slug: "/en/products/office-chair-3",
     },
     {
       id: "06",
@@ -133,29 +133,29 @@ const local_data = {
       {
         id: "01",
         label: "Office Chairs",
-        link: "/",
+        link: "/en/products/office-chair-1",
       },
       {
         id: "02",
         label: "Workstations",
-        link: "/",
+        link: "/en/products",
       },
       {
         id: "03",
         label: "Storage",
-        link: "/",
+        link: "/en/products",
       },
       {
         id: "04",
         label: "Shop All",
-        link: "/",
+        link: "/en/products",
       },
     ],
     quick_link_navigation: [
       {
         id: "01",
         label: "Home",
-        link: "/",
+        link: "/en",
       },
       {
         id: "02",
@@ -165,7 +165,7 @@ const local_data = {
       {
         id: "03",
         label: "Contact",
-        link: "/",
+        link: "/en/contact",
       },
       {
         id: "04",
@@ -177,12 +177,12 @@ const local_data = {
       {
         id: "01",
         label: "Ergonomic Chair Guide",
-        link: "/",
+        link: "/en/products/office-chair-1",
       },
       {
         id: "02",
         label: "Delivery",
-        link: "/",
+        link: "/en/delivery-policy",
       },
       {
         id: "03",
@@ -192,27 +192,27 @@ const local_data = {
       {
         id: "04",
         label: "Warranty",
-        link: "/",
+        link: "/en/warranty-policy",
       },
       {
         id: "05",
         label: "F&Q",
-        link: "/",
+        link: "/en/faqs",
       },
       {
         id: "06",
         label: "Privacy Policy",
-        link: "/",
+        link: "/en/privacy-policy",
       },
       {
         id: "07",
         label: "Terms & Conditions",
-        link: "/",
+        link: "/en/terms-and-conditions",
       },
       {
         id: "08",
         label: "Return & Refund Policy",
-        link: "/",
+        link: "/en/return-policy",
       },
     ],
     sale_enquiry: {

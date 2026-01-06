@@ -316,7 +316,7 @@ export default function ProductList({ data, locale }) {
                 </button>
               </SheetTrigger>
               <SheetContent side="left"
-              
+              showCloseButton={false}
               className={"max-w-[320px] sm:max-w-[320px] xl:max-w-[340px] 2xl:max-w-[468px]"}
               >
                 <SheetHeader className="min-h-(--header-y) border-b border-[#eee] px-4 sm:px-7 justify-center">

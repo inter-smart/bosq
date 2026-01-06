@@ -1,5 +1,5 @@
 import ProductHero from "@/components/blocks/product/product-hero";
-import ProductList from "@/components/blocks/product/product-list";
+import SearchListing from "@/components/blocks/search/search-listing";
 
 const local_data = {
   heroData: {
@@ -616,7 +616,8 @@ export default async function SearchResultsPage({ params }) {
         data={local_data?.heroData}
         slug={"Search"}
       />
-      <ProductList locale={locale} data={local_data?.productData} />
+
+      <SearchListing locale={locale} data={local_data?.productData} />
     </>
   );
 }

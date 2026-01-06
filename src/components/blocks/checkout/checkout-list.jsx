@@ -283,7 +283,7 @@ export default function CheckoutList({ locale, data }) {
               Your personal data will be used to process your order, support
               your experience throughout this website, and for other purposes
               described in our{" "}
-              <Link href="/privacy-policy">Privacy Policy</Link>
+              <Link href="/en/privacy-policy">Privacy Policy</Link>
             </Text>
 
             <div className="flex items-center gap-3 mb-2 xl:mb-4">
@@ -295,7 +295,7 @@ export default function CheckoutList({ locale, data }) {
                   className="leading-tight text-[#282828] [&_a]:underline"
                 >
                   I have read and agree to the website{" "}
-                  <Link href="/terms-and-conditions">
+                  <Link href="/en/terms-and-conditions">
                     Terms and Conditions *
                   </Link>
                 </Text>

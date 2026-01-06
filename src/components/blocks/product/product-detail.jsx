@@ -197,12 +197,19 @@ export default function ProductDetail({ locale, data = local_data }) {
   const [indexProduct, setIndexProduct] = useState(0);
   const [indexProject, setIndexProject] = useState(0);
 
+  const [isChooseDesignOpen, setIsChooseDesignOpen] = useState(false);
+
   return (
     <section className="w-full block py-[15px_30px] xl:py-[30px_60px] 2xl:py-[40px_100px]">
       <div className="container">
         <div className="flex flex-wrap -mx-2.5 xl:-mx-4 2xl:-mx-5 [&>*]:p-2.5 xl:[&>*]:p-4 2xl:[&>*]:p-5">
           <div className="w-full lg:w-[520px] xl:w-[668px] 2xl:w-[800px] 3xl:w-[1000px]">
-            <div className="max-w-[576px] xl:max-w-[1080px] flex flex-wrap sticky top-[var(--header-y)] max-lg:flex-direction-row-reverse ">
+            <div
+              className={cn(
+                "max-w-[576px] xl:max-w-[1080px] flex flex-wrap  max-lg:flex-direction-row-reverse",
+                !isChooseDesignOpen && "lg:sticky lg:top-[var(--header-y)]"
+              )}
+            >
               <div className="w-[60px] sm:w-[80px] xl:w-[100px] 2xl:w-[140px] mask-[linear-gradient(to_bottom,transparent_0%,white_5%,white_95%,transparent_100%)]">
                 <div className="overflow-hidden" ref={emblaThumbsRef}>
                   <div className="flex flex-col h-[320px] sm:h-[376px] xl:h-[420px] 2xl:h-[576px] 3xl:h-[740px] touch-pan-x touch-pinch-zoom">
@@ -238,7 +245,7 @@ export default function ProductDetail({ locale, data = local_data }) {
                 className={cn(
                   "w-[calc(100%-60px)] sm:w-[calc(100%-80px)] xl:w-[calc(100%-100px)] 2xl:w-[calc(100%-140px)]",
                   locale === "ar" ? "pr-2 xl:pr-4" : "pl-2 xl:pl-4",
-                  true && "relative z-51"
+                  isChooseDesignOpen && "lg:relative lg:z-51"
                 )}
               >
                 <div className="overflow-hidden" ref={emblaMainRef}>
@@ -322,14 +329,14 @@ export default function ProductDetail({ locale, data = local_data }) {
                 size="none"
                 className="text-[10px] xl:text-[8px] 2xl:text-[10px] 3xl:text-[12px] leading-normal font-light truncate text-[#bbbcbc] mb-1"
               >
-                OFFICE CHAIR
+                {data?.category}
               </Heading>
               <Heading
                 as="div"
                 size="heading2"
                 className="font-normal text-[#282828] mb-1 2xl:mb-2 max-sm:font-bold"
               >
-                Orca Mid Back Ergonomic Office Chair
+                {data?.name}
               </Heading>
               <Text
                 as="div"
@@ -355,8 +362,8 @@ export default function ProductDetail({ locale, data = local_data }) {
                   <div className="w-full max-w-[468px] bg-[#f2f2f2] border border-[#dedede] flex items-center p-1 rounded-lg">
                     <div className="w-[40px] xl:w-[45px] 2xl:w-[55px] aspect-square rounded-lg overflow-hidden bg-white">
                       <Image
-                        src={"/images/placeholder.jpg"}
-                        alt={"main"}
+                        src={data?.chooseDesign?.selectedDesign?.image}
+                        alt={data?.chooseDesign?.selectedDesign?.title}
                         width={1080}
                         height={1080}
                         className="w-full h-full object-contain"
@@ -364,9 +371,13 @@ export default function ProductDetail({ locale, data = local_data }) {
                     </div>
                     <div className="flex-1 flex justify-between gap-2 p-2 xl:p-2.5 2xl:p-[15px] ">
                       <div className="text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#282828]">
-                        light grey Frisco fabric with aquaclean 2063
+                        {data?.chooseDesign?.selectedDesign?.title}
                       </div>
-                      <ChooseDesign data={data?.chooseDesign} locale={locale}>
+                      <ChooseDesign
+                        data={data?.chooseDesign}
+                        locale={locale}
+                        onOpenChange={setIsChooseDesignOpen}
+                      >
                         <Button
                           variant={"link"}
                           className={
@@ -385,7 +396,7 @@ export default function ProductDetail({ locale, data = local_data }) {
                 size="none"
                 className="text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#808080] mb-2 xl:mb-3 2xl:mb-5"
               >
-                <b>Bosq</b> : light grey Frisco fabric with aquaclean 2063
+                {parse(data?.chooseDesign?.selectedDesign?.subtitle)}
               </Heading>
               <hr className="my-3 sm:my-3 2xl:my-5 mx-[-5px]" />
               <Heading
@@ -393,7 +404,7 @@ export default function ProductDetail({ locale, data = local_data }) {
                 size="none"
                 className="text-[12px] xl:text-[14px] 2xl:text-[18px] 3xl:text-[22px] leading-tight font-normal text-[#282828] [&_span]:text-[70%] [&_span]:font-light [&_span]:text-[#bbbcbc] mb-2 xl:mb-3 2xl:mb-5"
               >
-                AED 458 <span>Inc Tax</span>
+                {data?.formattedPrice} <span>Inc Tax</span>
               </Heading>
               <div className="w-full flex flex-wrap gap-2.5 mb-3 xl:mb-3 2xl:mb-5">
                 <div className="w-[60px] xl:w-[60px] 2xl:w-[80px] h-[35px] lg:h-[40px] 2xl:h-[45px] 3xl:h-[55px] flex items-center rounded-[6px] overflow-hidden bg-white border border-[#dedede]">
@@ -438,6 +449,21 @@ export default function ProductDetail({ locale, data = local_data }) {
                 </Button>
               </div>
 
+              {quantity * data?.price > data?.price && (
+                <div className="w-full mb-1 xl:mb-2">
+                  <Text
+                    as="div"
+                    size="text3"
+                    className="text-[#282828] max-w-[95%]"
+                  >
+                    {"Total: $"}
+                    <span className="font-medium">
+                      {(quantity * data?.price).toFixed(2)}
+                    </span>
+                  </Text>
+                </div>
+              )}
+
               <div className="flex flex-wrap items-center justify-between gap-4 xl:gap-6 mb-2 xl:mb-3 2xl:mb-5 max-lg:flex-wrap-reverse">
                 <div className="flex lg:flex-1">
                   <Text
@@ -455,7 +481,7 @@ export default function ProductDetail({ locale, data = local_data }) {
                 >
                   <Link href={"/"}>Buy Now</Link>
                 </Button>
-                <EnquireModal locale={locale}>
+                <EnquireModal data={data?.enquiry} locale={locale}>
                   <Button
                     variant={"link"}
                     className={"font-normal underline h-auto"}
@@ -515,16 +541,6 @@ export default function ProductDetail({ locale, data = local_data }) {
               </Button>
 
               <hr className="my-3 sm:my-3 2xl:my-5 mx-[-5px]" />
-
-              <div className="flex items-center gap-3">
-                <span className="text-sm text-gray-500">
-                  {quantity * 299.99 > 299.99 && (
-                    <span className="font-medium text-gray-700">
-                      Total: ${(quantity * 299.99).toFixed(2)}
-                    </span>
-                  )}
-                </span>
-              </div>
             </div>
           </div>
         </div>
@@ -541,7 +557,10 @@ export default function ProductDetail({ locale, data = local_data }) {
                 Product Details
               </AccordionTrigger>
               <AccordionContent className="sm:px-2">
-                <div dir={locale === "ar" ? "rtl" : "ltr"} className="typography flex flex-wrap justify-between">
+                <div
+                  dir={locale === "ar" ? "rtl" : "ltr"}
+                  className="typography flex flex-wrap justify-between"
+                >
                   <div className="xl:max-w-[540px] 2xl:max-w-[650px] 3xl:max-w-[820px]">
                     <h6>
                       Optron hash High-Back Task Chair | Latice Series| Product
@@ -641,7 +660,10 @@ export default function ProductDetail({ locale, data = local_data }) {
                 Additional Information
               </AccordionTrigger>
               <AccordionContent className="sm:p-2">
-                <div dir={locale === "ar" ? "rtl" : "ltr"} className="typography">
+                <div
+                  dir={locale === "ar" ? "rtl" : "ltr"}
+                  className="typography"
+                >
                   <h6>
                     Optron hash High-Back Task Chair | Latice Series| Product
                     Details
@@ -692,8 +714,9 @@ export default function ProductDetail({ locale, data = local_data }) {
   );
 }
 
-function ChooseDesign({ children, data, locale }) {
+function ChooseDesign({ children, data, locale, onOpenChange }) {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [modelSelected, setModelSelected] = useState(1);
 
   const sheetAccordionTriggerStyle = cn(
     "text-[12px] xl:text-[11px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-4 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5 [&[data-state=open]>svg]:invert-100"
@@ -709,23 +732,27 @@ function ChooseDesign({ children, data, locale }) {
     <Sheet
       dir={locale === "ar" ? "rtl" : "ltr"}
       open={isSheetOpen}
-      onOpenChange={setIsSheetOpen}
+      onOpenChange={(open) => {
+        setIsSheetOpen(open);
+        onOpenChange?.(open); // notify parent
+      }}
     >
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent
         side={locale === "ar" ? "left" : "right"}
+        showCloseButton={false}
         className={
-          "max-w-[320px] sm:max-w-[320px] xl:max-w-[340px] 2xl:max-w-[468px]"
+          "max-w-[320px] sm:max-w-[320px] xl:max-w-[340px] 2xl:max-w-[468px] gap-0"
         }
       >
         <SheetHeader className="min-h-(--header-y) border-b border-[#eee] px-4 sm:px-7 justify-center">
-          <SheetTitle>Choose Your Design</SheetTitle>
+          <SheetTitle>{data?.title}</SheetTitle>
           <SheetDescription className="sr-only">
             Select your preferences
           </SheetDescription>
         </SheetHeader>
 
-        <div className="w-full min-h-[calc(100vh-240px)] overflow-y-scroll px-2 sm:px-5">
+        <div className="w-full min-h-[calc(100vh-(var(--header-y)+77px))] overflow-y-scroll px-2 sm:px-5">
           <Accordion
             type="single"
             collapsible
@@ -741,13 +768,21 @@ function ChooseDesign({ children, data, locale }) {
                 <div className="flex flex-wrap">
                   {data?.model.map((item, index) => (
                     <div key={"chooseDesign" + index} className="w-1/2">
-                      <div className="w-full h-full border border-[#28828] rounded-[6px] p-2">
+                      <div
+                        className={cn(
+                          "w-full h-full border rounded-[6px] p-1 2xl:p-2",
+                          modelSelected === index
+                            ? "border-[#28828]"
+                            : "border-white"
+                        )}
+                        onClick={() => setModelSelected(index)}
+                      >
                         <Image
                           src={item?.iconPath || "/images/placeholder.jpg"}
                           alt={item?.title}
                           width={75}
                           height={85}
-                          className="w-[50px] xl:w-[70px] aspect-[75/85] mx-auto mb-1.5 block"
+                          className="w-[40px] xl:w-[45px] 2xl:w-[70px] aspect-[75/85] mx-auto mb-1 2xl:mb-1.5 block"
                         />
                         <div className="text-[8px] 2xl:text-[12px] leading-normal font-normal text-center text-[#282828] ">
                           {item?.title}
@@ -868,29 +903,28 @@ function EnquireModal({ children, data, locale }) {
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent
         side={locale === "ar" ? "left" : "right"}
+        showCloseButton={false}
         className={
-          "max-w-[320px] sm:max-w-[320px] xl:max-w-[340px] 2xl:max-w-[468px]"
+          "max-w-[320px] sm:max-w-[320px] xl:max-w-[340px] 2xl:max-w-[468px] gap-0"
         }
       >
         <SheetHeader className="min-h-(--header-y) border-b border-[#eee] px-4 sm:px-7 justify-center">
-          <SheetTitle>Enquire Now</SheetTitle>
+          <SheetTitle>{data?.title}</SheetTitle>
           <SheetDescription className="sr-only">
-            Select your preferences
+            {data?.subtitle}
           </SheetDescription>
         </SheetHeader>
 
-        <div className="w-full min-h-[calc(100vh-var(--header-y))] overflow-y-scroll px-2 sm:px-5">
+        <div className="w-full min-h-[calc(100vh-(var(--header-y)+77px))] overflow-y-scroll px-4 sm:px-7">
           <Heading
             as="div"
             size="heading5"
             className="font-normal text-[#282828] mb-2 2xl:mb-3 mt-2.5 2xl:mt-4"
           >
-            Bulk Orders & Customisation Available!
+            {data?.subtitle}
           </Heading>
           <Text as="div" size="text3" className="text-[#282828] mb-2 2xl:mb-4">
-            {parse(
-              "<p>Need 10 or 100 chairs? Want them in your brand colours or a unique design? No problem.Just tell us what you need below!</p>"
-            )}
+            {parse(data?.description)}
           </Text>
           <ProductEnquiryForm />
         </div>

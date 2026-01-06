@@ -40,7 +40,7 @@ export default function ContactInfo({ locale, data }) {
               >
                 {parse(data?.formData?.description)}
               </Text>
-              <ContactEnquiryForm />
+              <ContactEnquiryForm locale={locale} />
             </div>
           </div>
           <div className="w-full lg:w-1/2">

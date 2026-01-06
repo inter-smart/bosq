@@ -118,8 +118,9 @@ const local_data = {
   },
 };
 
-export default function ContactPage() {
-  const locale = "en";
+export default async function ContactPage({params}) {
+  const resolvedParams = await params;
+  const { locale } = resolvedParams;
   return (
     <>
       <CartHero locale={locale} data={local_data?.heroData} slug={"contact"} />

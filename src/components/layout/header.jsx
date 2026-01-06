@@ -107,7 +107,9 @@ export default function Header({ headerData, navigationData, locale }) {
             ? "border-b border-white/10 shadow-[0px_10px_4px_0px_rgba(0,0,0,0.1)] backdrop-blur-sm fixed"
             : "absolute",
           bg && (pathname === "/en" ? "bg-black/90" : "bg-white/90"),
-          pathname === "/en" ? "bg-linear-to-b from-black/20 to-transparent" : "bg-linear-to-b from-white/20 to-transparent",
+          pathname === "/en"
+            ? "bg-linear-to-b from-black/20 to-transparent"
+            : "bg-linear-to-b from-white/20 to-transparent"
         )}
       >
         <div className="container">
@@ -118,9 +120,17 @@ export default function Header({ headerData, navigationData, locale }) {
                   <Menu
                     size={18}
                     strokeWidth={1}
-                    className="size-5 text-white"
+                    className={cn(
+                      "size-5",
+                      pathname === "/en" ? "text-white" : "text-[#282828]"
+                    )}
                   />
-                  <div className="w-[1px] h-5 2xs:h-6 bg-white/10" />
+                  <div
+                    className={cn(
+                      "w-[1px] h-5 2xs:h-6",
+                      pathname === "/en" ? "bg-white/10" : "bg-[#282828]/10"
+                    )}
+                  />
                 </SheetTrigger>
                 <SheetContent
                   className="max-w-[320px] sm:max-w-[320px] bg-white"
@@ -240,47 +250,51 @@ export default function Header({ headerData, navigationData, locale }) {
                   )}
                 </Button>
               </SearchDialog>
-              <Button variant="none" size="none">
-                {pathname === "/en" ? (
-                  <Image
-                    src="/images/icon-bag.svg"
-                    alt="bag"
-                    width={12}
-                    height={12}
-                    unoptimized
-                    className="w-[15px] 2xl:w-[18px]"
-                  />
-                ) : (
-                  <Image
-                    src="/images/icon-bag-dark.svg"
-                    alt="bag"
-                    width={12}
-                    height={12}
-                    unoptimized
-                    className="w-[15px] 2xl:w-[18px]"
-                  />
-                )}
+              <Button variant="none" size="none" asChild>
+                <Link href="/en/cart">
+                  {pathname === "/en" ? (
+                    <Image
+                      src="/images/icon-bag.svg"
+                      alt="bag"
+                      width={12}
+                      height={12}
+                      unoptimized
+                      className="w-[15px] 2xl:w-[18px]"
+                    />
+                  ) : (
+                    <Image
+                      src="/images/icon-bag-dark.svg"
+                      alt="bag"
+                      width={12}
+                      height={12}
+                      unoptimized
+                      className="w-[15px] 2xl:w-[18px]"
+                    />
+                  )}
+                </Link>
               </Button>
-              <Button variant="none" size="none">
-                {pathname === "/en" ? (
-                  <Image
-                    src="/images/icon-user.svg"
-                    alt="user"
-                    width={12}
-                    height={12}
-                    unoptimized
-                    className="w-[15px] 2xl:w-[18px]"
-                  />
-                ) : (
-                  <Image
-                    src="/images/icon-user-dark.svg"
-                    alt="user"
-                    width={12}
-                    height={12}
-                    unoptimized
-                    className="w-[15px] 2xl:w-[18px]"
-                  />
-                )}
+              <Button variant="none" size="none" asChild>
+                <Link href="/en/account/profile">
+                  {pathname === "/en" ? (
+                    <Image
+                      src="/images/icon-user.svg"
+                      alt="user"
+                      width={12}
+                      height={12}
+                      unoptimized
+                      className="w-[15px] 2xl:w-[18px]"
+                    />
+                  ) : (
+                    <Image
+                      src="/images/icon-user-dark.svg"
+                      alt="user"
+                      width={12}
+                      height={12}
+                      unoptimized
+                      className="w-[15px] 2xl:w-[18px]"
+                    />
+                  )}
+                </Link>
               </Button>
               {locale == "ar" ? (
                 <Button
@@ -345,7 +359,7 @@ function NavigationMenuBar({ pathname, menuItems, onNavigationClick }) {
 
     const pageTextColor =
       pathname === "/en"
-        ? "text-white hover:text-white focus:text-white"
+        ? "text-[#282828] lg:text-white hover:text-white focus:text-white"
         : "text-[#282828] hover:text-[#282828] focus:text-[#282828]";
 
     const activeColor = isActive ? "text-[#f17423]" : "";

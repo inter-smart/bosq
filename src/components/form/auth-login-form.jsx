@@ -179,7 +179,7 @@ export default function AuthLoginForm() {
             className="font-normal underline h-auto! p-0 text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px]"
             asChild
           >
-            <Link href="/forgot-password">Forgot Password?</Link>
+            <Link href="/en/forgot-password">Forgot Password?</Link>
           </Button>
         </div>
 
