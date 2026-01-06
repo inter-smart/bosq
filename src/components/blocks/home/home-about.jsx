@@ -24,7 +24,7 @@ export default function HomeAbout({ data, locale }) {
               <div className="group w-[140px] sm:w-[168px] xl:w-[200px] 2xl:w-[268px] 3xl:w-[320px] aspect-[20/34] mx-auto hover:scale-110  transition duration-300 relative z-0">
                 <Image
                   src={data?.media?.path}
-                  alt={data?.media?.alt}
+                  alt={locale == "ar" ? data?.media?.alt_ar : data?.media?.alt}
                   width={308}
                   height={517}
                   className="w-full h-full object-contain group-hover:-translate-y-2 transition duration-300"
@@ -35,35 +35,20 @@ export default function HomeAbout({ data, locale }) {
 
             <div className="w-full sm:w-[calc(100%-220px)] xl:w-[calc(100%-480px)] 2xl:w-[calc(100%-576px)] 3xl:w-[calc(100%-720px)]">
               <div className="w-full max-sm:text-center">
-                <Heading
-                  as="h2"
-                  size="heading1"
-                  className="line-clamp-2 text-black mb-2 xl:mb-4 2xl:mb-6"
-                >
-                  {parse(data?.title)}
-
+                <Heading as="h2" size="heading1" className="line-clamp-2 text-black mb-2 xl:mb-4 2xl:mb-6">
+                  {parse(locale == "ar" ? data?.title_ar : data?.title)}
                   <span
                     className={cn(
                       "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
-                      locale === "ar"
-                        ? "-translate-x-1 xl:-translate-x-2 "
-                        : "translate-x-1 xl:translate-x-2 "
+                      locale === "ar" ? "-translate-x-1 xl:-translate-x-2 " : "translate-x-1 xl:translate-x-2 "
                     )}
                   />
                 </Heading>
-                <Text
-                  as="div"
-                  size="text1"
-                  className="line-clamp-4 font-light text-black mb-4 xl:mb-8 2xl:mb-10"
-                >
-                  {parse(data?.description)}
+                <Text as="div" size="text1" className="line-clamp-4 font-light text-black mb-4 xl:mb-8 2xl:mb-10">
+                  {parse(locale == "ar" ? data?.description_ar : data?.description)}
                 </Text>
-                <Button
-                  variant={"black"}
-                  className="min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-40"
-                  asChild
-                >
-                  <Link href={data?.button?.link}>{data?.button?.label}</Link>
+                <Button variant={"black"} className="min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-40" asChild>
+                  <Link href={"/"}>{locale == "ar" ? "قراءة المزيد" : "Read More"}</Link>
                 </Button>
               </div>
             </div>

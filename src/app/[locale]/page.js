@@ -1,6 +1,10 @@
 import dynamic from "next/dynamic";
 import HomeHero from "@/components/blocks/home/home-hero"; // keep SSR for SEO
 
+import { getHomeData } from "@/lib/api/home";
+import { notFound } from "next/navigation";
+import { GET as getHome } from "../api/home/route";
+
 const HomeAbout = dynamic(() => import("@/components/blocks/home/home-about"));
 const HomeFeatured = dynamic(() =>
   import("@/components/blocks/home/home-featured")
@@ -29,11 +33,11 @@ const local_data = {
         type: "image",
         mobile: {
           path: "/images/home-hero-1.jpg",
-          alt: "hero",
+          media_alt: "hero",
         },
         desktop: {
           path: "/images/home-hero-1.jpg",
-          alt: "hero",
+          media_alt: "hero",
         },
       },
       title: "Designed for Comfort.<br/> Engineered for Your <br /> Workspace",
@@ -548,14 +552,50 @@ const local_data = {
   },
 };
 
-export default function HomePage() {
-  const locale = "en";
+export default async function HomePage({ params }) {
+  const resolvedParams = await params;
+  const { locale } = resolvedParams;
+
+  // const { data, error } = await getHomeData.getCmsData();/
+  // const result = await getHome()
+
+  // if (error) {
+  //   notFound();
+  // }
+
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/home`, {
+    cache: "no-store", // or "force-cache" if static
+  });
+
+  if (!res.ok) {
+    notFound();
+  }
+
+  const { data } = await res.json();
+
+  console.log(data);
+
+  const {
+    sliders,
+    aboutSection,
+    formSection,
+    journeySection,
+    featuredSection,
+    projectSection,
+    fitsSection,
+    brandsSection,
+  } = data;
+
   return (
     <>
-      <HomeHero locale={locale} data={local_data?.homeData} />
-      <HomeAbout locale={locale} data={local_data?.aboutData} />
-      <HomeFeatured locale={locale} data={local_data?.featuredData} />
-      <HomeJourney locale={locale} data={local_data?.journeyData} />
+      <HomeHero locale={locale} data={sliders} />
+      <HomeAbout locale={locale} data={aboutSection} />
+      <HomeFeatured
+        locale={locale}
+        products={local_data?.featuredData?.product}
+        data={featuredSection}
+      />
+      <HomeJourney locale={locale} data={journeySection} />
       <HomeProject locale={locale} data={local_data?.projectData} />
       <HomeCalculator
         locale={locale}

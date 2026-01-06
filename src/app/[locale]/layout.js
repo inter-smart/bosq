@@ -3,9 +3,8 @@ import { Cairo } from "next/font/google";
 import "./../globals.css";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
-import { NextIntlClientProvider } from "next-intl";
-import { notFound } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { locales, localeDirection } from "../../il8n/config";
 
 const heroNew = localFont({
   src: [
@@ -52,6 +51,10 @@ const heroNew = localFont({
   ],
 });
 
+export async function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
+
 // Arabic Google Font - Cairo
 const cairo = Cairo({
   subsets: ["arabic", "latin"],
@@ -70,8 +73,8 @@ const local_data = {
     id: "uuid PRIMARY KEY",
     name: "Bosq Ergonomics",
     slug: "/",
-    logoUrl: "images/brand-logo-primary.svg",
-    logoWhiteUrl: "images/brand-logo.svg",
+    logoUrl: "/images/brand-logo-primary.svg",
+    logoWhiteUrl: "/images/brand-logo.svg",
     description: "text",
     websiteUrl: "https://bosq.ae/",
     countryOfOrigin: "char(2) (ISO country code)",
@@ -89,40 +92,40 @@ const local_data = {
     {
       id: "01",
       name: "Home",
-      slug: "/",
+      slug: "/en",
     },
     {
       id: "02",
       name: "Shop All",
-      slug: "/product",
+      slug: "/en/products",
     },
     {
       id: "03",
       name: "Office Chairs",
-      slug: "/office-chair",
+      slug: "/en/products",
     },
     {
       id: "04",
       name: "Workstations",
-      slug: "/",
+      slug: "/en/products",
     },
     {
       id: "05",
       name: "Storage",
-      slug: "/",
+      slug: "/en/products",
     },
     {
       id: "06",
       name: "Contact",
-      slug: "/",
+      slug: "/en/contact",
     },
   ],
   footer_data: {
     id: "uuid PRIMARY KEY",
     name: "Bosq Ergonomics",
     slug: "/",
-    logoUrl: "images/brand-logo-primary.svg",
-    logoWhiteUrl: "images/brand-logo.svg",
+    logoUrl: "/images/brand-logo-primary.svg",
+    logoWhiteUrl: "/images/brand-logo.svg",
     address:
       "<p>AYN MUSK FOR FURNITURE CO.L.L.C<br /> Office No 133, KML Business Tower,Meydan Road,<br /> Al Qouz, Dubai P.O Box: 294568</p>",
     websiteUrl: "https://bosq.ae/",
@@ -281,10 +284,11 @@ const local_data = {
   ],
 };
 
-export default async function RootLayout({ children }) {
-  const locale = "en";
+export default async function RootLayout({ children, params }) {
+  const resolvedParams = await params;
 
-  const dir = locale === "ar" ? "rtl" : "ltr";
+  const locale = resolvedParams.locale;
+  const dir = localeDirection[resolvedParams.locale];
 
   return (
     <html
@@ -296,7 +300,6 @@ export default async function RootLayout({ children }) {
       )}
     >
       <body className={locale === "ar" ? "font-cairo" : "font-hero"}>
-        {/* <NextIntlClientProvider locale={locale}> */}
         <Header
           headerData={local_data.header_data}
           navigationData={local_data.navigation_data}
@@ -308,7 +311,6 @@ export default async function RootLayout({ children }) {
           socialLinkData={local_data.social_link_data}
           locale={locale}
         />
-        {/* </NextIntlClientProvider> */}
       </body>
     </html>
   );

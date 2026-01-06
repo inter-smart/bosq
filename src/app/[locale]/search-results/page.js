@@ -3,7 +3,7 @@ import ProductList from "@/components/blocks/product/product-list";
 
 const local_data = {
   heroData: {
-    title: "Office Chairs",
+    title: "Showing 45 Results for 'Ergonomic Office Chair'",
     description: null,
   },
   productData: {
@@ -605,15 +605,16 @@ const local_data = {
   },
 };
 
-export default function ProductsPage() {
-  const locale = "en";
+export default async function SearchResultsPage({ params }) {
+  const resolvedParams = await params;
+  const { locale } = resolvedParams;
 
   return (
     <>
       <ProductHero
         locale={locale}
         data={local_data?.heroData}
-        slug={"Products"}
+        slug={"Search"}
       />
       <ProductList locale={locale} data={local_data?.productData} />
     </>

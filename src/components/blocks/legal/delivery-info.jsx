@@ -30,7 +30,7 @@ export default function DeliveryInfo({ data, deliveryInfo, locale }) {
               {parse(data?.title)}
               <span
                 className={cn(
-                  "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
+                  "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block",
                   locale === "ar"
                     ? "-translate-x-1 xl:-translate-x-2 "
                     : "translate-x-1 xl:translate-x-2 "
