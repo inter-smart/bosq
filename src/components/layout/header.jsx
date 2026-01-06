@@ -59,7 +59,7 @@ export default function Header({ headerData, navigationData, locale }) {
   const [bg, setBg] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(true);
   const [lang, setLang] = useState(true);
-  const [command, setCommand] = useState(true);
+  const [command, setCommand] = useState(false);
 
   const pathname = usePathname();
 
