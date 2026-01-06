@@ -62,7 +62,7 @@ function BreadcrumbPage({
       role="link"
       aria-disabled="true"
       aria-current="page"
-      className={cn("text-[#939393] font-normal", className)}
+      className={cn("text-[#939393] font-light", className)}
       {...props} />
   );
 }

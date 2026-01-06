@@ -32,7 +32,7 @@ export default function CartHero({ data, locale, slug, itemsCount }) {
           </BreadcrumbList>
         </Breadcrumb>
         {data?.title && (
-          <Heading as="h2" size="heading1" className="line-clamp-2 text-black">
+          <Heading as="h2" size="heading6" className="line-clamp-2 text-black">
             {parse(data?.title)}
 
             {itemsCount > 0 && (
