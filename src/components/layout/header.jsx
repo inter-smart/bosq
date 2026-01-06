@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useTransition, useEffect, useState } from "react";
 import {
   motion,
   AnimatePresence,
@@ -19,7 +19,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "../ui/button";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -56,9 +56,11 @@ export default function Header({ headerData, navigationData, locale }) {
   const [visible, setVisible] = useState(true);
   const [bg, setBg] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(true);
-  const [lang, setLang] = useState(true);
+  const [isPending, startTransition] = useTransition();
 
   const pathname = usePathname();
+
+  const router = useRouter();
 
   // Close mobile menu on route change
   useEffect(() => setSheetOpen(false), [pathname]);
@@ -75,6 +77,24 @@ export default function Header({ headerData, navigationData, locale }) {
 
   const handleNavigationLinkClick = () => setSheetOpen(false);
 
+  const switchLocale = (newLocale) => {
+    if (newLocale === locale) return;
+
+    // Remove current locale from pathname and add new one
+    const segments = pathname.split("/").filter(Boolean);
+    segments[0] = newLocale; // Replace locale segment
+    const newPath = `/${segments.join("/")}`;
+
+    // Set cookie for persistence
+    document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000`;
+
+    // Use transition for smooth loading state
+    startTransition(() => {
+      router.push(newPath);
+      setIsOpen(false);
+    });
+  };
+
   return (
     <AnimatePresence mode="wait">
       <motion.header
@@ -84,8 +104,9 @@ export default function Header({ headerData, navigationData, locale }) {
         className={cn(
           "w-full h-(--header-y) z-10 top-0 inset-x-0 flex items-center bg-linear-to-b from-black/20 to-transparent",
           bg
-            ? "border-b border-white/10 bg-black/95 shadow-[0px_10px_4px_0px_rgba(0,0,0,0.1)] backdrop-blur-sm fixed"
-            : "absolute"
+            ? "border-b border-white/10 shadow-[0px_10px_4px_0px_rgba(0,0,0,0.1)] backdrop-blur-sm fixed"
+            : "absolute",
+          bg && (pathname === "/en" ? "bg-black/80" : "bg-white/80")
         )}
       >
         <div className="container">
@@ -159,15 +180,27 @@ export default function Header({ headerData, navigationData, locale }) {
             {/* Brand Logo */}
             <div className="w-[70px] 2xs:w-[80px] sm:w-[100px] xl:w-[120px] 2xl:w-[140px] 3xl:w-[176px]">
               <Link href={headerData?.slug}>
-                <Image
-                  src={headerData?.logoWhiteUrl}
-                  alt={headerData?.name}
-                  width={173}
-                  height={58}
-                  unoptimized
-                  className="w-full h-full block object-contain"
-                  priority
-                />
+                {pathname === "/en" ? (
+                  <Image
+                    src={headerData?.logoWhiteUrl}
+                    alt={headerData?.name}
+                    width={173}
+                    height={58}
+                    unoptimized
+                    className="w-full h-full block object-contain"
+                    priority
+                  />
+                ) : (
+                  <Image
+                    src={headerData?.logoUrl}
+                    alt={headerData?.name}
+                    width={173}
+                    height={58}
+                    unoptimized
+                    className="w-full h-full block object-contain"
+                    priority
+                  />
+                )}
               </Link>
             </div>
 
@@ -185,41 +218,77 @@ export default function Header({ headerData, navigationData, locale }) {
               </MediaQuery>
               <SearchDialog>
                 <Button variant="none" size="none">
+                  {pathname === "/en" ? (
+                    <Image
+                      src="/images/icon-search.svg"
+                      alt="search"
+                      width={12}
+                      height={12}
+                      unoptimized
+                      className="w-[15px] 2xl:w-[18px]"
+                    />
+                  ) : (
+                    <Image
+                      src="/images/icon-search-dark.svg"
+                      alt="search"
+                      width={12}
+                      height={12}
+                      unoptimized
+                      className="w-[15px] 2xl:w-[18px]"
+                    />
+                  )}
+                </Button>
+              </SearchDialog>
+              <Button variant="none" size="none">
+                {pathname === "/en" ? (
                   <Image
-                    src="/images/icon-search.svg"
-                    alt="search"
+                    src="/images/icon-bag.svg"
+                    alt="bag"
                     width={12}
                     height={12}
                     unoptimized
                     className="w-[15px] 2xl:w-[18px]"
                   />
-                </Button>
-              </SearchDialog>
-              <Button variant="none" size="none" className="">
-                <Image
-                  src="/images/icon-bag.svg"
-                  alt="bag"
-                  width={12}
-                  height={12}
-                  unoptimized
-                  className="w-[15px] 2xl:w-[18px]"
-                />
+                ) : (
+                  <Image
+                    src="/images/icon-bag-dark.svg"
+                    alt="bag"
+                    width={12}
+                    height={12}
+                    unoptimized
+                    className="w-[15px] 2xl:w-[18px]"
+                  />
+                )}
               </Button>
-              <Button variant="none" size="none" className="">
-                <Image
-                  src="/images/icon-user.svg"
-                  alt="user"
-                  width={12}
-                  height={12}
-                  unoptimized
-                  className="w-[15px] 2xl:w-[18px]"
-                />
+              <Button variant="none" size="none">
+                {pathname === "/en" ? (
+                  <Image
+                    src="/images/icon-user.svg"
+                    alt="user"
+                    width={12}
+                    height={12}
+                    unoptimized
+                    className="w-[15px] 2xl:w-[18px]"
+                  />
+                ) : (
+                  <Image
+                    src="/images/icon-user-dark.svg"
+                    alt="user"
+                    width={12}
+                    height={12}
+                    unoptimized
+                    className="w-[15px] 2xl:w-[18px]"
+                  />
+                )}
               </Button>
-              {lang ? (
+              {locale == "ar" ? (
                 <Button
                   variant="link"
-                  onClick={() => setLang(!lang)}
-                  className="text-[12px] leading-none font-normal font-cairo text-white min-w-[60px] sm:min-w-[60px] lg:min-w-[80px] 2xl:min-w-[100px] gap-1"
+                  onClick={() => switchLocale("en")}
+                  className={cn(
+                    "text-[12px] leading-none font-normal font-cairo min-w-[60px] sm:min-w-[60px] lg:min-w-[80px] 2xl:min-w-[100px] gap-1",
+                    pathname === "/en" ? "text-white" : "text-[#282828]"
+                  )}
                 >
                   <Image
                     src="/images/lang-1.jpg"
@@ -233,8 +302,11 @@ export default function Header({ headerData, navigationData, locale }) {
               ) : (
                 <Button
                   variant="link"
-                  onClick={() => setLang(!lang)}
-                  className="text-[12px] leading-none font-normal font-cairo text-white min-w-[60px] sm:min-w-[60px] lg:min-w-[80px] 2xl:min-w-[100px] gap-1"
+                  onClick={() => switchLocale("ar")}
+                  className={cn(
+                    "text-[12px] leading-none font-normal font-cairo text-white min-w-[60px] sm:min-w-[60px] lg:min-w-[80px] 2xl:min-w-[100px] gap-1",
+                    pathname === "/en" ? "text-white" : "text-[#282828]"
+                  )}
                 >
                   <Image
                     src="/images/lang-2.jpg"
@@ -258,13 +330,28 @@ export default function Header({ headerData, navigationData, locale }) {
    Navigation Component
 ---------------------------------------- */
 function NavigationMenuBar({ pathname, menuItems, onNavigationClick }) {
+  // const getNavigationMenuTriggerStyle = (isActive) => {
+  //   const baseStyle =
+  //     "text-[14px] lg:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-normal font-normal text-start lg:text-center w-full h-auto p-[5px_15px] lg:p-[6px_12px] 2xl:p-[10px_15px] 3xl:p-[15px_25px] bg-transparent border border-transparent hover:text-white focus:text-primary hover:bg-black/10 focus:bg-black/50 ring-0 hover:border-white/10 data-[state=open]:border-white/10 data-[state=open]:hover:bg-black/10 data-[state=open]:text-white data-[state=open]:focus:bg-black/10 data-[state=open]:bg-black/10 transition-all duration-200";
+  //   return `${baseStyle} ${
+  //     isActive ? "text-primary border-transparent" : "text-black lg:text-white"
+  //   } ${pathname === "/en" ? "text-red-500" : "text-yellow-500"}`;
+  // };
+
   const getNavigationMenuTriggerStyle = (isActive) => {
     const baseStyle =
-      "text-[14px] lg:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-normal font-normal text-start lg:text-center w-full h-auto p-[5px_15px] lg:p-[6px_12px] 2xl:p-[10px_15px] 3xl:p-[15px_25px] bg-transparent border border-transparent hover:text-white focus:text-primary hover:bg-black/10 focus:bg-black/50 ring-0 hover:border-white/10 data-[state=open]:border-white/10 data-[state=open]:hover:bg-black/10 data-[state=open]:text-white data-[state=open]:focus:bg-black/10 data-[state=open]:bg-black/10 transition-all duration-200";
-    return `${baseStyle} ${
-      isActive ? "text-primary border-transparent" : "text-black lg:text-white"
-    }`;
+      "text-[14px] lg:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-normal font-normal text-start lg:text-center w-full h-auto p-[5px_15px] lg:p-[6px_12px] 2xl:p-[10px_15px] 3xl:p-[15px_25px] bg-transparent border border-transparent hover:bg-black/0 focus:bg-black/0 ring-0 hover:border-white/10 data-[state=open]:border-white/10 data-[state=open]:hover:bg-black/10 data-[state=open]:text-white data-[state=open]:focus:bg-black/10 data-[state=open]:bg-black/10 transition-all duration-200";
+
+    const pageTextColor =
+      pathname === "/en"
+        ? "text-white hover:text-white focus:text-white"
+        : "text-[#282828] hover:text-[#282828] focus:text-[#282828]";
+
+    const activeColor = isActive ? "text-[#f17423]" : "";
+
+    return `${baseStyle} ${pageTextColor} ${activeColor}`;
   };
+
   return (
     <NavigationMenu
       viewport={false}
@@ -272,15 +359,16 @@ function NavigationMenuBar({ pathname, menuItems, onNavigationClick }) {
     >
       <NavigationMenuList className="xl:gap-x-3 2xl:gap-x-4 max-lg:flex-col max-lg:[&>div]:w-full">
         {menuItems.map((item, i) => {
-          const isActive = pathname === item.url;
+          const isActive = pathname === item.slug;
           return (
             <motion.div key={i} variants={itemVariants}>
               <NavigationMenuItem>
                 <NavigationMenuLink
                   asChild
                   className={cn(getNavigationMenuTriggerStyle(isActive))}
+                  // className={getNavigationMenuTriggerStyle}
                 >
-                  <Link href={item.url || "#"} onClick={onNavigationClick}>
+                  <Link href={item.slug || "#"} onClick={onNavigationClick}>
                     {item.name}
                   </Link>
                 </NavigationMenuLink>

@@ -1,71 +1,47 @@
-import { NextResponse } from "next/server";
-import createMiddleware from "next-intl/middleware";
+// middleware.ts
+import { NextRequest, NextResponse } from "next/server";
+import { Locale, locales, localeDirection } from "./src/il8n/config";
 
-// 1. Define your valid route patterns
-const validRoutes = [
-  /^\/$/, // Allow root "/" as valid
-  /^\/(en|ar)$/, // Home pages for each locale
-  /^\/(en|ar)\/about$/, // About page
-  /^\/(en|ar)\/contact$/, // Contact page
-  /^\/(en|ar)\/legal-statement$/, // Statement page
-  /^\/(en|ar)\/models\/(u8|u9)(\/.*)?$/, // Models page
-  /^\/(en|ar)\/news$/, // News page
-  /^\/(en|ar)\/news\/[^\/]+$/, // News detail page (matches /en/news/some-article)
-  /^\/(en|ar)\/offers$/, // Offers page
-  /^\/(en|ar)\/ownership$/, // Ownership page
-  /^\/(en|ar)\/privacy-policy$/, // Privacy page
-  /^\/(en|ar)\/service$/, // Service page
-  /^\/(en|ar)\/not-found$/, // Error page
-];
+export function middleware(request) {
+  const pathname = request.nextUrl.pathname;
 
-function isValidRoute(pathname) {
-  return validRoutes.some((pattern) => pattern.test(pathname));
+  // Check if pathname already has a locale
+  const pathnameHasLocale = locales.some((locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`);
+
+  if (pathnameHasLocale) return NextResponse.next();
+
+  // Detect locale from Accept-Language header or use default
+  const locale = getLocale(request) || defaultLocale;
+
+  // Redirect to locale-prefixed URL
+  const newUrl = new URL(`/${locale}${pathname}`, request.url);
+  return NextResponse.redirect(newUrl);
 }
 
-export default async function middleware(request) {
-  const { pathname, search } = request.nextUrl;
-
-  // Redirect paths without locale prefix to locale-specific path
-  if (!pathname.startsWith("/en") && !pathname.startsWith("/ar")) {
-    const locale = request.cookies.get("NEXT_LOCALE")?.value || "en";
-    const targetPath =
-      pathname === "/" || pathname === ""
-        ? `/${locale}`
-        : `/${locale}${pathname}`;
-    const url = new URL(targetPath + search, request.url);
-    return NextResponse.redirect(url, { status: 308 });
+function getLocale(request) {
+  // Check cookie first
+  const cookieLocale = request.cookies.get("NEXT_LOCALE")?.value;
+  if (cookieLocale && locales.includes(cookieLocale)) {
+    return cookieLocale;
   }
 
-  // Remove trailing slash
-  if (pathname !== "/" && pathname.endsWith("/")) {
-    const url = new URL(pathname.slice(0, -1) + search, request.url);
-    return NextResponse.redirect(url, { status: 308 });
+  // Check Accept-Language header
+  const acceptLanguage = request.headers.get("accept-language");
+  if (acceptLanguage) {
+    const preferredLocale = acceptLanguage
+      .split(",")
+      .map((lang) => lang.split(";")[0].trim().toLowerCase())
+      .find((lang) => locales.includes(lang));
+
+    if (preferredLocale) return preferredLocale;
   }
 
-  // Check if the route is valid
-  if (!isValidRoute(pathname)) {
-    // Extract locale from pathname, default to "en"
-    const match = pathname.match(/^\/(en|ar)(\/|$)/);
-    const locale = match ? match[1] : "en";
-    const url = new URL(`/${locale}/not-found`, request.url);
-    return NextResponse.redirect(url, { status: 307 });
-  }
-
-  // Apply next-intl middleware for localization
-  try {
-    const intlMiddleware = createMiddleware({
-      locales: ["en", "ar"],
-      defaultLocale: "en",
-      localePrefix: "always",
-    });
-    const response = await intlMiddleware(request);
-    return response;
-  } catch (error) {
-    console.error(`[${new Date().toISOString()}] next-intl error:`, error);
-    return NextResponse.next();
-  }
+  return null;
 }
 
 export const config = {
-  matcher: ["/", "/((?!api|_next|.*\\..*).*)"],
+  matcher: [
+    // Skip all internal paths (_next, api, static files)
+    "/((?!api|_next/static|_next/image|favicon.ico|.*\\..*|manifest.json).*)",
+  ],
 };

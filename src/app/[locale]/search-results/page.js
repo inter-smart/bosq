@@ -605,8 +605,9 @@ const local_data = {
   },
 };
 
-export default function SearchResultsPage() {
-  const locale = "en";
+export default async function SearchResultsPage({ params }) {
+  const resolvedParams = await params;
+  const { locale } = resolvedParams;
 
   return (
     <>
