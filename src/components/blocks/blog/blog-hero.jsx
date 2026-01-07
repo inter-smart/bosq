@@ -14,9 +14,9 @@ import Image from "next/image";
 
 export default function BlogHero({ data, locale, slug }) {
   return (
-    <section className="w-full pt-(--header-y)_+_20px)] sm:pt-[calc(var(--header-y)_+_10px)]">
+    <section className="w-full pt-[calc(var(--header-y)_+_20px)] sm:pt-[calc(var(--header-y)_+_10px)]">
       <div className="container mb-3 xl:mb-5 2xl:mb-8">
-        <Breadcrumb className="mb-2 sm:mb-4">
+        <Breadcrumb className="mb-1 xl:mb-2">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="/">Home</BreadcrumbLink>

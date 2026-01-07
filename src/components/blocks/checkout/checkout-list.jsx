@@ -95,7 +95,7 @@ export default function CheckoutList({ locale, data }) {
               >
                 Addresses
               </Heading>
-              <AddressForm />
+              <AddressForm locale={locale} />
             </div>
 
             {orderStatus && <CheckoutResponse orderStatus={orderStatus} />}
@@ -244,6 +244,7 @@ export default function CheckoutList({ locale, data }) {
 
             <div className="w-full bg-[#f4f4f4] border border-[#e0e0e0] rounded-lg p-3 sm:p-4 xl:p-7 2xl:p-8 mb-2 xl:mb-4">
               <RadioGroup
+                dir={locale === "ar" ? "rtl" : "ltr"}
                 defaultValue="payment1"
                 className={"grid-cols-1 3xs:grid-cols-2"}
               >
@@ -283,7 +284,7 @@ export default function CheckoutList({ locale, data }) {
               Your personal data will be used to process your order, support
               your experience throughout this website, and for other purposes
               described in our{" "}
-              <Link href="/privacy-policy">Privacy Policy</Link>
+              <Link href="/en/privacy-policy">Privacy Policy</Link>
             </Text>
 
             <div className="flex items-center gap-3 mb-2 xl:mb-4">
@@ -295,7 +296,7 @@ export default function CheckoutList({ locale, data }) {
                   className="leading-tight text-[#282828] [&_a]:underline"
                 >
                   I have read and agree to the website{" "}
-                  <Link href="/terms-and-conditions">
+                  <Link href="/en/terms-and-conditions">
                     Terms and Conditions *
                   </Link>
                 </Text>

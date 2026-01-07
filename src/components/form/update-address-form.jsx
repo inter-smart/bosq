@@ -107,7 +107,7 @@ const textareaStyle = cn(
   "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none"
 );
 
-export default function UpdateAddressForm() {
+export default function UpdateAddressForm({locale}) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -260,7 +260,7 @@ export default function UpdateAddressForm() {
               <FormLabel className={labelStyle}>
                 Country / Region<span className={errorStyle}>*</span>
               </FormLabel>
-              <Select onValueChange={field.onChange} value={field.value}>
+              <Select dir={locale === "ar" ? "rtl" : "ltr"} onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger className={cn(inputStyle, "w-full")}>
                     <SelectValue placeholder="Select region" />
@@ -328,7 +328,7 @@ export default function UpdateAddressForm() {
               <FormLabel className={labelStyle}>
                 State / Country<span className={errorStyle}>*</span>
               </FormLabel>
-              <Select onValueChange={field.onChange} value={field.value}>
+              <Select dir={locale === "ar" ? "rtl" : "ltr"} onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger className={cn(inputStyle, "w-full")}>
                     <SelectValue placeholder="Select country" />
@@ -448,7 +448,7 @@ export default function UpdateAddressForm() {
                   <FormLabel className={labelStyle}>
                     Country / Region<span className={errorStyle}>*</span>
                   </FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select dir={locale === "ar" ? "rtl" : "ltr"} onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger className={cn(inputStyle, "w-full")}>
                         <SelectValue placeholder="Select region" />
@@ -517,7 +517,7 @@ export default function UpdateAddressForm() {
                   <FormLabel className={labelStyle}>
                     State / Country<span className={errorStyle}>*</span>
                   </FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select dir={locale === "ar" ? "rtl" : "ltr"} onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger className={cn(inputStyle, "w-full")}>
                         <SelectValue placeholder="Select country" />

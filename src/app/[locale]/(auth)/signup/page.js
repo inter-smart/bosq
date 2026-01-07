@@ -11,12 +11,13 @@ const local_data = {
   description: "<p>Fill the the fields below to login.</p>",
 };
 
-export default function SignupPage() {
-  const locale = "en";
+export default async function SignupPage({ params }) {
+  const resolvedParams = await params;
+  const { locale } = resolvedParams;
   return (
     <>
       <AuthLayout locale={locale} data={local_data}>
-        <AuthSignup />
+        <AuthSignup locale={locale} />
       </AuthLayout>
     </>
   );

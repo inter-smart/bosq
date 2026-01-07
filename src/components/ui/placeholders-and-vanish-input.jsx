@@ -178,7 +178,8 @@ export function PlaceholdersAndVanishInput({
       className={cn(
         "w-full relative max-w-full mx-auto bg-none border-b border-white dark:bg-zinc-800 h-7 2xl:h-8 overflow-hidden transition duration-200",
         value && "bg-none",
-        variant === "search" && "h-9 2xl:h-10 3xl:h-13 bg-white border border-[#e9e9e9]"
+        variant === "search" &&
+          "h-9 2xl:h-10 3xl:h-13 bg-white border border-[#e9e9e9]"
       )}
       onSubmit={handleSubmit}
     >
@@ -206,7 +207,8 @@ export function PlaceholdersAndVanishInput({
           "text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[16px] leading-tight font-light text-white w-full relative z-50 border-none dark:text-white bg-transparent h-full focus:outline-none focus:ring-0 selection:bg-white selection:text-black ",
           animating && "text-transparent dark:text-transparent",
           locale === "ar" ? "pr-0 pl-20" : "pl-0 pr-20",
-          variant === "search" && "text-black selection:bg-gray-500 pl-3"
+          variant === "search" && "text-black selection:bg-gray-500",
+          variant === "search" && (locale === "ar" ? "pr-3" : "pl-3")
         )}
       />
       <button
@@ -215,12 +217,16 @@ export function PlaceholdersAndVanishInput({
         className={cn(
           "w-3.5 absolute top-1/2 z-50 -translate-y-1/2 rounded-full transition duration-200 flex items-center justify-center",
           locale === "ar" ? "left-0 rotate-180" : "right-0 rotate-0",
-          variant === "search" && "mr-3"
+          variant === "search" && (locale === "ar" ? "ml-3" : "mr-3")
         )}
       >
         {variant === "search" ? (
           <Search
-            className={cn("size-3", value ? "text-black" : "text-[#282828]")}
+            className={cn(
+              "size-3",
+              value ? "text-black" : "text-[#282828]",
+              locale === "ar" && "rotate-180"
+            )}
           />
         ) : (
           <motion.svg

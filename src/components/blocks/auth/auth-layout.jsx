@@ -7,7 +7,12 @@ import { Text } from "@/components/utils/text";
 export default function AuthLayout({ locale, data, children }) {
   return (
     <section className="w-full block relative z-0">
-      <div className="w-full lg:max-w-1/2 h-20 lg:h-full lg:absolute -z-1 inset-0 left-auto aspect-4/1 bg-black">
+      <div
+        className={cn(
+          "w-full lg:max-w-1/2 h-20 lg:h-full lg:absolute -z-1 inset-0  aspect-4/1 bg-black",
+          locale === "ar" ? "right-auto" : "left-auto"
+        )}
+      >
         <Image
           src={data?.media?.path}
           alt={data?.media?.alt}

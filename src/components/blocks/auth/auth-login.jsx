@@ -2,10 +2,10 @@ import { Text } from "@/components/utils/text";
 import Link from "next/link";
 import AuthLoginForm from "@/components/form/auth-login-form";
 
-export default function AuthLogin() {
+export default function AuthLogin({ locale }) {
   return (
     <>
-      <AuthLoginForm />
+      <AuthLoginForm locale={locale} />
       <Text
         as="div"
         size="text1"

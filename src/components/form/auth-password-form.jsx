@@ -36,18 +36,7 @@ const formSchema = z
     path: ["confirmPassword"],
   });
 
-// Shared styles
-const labelStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]"
-);
-
-const inputStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1"
-);
-
-const errorStyle = cn("text-[#f17423]");
-
-export default function AuthPasswordForm() {
+export default function AuthPasswordForm({ locale }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -89,6 +78,23 @@ export default function AuthPasswordForm() {
     setLoading(false);
   };
 
+  // Shared styles
+  const labelStyle = cn(
+    "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]"
+  );
+
+  const inputStyle = cn(
+    "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1",
+    locale === "ar" ? "pl-10" : "pr-10"
+  );
+
+  const toggleStyle = cn(
+    "absolute top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700",
+    locale === "ar" ? "left-3" : "right-3"
+  );
+
+  const errorStyle = cn("text-[#f17423]");
+
   return (
     <Form {...form}>
       <form
@@ -109,13 +115,13 @@ export default function AuthPasswordForm() {
                   <Input
                     {...field}
                     type={showPassword ? "text" : "password"}
-                    className={cn(inputStyle, "pr-10")}
+                    className={cn(inputStyle)}
                     placeholder="Choose a strong password"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-200 hover:text-gray-700"
+                    className={cn(toggleStyle)}
                   >
                     {showPassword ? (
                       <EyeOff className="h-4 w-4" />
@@ -144,13 +150,13 @@ export default function AuthPasswordForm() {
                   <Input
                     {...field}
                     type={showConfirmPassword ? "text" : "password"}
-                    className={cn(inputStyle, "pr-10")}
+                    className={cn(inputStyle)}
                     placeholder="Confirm your password"
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 hover:text-gray-700"
+                    className={cn(toggleStyle)}
                   >
                     {showConfirmPassword ? (
                       <EyeOff className="h-4 w-4" />

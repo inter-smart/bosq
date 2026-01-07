@@ -9,7 +9,6 @@ import {
 import parse from "html-react-parser";
 import { cn } from "@/lib/utils";
 import { Heading } from "@/components/utils/heading";
-import { Text } from "@/components/utils/text";
 
 export default function ProductHero({ data, locale, slug }) {
   return (
