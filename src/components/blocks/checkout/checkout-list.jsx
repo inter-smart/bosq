@@ -95,7 +95,7 @@ export default function CheckoutList({ locale, data }) {
               >
                 Addresses
               </Heading>
-              <AddressForm />
+              <AddressForm locale={locale} />
             </div>
 
             {orderStatus && <CheckoutResponse orderStatus={orderStatus} />}
@@ -244,6 +244,7 @@ export default function CheckoutList({ locale, data }) {
 
             <div className="w-full bg-[#f4f4f4] border border-[#e0e0e0] rounded-lg p-3 sm:p-4 xl:p-7 2xl:p-8 mb-2 xl:mb-4">
               <RadioGroup
+                dir={locale === "ar" ? "rtl" : "ltr"}
                 defaultValue="payment1"
                 className={"grid-cols-1 3xs:grid-cols-2"}
               >

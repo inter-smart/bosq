@@ -12,12 +12,13 @@ const local_data = {
     "<p>Enter the verification code we just sent you on your mail address.</p>",
 };
 
-export default function CreatePassword() {
-  const locale = "en";
+export default async function CreatePasswordPage({ params }) {
+  const resolvedParams = await params;
+  const { locale } = resolvedParams;
   return (
     <>
       <AuthLayout locale={locale} data={local_data}>
-        <AuthPasswordForm />
+        <AuthPasswordForm locale={locale} />
       </AuthLayout>
     </>
   );

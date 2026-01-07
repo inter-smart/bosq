@@ -12,12 +12,13 @@ const local_data = {
     "<p>Please enter the email you used when you signed up in order to recover your password. You will receive a one-time password.</p>",
 };
 
-export default function ForgotPassword() {
-  const locale = "en";
+export default async function ForgotPasswordPage({ params }) {
+  const resolvedParams = await params;
+  const { locale } = resolvedParams;
   return (
     <>
       <AuthLayout locale={locale} data={local_data}>
-        <AuthForgotPasswordForm />
+        <AuthForgotPasswordForm locale={locale} />
       </AuthLayout>
     </>
   );

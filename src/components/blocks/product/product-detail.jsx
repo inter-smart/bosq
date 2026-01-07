@@ -222,7 +222,7 @@ export default function ProductDetail({ locale, data = local_data }) {
                           onClick={() => onThumbClick(index)}
                           type="button"
                           className={cn(
-                            "w-full h-full bg-black rounded-lg overflow-hidden border transition ",
+                            "w-full h-full bg-black rounded-lg overflow-hidden border transition select-none",
                             index === selectedIndex
                               ? " border-[#282828]"
                               : "border-[#e9e9e9]"
@@ -261,7 +261,7 @@ export default function ProductDetail({ locale, data = local_data }) {
                       >
                         <div
                           className={cn(
-                            "w-full h-full rounded-lg overflow-hidden border transition-all duration-300 bg-white"
+                            "w-full h-full rounded-lg overflow-hidden border transition-all duration-300 bg-white select-none"
                           )}
                         >
                           {item?.type === "video" ? (

@@ -65,7 +65,7 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
                 <div
                   key={"brand" + index}
                   className={cn(
-                    "flex-[0_0_100%] min-w-0 select-none transition aspect-6/5 sm:aspect-1920/740 bg-black"
+                    "flex-[0_0_100%] min-w-0 select-none transition aspect-6/4 sm:aspect-1920/740 bg-black"
                   )}
                 >
                   <picture className="absolute -z-2 inset-0 opacity-95">
@@ -276,7 +276,9 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
                     <Button
                       variant="link"
                       size="none"
-                      className={"text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black"}
+                      className={
+                        "text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black"
+                      }
                       asChild
                     >
                       <Link href={"/blogs"}>

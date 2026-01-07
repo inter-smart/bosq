@@ -217,12 +217,16 @@ export function PlaceholdersAndVanishInput({
         className={cn(
           "w-3.5 absolute top-1/2 z-50 -translate-y-1/2 rounded-full transition duration-200 flex items-center justify-center",
           locale === "ar" ? "left-0 rotate-180" : "right-0 rotate-0",
-          variant === "search" && "mr-3"
+          variant === "search" && (locale === "ar" ? "ml-3" : "mr-3")
         )}
       >
         {variant === "search" ? (
           <Search
-            className={cn("size-3", value ? "text-black" : "text-[#282828]")}
+            className={cn(
+              "size-3",
+              value ? "text-black" : "text-[#282828]",
+              locale === "ar" && "rotate-180"
+            )}
           />
         ) : (
           <motion.svg

@@ -11,12 +11,13 @@ const local_data = {
   description: "<p>Please Enter Your Details to Login.</p>",
 };
 
-export default function LoginPage() {
-  const locale = "en";
+export default async function LoginPage({ params }) {
+  const resolvedParams = await params;
+  const { locale } = resolvedParams;
   return (
     <>
       <AuthLayout locale={locale} data={local_data}>
-        <AuthLogin />
+        <AuthLogin locale={locale} />
       </AuthLayout>
     </>
   );

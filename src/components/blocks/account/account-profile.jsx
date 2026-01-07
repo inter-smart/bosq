@@ -6,13 +6,13 @@ import Image from "next/image";
 
 import parse from "html-react-parser";
 
-export default function AccountProfile({ data }) {
+export default function AccountProfile({ data, locale }) {
   return (
     <section className="w-full block py-[15px_30px] xl:py-[30px_60px] 2xl:py-[40px_100px] relative z-0">
       <div className="container">
         <div className="flex flex-wrap -mx-1 xl:-mx-1.5 2xl:-mx-2 [&>*]:p-1 xl:[&>*]:p-1.5 2xl:[&>*]:p-2">
           <div className="w-full sm:w-[200px] xl:w-[240px] 2xl:w-[268px] 3xl:w-[330px]">
-            <AccountNav />
+            <AccountNav locale={locale} />
           </div>
 
           <div className="w-full sm:w-[calc(100%-200px)] xl:w-[calc(100%-240px)] 2xl:w-[calc(100%-268px)] 3xl:w-[calc(100%-330px)] max-sm:mb-2">
