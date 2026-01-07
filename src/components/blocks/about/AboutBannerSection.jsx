@@ -4,13 +4,13 @@ import { cn } from "@/lib/utils";
 import parse from "html-react-parser";
 import { Text } from "@/components/utils/text";
 import { Button } from "@/components/ui/button";
-import { Heading } from "@/components/utils/heading";  
+import { Heading } from "@/components/utils/heading";
 
 export default function AboutBannerSection({ data, locale }) {
     return (
-        <section className="w-full h-auto lg:py-[20px_35px] 3xl:py-[30px_50px] block"> 
+        <section className="w-full h-auto py-[10px_20px] lg:py-[10px_35px] 3xl:py-[30px_50px] block">
             <div className="w-full aspect-6/5 sm:aspect-1920/740 overflow-hidden flex items-center relative z-0">
-                {data?.media?.type === "image" ? ( 
+                {data?.media?.type === "image" ? (
                     <picture className="absolute -z-2 inset-0 opacity-95">
                         <source
                             media="(max-width: 640px)"
@@ -36,7 +36,7 @@ export default function AboutBannerSection({ data, locale }) {
                         <Heading
                             as="h1"
                             size="heading1"
-                            className="line-clamp-4 leading-tight text-white mb-2 xl:mb-4 2xl:mb-7.5"
+                            className="line-clamp-4 leading-tight text-white mb-2 sm:mb-3 lg:mb-5 2xl:mb-7.5"
                         >
                             {parse(data?.title)}
                             <span
@@ -51,13 +51,13 @@ export default function AboutBannerSection({ data, locale }) {
                         <Text
                             as="div"
                             size="text1"
-                            className="line-clamp-2 font-light text-white max-w-[80%] mb-4 xl:mb-7 2xl:mb-10"
+                            className="line-clamp-2 font-light text-white max-w-[80%] mb-3 sm:mb-4 lg:mb-7 2xl:mb-10"
                         >
                             {parse(data?.description)}
                         </Text>
                         <Button
                             variant={"white"}
-                            className="min-w-0 px-7"
+                            className="min-w-0 px-4 2xl:px-7"
                             asChild
                         >
                             <Link href={data?.button?.link}>
