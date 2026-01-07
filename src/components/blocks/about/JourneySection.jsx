@@ -14,8 +14,7 @@ export default function JourneySection({ data, locale }) {
             loop: true,
             axis: 'y',
             align: "start",
-            dragFree: false,
-            slidesToScroll: 1,
+            dragFree: true,
             containScroll: false,
             watchSlides: true
         },
@@ -57,7 +56,8 @@ export default function JourneySection({ data, locale }) {
                                 {parse(data?.description)}
                             </Text>
                         </div>
-                        <div className="pl-12 2xl:pl-15 overflow-hidden relative z-0 before:content-[''] before:w-8 2xl:before:w-10 before:h-50 2xl:before:h-59 before:bg-[url('/images/about-scale.svg')] before:bg-cover before:bg-no-repeat before:absolute before:z-1 before:inset-[0_auto_0_0]" ref={emblaRef}>
+                        <div ref={emblaRef}
+                            className={cn("overflow-hidden relative z-0 before:content-[''] before:w-8 2xl:before:w-10 before:h-50 2xl:before:h-59 before:bg-[url('/images/about-scale.svg')] before:bg-cover before:bg-no-repeat before:absolute before:z-1", locale === "ar" ? "pr-12 2xl:pr-15 before:inset-[0_0_0_auto]" : "pl-12 2xl:pl-15 before:inset-[0_auto_0_0]")}>
                             <div className="h-51 2xl:h-60 select-none flex flex-col">
                                 {data?.journey_list?.map((item) => (
                                     <div

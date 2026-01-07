@@ -1,7 +1,8 @@
 import ProductHero from "@/components/blocks/product/product-hero";
-import AboutBannerSection from "@/components/blocks/about/AboutBannerSection";
 import JourneySection from "@/components/blocks/about/JourneySection";
 import WhyBosqSection from "@/components/blocks/about/WhyBosqSection";
+import AboutBannerSection from "@/components/blocks/about/AboutBannerSection";
+import TestimonialSection from "@/components/blocks/about/TestimonialSection";
 
 const local_data = {
   heroData: {
@@ -184,11 +185,48 @@ const local_data = {
       },
     ],
   },
+  testimonial_data: {
+    title: "Our <br> Clients <br> Say",
+    testimonial_list: [
+      {
+        id: 1,
+        title:
+          "BOSQ is our trusted partner for ergonomic furniture across projects.",
+        description:
+          "We have been recommending BOSQ furniture in various projects and are satisfied with their product quality and ergonomic performance. BOSQ's furniture designs are aesthetically pleasing, functional, and offer great value for money. Their design support team has consistently delivered solutions that meet our expectations. We appreciate BOSQ's commitment to innovation, reliability, and professionalism—qualities that set them apart from competitors. Their team’s responsiveness and attention to detail have been excellent. Best wishes to BOSQ; keep up the great work in delivering smart, human-centric furniture for modern workspaces.",
+        designation: "Sudhir Sawant, Director, Knexir Consultants",
+      },
+      {
+        id: 2,
+        title:
+          "BOSQ is our trusted partner for ergonomic furniture across projects.",
+        description:
+          "We have been recommending BOSQ furniture in various projects and are satisfied with their product quality and ergonomic performance. BOSQ's furniture designs are aesthetically pleasing, functional, and offer great value for money. Their design support team has consistently delivered solutions that meet our expectations. We appreciate BOSQ's commitment to innovation, reliability, and professionalism—qualities that set them apart from competitors. Their team’s responsiveness and attention to detail have been excellent. Best wishes to BOSQ; keep up the great work in delivering smart, human-centric furniture for modern workspaces.",
+        designation: "Sudhir Sawant, Director, Knexir Consultants",
+      },
+      {
+        id: 3,
+        title:
+          "BOSQ is our trusted partner for ergonomic furniture across projects.",
+        description:
+          "We have been recommending BOSQ furniture in various projects and are satisfied with their product quality and ergonomic performance. BOSQ's furniture designs are aesthetically pleasing, functional, and offer great value for money. Their design support team has consistently delivered solutions that meet our expectations. We appreciate BOSQ's commitment to innovation, reliability, and professionalism—qualities that set them apart from competitors. Their team’s responsiveness and attention to detail have been excellent. Best wishes to BOSQ; keep up the great work in delivering smart, human-centric furniture for modern workspaces.",
+        designation: "Sudhir Sawant, Director, Knexir Consultants",
+      },
+      {
+        id: 4,
+        title:
+          "BOSQ is our trusted partner for ergonomic furniture across projects.",
+        description:
+          "We have been recommending BOSQ furniture in various projects and are satisfied with their product quality and ergonomic performance. BOSQ's furniture designs are aesthetically pleasing, functional, and offer great value for money. Their design support team has consistently delivered solutions that meet our expectations. We appreciate BOSQ's commitment to innovation, reliability, and professionalism—qualities that set them apart from competitors. Their team’s responsiveness and attention to detail have been excellent. Best wishes to BOSQ; keep up the great work in delivering smart, human-centric furniture for modern workspaces.",
+        designation: "Sudhir Sawant, Director, Knexir Consultants",
+      },
+    ],
+  },
 };
 
-export default function AboutPage() {
-  const locale = "en";
-
+export default async function AboutPage({ params }) {
+  const resolvedParams = await params;
+  const { locale } = resolvedParams;
   return (
     <>
       <ProductHero
@@ -202,6 +240,7 @@ export default function AboutPage() {
       />
       <JourneySection locale={locale} data={local_data?.journey_data} />
       <WhyBosqSection locale={locale} data={local_data?.why_bosq_data} />
+      <TestimonialSection locale={locale} data={local_data?.testimonial_data} />
     </>
   );
 }

@@ -39,7 +39,11 @@ export default function WhyBosqSection({ data, locale }) {
                             className="w-full h-full mb-8 sm:mb-10 lg:mb-15 xl:mb-18 2xl:mb-22 3xl:mb-28 last:mb-0 block"
                         >
                             <div className={cn("w-full h-auto flex flex-wrap items-center", item?.id % 2 === 0 && "flex-row-reverse")}>
-                                <div className={cn("w-full lg:w-1/2 max-lg:mb-5", item?.id % 2 === 0 ? "lg:pl-12 2xl:pl-15 3xl:pl-20" : "lg:pr-12 2xl:pr-15 3xl:pr-20")}>
+                                <div className={cn("w-full lg:w-1/2 max-lg:mb-5",
+                                    locale === "ar"
+                                        ? item?.id % 2 === 0 ? "lg:pr-12 2xl:pr-15 3xl:pr-20" : "lg:pl-12 2xl:pl-15 3xl:pl-20"
+                                        : item?.id % 2 === 0 ? "lg:pl-12 2xl:pl-15 3xl:pl-20" : "lg:pr-12 2xl:pr-15 3xl:pr-20"
+                                )}>
                                     <div className="w-full h-auto aspect-[1.951] overflow-hidden block">
                                         <Image
                                             src={item?.media.path}
@@ -66,7 +70,7 @@ export default function WhyBosqSection({ data, locale }) {
                                     </div>
                                     <div
                                         dir={locale === "ar" ? "rtl" : "ltr"}
-                                        className={cn("typography [&_ul]:pl-4 sm:[&_ul]:pl-5 sm:[&_p,li]:text-[13px] 2xl:[&_p,li]:text-[15px] 3xl:[&_p,li]:text-[18px] [&_p,li]:leading-[1.8] lg:[&_li]:mb-2 2xl:[&_li]:mb-3 3xl:[&_li]:mb-5 2xl:[&_p]:mb-5 3xl:[&_p]:mb-8", "[--text-color:#282828]",
+                                        className={cn("typography sm:[&_p,li]:text-[13px] 2xl:[&_p,li]:text-[15px] 3xl:[&_p,li]:text-[18px] [&_p,li]:leading-[1.8] lg:[&_li]:mb-2 2xl:[&_li]:mb-3 3xl:[&_li]:mb-5 2xl:[&_p]:mb-5 3xl:[&_p]:mb-8", "[--text-color:#282828]", locale === "ar" ? "[&_ul]:pr-4 sm:[&_ul]:pr-5 pl-0" : "[&_ul]:pl-4 sm:[&_ul]:pl-5"
                                         )}
                                     >
                                         {parse(item?.description)}
