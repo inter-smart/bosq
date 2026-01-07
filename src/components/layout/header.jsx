@@ -227,7 +227,7 @@ export default function Header({ headerData, navigationData, locale }) {
                   onNavigationClick={handleNavigationLinkClick}
                 />
               </MediaQuery>
-              <SearchDialog>
+              <SearchDialog locale={locale}>
                 <Button variant="none" size="none">
                   {pathname === "/en" ? (
                     <Image
