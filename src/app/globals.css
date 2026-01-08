@@ -145,12 +145,12 @@
 
     &[dir="ltr"] ul,
     &[dir="ltr"] ol {
-      @apply pl-5 lg:pl-[30px];
+      @apply pl-4 sm:pl-5;
     }
 
     &[dir="rtl"] ul,
     &[dir="rtl"] ol {
-      @apply pr-5 lg:pr-[30px];
+      @apply pr-4 sm:pr-5;
     }
 
     ul > li,
