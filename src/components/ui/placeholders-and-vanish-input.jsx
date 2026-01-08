@@ -214,6 +214,7 @@ export function PlaceholdersAndVanishInput({
       <button
         disabled={!value}
         type="submit"
+        aria-label="submit"
         className={cn(
           "w-3.5 absolute top-1/2 z-50 -translate-y-1/2 rounded-full transition duration-200 flex items-center justify-center",
           locale === "ar" ? "left-0 rotate-180" : "right-0 rotate-0",

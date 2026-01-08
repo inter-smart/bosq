@@ -1,5 +1,6 @@
 import ReturnInfo from "@/components/blocks/legal/return-info";
 import ProductHero from "@/components/blocks/product/product-hero";
+import { getReturnPolicyCms } from "@/lib/api/returnPolicy";
 
 const local_data = {
   heroData: {
@@ -54,14 +55,19 @@ const local_data = {
 export default async function ReturnPage({ params }) {
   const resolvedParams = await params;
   const { locale } = resolvedParams;
+  const slug = locale === "en"? "Return Policy" : "سياسة الاسترجاع";
+  const {data} =  await getReturnPolicyCms.getCmsData();
+
+  const { heroData, returnData } = data;
+
   return (
     <>
       <ProductHero
         locale={locale}
-        data={local_data?.heroData}
-        slug={"Return Policy"}
+        data={heroData}
+        slug={slug}
       />
-      <ReturnInfo locale={locale} data={local_data?.returnData} />
+      <ReturnInfo locale={locale} data={returnData} />
     </>
   );
 }
