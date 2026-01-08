@@ -11,13 +11,16 @@ import { cn } from "@/lib/utils";
 import { Heading } from "@/components/utils/heading";
 
 export default function ProductHero({ data, locale, slug }) {
+
+  const isEn = locale === "en";
+
   return (
     <section className="w-full pt-[calc(var(--header-y)_+_20px)] sm:pt-[calc(var(--header-y)_+_10px)] pb-1 sm:pb-2.5">
       <div className="container">
         <Breadcrumb className="mb-1 xl:mb-2">
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/">Home</BreadcrumbLink>
+              <BreadcrumbLink href={`/${locale}`}>{isEn? "Home": "بيت"}</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>/</BreadcrumbSeparator>
             {/* <BreadcrumbItem>
@@ -32,7 +35,7 @@ export default function ProductHero({ data, locale, slug }) {
         </Breadcrumb>
         {data?.title && (
           <Heading as="h2" size="heading6" className="line-clamp-2 text-black">
-            {parse(data?.title)}
+            {parse(isEn ? data?.title : data?.title_ar)}
             <span
               className={cn(
                 "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
@@ -49,7 +52,7 @@ export default function ProductHero({ data, locale, slug }) {
             dir={locale === "ar" ? "rtl" : "ltr"}
             className={cn("typography", "[--text-color:#282828]")}
           >
-            {parse(data?.description)}
+            {parse(isEn? data?.description : data?.description_ar)}
           </div>
         )}
       </div>

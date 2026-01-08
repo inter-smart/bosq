@@ -4,6 +4,8 @@ import { cn } from "@/lib/utils";
 import { Heading } from "@/components/utils/heading";
 
 export default function PrivacyInfo({ data, locale }) {
+  const isEN = locale === "en";
+
   return (
     <section className="w-full h-auto block py-[30px] sm:py-[40px] xl:py-[60px] 2xl:py-[100px]">
       <div className="container">
@@ -18,7 +20,7 @@ export default function PrivacyInfo({ data, locale }) {
                 size="heading2"
                 className="tracking-tight text-[#282828] mt-3 xl:mt-1.5"
               >
-                {item?.title}
+                {isEN ? item?.title : item?.title_ar}
               </Heading>
             </div>
             <div className="w-full xl:w-[calc(100%-360px)] 2xl:sm:w-[calc(100%-520px)]">
@@ -26,7 +28,7 @@ export default function PrivacyInfo({ data, locale }) {
                 dir={locale === "ar" ? "rtl" : "ltr"}
                 className={cn("typography", "[--text-color:#282828]")}
               >
-                {parse(item?.description)}
+                {parse(isEN ? item?.description : item?.description_ar)}
               </div>
             </div>
           </div>

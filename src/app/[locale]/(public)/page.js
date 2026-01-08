@@ -556,18 +556,9 @@ export default async function HomePage({ params }) {
   const resolvedParams = await params;
   const { locale } = resolvedParams;
 
-  // const { data, error } = await getHomeData.getCmsData();/
-  // const result = await getHome()
+  const { data, error } = await getHomeData.getCmsData();
 
-  // if (error) {
-  //   notFound();
-  // }
-
-  const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/home`, {
-    cache: "no-store", // or "force-cache" if static
-  });
-
-  if (!res.ok) {
+  if (error) {
     notFound();
   }
 

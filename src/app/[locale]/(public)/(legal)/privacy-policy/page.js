@@ -140,6 +140,7 @@ export default async function PrivacyPolicyPage({ params }) {
     privacyPolicyData,
   };
 
+  const slug = locale === "en"? "Privacy Policy" : "سياسة الخصوصية";
 
   console.log(data)
   return (
@@ -147,7 +148,7 @@ export default async function PrivacyPolicyPage({ params }) {
       <ProductHero
         locale={locale}
         data={local_data?.heroData}
-        slug={"Privacy Policy"}
+        slug={slug}
       />
       <PrivacyInfo locale={locale} data={local_data?.privacyPolicyData} />
     </>
