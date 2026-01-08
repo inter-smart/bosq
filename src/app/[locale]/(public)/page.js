@@ -1,9 +1,7 @@
 import dynamic from "next/dynamic";
 import HomeHero from "@/components/blocks/home/home-hero"; // keep SSR for SEO
 
-import { getHomeData } from "@/lib/api/home";
 import { notFound } from "next/navigation";
-import { GET as getHome } from "../../api/home/route";
 
 const HomeAbout = dynamic(() => import("@/components/blocks/home/home-about"));
 const HomeFeatured = dynamic(() =>
@@ -561,6 +559,10 @@ export default async function HomePage({ params }) {
   if (error) {
     notFound();
   }
+
+  const { data } = await res.json();
+
+  console.log(data);
 
   const {
     sliders,

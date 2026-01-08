@@ -12,7 +12,11 @@ import { Text } from "@/components/utils/text";
 
 import parse from "html-react-parser";
 import { Button } from "@/components/ui/button";
-import { NextButton, PrevButton, usePrevNextButtons } from "@/components/utils/embla-carousel-arrow-button";
+import {
+  NextButton,
+  PrevButton,
+  usePrevNextButtons,
+} from "@/components/utils/embla-carousel-arrow-button";
 import { cn } from "@/lib/utils";
 
 const slideContentVariants = {
@@ -106,12 +110,20 @@ const buttonContainerVariants = {
 };
 
 export default function HomeHero({ data, locale }) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, direction: locale === "ar" ? "rtl" : "ltr" }, [
-    Autoplay({ delay: 6000, stopOnInteraction: true, pauseOnHover: true }),
-    Fade(),
-  ]);
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { loop: false, direction: locale === "ar" ? "rtl" : "ltr" },
+    [
+      Autoplay({ delay: 6000, stopOnInteraction: true, pauseOnHover: true }),
+      Fade(),
+    ]
+  );
 
-  const { prevBtnDisabled, nextBtnDisabled, onPrevButtonClick, onNextButtonClick } = usePrevNextButtons(emblaApi);
+  const {
+    prevBtnDisabled,
+    nextBtnDisabled,
+    onPrevButtonClick,
+    onNextButtonClick,
+  } = usePrevNextButtons(emblaApi);
 
   return (
     <section className="w-full h-auto block bg-black relative z-0">
@@ -119,7 +131,10 @@ export default function HomeHero({ data, locale }) {
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex touch-pan-y touch-pinch-zoom">
             {data?.map((item, index) => (
-              <div key={"gallery" + index} className="flex-[0_0_100%] min-w-0 select-none relative z-0">
+              <div
+                key={"gallery" + index}
+                className="flex-[0_0_100%] min-w-0 select-none relative z-0"
+              >
                 <div
                   className={cn(
                     "w-full h-full from-transparent to-black/40 absolute -z-1 inset-0 ",
@@ -127,15 +142,26 @@ export default function HomeHero({ data, locale }) {
                   )}
                 />
                 {item?.media_type === "video" ? (
-                  <video autoPlay loop muted playsInline className="w-full h-full object-cover absolute -z-2 inset-0">
+                  <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-full object-cover absolute -z-2 inset-0"
+                  >
                     <source src={item?.media?.desktop?.path} type="video/mp4" />
                   </video>
                 ) : (
                   <picture className="absolute -z-2 inset-0">
-                    <source media="(max-width: 640px)" srcSet={item?.media?.mobile?.path} />
+                    <source
+                      media="(max-width: 640px)"
+                      srcSet={item?.media?.mobile?.path}
+                    />
                     <Image
                       src={item?.media?.desktop?.path}
-                      alt={locale === "ar" ? item?.media_alt_ar : item?.media_alt}
+                      alt={
+                        locale === "ar" ? item?.media_alt_ar : item?.media_alt
+                      }
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 80vw"
                       className="-z-2 object-cover"
@@ -149,20 +175,42 @@ export default function HomeHero({ data, locale }) {
                 <div className="container">
                   <div className="w-full h-[468px] sm:h-[576px] xl:h-screen min-h-[468px] sm:min-h-[468px] xl:min-h-[576px] 2xl:min-h-[768px] 3xl:min-h-[900px] flex items-center py-[calc(30px+var(--header-y))_30px] sm:py-[calc(40px+var(--header-y))_40px] xl:py-[calc(60px+var(--header-y))_60px] 2xl:py-[calc(80px+var(--header-y))_80px]">
                     <div className="w-full xl:max-w-1/2 max-lg:px-4">
-                      <Heading as="h1" size="heading1" className="line-clamp-4 leading-tight text-white mb-2 xl:mb-4 2xl:mb-6">
+                      <Heading
+                        as="h1"
+                        size="heading1"
+                        className="line-clamp-4 leading-tight text-white mb-2 xl:mb-4 2xl:mb-6"
+                      >
                         {parse(locale === "ar" ? item?.title_ar : item?.title)}
                         <span
                           className={cn(
                             "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
-                            locale === "ar" ? "-translate-x-1 xl:-translate-x-2 " : "translate-x-1 xl:translate-x-2 "
+                            locale === "ar"
+                              ? "-translate-x-1 xl:-translate-x-2 "
+                              : "translate-x-1 xl:translate-x-2 "
                           )}
                         />
                       </Heading>
-                      <Text as="div" size="text1" className="line-clamp-2 font-light text-white max-w-[80%] mb-4 xl:mb-7 2xl:mb-10">
-                        {parse(locale === "ar" ? item?.description_ar : item?.description)}
+                      <Text
+                        as="div"
+                        size="text1"
+                        className="line-clamp-2 font-light text-white max-w-[80%] mb-4 xl:mb-7 2xl:mb-10"
+                      >
+                        {parse(
+                          locale === "ar"
+                            ? item?.description_ar
+                            : item?.description
+                        )}
                       </Text>
-                      <Button variant={"white"} className="min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-40" asChild>
-                        <Link href={item?.button?.link}>{locale === "ar" ? item?.button?.label_ar : item?.button?.label}</Link>
+                      <Button
+                        variant={"white"}
+                        className="min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-40"
+                        asChild
+                      >
+                        <Link href={item?.button?.link}>
+                          {locale === "ar"
+                            ? item?.button?.label_ar
+                            : item?.button?.label}
+                        </Link>
                       </Button>
                     </div>
                   </div>
@@ -176,14 +224,24 @@ export default function HomeHero({ data, locale }) {
           disabled={prevBtnDisabled}
           className="w-[10px] xl:w-[16px] absolute z-1 top-1/2 left-3 -translate-y-1/2 disabled:opacity-50 not-disabled:hover:scale-110"
         >
-          <Image src="/images/icon-embla-prev.svg" alt="arrow prev" width={16} height={32} />
+          <Image
+            src="/images/icon-embla-prev.svg"
+            alt="arrow prev"
+            width={16}
+            height={32}
+          />
         </PrevButton>
         <NextButton
           onClick={onNextButtonClick}
           disabled={nextBtnDisabled}
           className="w-[10px] xl:w-[16px] absolute z-1 top-1/2 right-3 -translate-y-1/2 disabled:opacity-50 not-disabled:hover:scale-110"
         >
-          <Image src="/images/icon-embla-next.svg" alt="arrow next" width={16} height={32} />
+          <Image
+            src="/images/icon-embla-next.svg"
+            alt="arrow next"
+            width={16}
+            height={32}
+          />
         </NextButton>
       </div>
     </section>

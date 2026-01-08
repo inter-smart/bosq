@@ -100,15 +100,15 @@ const local_data = {
     ],
   },
 
-  requestCustomQuote: {
+  customizationOptions: {
     media: {
       type: "image",
       media_path: "/images/customizationOptions-1.jpg",
       media_alt: "customizationOptions-1",
     },
-    title: "Request Custom Quote",
+    title: "Customization Options",
     description:
-      "<p>Tell us about your requirements and our experts will create a personalized solution for you.</p>",
+      "<p>Explore the extensive range of customization possibilities available for your BOSQ ergonomic furniture.</p>",
     items: [
       {
         id: 1,
@@ -145,6 +145,17 @@ const local_data = {
       },
     ],
   },
+
+  requestCustomQuote: {
+    media: {
+      type: "image",
+      media_path: "/images/contact-1.jpg",
+      media_alt: "contact-1",
+    },
+    title: "Request Custom Quote",
+    description:
+      "<p>Tell us about your requirements and our experts will create a personalized<br/> solution for you.</p>",
+  },
 };
 
 export default async function CustomizationPage({ params }) {
@@ -163,6 +174,7 @@ export default async function CustomizationPage({ params }) {
         customizationFeatures={local_data?.customizationFeatures}
         customizationProcess={local_data?.customizationProcess}
         customizationOptions={local_data?.customizationOptions}
+        requestCustomQuote={local_data?.requestCustomQuote}
       />
     </>
   );

@@ -25,32 +25,32 @@ const local_data = {
     {
       id: "01",
       name: "Home",
-      slug: "/en",
+      slug: "/",
     },
     {
       id: "02",
       name: "Shop All",
-      slug: "/en/products",
+      slug: "/products",
     },
     {
       id: "03",
       name: "Office Chairs",
-      slug: "/en/products/office-chair-1",
+      slug: "/products/office-chair-1",
     },
     {
       id: "04",
       name: "Workstations",
-      slug: "/en/products/office-chair-2",
+      slug: "/products/office-chair-2",
     },
     {
       id: "05",
       name: "Storage",
-      slug: "/en/products/office-chair-3",
+      slug: "/products/office-chair-3",
     },
     {
       id: "06",
       name: "Contact",
-      slug: "/en/contact",
+      slug: "/contact",
     },
   ],
   footer_data: {
@@ -66,29 +66,29 @@ const local_data = {
       {
         id: "01",
         label: "Office Chairs",
-        link: "/en/products/office-chair-1",
+        link: "/products/office-chair-1",
       },
       {
         id: "02",
         label: "Workstations",
-        link: "/en/products",
+        link: "/products",
       },
       {
         id: "03",
         label: "Storage",
-        link: "/en/products",
+        link: "/products",
       },
       {
         id: "04",
         label: "Shop All",
-        link: "/en/products",
+        link: "/products",
       },
     ],
     quick_link_navigation: [
       {
         id: "01",
         label: "Home",
-        link: "/en",
+        link: "",
       },
       {
         id: "02",
@@ -98,7 +98,7 @@ const local_data = {
       {
         id: "03",
         label: "Contact",
-        link: "/en/contact",
+        link: "/contact",
       },
       {
         id: "04",
@@ -110,12 +110,12 @@ const local_data = {
       {
         id: "01",
         label: "Ergonomic Chair Guide",
-        link: "/en/products/office-chair-1",
+        link: "/products/office-chair-1",
       },
       {
         id: "02",
         label: "Delivery",
-        link: "/en/delivery-policy",
+        link: "/delivery-policy",
       },
       {
         id: "03",
@@ -125,27 +125,27 @@ const local_data = {
       {
         id: "04",
         label: "Warranty",
-        link: "/en/warranty-policy",
+        link: "/warranty-policy",
       },
       {
         id: "05",
         label: "F&Q",
-        link: "/en/faqs",
+        link: "/faqs",
       },
       {
         id: "06",
         label: "Privacy Policy",
-        link: "/en/privacy-policy",
+        link: "/privacy-policy",
       },
       {
         id: "07",
         label: "Terms & Conditions",
-        link: "/en/terms-and-conditions",
+        link: "/terms-and-conditions",
       },
       {
         id: "08",
         label: "Return & Refund Policy",
-        link: "/en/return-policy",
+        link: "/return-policy",
       },
     ],
     sale_enquiry: {
