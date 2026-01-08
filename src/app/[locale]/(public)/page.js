@@ -560,10 +560,6 @@ export default async function HomePage({ params }) {
     notFound();
   }
 
-  const { data } = await res.json();
-
-  console.log(data);
-
   const {
     sliders,
     aboutSection,
