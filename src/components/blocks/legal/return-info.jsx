@@ -22,6 +22,7 @@ export default function ReturnInfo({ data, locale }) {
               alt={data?.media?.media_alt}
               width={768}
               height={468}
+              loading="lazy"
               className="w-full h-full object-cover hover:scale-105 transition duration-300 "
             />
           </div>

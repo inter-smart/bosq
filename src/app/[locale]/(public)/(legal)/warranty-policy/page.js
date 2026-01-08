@@ -1,5 +1,6 @@
 import WarrantyInfo from "@/components/blocks/legal/warranty-info";
 import ProductHero from "@/components/blocks/product/product-hero";
+import { getWarrantyPolicyCms } from "@/lib/api/warrantyPolicy";
 
 const local_data = {
   heroData: {
@@ -61,14 +62,17 @@ const local_data = {
 export default async function WarrantyPage({ params }) {
   const resolvedParams = await params;
   const { locale } = resolvedParams;
+
+  const {data} = await getWarrantyPolicyCms.getCmsData();
+  const { heroData, warrantyData } = data;
   return (
     <>
       <ProductHero
         locale={locale}
-        data={local_data?.heroData}
+        data={heroData}
         slug={"Warranty Policy"}
       />
-      <WarrantyInfo locale={locale} data={local_data?.warrantyData} />
+      <WarrantyInfo locale={locale} data={warrantyData} />
     </>
   );
 }
