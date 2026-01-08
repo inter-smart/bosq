@@ -101,9 +101,9 @@ const local_data = {
   },
 };
 
-export default function ErgonomicChair() {
-  const locale = "en";
-
+export default async function ErgonomicChairPage({ params }) {
+  const resolvedParams = await params;
+  const { locale } = resolvedParams;
   return (
     <>
       <ProductHero
