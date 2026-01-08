@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import parse from "html-react-parser";
 import { cn } from "@/lib/utils";
+import EnquiryDialog from "@/components/common/enquiry-dialog";
 
 export default function HomeAbout({ data, locale }) {
   return (
@@ -35,21 +36,49 @@ export default function HomeAbout({ data, locale }) {
 
             <div className="w-full sm:w-[calc(100%-220px)] xl:w-[calc(100%-480px)] 2xl:w-[calc(100%-576px)] 3xl:w-[calc(100%-720px)]">
               <div className="w-full max-sm:text-center">
-                <Heading as="h2" size="heading1" className="line-clamp-2 text-black mb-2 xl:mb-4 2xl:mb-6">
+                <Heading
+                  as="h2"
+                  size="heading1"
+                  className="line-clamp-2 text-black mb-2 xl:mb-4 2xl:mb-6"
+                >
                   {parse(locale == "ar" ? data?.title_ar : data?.title)}
                   <span
                     className={cn(
                       "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
-                      locale === "ar" ? "-translate-x-1 xl:-translate-x-2 " : "translate-x-1 xl:translate-x-2 "
+                      locale === "ar"
+                        ? "-translate-x-1 xl:-translate-x-2 "
+                        : "translate-x-1 xl:translate-x-2 "
                     )}
                   />
                 </Heading>
-                <Text as="div" size="text1" className="line-clamp-4 font-light text-black mb-4 xl:mb-8 2xl:mb-10">
-                  {parse(locale == "ar" ? data?.description_ar : data?.description)}
+                <Text
+                  as="div"
+                  size="text1"
+                  className="line-clamp-4 font-light text-black mb-4 xl:mb-8 2xl:mb-10"
+                >
+                  {parse(
+                    locale == "ar" ? data?.description_ar : data?.description
+                  )}
                 </Text>
-                <Button variant={"black"} className="min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-40" asChild>
-                  <Link href={"/"}>{locale == "ar" ? "قراءة المزيد" : "Read More"}</Link>
+                <Button
+                  variant={"black"}
+                  className="min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-40"
+                  asChild
+                >
+                  <Link href={"/"}>
+                    {locale == "ar" ? "قراءة المزيد" : "Read More"}
+                  </Link>
                 </Button>
+
+                <EnquiryDialog locale={locale}>
+                  <Button
+                    variant={"black"}
+                    disabled={false}
+                    className="min-w-[90px] xl:min-w-[100px] 2xl:min-w-[120px] mx-1"
+                  >
+                    Enquiry Dialog
+                  </Button>
+                </EnquiryDialog>
               </div>
             </div>
           </div>

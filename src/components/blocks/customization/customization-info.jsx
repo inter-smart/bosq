@@ -3,17 +3,20 @@ import { cn } from "@/lib/utils";
 import { Heading } from "@/components/utils/heading";
 import Image from "next/image";
 import { Text } from "@/components/utils/text";
+import AddressForm from "@/components/form/address-form";
+import RequestEnquiryForm from "@/components/form/request-enquiry-form";
 
 export default function CustomizationInfo({
   data,
   customizationFeatures,
   customizationProcess,
   customizationOptions,
+  requestCustomQuote,
   locale,
 }) {
   return (
-    <section className="w-full block py-[10px] sm:py-[15px] xl:py-[20px] 2xl:py-[30px]">
-      <div className="w-full aspect-6/4 sm:aspect-1920/740 overflow-hidden flex items-center relative z-0">
+    <section className="w-full block">
+      <div className="w-full aspect-6/4 sm:aspect-1920/740 overflow-hidden flex items-center mt-[10px] sm:mt-[15px] xl:mt-[20px] 2xl:mt-[30px] relative z-0">
         <picture className="absolute -z-2 inset-0 opacity-95">
           <source media="(max-width: 640px)" srcSet={data?.media?.mobilePath} />
           <Image
@@ -250,81 +253,51 @@ export default function CustomizationInfo({
         </div>
       </div>
 
-      {/* CUSTOMIZATION_PROCESS */}
+      {/* REQUEST_CUSTOM_QUOTE */}
       <div className="w-full bg-[#f4f4f4] py-[40px_30px] sm:py-[60px_40px] xl:py-[100px_60px] 2xl:py-[140px_100px]">
         <div className="container">
-          <div className={cn("w-full h-auto")}>
-            <div
-              className={cn(
-                "w-full max-w-[220px] sm:max-w-[46%] aspect-54/41 overflow-hidden mb-3 xl:mb-5",
-                "sm:float-right sm:ml-20 xl:ml-34 2xl:ml-42 3xl:ml-52 sm:mr-0"
-              )}
-            >
-              <Image
-                src={customizationProcess?.media?.media_path}
-                alt={customizationProcess?.media?.media_alt}
-                width={768}
-                height={468}
-                className="w-full h-full object-cover hover:scale-105 transition duration-300 "
-              />
-            </div>
-            {customizationProcess?.title && (
-              <Heading as="h2" size="heading1" className="text-[#282828]">
-                {parse(customizationProcess?.title)}
+          <div className="w-full h-auto flex flex-wrap mb-2 sm:mb-4 xl:mb-12 2xl:mb-16">
+            <div className="w-full lg:max-w-[54%]">
+              <Heading
+                as="h1"
+                size="heading1"
+                className="text-[#282828] mb-1 sm:mb-2 xl:mb-4 2xl:mb-6"
+              >
+                {parse(requestCustomQuote?.title)}
                 <span
                   className={cn(
-                    "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
+                    "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block",
                     locale === "ar"
                       ? "-translate-x-1 xl:-translate-x-2 "
                       : "translate-x-1 xl:translate-x-2 "
                   )}
                 />
-                &nbsp;
               </Heading>
-            )}
-            {customizationProcess?.description && (
+            </div>
+            <div className={cn("flex-1")}>
               <div
                 dir={locale === "ar" ? "rtl" : "ltr"}
-                className={cn(
-                  "typography mb-6 xl:mb-7 2xl:mb-14",
-                  "[--text-color:#282828]"
-                )}
+                className={cn("typography", "[--text-color:#282828]")}
               >
-                {parse(customizationProcess?.description)}
+                {parse(requestCustomQuote?.description)}
               </div>
-            )}
-            {customizationProcess?.items?.map((item, index) => (
-              <div key={"customizationProcess-info-" + index}>
-                <div
-                  className={cn(
-                    "flex gap-2 xl:gap-3 2xl:gap-4 mb-4 xl:mb-5 2xl:mb-10"
-                  )}
-                >
-                  <div>
-                    <Text
-                      as="div"
-                      size="text1"
-                      className="font-medium text-[#b7b7b7] w-8 xl:w-10 2xl:w-14 aspect-square border border-[#b7b7b7] flex items-center justify-center rounded-full"
-                    >
-                      {String(index + 1).padStart(2, "0")}
-                    </Text>
-                  </div>
-                  <div className="flex-1">
-                    <Text
-                      as="div"
-                      size="text2"
-                      className="font-normal text-black mb-1"
-                    >
-                      {parse(item?.title)}
-                    </Text>
-                    <Text as="div" size="text1" className="text-black">
-                      {parse(item?.description)}
-                    </Text>
-                  </div>
-                </div>
+            </div>
+          </div>
+          <div className="w-full h-auto flex flex-wrap gap-6 sm:gap-12 xl:gap-18 2xl:gap-30">
+            <div className="flex-1">
+              <RequestEnquiryForm locale={locale} />
+            </div>
+            <div className="w-full lg:max-w-[46%]">
+              <div className="w-full aspect-75/52 overflow-hidden">
+                <Image
+                  src={requestCustomQuote?.media?.media_path}
+                  alt={requestCustomQuote?.media?.media_alt}
+                  width={768}
+                  height={520}
+                  className="w-full h-full object-cover hover:scale-105 transition duration-300"
+                />
               </div>
-            ))}
-            <div className="clear-both" />
+            </div>
           </div>
         </div>
       </div>

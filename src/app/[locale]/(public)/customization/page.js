@@ -145,50 +145,16 @@ const local_data = {
       },
     ],
   },
+
   requestCustomQuote: {
     media: {
       type: "image",
-      media_path: "/images/customizationOptions-1.jpg",
-      media_alt: "customizationOptions-1",
+      media_path: "/images/contact-1.jpg",
+      media_alt: "contact-1",
     },
     title: "Request Custom Quote",
     description:
-      "<p>Tell us about your requirements and our experts will create a personalized solution for you.</p>",
-    items: [
-      {
-        id: 1,
-        media: {
-          type: "image",
-          media_path: "/images/customizationOptions-1.jpg",
-          media_alt: "customizationOptions-1",
-        },
-        title: "Materials & Finishes",
-        description:
-          "<p>Premium materials tailored to your environment.</p><ul><li>Genuine leather options</li><li>High-grade mesh fabrics</li><li>Sustainable materials</li><li>Custom color matching</li><li>Antimicrobial treatments</li></ul>",
-      },
-      {
-        id: 2,
-        media: {
-          type: "image",
-          media_path: "/images/customizationOptions-2.jpg",
-          media_alt: "customizationOptions-2",
-        },
-        title: "Ergonomic Features",
-        description:
-          "<p>Advanced support systems for optimal comfort.</p><ul><li>Multi-zone lumbar support</li><li>4D adjustable armrests</li><li>Synchronized tilt mechanisms</li><li>Height-adjustable headrests</li><li>Seat depth adjustment</li></ul>",
-      },
-      {
-        id: 3,
-        media: {
-          type: "image",
-          media_path: "/images/customizationOptions-3.jpg",
-          media_alt: "customizationOptions-3",
-        },
-        title: "Design & Aesthetics",
-        description:
-          "<p>Visual elements that match your brand identity.</p><ul><li>Logo embossing options</li><li>Custom stitching patterns</li><li>Executive styling details</li><li>Color coordination</li><li>Matching accessories</li></ul>",
-      },
-    ],
+      "<p>Tell us about your requirements and our experts will create a personalized<br/> solution for you.</p>",
   },
 };
 
@@ -208,6 +174,7 @@ export default async function CustomizationPage({ params }) {
         customizationFeatures={local_data?.customizationFeatures}
         customizationProcess={local_data?.customizationProcess}
         customizationOptions={local_data?.customizationOptions}
+        requestCustomQuote={local_data?.requestCustomQuote}
       />
     </>
   );

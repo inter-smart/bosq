@@ -36,7 +36,7 @@ export default function Footer({ footerData, socialLinkData, locale }) {
         <div className="flex flex-wrap -mx-[10px] sm:-mx-[15px] xl:-mx-[20px] 2xl:-mx-[30px] [&>*]:p-[10px] sm:[&>*]:p-[15px] xl:[&>*]:p-[20px] 2xl:[&>*]:p-[30px]">
           <div className="w-full lg:w-[28%]">
             <Link
-              href="/"
+              href={`/${locale}`}
               className="w-[90px] xl:w-[100px] 2xl:w-[140px] block mb-3 xl:mb-4 2xl:mb-6"
             >
               <Image
@@ -94,7 +94,9 @@ export default function Footer({ footerData, socialLinkData, locale }) {
                       size="text3"
                       className="text-white transition [&>a]:hover:text-[#f17423] mb-1 xl:mb-3"
                     >
-                      <Link href={item?.link || "#"}>{item?.label}</Link>
+                      <Link href={`/${locale}${item?.link}`}>
+                        {item?.label}
+                      </Link>
                     </Text>
                   </div>
                 ))}
@@ -109,7 +111,9 @@ export default function Footer({ footerData, socialLinkData, locale }) {
                       size="text3"
                       className="text-white transition [&>a]:hover:text-[#f17423] mb-2"
                     >
-                      <Link href={item?.link || "#"}>{item?.label}</Link>
+                      <Link href={`/${locale}${item?.link}`}>
+                        {item?.label}
+                      </Link>
                     </Text>
                   </div>
                 ))}
@@ -134,7 +138,9 @@ export default function Footer({ footerData, socialLinkData, locale }) {
                       size="text3"
                       className="text-white transition [&>a]:hover:text-[#f17423] mb-1 xl:mb-3"
                     >
-                      <Link href={item?.link || "#"}>{item?.label}</Link>
+                      <Link href={`/${locale}${item?.link}`}>
+                        {item?.label}
+                      </Link>
                     </Text>
                   </div>
                 ))}
@@ -149,7 +155,9 @@ export default function Footer({ footerData, socialLinkData, locale }) {
                       size="text3"
                       className="text-white transition [&>a]:hover:text-[#f17423] mb-2"
                     >
-                      <Link href={item?.link || "#"}>{item?.label}</Link>
+                      <Link href={`/${locale}${item?.link}`}>
+                        {item?.label}
+                      </Link>
                     </Text>
                   </div>
                 ))}
@@ -178,7 +186,9 @@ export default function Footer({ footerData, socialLinkData, locale }) {
                         size="text3"
                         className="text-white transition [&>a]:hover:text-[#f17423] mb-1 xl:mb-3"
                       >
-                        <Link href={item?.link || "#"}>{item?.label}</Link>
+                        <Link href={`/${locale}${item?.link}`}>
+                          {item?.label}
+                        </Link>
                       </Text>
                     </div>
                   ))}
@@ -198,7 +208,9 @@ export default function Footer({ footerData, socialLinkData, locale }) {
                         size="text3"
                         className="text-white transition [&>a]:hover:text-[#f17423] mb-2"
                       >
-                        <Link href={item?.link || "#"}>{item?.label}</Link>
+                        <Link href={`/${locale}${item?.link}`}>
+                          {item?.label}
+                        </Link>
                       </Text>
                     </div>
                   ))}

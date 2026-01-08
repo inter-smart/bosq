@@ -454,7 +454,7 @@ export default function SearchDialog({ children, locale }) {
                                 size="text3"
                                 className="font-normal text-black hover:underline"
                               >
-                                <Link href={"#"}>
+                                <Link href={`${locale}/search-results`}>
                                   See All Results (
                                   {defaultSuggestionData?.no_of_items})
                                 </Link>
