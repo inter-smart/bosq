@@ -31,7 +31,7 @@ export default function HomeFind({ data, locale }) {
                   size="heading1"
                   className="line-clamp-2 text-black mb-2 xl:mb-3 2xl:mb-5"
                 >
-                  {parse(data?.title)}
+                  {parse(locale === "ar" ? data?.title_ar : data?.title)}
                   <span
                     className={cn(
                       "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
@@ -46,14 +46,14 @@ export default function HomeFind({ data, locale }) {
                   size="text1"
                   className="line-clamp-6 font-light text-black mb-4 xl:mb-6 2xl:mb-6"
                 >
-                  {parse(data?.description)}
+                  {parse(locale === "ar" ? data?.description_ar : data?.description)}
                 </Text>
                 <Button
                   variant={"white"}
                   className="bg-white min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-[160px]"
                   asChild
                 >
-                  <Link href={data?.button?.link}>{data?.button?.label}</Link>
+                  <Link href={data?.button?.link ?? "/"}>{locale === "ar"? data?.button?.label_ar: data?.button?.label}</Link>
                 </Button>
               </div>
             </div>
@@ -69,7 +69,7 @@ export default function HomeFind({ data, locale }) {
               <div className="w-full max-w-full">
                 <div className="overflow-hidden" ref={emblaRef}>
                   <div className="flex touch-pan-y touch-pinch-zoom -mx-0.5 sm:-mx-1 xl:-mx-3">
-                    {data?.project?.map((item, index) => {
+                    {data?.projects?.map((item, index) => {
                       return (
                         <div
                           key={"project" + index}
@@ -92,7 +92,7 @@ export default function HomeFind({ data, locale }) {
                                   size="heading2"
                                   className="font-light capitalize text-[#282828] mb-2 xl:mb-3"
                                 >
-                                  {parse(item?.title)}
+                                  {parse(locale === "ar" ? item?.title_ar : item?.title )}
                                   <span
                                     className={cn(
                                       "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
@@ -107,7 +107,7 @@ export default function HomeFind({ data, locale }) {
                                   size="text1"
                                   className="line-clamp-6 leading-normal font-light text-black mb-3 xl:mb-5 2xl:mb-6"
                                 >
-                                  {parse(item?.description)}
+                                  {parse(locale === "ar" ? item?.description_ar : item?.description)}
                                 </Text>
                                 <Button
                                   variant={
@@ -120,14 +120,14 @@ export default function HomeFind({ data, locale }) {
                                   asChild
                                 >
                                   <Link href={item?.button?.link}>
-                                    {item?.button?.label}
+                                    {locale === "ar" ? item?.button?.label_ar : item?.button?.label}
                                   </Link>
                                 </Button>
                               </div>
                               <div className="w-full aspect-[3/4] xl:aspect-[22/30] overflow-hidden">
                                 <Image
                                   src={item?.media?.path}
-                                  alt={item?.media?.alt}
+                                  alt={locale === "ar" ? item?.media?.alt_ar : item?.media?.alt}
                                   width={350}
                                   height={440}
                                   className="w-full h-full object-cover hover:scale-110 transition duration-300"

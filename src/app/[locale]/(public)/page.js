@@ -571,10 +571,6 @@ export default async function HomePage({ params }) {
     notFound();
   }
 
-  const { data } = await res.json();
-
-  console.log(data);
-
   const {
     sliders,
     aboutSection,
@@ -602,7 +598,10 @@ export default async function HomePage({ params }) {
         calculatorData={local_data?.calculatorData}
         customizeData={local_data?.customizeData}
       />
-      <HomeFind locale={locale} data={local_data?.findData} />
+      <HomeFind
+        locale={locale}
+        data={fitsSection ? fitsSection : local_data?.findData}
+      />
       <HomeBrand locale={locale} data={local_data?.brandData} />
       <HomeEnquiry locale={locale} data={local_data?.enquiryData} />
     </>

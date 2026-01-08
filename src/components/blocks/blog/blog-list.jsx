@@ -21,6 +21,10 @@ export default function BlogList({ locale, data }) {
     
   // Access the blog array from data structure
   const blogs = data?.blog || [];
+  const pagination = data?.pagination || {};
+
+  const { totalCount, currentPage: limit, page } = pagination;
+
   const isEn = locale === "en";
 
   // Pagination calculations

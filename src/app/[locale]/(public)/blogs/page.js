@@ -180,21 +180,19 @@ const local_data = {
 };
 
 export default async function BlogsPage({params}) {
-
   const resolvedParams = await params;
-
   const {locale} = resolvedParams;
 
-  const { data, error } = await getBlogsData.getCmsData();
+  let page = 1;
+  let limit = 6;
 
+  const { data, error } = await getBlogsData.getCmsData({ page, limit });
   const { heroData, blogData } = data;
 
-
-  // const locale = "en";
   return (
     <>
       <BlogHero locale={locale} data={heroData} slug={"Blogs"} />
-      <BlogList locale={locale} data={blogData} />
+      <BlogList locale={locale} initialData={blogData} limit={limit} />
     </>
   );
 }
