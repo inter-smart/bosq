@@ -1,6 +1,6 @@
 // middleware.ts
 import { NextRequest, NextResponse } from "next/server";
-import { Locale, locales, localeDirection } from "./src/il8n/config";
+import { Locale, locales, localeDirection, defaultLocale } from "./src/il8n/config";
 
 export function middleware(request) {
   const pathname = request.nextUrl.pathname;

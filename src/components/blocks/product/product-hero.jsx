@@ -33,7 +33,7 @@ export default function ProductHero({ data, locale, slug }) {
             )}
           </BreadcrumbList>
         </Breadcrumb>
-        {data?.title && (
+        {(data?.title || data?.title_ar) && (
           <Heading as="h2" size="heading6" className="line-clamp-2 text-black">
             {parse(isEn ? data?.title : data?.title_ar)}
             <span

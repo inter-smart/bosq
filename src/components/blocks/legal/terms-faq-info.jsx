@@ -14,6 +14,9 @@ const accordionTriggerStyle = cn(
 );
 
 export default function TermsFaqInfo({ data, locale }) {
+
+  const isEn = locale === "en";
+
   return (
     <section className="w-full block py-[20px] sm:py-[30px] xl:py-[40px] 2xl:py-[60px]">
       <div className="container">
@@ -24,7 +27,7 @@ export default function TermsFaqInfo({ data, locale }) {
               size="none"
               className="text-[16px] sm:text-[18px] lg:text-[20px] xl:text-[26px] 2xl:text-[32px] 3xl:text-[40px] leading-normal tracking-tight font-light text-black mb-4 xl:mb-8 2xl:mb-10"
             >
-              {parse(data?.title)}
+              {parse(isEn? data?.title : data?.title_ar)}
               <span
                 className={cn(
                   "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
@@ -47,14 +50,14 @@ export default function TermsFaqInfo({ data, locale }) {
                   className="last:border-b first:border-t"
                 >
                   <AccordionTrigger className={accordionTriggerStyle}>
-                    {parse(item?.question)}
+                    {parse(isEn? item?.question : item?.question_ar)}
                   </AccordionTrigger>
                   <AccordionContent>
                     <div
                       dir={locale === "ar" ? "rtl" : "ltr"}
                       className={cn("typography", "[--text-color:#282828]")}
                     >
-                      {parse(item?.answer)}
+                      {parse(isEn? item?.answer : item?.answer_ar)}
                     </div>
                   </AccordionContent>
                 </AccordionItem>
