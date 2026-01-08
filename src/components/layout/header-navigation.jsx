@@ -50,8 +50,8 @@ export default function HeaderNavigation({
 
   return (
     <NavigationMenu
-    //   viewport={true}
-      defaultValue={"toplevel2"}
+      //   viewport={true}
+    //   defaultValue={"toplevel2"}
       className="w-full max-w-full justify-start lg:justify-center max-lg:[&>div]:w-full static [--radix-navigation-menu-viewport-width: 100%] [--radix-navigation-menu-viewport-height: 176px;]"
     >
       <NavigationMenuList className="xl:gap-x-3 2xl:gap-x-4 max-lg:flex-col max-lg:[&>div]:w-full">
@@ -117,12 +117,13 @@ export default function HeaderNavigation({
         })}
       </NavigationMenuList>
       {/* <NavigationMenuViewport className={"bg-red-500"} /> */}
-      <NavigationMenuViewport
+      {/* <NavigationMenuViewport
         className={cn(
           "absolute left-0 top-full flex w-full justify-center",
           "origin-top-center"
         )}
-      />
+        asChild
+      /> */}
     </NavigationMenu>
   );
 }
