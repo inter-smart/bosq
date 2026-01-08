@@ -112,7 +112,7 @@ export default function MaterialInfoSection({ data, locale }) {
                                             <div className="w-full h-full min-h-[190px] max-h-[720px] overflow-hidden block relative z-0">
                                                 <Image
                                                     src={item?.media?.path}
-                                                    alt={item?.media?.alt}
+                                                    alt={item?.media?.alt || "Image"}
                                                     width={760}
                                                     height={630}
                                                     className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
