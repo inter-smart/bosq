@@ -3,6 +3,8 @@ import JourneySection from "@/components/blocks/about/JourneySection";
 import WhyBosqSection from "@/components/blocks/about/WhyBosqSection";
 import AboutBannerSection from "@/components/blocks/about/AboutBannerSection";
 import TestimonialSection from "@/components/blocks/about/TestimonialSection";
+import ClinetSection from "@/components/blocks/about/ClinetSection";
+import NewsSection from "@/components/blocks/about/NewsSection";
 
 const local_data = {
   heroData: {
@@ -217,8 +219,234 @@ const local_data = {
         title:
           "BOSQ is our trusted partner for ergonomic furniture across projects.",
         description:
+          "We have been recommending BOSQ furniture in various projects and are satisfied with their product quality and ergonomic performance. BOSQ's furniture designs are aesthetically pleasing, functional, and offer great value for money. Their design support team has consistently delivered solutions that meet our expectations. We appreciate BOSQ's commitment to innovation, reliability, and professionalism—qualities that set them apart from competitors. Their team’s responsiveness and attention to detail have been excellent. Best wishes to BOSQ; keep up the great work in delivering smart, human-centric furniture for modern workspaces. We have been recommending BOSQ furniture in various projects and are satisfied with their product quality and ergonomic performance. BOSQ's furniture designs are aesthetically pleasing, functional, and offer great value for money. Their design support team has consistently delivered solutions that meet our expectations. We appreciate BOSQ's commitment to innovation, reliability, and professionalism—qualities that set them apart from competitors. Their team’s responsiveness and attention to detail have been excellent. Best wishes to BOSQ; keep up the great work in delivering smart, human-centric furniture for modern workspaces. We have been recommending BOSQ furniture in various projects and are satisfied with their product quality and ergonomic performance. BOSQ's furniture designs are aesthetically pleasing, functional, and offer great value for money. Their design support team has consistently delivered solutions that meet our expectations. We appreciate BOSQ's commitment to innovation, reliability, and professionalism—qualities that set them apart from competitors. Their team’s responsiveness and attention to detail have been excellent. Best wishes to BOSQ; keep up the great work in delivering smart, human-centric furniture for modern workspaces.",
+        designation: "Sudhir Sawant, Director, Knexir Consultants",
+      },
+      {
+        id: 5,
+        title:
+          "BOSQ is our trusted partner for ergonomic furniture across projects.",
+        description:
           "We have been recommending BOSQ furniture in various projects and are satisfied with their product quality and ergonomic performance. BOSQ's furniture designs are aesthetically pleasing, functional, and offer great value for money. Their design support team has consistently delivered solutions that meet our expectations. We appreciate BOSQ's commitment to innovation, reliability, and professionalism—qualities that set them apart from competitors. Their team’s responsiveness and attention to detail have been excellent. Best wishes to BOSQ; keep up the great work in delivering smart, human-centric furniture for modern workspaces.",
         designation: "Sudhir Sawant, Director, Knexir Consultants",
+      },
+    ],
+  },
+  client_data: {
+    title: "Our Top Clients",
+    client_list: [
+      {
+        id: 1,
+        media: {
+          type: "image",
+          path: "/images/client-logo-1.png",
+          alt: "client-logo",
+        },
+      },
+      {
+        id: 2,
+        media: {
+          type: "image",
+          path: "/images/client-logo-2.png",
+          alt: "client-logo",
+        },
+      },
+      {
+        id: 3,
+        media: {
+          type: "image",
+          path: "/images/client-logo-3.png",
+          alt: "client-logo",
+        },
+      },
+      {
+        id: 4,
+        media: {
+          type: "image",
+          path: "/images/client-logo-4.png",
+          alt: "client-logo",
+        },
+      },
+      {
+        id: 5,
+        media: {
+          type: "image",
+          path: "/images/client-logo-5.png",
+          alt: "client-logo",
+        },
+      },
+      {
+        id: 6,
+        media: {
+          type: "image",
+          path: "/images/client-logo-6.png",
+          alt: "client-logo",
+        },
+      },
+      {
+        id: 7,
+        media: {
+          type: "image",
+          path: "/images/client-logo-3.png",
+          alt: "client-logo",
+        },
+      },
+      {
+        id: 8,
+        media: {
+          type: "image",
+          path: "/images/client-logo-1.png",
+          alt: "client-logo",
+        },
+      },
+      {
+        id: 9,
+        media: {
+          type: "image",
+          path: "/images/client-logo-4.png",
+          alt: "client-logo",
+        },
+      },
+      {
+        id: 10,
+        media: {
+          type: "image",
+          path: "/images/client-logo-3.png",
+          alt: "client-logo",
+        },
+      },
+      {
+        id: 11,
+        media: {
+          type: "image",
+          path: "/images/client-logo-6.png",
+          alt: "client-logo",
+        },
+      },
+      {
+        id: 12,
+        media: {
+          type: "image",
+          path: "/images/client-logo-4.png",
+          alt: "client-logo",
+        },
+      },
+      {
+        id: 13,
+        media: {
+          type: "image",
+          path: "/images/client-logo-3.png",
+          alt: "client-logo",
+        },
+      },
+      {
+        id: 14,
+        media: {
+          type: "image",
+          path: "/images/client-logo-1.png",
+          alt: "client-logo",
+        },
+      },
+      {
+        id: 15,
+        media: {
+          type: "image",
+          path: "/images/client-logo-4.png",
+          alt: "client-logo",
+        },
+      },
+      {
+        id: 16,
+        media: {
+          type: "image",
+          path: "/images/client-logo-4.png",
+          alt: "client-logo",
+        },
+      },
+    ],
+  },
+  news_data: {
+    title: "In the News",
+    news_list: [
+      {
+        id: 1,
+        link: {
+          href: "/news/1",
+          target: true,
+        },
+        media: {
+          type: "image",
+          path: "/images/news-1.jpg",
+          alt: "news-1",
+        },
+        name: "Anam Khan",
+        date: "Tue 13 Aug 2024 ",
+        title:
+          "Creating Smart Space Management with Modern Office Furniture Design",
+      },
+      {
+        id: 2,
+        link: {
+          href: "/news/1",
+          target: true,
+        },
+        media: {
+          type: "image",
+          path: "/images/news-2.jpg",
+          alt: "news-1",
+        },
+        name: "Anam Khan",
+        date: "Tue 13 Aug 2024 ",
+        title:
+          "BOSQ is set to expand in Sharjah with a 20,000 sqm joinery facility",
+      },
+      {
+        id: 3,
+        link: {
+          href: "/news/1",
+          target: true,
+        },
+        media: {
+          type: "image",
+          path: "/images/news-3.jpg",
+          alt: "news-1",
+        },
+        name: "Anam Khan",
+        date: "Tue 13 Aug 2024 ",
+        title:
+          "How to Design the Perfect Modular Workstation for Modern Offices",
+      },
+      {
+        id: 4,
+        link: {
+          href: "/news/1",
+          target: true,
+        },
+        media: {
+          type: "image",
+          path: "/images/news-2.jpg",
+          alt: "news-1",
+        },
+        name: "Anam Khan",
+        date: "Tue 13 Aug 2024 ",
+        title:
+          "BOSQ is set to expand in Sharjah with a 20,000 sqm joinery facility",
+      },
+      {
+        id: 5,
+        link: {
+          href: "/news/1",
+          target: true,
+        },
+        media: {
+          type: "image",
+          path: "/images/news-3.jpg",
+          alt: "news-1",
+        },
+        name: "Anam Khan",
+        date: "Tue 13 Aug 2024 ",
+        title:
+          "How to Design the Perfect Modular Workstation for Modern Offices",
       },
     ],
   },
@@ -241,6 +469,8 @@ export default async function AboutPage({ params }) {
       <JourneySection locale={locale} data={local_data?.journey_data} />
       <WhyBosqSection locale={locale} data={local_data?.why_bosq_data} />
       <TestimonialSection locale={locale} data={local_data?.testimonial_data} />
+      <ClinetSection locale={locale} data={local_data?.client_data} />
+      <NewsSection locale={locale} data={local_data?.news_data} />
     </>
   );
 }
