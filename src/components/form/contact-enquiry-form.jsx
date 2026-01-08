@@ -48,7 +48,7 @@ const textareaStyle = cn(
   "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none"
 );
 
-export default function ContactEnquiryForm() {
+export default function ContactEnquiryForm({ locale }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -123,9 +123,13 @@ export default function ContactEnquiryForm() {
               </FormLabel>
               <FormControl>
                 <PhoneInput
+                  dir={locale === "ar" ? "rtl" : "ltr"}
                   defaultCountry="ae"
                   {...field}
-                  className={cn(inputStyle, "w-full p-0 [&_input]:flex-1  [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px]")}
+                  className={cn(
+                    inputStyle,
+                    "w-full p-0 [&_input]:flex-1 [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px]"
+                  )}
                   placeholder="Enter your mobile number"
                 />
               </FormControl>

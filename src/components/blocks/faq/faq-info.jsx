@@ -1,14 +1,7 @@
 import parse from "html-react-parser";
 import { cn } from "@/lib/utils";
 import { Heading } from "@/components/utils/heading";
-import { Text } from "@/components/utils/text";
 import Image from "next/image";
-
-import { Suspense } from "react";
-import Link from "next/link";
-import dynamic from "next/dynamic";
-
-const MediaQuery = dynamic(() => import("react-responsive"), {});
 
 import {
   Accordion,
@@ -24,7 +17,7 @@ const accordionTriggerStyle = cn(
 export default function FaqInfo({ data, locale }) {
   return (
     <section className="w-full block py-[10px] sm:py-[15px] xl:py-[20px] 2xl:py-[30px]">
-      <div className="w-full aspect-6/5 sm:aspect-1920/740 overflow-hidden flex items-center relative z-0">
+      <div className="w-full aspect-6/4 sm:aspect-1920/740 overflow-hidden flex items-center relative z-0">
         <picture className="absolute -z-2 inset-0 opacity-95">
           <source media="(max-width: 640px)" srcSet={data?.media?.mobilePath} />
           <Image

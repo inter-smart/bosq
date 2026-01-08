@@ -38,7 +38,7 @@ export default function CartHero({ data, locale, slug, itemsCount }) {
           : data?.title_ar) && (
               <Heading
                 as="h2"
-                size="heading1"
+                size="heading6"
                 className="line-clamp-2 text-black"
               >
                 {parse(

@@ -1,5 +1,4 @@
 import AuthLayout from "@/components/blocks/auth/auth-layout";
-import AuthLogin from "@/components/blocks/auth/auth-signup";
 import AuthOtpForm from "@/components/form/auth-otp-form";
 
 const local_data = {
@@ -13,12 +12,13 @@ const local_data = {
     "<p>Enter the verification code we just sent you on your mail address.</p>",
 };
 
-export default function OtpSubmission() {
-  const locale = "en";
+export default async function OtpSubmissionPage({ params }) {
+  const resolvedParams = await params;
+  const { locale } = resolvedParams;
   return (
     <>
       <AuthLayout locale={locale} data={local_data}>
-        <AuthOtpForm />
+        <AuthOtpForm locale={locale} />
       </AuthLayout>
     </>
   );

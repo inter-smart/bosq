@@ -315,9 +315,12 @@ export default function ProductList({ data, locale }) {
                   )}
                 </button>
               </SheetTrigger>
-              <SheetContent side="left"
-              
-              className={"max-w-[320px] sm:max-w-[320px] xl:max-w-[340px] 2xl:max-w-[468px]"}
+              <SheetContent
+                side={locale === "ar" ? "right" : "left"}
+                showCloseButton={false}
+                className={
+                  "max-w-[320px] sm:max-w-[320px] xl:max-w-[340px] 2xl:max-w-[468px]"
+                }
               >
                 <SheetHeader className="min-h-(--header-y) border-b border-[#eee] px-4 sm:px-7 justify-center">
                   <SheetTitle>Filters</SheetTitle>
@@ -674,7 +677,6 @@ export default function ProductList({ data, locale }) {
         </div>
       </div>
       <div className="container">
-        {/* Products Grid */}
         <div className="flex flex-wrap -mx-3 sm:-mx-2 xl:-mx-5 2xl:-mx-8 [&>*]:p-3 sm:[&>*]:p-2 xl:[&>*]:p-5 2xl:[&>*]:p-8">
           {currentProducts.map((item) => (
             <div key={item.id} className="w-full 2xs:w-1/2 sm:w-1/2 md:w-1/3">

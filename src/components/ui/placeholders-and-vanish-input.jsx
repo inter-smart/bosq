@@ -3,12 +3,14 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { Search } from "lucide-react";
 
 export function PlaceholdersAndVanishInput({
   placeholders,
   onChange,
   onSubmit,
   locale,
+  variant = "default",
 }) {
   const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
 
@@ -175,7 +177,9 @@ export function PlaceholdersAndVanishInput({
     <form
       className={cn(
         "w-full relative max-w-full mx-auto bg-none border-b border-white dark:bg-zinc-800 h-7 2xl:h-8 overflow-hidden transition duration-200",
-        value && "bg-none"
+        value && "bg-none",
+        variant === "search" &&
+          "h-9 2xl:h-10 3xl:h-13 bg-white border border-[#e9e9e9]"
       )}
       onSubmit={handleSubmit}
     >
@@ -183,7 +187,8 @@ export function PlaceholdersAndVanishInput({
         className={cn(
           "absolute pointer-events-none text-base transform scale-50 top-0 origin-top-left filter",
           !animating ? "opacity-0" : "opacity-100",
-          locale === "ar" ? "right-0 pl-20" : "left-0 pr-20"
+          locale === "ar" ? "right-0 pl-20" : "left-0 pr-20",
+          variant === "search" && "px-0"
         )}
         ref={canvasRef}
       />
@@ -201,7 +206,9 @@ export function PlaceholdersAndVanishInput({
         className={cn(
           "text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[16px] leading-tight font-light text-white w-full relative z-50 border-none dark:text-white bg-transparent h-full focus:outline-none focus:ring-0 selection:bg-white selection:text-black ",
           animating && "text-transparent dark:text-transparent",
-          locale === "ar" ? "pr-0 pl-20" : "pl-0 pr-20"
+          locale === "ar" ? "pr-0 pl-20" : "pl-0 pr-20",
+          variant === "search" && "text-black selection:bg-gray-500",
+          variant === "search" && (locale === "ar" ? "pr-3" : "pl-3")
         )}
       />
       <button
@@ -209,27 +216,38 @@ export function PlaceholdersAndVanishInput({
         type="submit"
         className={cn(
           "w-3.5 absolute top-1/2 z-50 -translate-y-1/2 rounded-full transition duration-200 flex items-center justify-center",
-          locale === "ar" ? "left-0 rotate-180" : "right-0 rotate-0"
+          locale === "ar" ? "left-0 rotate-180" : "right-0 rotate-0",
+          variant === "search" && (locale === "ar" ? "ml-3" : "mr-3")
         )}
       >
-        <motion.svg
-          width="18"
-          height="15"
-          viewBox="0 0 18 15"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M9.22363 0.749023L16.2614 6.96595L9.22363 13.4131"
-            stroke={value ? "#f17423" : "#999"}
-            strokeWidth="2"
+        {variant === "search" ? (
+          <Search
+            className={cn(
+              "size-3",
+              value ? "text-black" : "text-[#282828]",
+              locale === "ar" && "rotate-180"
+            )}
           />
-          <path
-            d="M0 7.02539H16.1188"
-            stroke={value ? "#f17423" : "#999"}
-            strokeWidth="2"
-          />
-        </motion.svg>
+        ) : (
+          <motion.svg
+            width="18"
+            height="15"
+            viewBox="0 0 18 15"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M9.22363 0.749023L16.2614 6.96595L9.22363 13.4131"
+              stroke={value ? "#f17423" : "#999"}
+              strokeWidth="2"
+            />
+            <path
+              d="M0 7.02539H16.1188"
+              stroke={value ? "#f17423" : "#999"}
+              strokeWidth="2"
+            />
+          </motion.svg>
+        )}
       </button>
       <div className="absolute inset-0 flex items-center rounded-full pointer-events-none">
         <AnimatePresence mode="wait">
@@ -252,7 +270,10 @@ export function PlaceholdersAndVanishInput({
                 duration: 0.3,
                 ease: "linear",
               }}
-              className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[16px] leading-none font-light text-white/50 dark:text-zinc-500 pl-0 text-start w-[calc(100%-2rem)] truncate"
+              className={cn(
+                "text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[16px] leading-tight font-light text-white/50 dark:text-zinc-500 pl-0 text-start w-[calc(100%-2rem)] truncate",
+                variant === "search" && "text-black/50 px-3"
+              )}
             >
               {placeholders[currentPlaceholder]}
             </motion.p>

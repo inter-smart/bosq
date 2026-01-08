@@ -42,7 +42,7 @@ const inputStyle = cn(
 
 const errorStyle = cn("text-[#f17423]");
 
-export default function AuthLoginForm() {
+export default function AuthLoginForm({ locale }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -91,6 +91,11 @@ export default function AuthLoginForm() {
     setLoading(false);
   };
 
+  const toggleStyle = cn(
+    "absolute top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700",
+    locale === "ar" ? "left-3" : "right-3"
+  );
+
   return (
     <Form {...form}>
       <form
@@ -133,13 +138,16 @@ export default function AuthLoginForm() {
                   <Input
                     {...field}
                     type={showPassword ? "text" : "password"}
-                    className={cn(inputStyle, "pr-10")}
+                    className={cn(
+                      inputStyle,
+                      locale === "ar" ? "pl-10" : "pr-10"
+                    )}
                     placeholder="Enter your password"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    className={cn(toggleStyle)}
                   >
                     {showPassword ? (
                       <EyeOff className="h-4 w-4" />
@@ -179,7 +187,7 @@ export default function AuthLoginForm() {
             className="font-normal underline h-auto! p-0 text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px]"
             asChild
           >
-            <Link href="/forgot-password">Forgot Password?</Link>
+            <Link href="/en/forgot-password">Forgot Password?</Link>
           </Button>
         </div>
 

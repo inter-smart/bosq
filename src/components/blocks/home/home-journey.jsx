@@ -23,7 +23,7 @@ export default function HomeJourney({ data, locale }) {
           locale === "ar" ? "bg-gradient-to-r" : "bg-gradient-to-l"
         )}
       />
-      {data?.media?.type === "video" ? (
+      {data?.media_type === "video" ? (
         <>
           <video
             autoPlay
@@ -91,7 +91,7 @@ export default function HomeJourney({ data, locale }) {
             className="min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-40"
             asChild
           >
-            <Link href={localData?.button?.link}>{localData?.button?.label}</Link>
+            <Link href={"/"}>View Details</Link>
           </Button>
         </div>
       </div>

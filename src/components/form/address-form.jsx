@@ -93,7 +93,7 @@ const formSchema = z
 
 // Shared styles
 const labelStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]"
+  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-[#282828]"
 );
 
 const inputStyle = cn(
@@ -107,7 +107,7 @@ const textareaStyle = cn(
   "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none"
 );
 
-export default function AddressForm() {
+export default function AddressForm({locale}) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -194,7 +194,7 @@ export default function AddressForm() {
           name="companyName"
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
-              <FormLabel className={labelStyle}>Company Name</FormLabel>
+              <FormLabel className={labelStyle}>Company Name (Optional)</FormLabel>
               <FormControl>
                 <Input
                   {...field}
@@ -260,7 +260,7 @@ export default function AddressForm() {
               <FormLabel className={labelStyle}>
                 Country / Region<span className={errorStyle}>*</span>
               </FormLabel>
-              <Select onValueChange={field.onChange} value={field.value}>
+              <Select dir={locale === "ar" ? "rtl" : "ltr"} onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger className={cn(inputStyle, "w-full")}>
                     <SelectValue placeholder="Select region" />
@@ -328,7 +328,7 @@ export default function AddressForm() {
               <FormLabel className={labelStyle}>
                 State / Country<span className={errorStyle}>*</span>
               </FormLabel>
-              <Select onValueChange={field.onChange} value={field.value}>
+              <Select dir={locale === "ar" ? "rtl" : "ltr"} onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger className={cn(inputStyle, "w-full")}>
                     <SelectValue placeholder="Select country" />
@@ -448,7 +448,7 @@ export default function AddressForm() {
                   <FormLabel className={labelStyle}>
                     Country / Region<span className={errorStyle}>*</span>
                   </FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select dir={locale === "ar" ? "rtl" : "ltr"} onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger className={cn(inputStyle, "w-full")}>
                         <SelectValue placeholder="Select region" />
@@ -517,7 +517,7 @@ export default function AddressForm() {
                   <FormLabel className={labelStyle}>
                     State / Country<span className={errorStyle}>*</span>
                   </FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select dir={locale === "ar" ? "rtl" : "ltr"} onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger className={cn(inputStyle, "w-full")}>
                         <SelectValue placeholder="Select country" />
@@ -550,7 +550,7 @@ export default function AddressForm() {
             disabled={loading}
             className="min-w-[120px] 2xl:min-w-40"
           >
-            {loading ? "Submitting..." : "Add address"}
+            {loading ? "Submitting..." : "Add Address"}
           </Button>
         </div>
 

@@ -1,9 +1,17 @@
+"use client";
 import { Text } from "@/components/utils/text";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
+
+import dynamic from "next/dynamic";
+import { Menu } from "lucide-react";
+import { useState } from "react";
+
+const MediaQuery = dynamic(() => import("react-responsive"), {
+  ssr: false,
+});
 
 const ASIDE_ITEMS = [
   {
@@ -34,7 +42,7 @@ const ASIDE_ITEMS = [
       alt: "account-nav",
     },
     title: "Cancelled Orders",
-    href: "#",
+    href: "/en/account/cancelled-orders",
   },
   {
     id: 4,
@@ -44,7 +52,7 @@ const ASIDE_ITEMS = [
       alt: "account-nav",
     },
     title: "Manage Address",
-    href: "#",
+    href: "/en/account/manage-address",
   },
   {
     id: 5,
@@ -54,7 +62,7 @@ const ASIDE_ITEMS = [
       alt: "account-nav",
     },
     title: "Wishlist",
-    href: "#",
+    href: "/en/account/wishlist",
   },
   {
     id: 6,
@@ -64,7 +72,7 @@ const ASIDE_ITEMS = [
       alt: "account-nav",
     },
     title: "Coupons",
-    href: "#",
+    href: "/en/account/coupons",
   },
   {
     id: 7,
@@ -74,7 +82,7 @@ const ASIDE_ITEMS = [
       alt: "account-nav",
     },
     title: "Account Settings",
-    href: "#",
+    href: "/en/account/settings",
   },
   {
     id: 8,
@@ -88,44 +96,66 @@ const ASIDE_ITEMS = [
   },
 ];
 
-export default function AccountNav() {
+export default function AccountNav({locale}) {
   const pathname = usePathname();
+  const [open, setOpen] = useState(false);
   return (
-    <div className="w-full bg-[#f4f4f4] border border-[#e0e0e0] rounded-s-lg overflow-hidden sticky top-(--header-y)">
-      {ASIDE_ITEMS.map((item) => {
-        const isActive = pathname === item.href;
-        return (
-          <Link
-            key={"account-nav-" + item.id}
-            href={item.href}
-            className={cn(
-              "w-full flex gap-x-1.5 xl:gap-x-2.5 items-center py-2.5 xl:py-3 3xl:py-4.5 px-3 xl:px-5 3xl:px-6 transition ",
-              isActive ? "bg-black" : "bg-transparent hover:bg-gray-200"
-            )}
-          >
-            <Image
-              src={item?.media?.path}
-              alt={item?.media?.alt}
-              width={12}
-              height={14}
-              className={cn(
-                "w-3 xl:w-3 2xl:w-4 aspect-square object-contain hover:scale-105 transition duration-300 ",
-                isActive ? "invert-100" : "invert-0"
-              )}
-            />
-            <Text
-              as="div"
-              size="text3"
-              className={cn(
-                "leading-none text-black",
-                isActive ? "text-white" : "text-black"
-              )}
-            >
-              {item?.title}
-            </Text>
-          </Link>
-        );
-      })}
-    </div>
+    <>
+      <div className="relative z-2 sm:sticky sm:top-(--header-y)">
+        <div
+          onClick={() => setOpen((prev) => !prev)}
+          className={cn(
+            "text-[13px] leading-none font-normal text-black max-w-22 rounded-lg bg-gray-100 p-2 flex gap-1  flex items-center justify-center sm:hidden",
+            open && "bg-gray-200 rounded-tb-lg",
+            locale === "ar" ? "mr-auto" : "ml-auto"
+          )}
+        >
+          <Menu className="size-3" />
+          Menu
+        </div>
+        <div
+          className={cn(
+            "w-full max-w-40 sm:max-w-full bg-[#f4f4f4] border border-[#e0e0e0] rounded-tb-lg sm:rounded-s-lg shadow-xl sm:shadow-none overflow-hidden max-sm:absolute max-sm:top-full",
+            open ? "block" : "hidden",
+            locale === "ar" ? "max-sm:left-0" : "max-sm:right-0"
+          )}
+        >
+          {ASIDE_ITEMS.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={"account-nav-" + item.id}
+                href={item.href}
+                className={cn(
+                  "w-full flex gap-x-1.5 xl:gap-x-2.5 items-center py-2.5 xl:py-3 3xl:py-4.5 px-3 xl:px-5 3xl:px-6 transition ",
+                  isActive ? "bg-black" : "bg-transparent hover:bg-gray-200"
+                )}
+              >
+                <Image
+                  src={item?.media?.path}
+                  alt={item?.media?.alt}
+                  width={12}
+                  height={14}
+                  className={cn(
+                    "w-3 xl:w-3 2xl:w-4 aspect-square object-contain hover:scale-105 transition duration-300 ",
+                    isActive ? "invert-100" : "invert-0"
+                  )}
+                />
+                <Text
+                  as="div"
+                  size="text3"
+                  className={cn(
+                    "leading-none text-black",
+                    isActive ? "text-white" : "text-black"
+                  )}
+                >
+                  {item?.title}
+                </Text>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+    </>
   );
 }
