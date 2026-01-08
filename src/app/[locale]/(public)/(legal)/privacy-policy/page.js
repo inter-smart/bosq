@@ -1,5 +1,6 @@
 import PrivacyInfo from "@/components/blocks/legal/privacy-info";
 import ProductHero from "@/components/blocks/product/product-hero";
+import { getPolicyCms } from "@/lib/api/privacyPolicy";
 
 const local_data = {
   heroData: {
@@ -131,6 +132,16 @@ const local_data = {
 export default async function PrivacyPolicyPage({ params }) {
   const resolvedParams = await params;
   const { locale } = resolvedParams;
+  
+  const {data} = await getPolicyCms.getCmsData();
+  const { heroData, privacyPolicyData } = data;
+  const local_data = {
+    heroData,
+    privacyPolicyData,
+  };
+
+
+  console.log(data)
   return (
     <>
       <ProductHero
