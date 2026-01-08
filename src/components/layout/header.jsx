@@ -381,7 +381,7 @@ function NavigationMenuBar({ pathname, menuItems, onNavigationClick }) {
                 <NavigationMenuLink
                   asChild
                   className={cn(getNavigationMenuTriggerStyle(isActive))}
-                  // className={getNavigationMenuTriggerStyle}
+                // className={getNavigationMenuTriggerStyle}
                 >
                   <Link href={item.slug || "#"} onClick={onNavigationClick}>
                     {item.name}
