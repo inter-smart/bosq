@@ -125,8 +125,9 @@ const local_data = {
   },
 };
 
-export default function page() {
-  const locale = "en";
+export default async function MaterialGuidePage({ params }) {
+  const resolvedParams = await params;
+  const { locale } = resolvedParams;
   return (
     <>
       <ProductHero

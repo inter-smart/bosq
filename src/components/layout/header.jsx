@@ -31,6 +31,7 @@ import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
 import { Menu, X } from "lucide-react";
 import SearchDialog from "../common/search-dialog";
+import HeaderNavigation from "./header-navigation";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
@@ -168,7 +169,7 @@ export default function Header({ headerData, navigationData, locale }) {
                           animate="show"
                           exit="exit"
                         >
-                          <NavigationMenuBar
+                          <HeaderNavigation
                             pathname={pathname}
                             menuItems={navigationData}
                             onNavigationClick={handleNavigationLinkClick}
@@ -225,12 +226,18 @@ export default function Header({ headerData, navigationData, locale }) {
               )}
             >
               <MediaQuery minWidth={1024}>
-                <NavigationMenuBar
+                <HeaderNavigation
                   locale={locale}
                   pathname={pathname}
                   menuItems={navigationData}
                   onNavigationClick={handleNavigationLinkClick}
                 />
+                {/* <NavigationMenuBar
+                  locale={locale}
+                  pathname={pathname}
+                  menuItems={navigationData}
+                  onNavigationClick={handleNavigationLinkClick}
+                /> */}
               </MediaQuery>
               <SearchDialog locale={locale}>
                 <Button variant="none" size="none">
@@ -349,48 +356,48 @@ export default function Header({ headerData, navigationData, locale }) {
 /* ----------------------------------------
    Navigation Component
 ---------------------------------------- */
-function NavigationMenuBar({ pathname, menuItems, onNavigationClick, locale }) {
-  const getNavigationMenuTriggerStyle = (isActive) => {
-    const baseStyle =
-      "text-[14px] lg:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-normal font-normal text-start lg:text-center w-full h-auto p-[5px_15px] lg:p-[6px_12px] 2xl:p-[10px_15px] 3xl:p-[15px_25px] bg-transparent border border-transparent hover:bg-black/0 focus:bg-black/0 ring-0 hover:border-white/10 data-[state=open]:border-white/10 data-[state=open]:hover:bg-black/10 data-[state=open]:text-white data-[state=open]:focus:bg-black/10 data-[state=open]:bg-black/10 transition-all duration-200";
+// function NavigationMenuBar({ pathname, menuItems, onNavigationClick, locale }) {
+//   const getNavigationMenuTriggerStyle = (isActive) => {
+//     const baseStyle =
+//       "text-[14px] lg:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-normal font-normal text-start lg:text-center w-full h-auto p-[5px_15px] lg:p-[6px_12px] 2xl:p-[10px_15px] 3xl:p-[15px_25px] bg-transparent border border-transparent hover:bg-black/0 focus:bg-black/0 ring-0 hover:border-white/10 data-[state=open]:border-white/10 data-[state=open]:hover:bg-black/10 data-[state=open]:text-white data-[state=open]:focus:bg-black/10 data-[state=open]:bg-black/10 transition-all duration-200";
 
-    const pageTextColor =
-      pathname === `/${locale}`
-        ? "text-[#282828] lg:text-white hover:text-white focus:text-white"
-        : "text-[#282828] hover:text-[#282828] focus:text-[#282828]";
+//     const pageTextColor =
+//       pathname === `/${locale}`
+//         ? "text-[#282828] lg:text-white hover:text-white focus:text-white"
+//         : "text-[#282828] hover:text-[#282828] focus:text-[#282828]";
 
-    const activeColor = isActive ? "text-[#f17423]" : "";
+//     const activeColor = isActive ? "text-[#f17423]" : "";
 
-    return `${baseStyle} ${pageTextColor} ${activeColor}`;
-  };
+//     return `${baseStyle} ${pageTextColor} ${activeColor}`;
+//   };
 
-  return (
-    <NavigationMenu
-      viewport={false}
-      className="w-full max-w-full justify-start lg:justify-center max-lg:[&>div]:w-full"
-    >
-      <NavigationMenuList className="xl:gap-x-3 2xl:gap-x-4 max-lg:flex-col max-lg:[&>div]:w-full">
-        {menuItems.map((item, i) => {
-          const isActive = pathname === item.slug;
-          return (
-            <motion.div key={i} variants={itemVariants}>
-              <NavigationMenuItem>
-                <NavigationMenuLink
-                  asChild
-                  className={cn(getNavigationMenuTriggerStyle(isActive))}
-                >
-                  <Link
-                    href={`/${locale}${item.slug}`}
-                    onClick={onNavigationClick}
-                  >
-                    {item.name}
-                  </Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-            </motion.div>
-          );
-        })}
-      </NavigationMenuList>
-    </NavigationMenu>
-  );
-}
+//   return (
+//     <NavigationMenu
+//       viewport={false}
+//       className="w-full max-w-full justify-start lg:justify-center max-lg:[&>div]:w-full"
+//     >
+//       <NavigationMenuList className="xl:gap-x-3 2xl:gap-x-4 max-lg:flex-col max-lg:[&>div]:w-full">
+//         {menuItems.map((item, i) => {
+//           const isActive = pathname === item.slug;
+//           return (
+//             <motion.div key={i} variants={itemVariants}>
+//               <NavigationMenuItem>
+//                 <NavigationMenuLink
+//                   asChild
+//                   className={cn(getNavigationMenuTriggerStyle(isActive))}
+//                 >
+//                   <Link
+//                     href={`/${locale}${item.slug}`}
+//                     onClick={onNavigationClick}
+//                   >
+//                     {item.name}
+//                   </Link>
+//                 </NavigationMenuLink>
+//               </NavigationMenuItem>
+//             </motion.div>
+//           );
+//         })}
+//       </NavigationMenuList>
+//     </NavigationMenu>
+//   );
+// }

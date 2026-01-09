@@ -23,35 +23,118 @@ const local_data = {
   },
   navigation_data: [
     {
-      id: "01",
+      id: 1,
+      hasSubmenu: false,
       name: "Home",
       slug: "/",
     },
     {
-      id: "02",
-      name: "Shop All",
+      id: 2,
+      hasSubmenu: true,
+      name: "Products",
       slug: "/products",
+      items: [
+        {
+          id: 1,
+          hasSubmenu: true,
+          name: ">sub Seating",
+          slug: "/products/seating",
+          items: [
+            {
+              id: 1,
+              hasSubmenu: false,
+              name: ">sub>sub Office Chairs",
+              slug: "/products/office-chair-1",
+            },
+            {
+              id: 2,
+              hasSubmenu: false,
+              name: ">sub>sub Workstations",
+              slug: "/products/workstations",
+            },
+          ],
+        },
+        {
+          id: 2,
+          hasSubmenu: false,
+          name: "Desks & Workstations",
+          slug: "/products/desks-and-Workstations",
+        },
+        {
+          id: 3,
+          hasSubmenu: false,
+          name: "Storage Solutions ",
+          slug: "/products/storage-solutions",
+        },
+        {
+          id: 4,
+          hasSubmenu: false,
+          name: "Shop All",
+          slug: "/products/sofas-and-lounge",
+        },
+        {
+          id: 5,
+          hasSubmenu: false,
+          name: "Shop All",
+          slug: "/products/sofas-and-lounge",
+        },
+      ],
     },
     {
-      id: "03",
-      name: "Office Chairs",
+      id: 3,
+      hasSubmenu: true,
+      name: "Projects",
       slug: "/products/office-chair-1",
+      items: [
+        {
+          id: 1,
+          hasSubmenu: false,
+          name: "11 Seating",
+          slug: "/products/seating",
+        },
+        {
+          id: 2,
+          hasSubmenu: false,
+          name: "11 Desks & Workstations",
+          slug: "/products/desks-and-Workstations",
+        },
+        {
+          id: 3,
+          hasSubmenu: false,
+          name: "11 Storage Solutions ",
+          slug: "/products/storage-solutions",
+        },
+        {
+          id: 4,
+          hasSubmenu: false,
+          name: "11 Shop All",
+          slug: "/products/sofas-and-lounge",
+        },
+        {
+          id: 5,
+          hasSubmenu: false,
+          name: "11 Shop All",
+          slug: "/products/sofas-and-lounge",
+        },
+      ],
     },
     {
-      id: "04",
-      name: "Workstations",
+      id: 4,
+      hasSubmenu: false,
+      name: "About Us",
       slug: "/products/office-chair-2",
     },
     {
-      id: "05",
-      name: "Storage",
+      id: 5,
+      hasSubmenu: false,
+      name: "Contact Us",
       slug: "/products/office-chair-3",
     },
-    {
-      id: "06",
-      name: "Contact",
-      slug: "/contact",
-    },
+    // {
+    //   id: "06",
+    //   name: "Contact",
+    //   slug: "/contact",
+    // },
   ],
   footer_data: {
     id: "uuid PRIMARY KEY",
@@ -218,12 +301,12 @@ const local_data = {
 };
 
 export default async function PublicLayout({ children, params }) {
-//   const locale = params.locale;
-  
-//   const resolvedParams = await params;
+  //   const locale = params.locale;
 
-//   const locale = resolvedParams.locale;
-//   const dir = localeDirection[resolvedParams.locale];
+  //   const resolvedParams = await params;
+
+  //   const locale = resolvedParams.locale;
+  //   const dir = localeDirection[resolvedParams.locale];
   const resolvedParams = await params;
   const { locale } = resolvedParams;
 
