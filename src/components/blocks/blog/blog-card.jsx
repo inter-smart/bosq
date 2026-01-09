@@ -3,26 +3,18 @@ import { Heading } from "../../utils/heading";
 import { Text } from "../../utils/text";
 import Link from "next/link";
 import { Suspense } from "react";
-import parse from "html-react-parser";
 
 import { Skeleton } from "../../ui/skeleton";
-import { format } from "date-fns";
 
-export default function BlogCard({ data, isEn }) {
+export default function BlogCard({ locale, data, isEn }) {
   
-    // let formattedDate = "";
-    // if (data?.publishedAt) {
-    //     const date = new Date(data.publishedAt);
-    //     if (!isNaN(date)) {
-    //     formattedDate = format(date, "dd MMMM yyyy");
-    //     }
-    // }
+
 
   return (
     <Suspense fallback={<CartCardSkeleton />}>
       <div className="group w-full h-full flex flex-col justify-between">
         <Link
-          href={data?.slug}
+          href={`/${locale}/blogs/${data?.slug}`}
           className="w-full block aspect-580/290 overflow-hidden border border-gray-100 mb-1.5 sm:mb-3 xl:mb-5"
         >
           <Image

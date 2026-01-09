@@ -4,6 +4,7 @@ import ProductHero from "@/components/blocks/product/product-hero";
 const local_data = {
   heroData: {
     title: "Frequently Asked Questions",
+    title_ar: "الاسئلة الشائعة",
     description: null,
   },
   faqData: {
@@ -134,6 +135,9 @@ const local_data = {
 export default async function FaqsPage({ params }) {
   const resolvedParams = await params;
   const { locale } = resolvedParams;
+
+  
+
   return (
     <>
       <ProductHero locale={locale} data={local_data?.heroData} slug={"FAQ"} />

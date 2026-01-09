@@ -187,6 +187,7 @@ export default async function BlogsPage({params}) {
   let limit = 6;
 
   const { data, error } = await getBlogsData.getCmsData({ page, limit });
+  console.log("blog ", data)
   const { heroData, blogData } = data;
 
   return (

@@ -101,7 +101,7 @@ function CardComp({ data, variant, locale }) {
           className="min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-[160px]"
           asChild
         >
-          <Link href={data?.button?.link}>{data?.button?.label}</Link>
+          <Link href={`/${locale}${data?.button?.link}`}>{data?.button?.label}</Link>
         </Button>
       </div>
     </div>

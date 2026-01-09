@@ -22,6 +22,9 @@ export default function HomeProject({ data, locale }) {
     [ClassNames(), Autoplay({ delay: 4000, stopOnInteraction: true })]
   );
 
+
+  console.log("projects: ", data)
+
   const { selectedIndex, scrollSnaps, onDotButtonClick } =
     useDotButton(emblaApi);
 
@@ -43,7 +46,7 @@ export default function HomeProject({ data, locale }) {
             />
           </Heading>
           <div className="flex py-2 gap-1 xl:gap-3">
-            {scrollSnaps.map((_, index) => (
+            {data.project.length>3 && scrollSnaps.map((_, index) => (
               <DotButton
                 key={index}
                 onClick={() => onDotButtonClick(index)}
@@ -67,7 +70,7 @@ export default function HomeProject({ data, locale }) {
         <div className="w-full max-w-full">
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex touch-pan-y touch-pinch-zoom -mx-0.5 sm:-mx-1">
-              {data?.project?.map((item, index) => {
+              {data?.list?.map((item, index) => {
                 const isActive = activeIndex === index;
                 return (
                   <div
@@ -106,8 +109,8 @@ export default function HomeProject({ data, locale }) {
                           className="min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-40"
                           asChild
                         >
-                          <Link href={item?.button?.link}>
-                            {item?.button?.label}
+                          <Link href={`/project/${item?.slug}` || "/projects/slug"}>
+                            View Projects
                           </Link>
                         </Button>
                       </div>

@@ -53,7 +53,7 @@ export default function HomeFind({ data, locale }) {
                   className="bg-white min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-[160px]"
                   asChild
                 >
-                  <Link href={data?.button?.link ?? "/"}>{locale === "ar"? data?.button?.label_ar: data?.button?.label}</Link>
+                  <Link href={`${locale}/projects`}>{locale === "ar"? data?.button?.label_ar: data?.button?.label}</Link>
                 </Button>
               </div>
             </div>

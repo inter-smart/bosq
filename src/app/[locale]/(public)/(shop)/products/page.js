@@ -4,6 +4,7 @@ import ProductList from "@/components/blocks/product/product-list";
 const local_data = {
   heroData: {
     title: "Office Chairs",
+    title_ar: "مقاعد المكتب",
     description: null,
   },
   productData: {

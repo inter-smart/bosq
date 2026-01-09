@@ -122,13 +122,13 @@ const local_data = {
       id: 4,
       hasSubmenu: false,
       name: "About Us",
-      slug: "/products/office-chair-2",
+      slug: "/about",
     },
     {
       id: 5,
       hasSubmenu: false,
       name: "Contact Us",
-      slug: "/products/office-chair-3",
+      slug: "/contact",
     },
     // {
     //   id: "06",
@@ -171,12 +171,12 @@ const local_data = {
       {
         id: "01",
         label: "Home",
-        link: "",
+        link: "/",
       },
       {
         id: "02",
         label: "About",
-        link: "/",
+        link: "/about",
       },
       {
         id: "03",
@@ -186,7 +186,7 @@ const local_data = {
       {
         id: "04",
         label: "Projects",
-        link: "/",
+        link: "/projects",
       },
     ],
     other_link_navigation: [
@@ -291,7 +291,7 @@ const local_data = {
       id: "04",
       name: "linkedin",
       link: "https://www.linkedin.com/",
-      media: {
+    media: {
         media_type: "image",
         media_path: "/images/social-linkedin.svg",
         media_alt: "social-linkedin",
@@ -301,12 +301,7 @@ const local_data = {
 };
 
 export default async function PublicLayout({ children, params }) {
-  //   const locale = params.locale;
 
-  //   const resolvedParams = await params;
-
-  //   const locale = resolvedParams.locale;
-  //   const dir = localeDirection[resolvedParams.locale];
   const resolvedParams = await params;
   const { locale } = resolvedParams;
 

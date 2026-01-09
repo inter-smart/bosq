@@ -50,7 +50,7 @@ export default function NewsSection({ data, locale }) {
                     </div>
                     <div className="w-1/2 flex justify-end">
                         <Button variant={"black"} className="min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-40 mb-0" asChild>
-                            <Link href={"/"}>{locale == "ar" ? "قراءة المزيد" : "View All"}</Link>
+                            <Link href={`/${locale}/news`}>{locale == "ar" ? "قراءة المزيد" : "View All"}</Link>
                         </Button>
                     </div>
                 </div>
@@ -63,7 +63,7 @@ export default function NewsSection({ data, locale }) {
                                 className="flex-[0_0_100%] 3xs:flex-[0_0_46%] lg:flex-[0_0_28%] mr-5 sm:mr-15 lg:mr-20 xl:mr-23 2xl:mr-30 3xl:mr-35"
                             >
                                 <Link
-                                    href={item?.lnik?.href || "/"}
+                                    href={`${locale}/news${item?.lnik?.href}` || `/${locale}/news/${item?.id}`}
                                     target={item?.lnik?.target ? "_blank" : "_self"}
                                     className="group w-full h-full block"
                                 >

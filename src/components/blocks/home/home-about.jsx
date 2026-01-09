@@ -65,7 +65,7 @@ export default function HomeAbout({ data, locale }) {
                   className="min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-40"
                   asChild
                 >
-                  <Link href={"/"}>
+                  <Link href={`${locale}/about`}>
                     {locale == "ar" ? "قراءة المزيد" : "Read More"}
                   </Link>
                 </Button>

@@ -15,13 +15,13 @@ import { cn } from "@/lib/utils";
 
 const ITEMS_PER_PAGE = 6;
 
-export default function BlogList({ locale, data }) {
+export default function BlogList({ locale, initialData }) {
   const [currentPage, setCurrentPage] = useState(1);
   
     
-  // Access the blog array from data structure
-  const blogs = data?.blog || [];
-  const pagination = data?.pagination || {};
+  // Access the blog array from initialData structure
+  const blogs = initialData?.blog || [];
+  const pagination = initialData?.pagination || {};
 
   const { totalCount, currentPage: limit, page } = pagination;
 
@@ -92,7 +92,7 @@ export default function BlogList({ locale, data }) {
         <div className="flex flex-wrap -mx-2 sm:-mx-2 xl:-mx-2 2xl:-mx-3 [&>*]:p-2 sm:[&>*]:p-2 xl:[&>*]:p-2 2xl:[&>*]:p-3">
           {currentBlogs.map((item) => (
             <div key={item?.id} className="w-full 2xs:w-1/2 sm:w-1/2 md:w-1/3">
-              <BlogCard data={item}  isEn={isEn}/>
+              <BlogCard locale = {locale} data={item}  isEn={isEn}/>
             </div>
           ))}
         </div>

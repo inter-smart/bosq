@@ -5,7 +5,8 @@ export const getBlogsData = {
     try {
       const {data} = await apiClient(`/api/frontend/blogs?page=${page}&limit=${limit}`);
       
-      return sendSuccess(data?.data);
+      console.log(data)
+      return sendSuccess(data);
     } catch (error) {
       return sendError(error);
     }

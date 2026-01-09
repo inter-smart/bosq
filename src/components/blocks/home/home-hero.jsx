@@ -206,7 +206,7 @@ export default function HomeHero({ data, locale }) {
                         className="min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-40"
                         asChild
                       >
-                        <Link href={item?.button?.link}>
+                        <Link href={`/${locale}${item?.button?.link}`}>
                           {locale === "ar"
                             ? item?.button?.label_ar
                             : item?.button?.label}
@@ -219,30 +219,35 @@ export default function HomeHero({ data, locale }) {
             ))}
           </div>
         </div>
-        <PrevButton
-          onClick={onPrevButtonClick}
-          disabled={prevBtnDisabled}
-          className="w-[10px] xl:w-[16px] absolute z-1 top-1/2 left-3 -translate-y-1/2 disabled:opacity-50 not-disabled:hover:scale-110"
-        >
-          <Image
-            src="/images/icon-embla-prev.svg"
-            alt="arrow prev"
-            width={16}
-            height={32}
-          />
-        </PrevButton>
-        <NextButton
-          onClick={onNextButtonClick}
-          disabled={nextBtnDisabled}
-          className="w-[10px] xl:w-[16px] absolute z-1 top-1/2 right-3 -translate-y-1/2 disabled:opacity-50 not-disabled:hover:scale-110"
-        >
-          <Image
-            src="/images/icon-embla-next.svg"
-            alt="arrow next"
-            width={16}
-            height={32}
-          />
-        </NextButton>
+
+        {data.length > 1 && (
+          <div>
+            <PrevButton
+              onClick={onPrevButtonClick}
+              disabled={prevBtnDisabled}
+              className="w-[10px] xl:w-[16px] absolute z-1 top-1/2 left-3 -translate-y-1/2 disabled:opacity-50 not-disabled:hover:scale-110"
+            >
+              <Image
+                src="/images/icon-embla-prev.svg"
+                alt="arrow prev"
+                width={16}
+                height={32}
+              />
+            </PrevButton>
+            <NextButton
+              onClick={onNextButtonClick}
+              disabled={nextBtnDisabled}
+              className="w-[10px] xl:w-[16px] absolute z-1 top-1/2 right-3 -translate-y-1/2 disabled:opacity-50 not-disabled:hover:scale-110"
+            >
+              <Image
+                src="/images/icon-embla-next.svg"
+                alt="arrow next"
+                width={16}
+                height={32}
+              />
+            </NextButton>
+          </div>
+        )}
       </div>
     </section>
   );
