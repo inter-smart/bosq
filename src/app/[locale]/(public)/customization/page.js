@@ -1,9 +1,11 @@
 import CustomizationInfo from "@/components/blocks/customization/customization-info";
 import ProductHero from "@/components/blocks/product/product-hero";
+import { getCustomizationCms } from "@/lib/api/customization";
 
 const local_data = {
   heroData: {
     title: "Customize Your Chair",
+    title_ar: "تخصيص مقعدك",
     description: null,
   },
 
@@ -101,11 +103,6 @@ const local_data = {
   },
 
   customizationOptions: {
-    media: {
-      type: "image",
-      media_path: "/images/customizationOptions-1.jpg",
-      media_alt: "customizationOptions-1",
-    },
     title: "Customization Options",
     description:
       "<p>Explore the extensive range of customization possibilities available for your BOSQ ergonomic furniture.</p>",
@@ -161,21 +158,29 @@ const local_data = {
 export default async function CustomizationPage({ params }) {
   const resolvedParams = await params;
   const { locale } = resolvedParams;
+
+  const slug = locale === "en"? "Customize Your Chair" : "تخصيص الكرسي الخاص بك";
+
+  const {data} = await getCustomizationCms.getCmsData();
+  const { heroData, customizationData, FeaturesSection, processSection, optionsSection,requestCustomQuote  } = data;
+
+
   return (
     <>
       <ProductHero
         locale={locale}
-        data={local_data?.heroData}
-        slug={"Customize Your Chair"}
+        data={heroData}
+        slug={slug}
       />
       <CustomizationInfo
         locale={locale}
-        data={local_data?.customizationData}
-        customizationFeatures={local_data?.customizationFeatures}
-        customizationProcess={local_data?.customizationProcess}
-        customizationOptions={local_data?.customizationOptions}
-        requestCustomQuote={local_data?.requestCustomQuote}
+        data={customizationData}
+        customizationFeatures={FeaturesSection}
+        customizationProcess={processSection}
+        customizationOptions={optionsSection}
+        requestCustomQuote={requestCustomQuote}
       />
     </>
   );
 }
+

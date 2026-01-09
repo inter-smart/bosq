@@ -303,7 +303,7 @@ const local_data = {
     button: {
       type: "link",
       label: "Calculate Now",
-      link: "/test",
+      link: "/",
     },
   },
   customizeData: {
@@ -318,7 +318,7 @@ const local_data = {
     button: {
       type: "link",
       label: "Customize",
-      link: "/bingo",
+      link: "/",
     },
   },
   findData: {
@@ -564,15 +564,13 @@ export default async function HomePage({ params }) {
   const {
     sliders,
     aboutSection,
+    formSection,
     journeySection,
     featuredSection,
     projectSection,
     fitsSection,
     brandsSection,
-    formSection,
   } = data;
-
-
 
   return (
     <>
@@ -583,8 +581,8 @@ export default async function HomePage({ params }) {
         products={local_data?.featuredData?.product}
         data={featuredSection}
       />
-      <HomeJourney locale={locale} data={local_data.journeyData} />
-      <HomeProject locale={locale} data={local_data.projectData} />
+      <HomeJourney locale={locale} data={journeySection} />
+      <HomeProject locale={locale} data={local_data?.projectData} />
       <HomeCalculator
         locale={locale}
         calculatorData={local_data?.calculatorData}
@@ -592,10 +590,10 @@ export default async function HomePage({ params }) {
       />
       <HomeFind
         locale={locale}
-        data={local_data?.findData}
+        data={fitsSection ? fitsSection : local_data?.findData}
       />
-      <HomeBrand locale={locale} data={local_data.brandData} />
-      <HomeEnquiry locale={locale} data={local_data.enquiryData} />
+      <HomeBrand locale={locale} data={local_data?.brandData} />
+      <HomeEnquiry locale={locale} data={local_data?.enquiryData} />
     </>
   );
 }
