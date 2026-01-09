@@ -2,6 +2,7 @@ import dynamic from "next/dynamic";
 import HomeHero from "@/components/blocks/home/home-hero"; // keep SSR for SEO
 
 import { notFound } from "next/navigation";
+import { getHomeData } from "@/lib/api/home";
 
 const HomeAbout = dynamic(() => import("@/components/blocks/home/home-about"));
 const HomeFeatured = dynamic(() =>

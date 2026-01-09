@@ -26,6 +26,7 @@ export default function WarrantyInfo({ data, locale }) {
                 alt={item?.media?.media_alt}
                 width={768}
                 height={468}
+                priority
                 className="w-full h-full object-cover hover:scale-105 transition duration-300 "
               />
             </div>

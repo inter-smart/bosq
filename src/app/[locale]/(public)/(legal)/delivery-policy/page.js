@@ -1,5 +1,6 @@
 import DeliveryInfo from "@/components/blocks/legal/delivery-info";
 import ProductHero from "@/components/blocks/product/product-hero";
+import { getDeliveryPolicyCms } from "@/lib/api/warrantyPolicy";
 
 const local_data = {
   heroData: {
@@ -14,8 +15,8 @@ const local_data = {
       desktopPath: "/images/delivery-hero-1.jpg",
       media_alt: "delivery-hero-1",
     },
-    title: "Fulfilment, Delivery & <br /> Installation",
-    description: "<p>Production & Delivery Times</p>",
+    // title: "Fulfilment, Delivery & <br /> Installation",
+    // description: "<p>Production & Delivery Times</p>",
     items: [
       {
         id: 1,
@@ -100,17 +101,20 @@ const local_data = {
 export default async function DeliveryPage({ params }) {
   const resolvedParams = await params;
   const { locale } = resolvedParams;
-  return (
+
+  const {data} = await getDeliveryPolicyCms.getCmsData();
+  const { heroData, deliveryData, deliveryInfo } = data;
+   return (
     <>
       <ProductHero
         locale={locale}
-        data={local_data?.heroData}
+        data={heroData}
         slug={"Delivery Policy"}
       />
       <DeliveryInfo
         locale={locale}
-        deliveryInfo={local_data?.deliveryInfo}
-        data={local_data?.deliveryData}
+        deliveryInfo={deliveryInfo}
+        data={deliveryData}
       />
     </>
   );
