@@ -37,46 +37,126 @@ const local_data = {
         {
           id: 1,
           hasSubmenu: true,
-          name: ">sub Seating",
-          slug: "/products/seating",
+          name: "Seating",
+          slug: null,
+          image:
+            "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?w=450&h=300&fit=crop",
           items: [
             {
               id: 1,
               hasSubmenu: false,
-              name: ">sub>sub Office Chairs",
+              name: "Office Chairs",
               slug: "/products/office-chair-1",
+              image:
+                "https://images.unsplash.com/photo-1595428774223-f52624120d2?w=450&h=300&fit=crop",
             },
             {
               id: 2,
               hasSubmenu: false,
-              name: ">sub>sub Workstations",
-              slug: "/products/workstations",
+              name: "Executive Seating",
+              slug: "/products/executive-seating",
+              image:
+                "https://images.unsplash.com/photo-1595428774223-52624120d2?w=450&h=300&fit=crop",
             },
           ],
         },
         {
           id: 2,
-          hasSubmenu: false,
+          hasSubmenu: true,
           name: "Desks & Workstations",
-          slug: "/products/desks-and-Workstations",
+          slug: "/products/desks-and-workstations",
+          image:
+            "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=450&h=300&fit=crop",
+          items: [
+            {
+              id: 1,
+              hasSubmenu: false,
+              name: "Workstation Clusters 2/4/6/8",
+              slug: "/products/workstation-clusters",
+              image:
+                "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=450&h=300&fit=crop",
+            },
+            {
+              id: 2,
+              hasSubmenu: false,
+              name: "Height Adjustable Desks",
+              slug: "/products/height-adjustable",
+              image:
+                "https://images.unsplash.com/photo-1595428744223-ef52624120d2?w=450&h=300&fit=crop",
+            },
+            {
+              id: 3,
+              hasSubmenu: false,
+              name: "Executive Desks",
+              slug: "/products/executive-desks",
+              image:
+                "https://images.unsplash.com/photo-1595428754223-ef52624120d2?w=450&h=300&fit=crop",
+            },
+            {
+              id: 4,
+              hasSubmenu: false,
+              name: "L-Shape Workstations",
+              slug: "/products/l-shape",
+              image:
+                "https://images.unsplash.com/photo-1595428764223-ef52624120d2?w=450&h=300&fit=crop",
+            },
+            {
+              id: 5,
+              hasSubmenu: false,
+              name: "Benching Systems",
+              slug: "/products/benching",
+              image:
+                "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=450&h=300&fit=crop",
+            },
+            {
+              id: 6,
+              hasSubmenu: false,
+              name: "Manager Cabins",
+              slug: "/products/manager-cabins",
+              image:
+                "https://images.unsplash.com/photo-1595428784223-ef52624120d2?w=450&h=300&fit=crop",
+            },
+            {
+              id: 7,
+              hasSubmenu: false,
+              name: "Standing Workstations",
+              slug: "/products/standing",
+              image:
+                "https://images.unsplash.com/photo-1595428794223-ef52624120d2?w=450&h=300&fit=crop",
+            },
+          ],
         },
         {
           id: 3,
           hasSubmenu: false,
-          name: "Storage Solutions ",
+          name: "Storage Solutions",
           slug: "/products/storage-solutions",
+          image:
+            "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=450&h=300&fit=crop",
         },
         {
           id: 4,
           hasSubmenu: false,
-          name: "Shop All",
+          name: "Sofas & Lounge",
           slug: "/products/sofas-and-lounge",
+          image:
+            "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=450&h=300&fit=crop",
         },
         {
           id: 5,
           hasSubmenu: false,
-          name: "Shop All",
-          slug: "/products/sofas-and-lounge",
+          name: "Partitions & Acoustic",
+          slug: "/products/partitions-acoustic",
+          image:
+            "https://images.unsplash.com/photo-1497366216548-37526070297c?w=450&h=300&fit=crop",
+        },
+        {
+          id: 6,
+          hasSubmenu: false,
+          name: "Accessories",
+          slug: "/products/accessories",
+          image:
+            "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=450&h=300&fit=crop",
         },
       ],
     },
@@ -84,57 +164,72 @@ const local_data = {
       id: 3,
       hasSubmenu: true,
       name: "Projects",
-      slug: "/products/office-chair-1",
+      slug: "/projects",
       items: [
         {
           id: 1,
           hasSubmenu: false,
-          name: "11 Seating",
-          slug: "/products/seating",
+          name: "Corporate Offices",
+          slug: "/projects/corporate",
+          image:
+            "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=450&h=300&fit=crop",
         },
         {
           id: 2,
           hasSubmenu: false,
-          name: "11 Desks & Workstations",
-          slug: "/products/desks-and-Workstations",
+          name: "Co-working Spaces",
+          slug: "/projects/coworking",
+          image:
+            "https://images.unsplash.com/photo-1497366412874-3415097a27e7?w=450&h=300&fit=crop",
         },
         {
           id: 3,
           hasSubmenu: false,
-          name: "11 Storage Solutions ",
-          slug: "/products/storage-solutions",
-        },
-        {
-          id: 4,
-          hasSubmenu: false,
-          name: "11 Shop All",
-          slug: "/products/sofas-and-lounge",
-        },
-        {
-          id: 5,
-          hasSubmenu: false,
-          name: "11 Shop All",
-          slug: "/products/sofas-and-lounge",
+          name: "Educational Institutions",
+          slug: "/projects/education",
+          image:
+            "https://images.unsplash.com/photo-1562774053-701939374585?w=450&h=300&fit=crop",
         },
       ],
     },
     {
       id: 4,
-      hasSubmenu: false,
+      hasSubmenu: true,
       name: "About Us",
-      slug: "/products/office-chair-2",
+      slug: "/about",
+      items: [
+        {
+          id: 1,
+          hasSubmenu: false,
+          name: "11 About Us",
+          slug: "/about",
+          image:
+            "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=450&h=300&fit=crop",
+        },
+        {
+          id: 2,
+          hasSubmenu: false,
+          name: "22 About Us",
+          slug: "/about",
+          image:
+            "https://images.unsplash.com/photo-1497366412874-3415097a27e7?w=450&h=300&fit=crop",
+        },
+        {
+          id: 3,
+          hasSubmenu: false,
+          name: "33 About Us",
+          slug: "/about",
+          image:
+            "https://images.unsplash.com/photo-1562774053-701939374585?w=450&h=300&fit=crop",
+        },
+      ],
     },
     {
       id: 5,
       hasSubmenu: false,
       name: "Contact Us",
-      slug: "/products/office-chair-3",
+      slug: "/contact",
     },
-    // {
-    //   id: "06",
-    //   name: "Contact",
-    //   slug: "/contact",
-    // },
   ],
   footer_data: {
     id: "uuid PRIMARY KEY",
@@ -301,29 +396,23 @@ const local_data = {
 };
 
 export default async function PublicLayout({ children, params }) {
-  //   const locale = params.locale;
-
-  //   const resolvedParams = await params;
-
-  //   const locale = resolvedParams.locale;
-  //   const dir = localeDirection[resolvedParams.locale];
   const resolvedParams = await params;
   const { locale } = resolvedParams;
 
   return (
     <>
       <Header
+        locale={locale}
         headerData={local_data.header_data}
         navigationData={local_data.navigation_data}
-        locale={locale}
       />
 
       <main>{children}</main>
 
       <Footer
+        locale={locale}
         footerData={local_data.footer_data}
         socialLinkData={local_data.social_link_data}
-        locale={locale}
       />
     </>
   );
