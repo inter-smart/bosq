@@ -11,6 +11,7 @@ import {
 import { useState, useEffect } from "react";
 
 export default function TestimonialSection({ data, locale }) {
+    const isEn = locale === "en";
     const [axis, setAxis] = useState("y");
     useEffect(() => {
         const handleResize = () => {
@@ -45,7 +46,7 @@ export default function TestimonialSection({ data, locale }) {
                             size="heading1"
                             className={cn("leading-tight text-[#282828] w-fit h-fit pt-10 m-auto absolute z-1 inset-0", locale === "ar" ? "ml-[50%] text-left" : "mr-[50%] text-right")}
                         >
-                            {parse(data?.title)}
+                            {parse(isEn? data?.title: data?.title_ar)}
                             <span
                                 className={cn(
                                     "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
@@ -68,15 +69,15 @@ export default function TestimonialSection({ data, locale }) {
                     <div ref={emblaRef}
                         className={cn("max-w-full sm:max-w-100 md:max-w-130 lg:max-w-140 xl:max-w-160 2xl:max-w-193 3xl:max-w-240 h-50 sm:h-70 lg:h-90 2xl:h-100 3xl:h-110 sm:mask-t-from-85% sm:mask-b-from-85% overflow-hidden", locale === "ar" ? "mr-auto sm:translate-x-[5%]" : "ml-auto sm:translate-x-[-5%]")}>
                         <div className="h-full select-none flex sm:flex-col">
-                            {data?.testimonial_list?.map((item) => (
+                            {data?.list?.map((item) => (
                                 <div
                                     key={item?.id}
                                     className="h-full flex-[0_0_100%] mb-5 flex flex-col justify-center">
                                     <div className={cn("w-full h-full sm:h-50 lg:h-65 2xl:h-75 3xl:h-85 overflow-auto flex flex-col justify-start", locale === "ar" ? "pl-5" : "pr-5")}>
                                         <div className="w-full h-auto my-auto">
-                                            <div className="text-[13px] 2xl:text-[16px] 3xl:text-[18px] leading-[1.4] font-normal text-[#282828] mb-3 sm:mb-5 2xl:mb-7.5">{item?.title}</div>
-                                            <div className="text-[11px] lg:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-[1.8] font-light text-[#282828] mb-3 sm:mb-5 2xl:mb-7.5">{item?.description}</div>
-                                            <div className="text-[13px] 2xl:text-[16px] 3xl:text-[18px] leading-[1.4] font-normal text-[#282828]">{item?.designation}</div>
+                                            <div className="text-[13px] 2xl:text-[16px] 3xl:text-[18px] leading-[1.4] font-normal text-[#282828] mb-3 sm:mb-5 2xl:mb-7.5">{isEn? item?.name: item?.name_ar}</div>
+                                            <div className="text-[11px] lg:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-[1.8] font-light text-[#282828] mb-3 sm:mb-5 2xl:mb-7.5">{isEn? item?.description: item?.description_ar}</div>
+                                            <div className="text-[13px] 2xl:text-[16px] 3xl:text-[18px] leading-[1.4] font-normal text-[#282828]">{isEn? item?.designation: item?.designation_ar}</div>
                                         </div>
                                     </div>
                                 </div>

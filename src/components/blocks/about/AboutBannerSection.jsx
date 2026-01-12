@@ -7,6 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/utils/heading";
 
 export default function AboutBannerSection({ data, locale }) {
+
+    const isEn = locale === "en";
+
     return (
         <section className="w-full h-auto py-[10px_20px] lg:py-[10px_35px] 3xl:py-[30px_50px] block">
             <div className="w-full aspect-6/5 sm:aspect-1920/740 overflow-hidden flex items-center relative z-0">
@@ -18,7 +21,7 @@ export default function AboutBannerSection({ data, locale }) {
                         />
                         <Image
                             src={data?.media?.desktopPath}
-                            alt={data?.media?.alt}
+                            alt={isEn? data?.media?.alt: data?.media?.alt_ar}
                             fill
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 80vw"
                             className="-z-2 object-cover"
@@ -28,7 +31,7 @@ export default function AboutBannerSection({ data, locale }) {
                     </picture>
                 ) : (
                     <video autoPlay loop muted playsInline className="w-full h-full object-cover absolute -z-2 inset-0">
-                        <source src={data?.media?.path} type="video/mp4" />
+                        <source src={data?.media?.desktopPath} type="video/mp4" />
                     </video>
                 )}
                 <div className="container">
@@ -38,7 +41,7 @@ export default function AboutBannerSection({ data, locale }) {
                             size="heading1"
                             className="line-clamp-4 leading-tight text-white mb-2 sm:mb-3 lg:mb-5 2xl:mb-7.5"
                         >
-                            {parse(data?.title)}
+                            {parse(isEn? data?.title: data?.title_ar)}
                             <span
                                 className={cn(
                                     "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
@@ -53,7 +56,7 @@ export default function AboutBannerSection({ data, locale }) {
                             size="text1"
                             className="line-clamp-2 font-light text-white max-w-[80%] mb-3 sm:mb-4 lg:mb-7 2xl:mb-10"
                         >
-                            {parse(data?.description)}
+                            {parse(isEn? data?.description: data?.description_ar)}
                         </Text>
                         <Button
                             variant={"white"}
@@ -61,7 +64,7 @@ export default function AboutBannerSection({ data, locale }) {
                             asChild
                         >
                             <Link href={data?.button?.link}>
-                                {data?.button?.label}
+                                {isEn? data?.button?.label:data?.button?.label_ar}
                             </Link>
                         </Button>
                     </div>
