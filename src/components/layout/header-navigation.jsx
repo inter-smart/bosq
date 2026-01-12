@@ -30,6 +30,7 @@ export default function HeaderNavigation({
   pathname,
   menuItems,
   onNavigationClick,
+  isDesktop,
   locale,
 }) {
   const [hoveredSubmenu, setHoveredSubmenu] = useState(null);
@@ -37,7 +38,7 @@ export default function HeaderNavigation({
 
   const getNavigationMenuTriggerStyle = (isActive) => {
     const baseStyle =
-      "text-[20px] lg:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-normal font-medium lg:font-normal text-start lg:text-center w-full h-auto p-[5px_15px] lg:p-[6px_12px] 2xl:p-[10px_15px] 3xl:p-[15px_25px] bg-transparent border border-transparent hover:bg-black/0 focus:bg-black/0 ring-0 hover:border-white/10 data-[state=open]:border-white/10 data-[state=open]:hover:bg-black/0 data-[state=open]:focus:bg-black/0 data-[state=open]:bg-black/0 transition-all duration-200 max-lg:justify-between";
+      "text-[20px] lg:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-normal font-medium lg:font-normal text-start lg:text-center w-full h-auto p-[8px_15px] lg:p-[6px_12px] 2xl:p-[10px_15px] 3xl:p-[15px_25px] bg-transparent border border-transparent hover:bg-black/0 focus:bg-black/0 ring-0 hover:border-white/10 data-[state=open]:border-white/10 data-[state=open]:hover:bg-black/0 data-[state=open]:focus:bg-black/0 data-[state=open]:bg-black/0 transition-all duration-200 max-lg:justify-between";
 
     const pageTextColor =
       pathname === `/${locale}`
@@ -50,7 +51,7 @@ export default function HeaderNavigation({
   };
   const getSubNavMenuTriggerStyle = (isActive, isHovered) => {
     return cn(
-      "text-[16px] lg:text-[14px] 2xl:text-[17px] 3xl:text-[22px] leading-normal font-normal text-start hover:bg-black/0 px-0 py-2 2xl:py-3 transition-colors duration-200",
+      "text-[14px] lg:text-[14px] 2xl:text-[17px] 3xl:text-[22px] leading-normal font-normal text-start hover:bg-black/0 px-0 py-2 2xl:py-3 transition-colors duration-200",
       isActive
         ? "text-[#f17423]"
         : isHovered
@@ -61,7 +62,7 @@ export default function HeaderNavigation({
 
   const getSubSubNavMenuTriggerStyle = (isActive, isHovered) => {
     return cn(
-      "text-[14px] lg:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-normal font-normal text-start hover:bg-black/0 px-0 py-2 transition-colors duration-200",
+      "text-[12px] lg:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-normal font-normal text-start hover:bg-black/0 px-0 py-2 transition-colors duration-200",
       isActive
         ? "text-[#f17423]"
         : isHovered
@@ -76,7 +77,7 @@ export default function HeaderNavigation({
 
   return (
     <NavigationMenu
-      viewport={true}
+      viewport={isDesktop ? false : true}
       // defaultValue={"toplevel1"}
       className="w-full max-w-full justify-start lg:justify-center max-lg:[&>div]:w-full static"
     >
@@ -93,7 +94,6 @@ export default function HeaderNavigation({
                     {item.name}
                   </NavigationMenuTrigger>
                   <NavigationMenuContent
-                    data-motion="from-end"
                     className={cn(
                       "md:w-full min-w-full py-1 px-0 lg:py-6 xl:py-16 2xl:py-20",
                       "group-data-[viewport=false]/navigation-menu:data-[state=closed]:zoom-out-0 group-data-[viewport=false]/navigation-menu:data-[state=open]:zoom-in-0"
@@ -129,7 +129,7 @@ export default function HeaderNavigation({
                                   <NavigationMenuLink
                                     className={getSubNavMenuTriggerStyle(
                                       isSubActive,
-                                      isSubHovered,
+                                      isSubHovered
                                     )}
                                     asChild
                                   >

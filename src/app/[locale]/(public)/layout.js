@@ -48,15 +48,14 @@ const local_data = {
               name: "Office Chairs",
               slug: "/products/office-chair-1",
               image:
-                "https://images.unsplash.com/photo-1595428774223-f52624120d2?w=450&h=300&fit=crop",
+                "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=450&h=300&fit=crop",
             },
             {
               id: 2,
               hasSubmenu: false,
               name: "Executive Seating",
               slug: "/products/executive-seating",
-              image:
-                "https://images.unsplash.com/photo-1595428774223-52624120d2?w=450&h=300&fit=crop",
+              image: "https://picsum.photos/450/300",
             },
           ],
         },
@@ -74,7 +73,7 @@ const local_data = {
               name: "Workstation Clusters 2/4/6/8",
               slug: "/products/workstation-clusters",
               image:
-                "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=450&h=300&fit=crop",
+                "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=450&h=300&fit=crop",
             },
             {
               id: 2,
@@ -82,7 +81,7 @@ const local_data = {
               name: "Height Adjustable Desks",
               slug: "/products/height-adjustable",
               image:
-                "https://images.unsplash.com/photo-1595428744223-ef52624120d2?w=450&h=300&fit=crop",
+                "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=450&h=300&fit=crop",
             },
             {
               id: 3,
@@ -90,7 +89,7 @@ const local_data = {
               name: "Executive Desks",
               slug: "/products/executive-desks",
               image:
-                "https://images.unsplash.com/photo-1595428754223-ef52624120d2?w=450&h=300&fit=crop",
+                "https://images.unsplash.com/photo-1497366216548-37526070297c?w=450&h=300&fit=crop",
             },
             {
               id: 4,
@@ -98,7 +97,7 @@ const local_data = {
               name: "L-Shape Workstations",
               slug: "/products/l-shape",
               image:
-                "https://images.unsplash.com/photo-1595428764223-ef52624120d2?w=450&h=300&fit=crop",
+                "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=450&h=300&fit=crop",
             },
             {
               id: 5,
@@ -114,7 +113,7 @@ const local_data = {
               name: "Manager Cabins",
               slug: "/products/manager-cabins",
               image:
-                "https://images.unsplash.com/photo-1595428784223-ef52624120d2?w=450&h=300&fit=crop",
+                "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=450&h=300&fit=crop",
             },
             {
               id: 7,
@@ -122,7 +121,7 @@ const local_data = {
               name: "Standing Workstations",
               slug: "/products/standing",
               image:
-                "https://images.unsplash.com/photo-1595428794223-ef52624120d2?w=450&h=300&fit=crop",
+                "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=450&h=300&fit=crop",
             },
           ],
         },

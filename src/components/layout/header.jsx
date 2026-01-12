@@ -20,18 +20,13 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "../ui/button";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-} from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 
 import dynamic from "next/dynamic";
 import { Menu, X } from "lucide-react";
 import SearchDialog from "../common/search-dialog";
 import HeaderNavigation from "./header-navigation";
+import MobileHeaderNavigation from "./mobile-header-navigation";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
@@ -147,7 +142,7 @@ export default function Header({ headerData, navigationData, locale }) {
                   </SheetHeader>
                   <Link
                     href={`/${locale}/login`}
-                    className="text-[14px] leading-none font-light text-white h-(--header-y) bg-black flex items-center gap-x-2 px-4"
+                    className="text-[14px] leading-none font-light text-white min-h-(--header-y) h-(--header-y) bg-black flex items-center gap-x-2 px-4"
                   >
                     <Image
                       src="/images/icon-user.svg"
@@ -169,7 +164,8 @@ export default function Header({ headerData, navigationData, locale }) {
                           animate="show"
                           exit="exit"
                         >
-                          <HeaderNavigation
+                          <MobileHeaderNavigation
+                            locale={locale}
                             pathname={pathname}
                             menuItems={navigationData}
                             onNavigationClick={handleNavigationLinkClick}
