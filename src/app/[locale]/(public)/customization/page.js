@@ -1,6 +1,7 @@
 import CustomizationInfo from "@/components/blocks/customization/customization-info";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getCustomizationCms } from "@/lib/api/customization";
+import { notFound } from "next/navigation";
 
 const local_data = {
   heroData: {
@@ -161,7 +162,12 @@ export default async function CustomizationPage({ params }) {
 
   const slug = locale === "en"? "Customize Your Chair" : "تخصيص الكرسي الخاص بك";
 
-  const {data} = await getCustomizationCms.getCmsData();
+  const {data, error} = await getCustomizationCms.getCmsData();
+
+    if (error) {
+      notFound();
+    }
+
   const { heroData, customizationData, FeaturesSection, processSection, optionsSection,requestCustomQuote  } = data;
 
 
