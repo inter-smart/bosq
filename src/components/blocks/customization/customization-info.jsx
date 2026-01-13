@@ -3,7 +3,6 @@ import { cn } from "@/lib/utils";
 import { Heading } from "@/components/utils/heading";
 import Image from "next/image";
 import { Text } from "@/components/utils/text";
-import AddressForm from "@/components/form/address-form";
 import RequestEnquiryForm from "@/components/form/request-enquiry-form";
 
 export default function CustomizationInfo({

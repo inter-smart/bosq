@@ -24,7 +24,7 @@ export default function HomeEnquiry({ data, locale }) {
 
           <div className="w-full md:w-[calc(100%-268px)] xl:w-[calc(100%-520px)] 2xl:w-[calc(100%-640px)] 3xl:w-[calc(100%-800px)]">
             <div className={cn("w-full",
-              locale === "ar" ? "md:px-[0_20px] xl:px-[60px] 2xl:px-[80px]" : "md:px-[20px_0] xl:px-[60px] 2xl:px-[80px]"
+              locale === "ar" ? "md:pr-5 xl:px-[60px] 2xl:px-[80px]" : "md:pl-5 xl:px-[60px] 2xl:px-[80px]"
             )}>
               <Heading
                 as="h2"
