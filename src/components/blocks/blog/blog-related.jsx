@@ -9,6 +9,7 @@ import parse from "html-react-parser";
 import BlogCard from "./blog-card";
 
 export default function BlogRelated({ locale, data }) {
+  const isEn = locale === "en";
   const [emblaRef] = useEmblaCarousel(
     { loop: false, align: "start", direction: locale === "ar" ? "rtl" : "ltr" },
     [Autoplay({ delay: 3000, stopOnInteraction: true })]
@@ -21,7 +22,7 @@ export default function BlogRelated({ locale, data }) {
         size="heading1"
         className="line-clamp-2 text-black mb-2 xl:mb-3 2xl:mb-4"
       >
-        {parse(data?.title)}
+        {parse( isEn ? data?.title: data?.title_ar)}
         <span
           className={cn(
             "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
@@ -39,7 +40,7 @@ export default function BlogRelated({ locale, data }) {
                 key={"blog" + index}
                 className="flex-[0_0_50%] min-w-0 select-none"
               >
-                <BlogCard data={item} />
+                <BlogCard locale={locale} data={item} isEn={isEn} />
               </div>
             ))}
           </div>

@@ -1,5 +1,7 @@
 import BlogInfo from "@/components/blocks/blog/blog-info";
 import ProductHero from "@/components/blocks/product/product-hero";
+import { getBlogsData } from "@/lib/api/blog";
+import NotFound from "../../not-found/page";
 
 const local_data = {
   heroData: {
@@ -240,16 +242,29 @@ const local_data = {
 };
 
 export default async function BlogDetailPage({ params }) {
-  const resolvedParams = await params;
-  const { locale } = resolvedParams;
+const resolvedParams = await params;
+  const { locale, slug } = resolvedParams;
+
+  const slugData = locale === "en"? "Blog Detail" : "تفاصيل المقالة";
+
+  const {data, error} = await getBlogsData.getBlogDetailsData(slug);
+
+if (!data || error) {
+  return <NotFound />;
+}
+
+
+  const { heroData, blogData, popularBlogData, relatedBlogData } = data;
+
   return (
     <>
-      <ProductHero locale={locale} data={local_data?.heroData} slug={"Blogs"} />
+      <ProductHero locale={locale} data={heroData} slug={slugData} />
       <BlogInfo
         locale={locale}
-        data={local_data?.blogData}
-        popularData={local_data?.popularBlog}
-        relatedData={local_data?.relatedBlog}
+        data={blogData}
+        shareLinkData={local_data?.blogData?.shareLinkData}
+        popularData={popularBlogData}
+        relatedData={relatedBlogData}
       />
     </>
   );
