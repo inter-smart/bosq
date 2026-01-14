@@ -15,7 +15,7 @@ export default function MaterialsList({ data, locale, extraMaterialsInfo}) {
                 {data?.items?.map((item, index) => (
                     <div
                         key={item?.id}
-                        className={`[--padding:40px] sm:[--padding:50px] lg:[--padding:60px] 2xl:[--padding:80px] 3xl:[--padding:100px] w-full h-auto py-[40px] sm:py-[60px] lg:py-[100px] 2xl:py-[120px] 3xl:py-[150px] first:pt-[var(--padding)] last:pb-[var(--padding)] block ${index % 2 === 0 ? "bg-white" : "bg-[#F4F4F4]"} `}
+                        className={`[--padding:40px] sm:[--padding:50px] lg:[--padding:60px] 2xl:[--padding:80px] 3xl:[--padding:100px] w-full h-auto py-[40px] sm:py-[60px] lg:py-[100px] 2xl:py-[120px] 3xl:py-[150px] first:pt-[var(--padding)] last:pb-[var(--padding)] block ${index % 2 !== 0 ? "bg-white" : "bg-[#F4F4F4]"} `}
                     >
                         <div className="container">
                             {item?.title && (

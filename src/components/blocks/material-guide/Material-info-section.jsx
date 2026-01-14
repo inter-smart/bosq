@@ -19,7 +19,7 @@ export default function MaterialInfoSection({
           <source media="(max-width: 640px)" srcSet={data?.media?.mobilePath} />
           <Image
             src={data?.media?.desktopPath}
-            alt={isEn ? data?.media?.alt : data?.media?.alt_ar}
+            alt={isEn ? data?.media?.media_alt : data?.media?.media_alt_ar}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 80vw"
             className="-z-2 object-cover"
