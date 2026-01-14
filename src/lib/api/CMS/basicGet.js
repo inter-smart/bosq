@@ -1,6 +1,6 @@
 import { apiClient, sendError, sendSuccess } from "../client";
 
-const getSustainabilityData = async () => {
+export const getSustainabilityData = async () => {
   try {
     const data = await apiClient(`/api/frontend/sustainability`);
     return sendSuccess(data?.data);
@@ -9,7 +9,7 @@ const getSustainabilityData = async () => {
   }
 };
 
-const getErgonomicChairData = async () => {
+export const getErgonomicChairData = async () => {
   try {
     const data = await apiClient(`/api/frontend/ergonomic-chair`);
     return sendSuccess(data?.data);
@@ -18,4 +18,14 @@ const getErgonomicChairData = async () => {
   }
 };
 
-export { getSustainabilityData, getErgonomicChairData };
+
+export const getFaqData = async () => {
+  try {
+    const data = await apiClient(`/api/frontend/faq`);
+    return sendSuccess(data?.data);
+  } catch (error) {
+    return sendError(error);
+  }
+};
+
+

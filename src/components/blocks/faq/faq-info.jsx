@@ -15,14 +15,18 @@ const accordionTriggerStyle = cn(
 );
 
 export default function FaqInfo({ data, locale }) {
+
+
+  console.log("data: ", data?.list[0]?.faqs)
+  const isEn = locale === "en";
   return (
     <section className="w-full block py-[10px] sm:py-[15px] xl:py-[20px] 2xl:py-[30px]">
       <div className="w-full aspect-6/4 sm:aspect-1920/740 overflow-hidden flex items-center relative z-0">
         <picture className="absolute -z-2 inset-0 opacity-95">
-          <source media="(max-width: 640px)" srcSet={data?.media?.mobilePath} />
+          <source media="(max-width: 640px)" srcSet={data?.media?.mobile?.path} />
           <Image
-            src={data?.media?.desktopPath}
-            alt={data?.media?.alt}
+            src={data?.media?.desktop?.path}
+            alt={isEn ? data?.media?.desktop?.alt: data?.media?.desktop?.alt_ar}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 80vw"
             className="-z-2 object-cover"
@@ -38,7 +42,7 @@ export default function FaqInfo({ data, locale }) {
               size="heading1"
               className="line-clamp-4 leading-tight text-white mb-2 xl:mb-4 2xl:mb-6"
             >
-              {parse(data?.title)}
+              {parse(isEn ? data?.title : data?.title_ar)}
               <span
                 className={cn(
                   "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
@@ -54,14 +58,15 @@ export default function FaqInfo({ data, locale }) {
       <div className="w-full py-[40px_20px] sm:py-[60px_30px] xl:py-[80px_40px] 2xl:py-[100px_50px]">
         <div className="container">
           <div className="w-full lg:w-[768px] 2xl:w-[1120px]">
-            {data?.generalFaq && (
-              <div className="mb-8 xl:mb-14 2xl:mb-20">
+            
+            {data?.list?.map((item, index)=>(
+              <div className="mb-8 xl:mb-14 2xl:mb-20" key={index}>
                 <Heading
                   as="h2"
                   size="none"
                   className="text-[16px] sm:text-[18px] lg:text-[20px] xl:text-[26px] 2xl:text-[32px] 3xl:text-[40px] leading-normal tracking-tight font-light text-black mb-4 xl:mb-8 2xl:mb-10"
                 >
-                  {parse(data?.generalFaq?.title)}
+                  {parse(isEn? item?.title: item?.title_ar)|| "test data"}
                   <span
                     className={cn(
                       "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
@@ -77,29 +82,31 @@ export default function FaqInfo({ data, locale }) {
                   className="w-full"
                   defaultValue="item-1"
                 >
-                  {data?.generalFaq?.items?.map((item, index) => (
+                  {item?.faqs?.map((faq, index) => (
                     <AccordionItem
                       key={"general-faq-" + index}
                       value={"item" + index}
                       className="last:border-b first:border-t"
                     >
                       <AccordionTrigger className={accordionTriggerStyle}>
-                        {parse(item?.question)}
+                        {parse(isEn?faq?.question : faq?.question_ar)}
                       </AccordionTrigger>
                       <AccordionContent>
                         <div
                           dir={locale === "ar" ? "rtl" : "ltr"}
                           className={cn("typography", "[--text-color:#282828]")}
                         >
-                          {parse(item?.answer)}
+                          {parse(isEn?faq?.answer : faq?.answer_ar)}
                         </div>
                       </AccordionContent>
                     </AccordionItem>
                   ))}
                 </Accordion>
               </div>
-            )}
-            {data?.paymentFaq && (
+            ))
+            }
+           
+            {/* {data?.paymentFaq && (
               <div className="mb-8 xl:mb-14 2xl:mb-20">
                 <Heading
                   as="h2"
@@ -278,8 +285,8 @@ export default function FaqInfo({ data, locale }) {
                   ))}
                 </Accordion>
               </div>
-            )}
-            {data?.moreFaq && (
+            )} */}
+            {/* {data?.moreFaq && (
               <div className="mb-8 xl:mb-14 2xl:mb-20">
                 <Heading
                   as="h2"
@@ -303,7 +310,7 @@ export default function FaqInfo({ data, locale }) {
                   {parse(data?.moreFaq?.description)}
                 </div>
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </div>
