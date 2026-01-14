@@ -38,11 +38,11 @@ export const usePrevNextButtons = (emblaApi) => {
 export const PrevButton = (props) => {
   const { children, ...restProps } = props;
 
-  return <button type="button" {...props} />;
+  return <button type="submit" {...props} />;
 };
 
 export const NextButton = (props) => {
   const { children, ...restProps } = props;
 
-  return <button type="button" {...props} />;
+  return <button type="submit" {...props} />;
 };

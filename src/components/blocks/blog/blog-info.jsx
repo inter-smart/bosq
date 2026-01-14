@@ -21,6 +21,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import BlogRelated from "./blog-related";
 import dynamic from "next/dynamic";
+import { usePathname } from "next/navigation";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
@@ -30,14 +31,13 @@ const navBtnStyle = cn(
   "text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-white flex items-center gap-0.5 disabled:opacity-50 not-disabled:hover:scale-110 transition"
 );
 
-export default function BlogInfo({
-  data,
-  popularData,
-  relatedData,
-  locale,
-  shareLinkData,
-}) {
+export default function BlogInfo({ data, popularData, relatedData, locale }) {
   const isEn = locale === "en";
+
+  const pathname = usePathname();
+
+  const blogUrl = `${window.location.origin}${pathname}`;
+
 
   const [emblaRef, emblaApi] = useEmblaCarousel(
     {
@@ -47,6 +47,39 @@ export default function BlogInfo({
     },
     [Autoplay({ delay: 4000, stopOnInteraction: true }), Fade()]
   );
+
+  const shareLinkData = [
+    {
+      id: 1,
+      name: "facebook",
+      link: `https://www.facebook.com/sharer/sharer.php?u=${blogUrl}`,
+      media: {
+        type: "image",
+        path: "/images/share-fb.svg",
+        alt: "share-fb",
+      },
+    },
+    {
+      id: 2,
+      name: "instagram",
+      link: "https://www.instagram.com/",
+      media: {
+        type: "image",
+        path: "/images/share-insta.svg",
+        alt: "share-insta",
+      },
+    },
+    {
+      id: 3,
+      name: "linkedin",
+      link: `https://www.linkedin.com/sharing/share-offsite/?url=${blogUrl}`,
+      media: {
+        type: "image",
+        path: "/images/share-linkedin.svg",
+        alt: "share-linkedin",
+      },
+    },
+  ];
 
   const {
     prevBtnDisabled,
@@ -181,33 +214,39 @@ export default function BlogInfo({
                 </div>
                 <div>
                   <div className="flex gap-4 xl:gap-8">
-                    <PrevButton
-                      onClick={onPrevButtonClick}
-                      disabled={prevBtnDisabled}
-                      className={cn(navBtnStyle, "text-black")}
-                    >
-                      <ChevronLeft
-                        className={cn("size-3.5", !isEn && "rotate-180")}
-                      />
-                      <span className="hidded sm:block">Previous </span>
-                    </PrevButton>
-                    <NextButton
-                      onClick={onNextButtonClick}
-                      disabled={nextBtnDisabled}
-                      className={cn(navBtnStyle, "text-black")}
-                    >
-                      <span className="hidded sm:block">Next </span>
-                      <ChevronRight
-                        className={cn("size-3.5", !isEn && "rotate-180")}
-                      />
-                    </NextButton>
+                    {data?.prevBlog && (
+                      <Link
+                        href={`/${locale}/blogs/${data?.prevBlog}`}
+                        onClick={onPrevButtonClick}
+                        disabled={prevBtnDisabled}
+                        className={cn(navBtnStyle, "text-black")}
+                      >
+                        <ChevronLeft
+                          className={cn("size-3.5", !isEn && "rotate-180")}
+                        />
+                        <span className="hidded sm:block">Previous </span>
+                      </Link>
+                    )}
+                    {data?.nextBlog && (
+                      <Link
+                        href={`/${locale}/blogs/${data?.nextBlog}`}
+                        onClick={onNextButtonClick}
+                        disabled={nextBtnDisabled}
+                        className={cn(navBtnStyle, "text-black")}
+                      >
+                        <span className="hidded sm:block">Next </span>
+                        <ChevronRight
+                          className={cn("size-3.5", !isEn && "rotate-180")}
+                        />
+                      </Link>
+                    )}
                   </div>
                 </div>
               </div>
 
-              {relatedData?.blog?.length>0 &&
-              <BlogRelated locale={locale} data={relatedData} />
-              }
+              {relatedData?.blog?.length > 0 && (
+                <BlogRelated locale={locale} data={relatedData} />
+              )}
             </div>
             <MediaQuery minWidth={1024}>
               <div className="w-full lg:w-[368px] 2xl:w-[540px]">
@@ -282,7 +321,7 @@ export default function BlogInfo({
                       }
                       asChild
                     >
-                      <Link href={"/blogs"}>
+                      <Link href={`/${locale}/blogs`}>
                         {isEn ? "See all" : "شاهد الكل"}
                         <ChevronRight
                           className={cn("size-3.5", !isEn && "rotate-180")}
@@ -293,8 +332,6 @@ export default function BlogInfo({
                 </div>
               </div>
             </MediaQuery>
-
-
 
             <MediaQuery maxWidth={1023}>
               <BlogRelated locale={locale} data={popularData} />
