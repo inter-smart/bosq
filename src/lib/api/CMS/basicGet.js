@@ -18,4 +18,13 @@ const getErgonomicChairData = async () => {
   }
 };
 
-export { getSustainabilityData, getErgonomicChairData };
+const getAuthData = async () => {
+  try {
+    const data = await apiClient(`/api/frontend/auth-cms`);
+    return sendSuccess(data?.data);
+  } catch (error) {
+    return sendError(error);
+  }
+};
+
+export { getSustainabilityData, getErgonomicChairData, getAuthData };
