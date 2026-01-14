@@ -28,4 +28,14 @@ export const getFaqData = async () => {
   }
 };
 
+export const getMaterialData = async () => {
+  try {
+    const data = await apiClient(`/api/frontend/materials-guide`);
+    return sendSuccess(data?.data);
+  } catch (error) {
+    return sendError(error);
+  }
+};
+
+
 

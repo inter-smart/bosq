@@ -1,6 +1,7 @@
 import FaqInfo from "@/components/blocks/faq/faq-info";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getFaqData } from "@/lib/api/CMS/basicGet";
+import NotFound from "../not-found/page";
 
 const local_data = {
   heroData: {
@@ -140,10 +141,8 @@ export default async function FaqsPage({ params }) {
    const { data, error } = await getFaqData();
   
     if (error) {
-      notFound();
+      <NotFound />
     }
-  
-      console.log("Server-side FAQ data:", data); // ✅ appears in terminal
 
 
     const {heroData, faqData, moreFaq} = data;

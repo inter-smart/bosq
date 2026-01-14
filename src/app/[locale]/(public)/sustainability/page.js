@@ -2,6 +2,7 @@ import ProductHero from "@/components/blocks/product/product-hero";
 import SustainabilityInfo from "@/components/blocks/sustainability/sustainability-info";
 import { getSustainabilityData, sustainabilityData } from "@/lib/api/CMS/basicGet";
 import { notFound } from "next/navigation";
+import NotFound from "../not-found/page";
 
 
 
@@ -11,9 +12,11 @@ export default async function SustainabilityPage({ params }) {
 
   const { data, error } = await getSustainabilityData();
 
-  if (error) {
-    notFound();
+
+  if(!data || error){
+    return <NotFound />
   }
+
 
   const { heroData, sustainabilityData } = data;
   const bannerData = sustainabilityData?.media;
