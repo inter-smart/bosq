@@ -9,4 +9,13 @@ const getSustainabilityData = async () => {
   }
 };
 
-export { getSustainabilityData };
+const getErgonomicChairData = async () => {
+  try {
+    const data = await apiClient(`/api/frontend/ergonomic-chair`);
+    return sendSuccess(data?.data);
+  } catch (error) {
+    return sendError(error);
+  }
+};
+
+export { getSustainabilityData, getErgonomicChairData };

@@ -1,5 +1,6 @@
 import ErgonomicChairSection from "@/components/blocks/ergonomic-chair-guide/ErgonomicChairSection";
 import ProductHero from "@/components/blocks/product/product-hero";
+import { getErgonomicChairData } from "@/lib/api/CMS/basicGet";
 
 const local_data = {
   heroData: {
@@ -13,8 +14,7 @@ const local_data = {
       desktopPath: "/images/ergonomic-chair-hero.jpg",
       media_alt: "ergonomic-chair-hero",
     },
-    title:
-      "Ergonomic Chairs <br> Essential Features for Healthy <br> and Comfortable Sitting",
+    title: "Ergonomic Chairs <br> Essential Features for Healthy <br> and Comfortable Sitting",
     description: null,
     chair_info_list: [
       {
@@ -104,17 +104,19 @@ const local_data = {
 export default async function ErgonomicChairPage({ params }) {
   const resolvedParams = await params;
   const { locale } = resolvedParams;
+
+  const { data, error } = await getErgonomicChairData();
+
+  if (error) {
+    notFound();
+  }
+
+  const { heroData, ergonomicChairData } = data;
+
   return (
     <>
-      <ProductHero
-        locale={locale}
-        data={local_data?.heroData}
-        slug={"Material Guide"}
-      />
-      <ErgonomicChairSection
-        locale={locale}
-        data={local_data?.ergonomic_chair_data}
-      />
+      <ProductHero locale={locale} data={heroData} slug={"Material Guide"} />
+      <ErgonomicChairSection locale={locale} data={ergonomicChairData} />
     </>
   );
 }
