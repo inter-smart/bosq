@@ -327,7 +327,7 @@ export default function Header({ headerData, navigationData, locale }) {
                   variant="link"
                   onClick={() => switchLocale("ar")}
                   className={cn(
-                    "text-[12px] leading-none font-normal font-cairo text-white min-w-[60px] sm:min-w-[60px] lg:min-w-[80px] 2xl:min-w-[100px] gap-1",
+                    "text-[12px] leading-none font-normal font-cairo text-white min-w-[60px] sm:min-w-[60px] lg:min-w-[80px] 2xl:min-w-[100px] gap-1 cursor-pointer",
                     pathname === `/${locale}` ? "text-white" : "text-[#282828]"
                   )}
                 >

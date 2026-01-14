@@ -5,6 +5,7 @@ import ProductSimilar from "@/components/blocks/product/product-similar";
 const local_data = {
   heroData: {
     title: null,
+    title_ar: null,
     description: null,
   },
   productData: {

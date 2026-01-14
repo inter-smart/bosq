@@ -5,10 +5,20 @@ export const getBlogsData = {
     try {
       const {data} = await apiClient(`/api/frontend/blogs?page=${page}&limit=${limit}`);
       
-      console.log(data)
+      return sendSuccess(data);
+    } catch (error) {
+      return sendError(error);
+    }
+  },
+
+  getBlogDetailsData: async (slug) => {
+    try {
+      const {data} = await apiClient(`/api/frontend/blog-details?slug=${slug}`);
       return sendSuccess(data);
     } catch (error) {
       return sendError(error);
     }
   },
 };
+
+
