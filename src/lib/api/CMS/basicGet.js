@@ -26,3 +26,12 @@ export const getFaqData = async () => {
     return sendError(error);
   }
 };
+
+export const getAuthData = async () => {
+  try {
+    const data = await apiClient(`/api/frontend/auth-cms`);
+    return sendSuccess(data?.data);
+  } catch (error) {
+    return sendError(error);
+  }
+};
