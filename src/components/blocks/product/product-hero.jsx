@@ -44,7 +44,7 @@ export default function ProductHero({ data, locale, slug, link }) {
         </Breadcrumb>
         {(data?.title || data?.title_ar) && (
           <Heading as="h2" size="heading6" className="line-clamp-2 text-black">
-            {parse(isEn ? data?.title : data?.title_ar)}
+            {parse(isEn ? data?.title : (data?.title_ar || data?.title))}
             <span
               className={cn(
                 "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",

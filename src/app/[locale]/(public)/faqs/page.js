@@ -145,13 +145,13 @@ export default async function FaqsPage({ params }) {
   
       console.log("Server-side FAQ data:", data); // ✅ appears in terminal
 
-      
-    const {heroData, faqData} = data;
+
+    const {heroData, faqData, moreFaq} = data;
 
   return (
     <>
       <ProductHero locale={locale} data={heroData} slug={"FAQ"} />
-      <FaqInfo locale={locale} data={faqData} />
+      <FaqInfo locale={locale} data={faqData} moreFaq={moreFaq} />
     </>
   );
 }

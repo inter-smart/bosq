@@ -14,7 +14,7 @@ const accordionTriggerStyle = cn(
   "text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-normal font-normal text-[#282828] py-4 sm:py-4 xl:py-5 [&>svg]:w-4 sm:[&>svg]:w-4 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5 [&[data-state=open]>svg]:invert-100"
 );
 
-export default function FaqInfo({ data, locale }) {
+export default function FaqInfo({ data, locale, moreFaq }) {
 
 
   console.log("data: ", data?.list[0]?.faqs)
@@ -105,195 +105,15 @@ export default function FaqInfo({ data, locale }) {
               </div>
             ))
             }
-           
-            {/* {data?.paymentFaq && (
-              <div className="mb-8 xl:mb-14 2xl:mb-20">
-                <Heading
-                  as="h2"
-                  size="none"
-                  className="text-[16px] sm:text-[18px] lg:text-[20px] xl:text-[26px] 2xl:text-[32px] 3xl:text-[40px] leading-normal tracking-tight font-light text-black mb-4 xl:mb-8 2xl:mb-10"
-                >
-                  {parse(data?.paymentFaq?.title)}
-                  <span
-                    className={cn(
-                      "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
-                      locale === "ar"
-                        ? "-translate-x-1 xl:-translate-x-2 "
-                        : "translate-x-1 xl:translate-x-2 "
-                    )}
-                  />
-                </Heading>
-                <Accordion
-                  type="single"
-                  collapsible
-                  className="w-full"
-                  defaultValue="item-1"
-                >
-                  {data?.paymentFaq?.items?.map((item, index) => (
-                    <AccordionItem
-                      key={"general-faq-" + index}
-                      value={"item" + index}
-                      className="last:border-b first:border-t"
-                    >
-                      <AccordionTrigger className={accordionTriggerStyle}>
-                        {parse(item?.question)}
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        <div
-                          dir={locale === "ar" ? "rtl" : "ltr"}
-                          className={cn("typography", "[--text-color:#282828]")}
-                        >
-                          {parse(item?.answer)}
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
-                </Accordion>
-              </div>
-            )}
-            {data?.returnFaq && (
+         
+            {moreFaq && (
               <div className="mb-8 xl:mb-14 2xl:mb-20">
                 <Heading
                   as="h2"
                   size="none"
                   className="text-[14px] sm:text-[16px] lg:text-[18px] xl:text-[26px] 2xl:text-[32px] 3xl:text-[40px] leading-normal tracking-tight font-light text-black mb-4 xl:mb-8 2xl:mb-10"
                 >
-                  {parse(data?.returnFaq?.title)}
-                  <span
-                    className={cn(
-                      "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
-                      locale === "ar"
-                        ? "-translate-x-1 xl:-translate-x-2 "
-                        : "translate-x-1 xl:translate-x-2 "
-                    )}
-                  />
-                </Heading>
-                <Accordion
-                  type="single"
-                  collapsible
-                  className="w-full"
-                  defaultValue="item-1"
-                >
-                  {data?.returnFaq?.items?.map((item, index) => (
-                    <AccordionItem
-                      key={"general-faq-" + index}
-                      value={"item" + index}
-                      className="last:border-b first:border-t"
-                    >
-                      <AccordionTrigger className={accordionTriggerStyle}>
-                        {parse(item?.question)}
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        <div
-                          dir={locale === "ar" ? "rtl" : "ltr"}
-                          className={cn("typography", "[--text-color:#282828]")}
-                        >
-                          {parse(item?.answer)}
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
-                </Accordion>
-              </div>
-            )}
-            {data?.productFaq && (
-              <div className="mb-8 xl:mb-14 2xl:mb-20">
-                <Heading
-                  as="h2"
-                  size="none"
-                  className="text-[14px] sm:text-[16px] lg:text-[18px] xl:text-[26px] 2xl:text-[32px] 3xl:text-[40px] leading-normal tracking-tight font-light text-black mb-4 xl:mb-8 2xl:mb-10"
-                >
-                  {parse(data?.productFaq?.title)}
-                  <span
-                    className={cn(
-                      "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
-                      locale === "ar"
-                        ? "-translate-x-1 xl:-translate-x-2 "
-                        : "translate-x-1 xl:translate-x-2 "
-                    )}
-                  />
-                </Heading>
-                <Accordion
-                  type="single"
-                  collapsible
-                  className="w-full"
-                  defaultValue="item-1"
-                >
-                  {data?.productFaq?.items?.map((item, index) => (
-                    <AccordionItem
-                      key={"general-faq-" + index}
-                      value={"item" + index}
-                      className="last:border-b first:border-t"
-                    >
-                      <AccordionTrigger className={accordionTriggerStyle}>
-                        {parse(item?.question)}
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        <div
-                          dir={locale === "ar" ? "rtl" : "ltr"}
-                          className={cn("typography", "[--text-color:#282828]")}
-                        >
-                          {parse(item?.answer)}
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
-                </Accordion>
-              </div>
-            )}
-            {data?.warrantyFaq && (
-              <div className="mb-8 xl:mb-14 2xl:mb-20">
-                <Heading
-                  as="h2"
-                  size="none"
-                  className="text-[14px] sm:text-[16px] lg:text-[18px] xl:text-[26px] 2xl:text-[32px] 3xl:text-[40px] leading-normal tracking-tight font-light text-black mb-4 xl:mb-8 2xl:mb-10"
-                >
-                  {parse(data?.warrantyFaq?.title)}
-                  <span
-                    className={cn(
-                      "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
-                      locale === "ar"
-                        ? "-translate-x-1 xl:-translate-x-2 "
-                        : "translate-x-1 xl:translate-x-2 "
-                    )}
-                  />
-                </Heading>
-                <Accordion
-                  type="single"
-                  collapsible
-                  className="w-full"
-                  defaultValue="item-1"
-                >
-                  {data?.warrantyFaq?.items?.map((item, index) => (
-                    <AccordionItem
-                      key={"warranty-faq-" + index}
-                      value={"item" + index}
-                      className="last:border-b first:border-t"
-                    >
-                      <AccordionTrigger className={accordionTriggerStyle}>
-                        {parse(item?.question)}
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        <div
-                          dir={locale === "ar" ? "rtl" : "ltr"}
-                          className={cn("typography", "[--text-color:#282828]")}
-                        >
-                          {parse(item?.answer)}
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
-                </Accordion>
-              </div>
-            )} */}
-            {/* {data?.moreFaq && (
-              <div className="mb-8 xl:mb-14 2xl:mb-20">
-                <Heading
-                  as="h2"
-                  size="none"
-                  className="text-[14px] sm:text-[16px] lg:text-[18px] xl:text-[26px] 2xl:text-[32px] 3xl:text-[40px] leading-normal tracking-tight font-light text-black mb-4 xl:mb-8 2xl:mb-10"
-                >
-                  {parse(data?.moreFaq?.title)}
+                  {parse(isEn? moreFaq?.title : moreFaq?.title_ar)}
                   <span
                     className={cn(
                       "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
@@ -307,10 +127,10 @@ export default function FaqInfo({ data, locale }) {
                   dir={locale === "ar" ? "rtl" : "ltr"}
                   className={cn("typography", "[--text-color:#282828]")}
                 >
-                  {parse(data?.moreFaq?.description)}
+                  {parse(isEn? moreFaq?.description : moreFaq?.description_ar)}
                 </div>
               </div>
-            )} */}
+            )}
           </div>
         </div>
       </div>
