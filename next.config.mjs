@@ -9,6 +9,11 @@ const nextConfig = {
         port: "4000", // Specify the exact port your local image server is running on
         pathname: "/**", // Use '/**' to allow any path
       },
+         {
+        protocol: "https",
+        hostname: "crm.intersmarthosting.in",
+        pathname: "/**",
+      },
       {
         protocol: "https",
         hostname: "images.unsplash.com",

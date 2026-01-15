@@ -71,7 +71,7 @@ export default function NewsSection({ data, locale }) {
               >
                 <Link
                   href={
-                    `${locale}/news${item?.lnik?.href}` ||
+                    `${locale}/news/${item?.slug}` ||
                     `/${locale}/news/${item?.id}`
                   }
                   target={item?.lnik?.target ? "_blank" : "_self"}

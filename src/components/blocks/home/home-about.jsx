@@ -74,7 +74,7 @@ export default function HomeAbout({ data, locale }) {
                   <Button
                     variant={"black"}
                     disabled={false}
-                    className="min-w-[90px] xl:min-w-[100px] 2xl:min-w-[120px] mx-1"
+                    className="min-w-[90px] xl:min-w-[100px] 2xl:min-w-[120px] mx-1 cursor-pointer"
                   >
                     Enquiry Dialog
                   </Button>

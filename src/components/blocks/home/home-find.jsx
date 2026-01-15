@@ -119,7 +119,7 @@ export default function HomeFind({ data, locale }) {
                                   )}
                                   asChild
                                 >
-                                  <Link href={item?.button?.link}>
+                                  <Link href={`${locale}/${item?.button?.link}`}>
                                     {locale === "ar" ? item?.button?.label_ar : item?.button?.label}
                                   </Link>
                                 </Button>

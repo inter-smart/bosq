@@ -66,7 +66,7 @@ export default function JourneySection({ data, locale }) {
                                         key={item?.id}
                                         className="flex-[0_0_8%] mb-7.5 2xl:mb-9">
                                         <div className="w-full h-full block">
-                                            <div className="text-[12px] sm:text-[13px] 2xl:text-[16px] 3xl:text-[18px] leading-[1] font-light text-[#282828] line-clamp-1">{isEn? data?.title: data?.title_ar}</div>
+                                            <div className="text-[12px] sm:text-[13px] 2xl:text-[16px] 3xl:text-[18px] leading-[1] font-light text-[#282828] line-clamp-1">{isEn? item?.title: item?.title_ar}</div>
                                         </div>
                                     </div>
                                 ))}

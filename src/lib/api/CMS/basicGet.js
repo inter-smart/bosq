@@ -38,4 +38,12 @@ export const getMaterialData = async () => {
 };
 
 
+export const getSiteData = async () => {
+  try {
+    const data = await apiClient(`/api/frontend/site-settings`);
+    return sendSuccess(data?.data);
+  } catch (error) {
+    return sendError(error);
+  }
+};
 

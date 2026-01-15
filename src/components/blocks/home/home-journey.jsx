@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 const localData = {
   button: {
     label: "Explore Our Journey",
-    link: "/journey",
+    link: "/",
   },  
 }
 
@@ -91,7 +91,7 @@ export default function HomeJourney({ data, locale }) {
             className="min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-40"
             asChild
           >
-            <Link href={"/"}>View Details</Link>
+            <Link href={`${locale}${localData.button.link}`}>View Details</Link>
           </Button>
         </div>
       </div>

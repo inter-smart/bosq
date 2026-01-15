@@ -63,7 +63,7 @@ export default function AboutBannerSection({ data, locale }) {
                             className="min-w-0 px-4 2xl:px-7"
                             asChild
                         >
-                            <Link href={data?.button?.link}>
+                            <Link href={`/${locale}${data?.button?.link}`}>
                                 {isEn? data?.button?.label:data?.button?.label_ar}
                             </Link>
                         </Button>

@@ -184,7 +184,7 @@ export default function EnquiryForm() {
             type="submit"
             variant={"black"}
             disabled={loading}
-            className="min-w-[120px] 2xl:min-w-40 ml-auto"
+            className="min-w-[120px] 2xl:min-w-40 ml-auto cursor-pointer"
           >
             {loading ? "Sending..." : "Submit Enquiry"}
           </Button>
