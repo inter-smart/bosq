@@ -7,6 +7,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
+  NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
@@ -27,11 +28,12 @@ const itemVariants = {
 };
 
 export default function HeaderNavigation({
-  pathname,
-  menuItems,
-  onNavigationClick,
-  isDesktop,
   locale,
+  isDesktop,
+  pathname,
+  onNavigationClick,
+  menuItems,
+  showDarkHeader,
 }) {
   const [hoveredSubmenu, setHoveredSubmenu] = useState(null);
   const [hoveredSubSubmenu, setHoveredSubSubmenu] = useState(null);
@@ -40,10 +42,9 @@ export default function HeaderNavigation({
     const baseStyle =
       "text-[20px] lg:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-normal font-medium lg:font-normal text-start lg:text-center w-full h-auto p-[8px_15px] lg:p-[6px_12px] 2xl:p-[10px_15px] 3xl:p-[15px_25px] bg-transparent border border-transparent hover:bg-black/0 focus:bg-black/0 ring-0 hover:border-white/10 data-[state=open]:border-white/10 data-[state=open]:hover:bg-black/0 data-[state=open]:focus:bg-black/0 data-[state=open]:bg-black/0 transition-all duration-200 max-lg:justify-between";
 
-    const pageTextColor =
-      pathname === `/${locale}`
-        ? "text-[#282828] lg:text-white lg:data-[state=open]:text-white hover:text-white focus:text-white"
-        : "text-[#282828] lg:data-[state=open]:text-black hover:text-[#282828] focus:text-[#282828]";
+    const pageTextColor = showDarkHeader
+      ? "text-[#282828] lg:data-[state=open]:text-black hover:text-[#282828] focus:text-[#282828]"
+      : "text-[#282828] lg:text-white lg:data-[state=open]:text-white hover:text-white focus:text-white";
 
     const activeColor = isActive ? "text-[#f17423]" : "";
 
@@ -77,8 +78,9 @@ export default function HeaderNavigation({
 
   return (
     <NavigationMenu
+      data-motion="from-end"
       viewport={isDesktop ? false : true}
-      // defaultValue={"toplevel1"}
+      defaultValue={"toplevel1"}
       className="w-full max-w-full justify-start lg:justify-center max-lg:[&>div]:w-full static"
     >
       <NavigationMenuList className="xl:gap-x-3 2xl:gap-x-4 max-lg:flex-col max-lg:[&>div]:w-full">
@@ -94,6 +96,7 @@ export default function HeaderNavigation({
                     {item.name}
                   </NavigationMenuTrigger>
                   <NavigationMenuContent
+                    data-motion="from-end"
                     className={cn(
                       "md:w-full min-w-full py-1 px-0 lg:py-6 xl:py-16 2xl:py-20",
                       "group-data-[viewport=false]/navigation-menu:data-[state=closed]:zoom-out-0 group-data-[viewport=false]/navigation-menu:data-[state=open]:zoom-in-0"

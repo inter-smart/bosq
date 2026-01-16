@@ -53,6 +53,7 @@ export default function Header({ headerData, navigationData, locale }) {
   const [bg, setBg] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(true);
   const [isPending, startTransition] = useTransition();
+  const [headerHover, setHeaderHover] = useState(true);
 
   const pathname = usePathname();
 
@@ -91,21 +92,34 @@ export default function Header({ headerData, navigationData, locale }) {
     });
   };
 
+  const showDarkHeader = headerHover === true || pathname !== `/${locale}`;
+
   return (
     <AnimatePresence mode="wait">
       <motion.header
         initial={{ opacity: 1, y: -100 }}
         animate={{ y: visible ? 0 : -100, opacity: visible ? 1 : 0 }}
         transition={{ duration: 0.2 }}
+        onMouseEnter={() => setHeaderHover(true)}
+        onMouseLeave={() => setHeaderHover(false)}
         className={cn(
-          "w-full h-(--header-y) z-10 top-0 inset-x-0 flex items-center bg-linear-to-b from-black/20 to-transparent",
+          "w-full h-(--header-y) z-10 top-0 inset-x-0 flex items-center bg-linear-to-b from-black/20 to-transparent transition-background duration-300",
           bg
             ? "border-b border-white/10 shadow-[0px_10px_4px_0px_rgba(0,0,0,0.1)] backdrop-blur-sm fixed"
             : "absolute",
-          bg && (pathname === `/${locale}` ? "bg-black/90" : "bg-white/90"),
-          pathname === `/${locale}`
-            ? "bg-linear-to-b from-black/20 to-transparent"
-            : "bg-linear-to-b from-white/20 to-transparent"
+          // bg && (pathname === `/${locale}` ? "bg-black/90" : "bg-white/90"),
+          // pathname === `/${locale}`
+          //   ? "bg-linear-to-b from-black/20 to-transparent"
+          //   : "bg-linear-to-b from-white/20 to-transparent",
+          headerHover
+            ? "bg-white from-white to-white"
+            : bg
+            ? showDarkHeader
+              ? "bg-white/90"
+              : "bg-black/90"
+            : showDarkHeader
+            ? "bg-linear-to-b from-white/20 to-white"
+            : "bg-linear-to-b from-black/20 to-transparent"
         )}
       >
         <div className="container">
@@ -118,17 +132,13 @@ export default function Header({ headerData, navigationData, locale }) {
                     strokeWidth={1}
                     className={cn(
                       "size-5",
-                      pathname === `/${locale}`
-                        ? "text-white"
-                        : "text-[#282828]"
+                      showDarkHeader ? "text-[#282828]" : "text-white"
                     )}
                   />
                   <div
                     className={cn(
                       "w-[1px] h-5 2xs:h-6",
-                      pathname === `/${locale}`
-                        ? "bg-white/10"
-                        : "bg-[#282828]/10"
+                      showDarkHeader ? "bg-[#282828]/10" : "bg-white/10"
                     )}
                   />
                 </SheetTrigger>
@@ -192,27 +202,19 @@ export default function Header({ headerData, navigationData, locale }) {
             {/* Brand Logo */}
             <div className="w-[70px] 2xs:w-[80px] sm:w-[100px] xl:w-[120px] 2xl:w-[140px] 3xl:w-[176px]">
               <Link href={`/${locale}${headerData?.slug}`}>
-                {pathname === `/${locale}` ? (
-                  <Image
-                    src={headerData?.logoWhiteUrl}
-                    alt={headerData?.name}
-                    width={173}
-                    height={58}
-                    unoptimized
-                    className="w-full h-full block object-contain"
-                    priority
-                  />
-                ) : (
-                  <Image
-                    src={headerData?.logoUrl}
-                    alt={headerData?.name}
-                    width={173}
-                    height={58}
-                    unoptimized
-                    className="w-full h-full block object-contain"
-                    priority
-                  />
-                )}
+                <Image
+                  src={
+                    showDarkHeader
+                      ? headerData?.logoUrl
+                      : headerData?.logoWhiteUrl
+                  }
+                  alt={headerData?.name}
+                  width={173}
+                  height={58}
+                  unoptimized
+                  className="w-full h-full block object-contain"
+                  priority
+                />
               </Link>
             </div>
 
@@ -227,6 +229,7 @@ export default function Header({ headerData, navigationData, locale }) {
                   pathname={pathname}
                   menuItems={navigationData}
                   onNavigationClick={handleNavigationLinkClick}
+                  showDarkHeader={showDarkHeader}
                 />
                 {/* <NavigationMenuBar
                   locale={locale}
@@ -237,98 +240,59 @@ export default function Header({ headerData, navigationData, locale }) {
               </MediaQuery>
               <SearchDialog locale={locale}>
                 <Button variant="none" size="none">
-                  {pathname === `/${locale}` ? (
-                    <Image
-                      src="/images/icon-search.svg"
-                      alt="search"
-                      width={12}
-                      height={12}
-                      unoptimized
-                      className="w-[15px] 2xl:w-[18px]"
-                    />
-                  ) : (
-                    <Image
-                      src="/images/icon-search-dark.svg"
-                      alt="search"
-                      width={12}
-                      height={12}
-                      unoptimized
-                      className="w-[15px] 2xl:w-[18px]"
-                    />
-                  )}
+                  <Image
+                    src={
+                      showDarkHeader
+                        ? "/images/icon-search-dark.svg"
+                        : "/images/icon-search.svg"
+                    }
+                    alt="search"
+                    width={12}
+                    height={12}
+                    unoptimized
+                    className="w-[15px] 2xl:w-[18px]"
+                  />
                 </Button>
               </SearchDialog>
               <Button variant="none" size="none" asChild>
                 <Link href={`/${locale}/cart`}>
-                  {pathname === `/${locale}` ? (
-                    <Image
-                      src="/images/icon-bag.svg"
-                      alt="bag"
-                      width={12}
-                      height={12}
-                      unoptimized
-                      className="w-[15px] 2xl:w-[18px]"
-                    />
-                  ) : (
-                    <Image
-                      src="/images/icon-bag-dark.svg"
-                      alt="bag"
-                      width={12}
-                      height={12}
-                      unoptimized
-                      className="w-[15px] 2xl:w-[18px]"
-                    />
-                  )}
+                  <Image
+                    src={
+                      showDarkHeader
+                        ? "/images/icon-bag-dark.svg"
+                        : "/images/icon-bag.svg"
+                    }
+                    alt="bag"
+                    width={12}
+                    height={12}
+                    unoptimized
+                    className="w-[15px] 2xl:w-[18px]"
+                  />
                 </Link>
               </Button>
               <Button variant="none" size="none" asChild>
                 <Link href={`/${locale}/account/profile`}>
-                  {pathname === `/${locale}` ? (
-                    <Image
-                      src="/images/icon-user.svg"
-                      alt="user"
-                      width={12}
-                      height={12}
-                      unoptimized
-                      className="w-[15px] 2xl:w-[18px]"
-                    />
-                  ) : (
-                    <Image
-                      src="/images/icon-user-dark.svg"
-                      alt="user"
-                      width={12}
-                      height={12}
-                      unoptimized
-                      className="w-[15px] 2xl:w-[18px]"
-                    />
-                  )}
+                  <Image
+                    src={
+                      showDarkHeader
+                        ? "/images/icon-user-dark.svg"
+                        : "/images/icon-user.svg"
+                    }
+                    alt="user"
+                    width={12}
+                    height={12}
+                    unoptimized
+                    className="w-[15px] 2xl:w-[18px]"
+                  />
                 </Link>
               </Button>
               {locale == "ar" ? (
                 <Button
                   variant="link"
-                  onClick={() => switchLocale("en")}
-                  className={cn(
-                    "text-[12px] leading-none font-normal font-cairo min-w-[60px] sm:min-w-[60px] lg:min-w-[80px] 2xl:min-w-[100px] gap-1",
-                    pathname === `/${locale}` ? "text-white" : "text-[#282828]"
-                  )}
-                >
-                  <Image
-                    src="/images/lang-1.jpg"
-                    alt="lang-1"
-                    width={12}
-                    height={12}
-                    className="w-[15px] lg:w-[18px] aspect-square rounded-full block border-black border-1"
-                  />
-                  العربية
-                </Button>
-              ) : (
-                <Button
-                  variant="link"
                   onClick={() => switchLocale("ar")}
                   className={cn(
                     "text-[12px] leading-none font-normal font-cairo text-white min-w-[60px] sm:min-w-[60px] lg:min-w-[80px] 2xl:min-w-[100px] gap-1",
-                    pathname === `/${locale}` ? "text-white" : "text-[#282828]"
+                    showDarkHeader ? "text-[#282828]" : "text-white"
                   )}
                 >
                   <Image
@@ -340,6 +304,24 @@ export default function Header({ headerData, navigationData, locale }) {
                   />
                   English
                 </Button>
+              ) : (
+                <Button
+                  variant="link"
+                  onClick={() => switchLocale("en")}
+                  className={cn(
+                    "text-[12px] leading-none font-normal font-cairo min-w-[60px] sm:min-w-[60px] lg:min-w-[80px] 2xl:min-w-[100px] gap-1",
+                    showDarkHeader ? "text-[#282828]" : "text-white"
+                  )}
+                >
+                  <Image
+                    src="/images/lang-1.jpg"
+                    alt="lang-1"
+                    width={12}
+                    height={12}
+                    className="w-[15px] lg:w-[18px] aspect-square rounded-full block border-black border-1"
+                  />
+                  العربية
+                </Button>
               )}
             </div>
           </div>
@@ -348,52 +330,3 @@ export default function Header({ headerData, navigationData, locale }) {
     </AnimatePresence>
   );
 }
-
-/* ----------------------------------------
-   Navigation Component
----------------------------------------- */
-// function NavigationMenuBar({ pathname, menuItems, onNavigationClick, locale }) {
-//   const getNavigationMenuTriggerStyle = (isActive) => {
-//     const baseStyle =
-//       "text-[14px] lg:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-normal font-normal text-start lg:text-center w-full h-auto p-[5px_15px] lg:p-[6px_12px] 2xl:p-[10px_15px] 3xl:p-[15px_25px] bg-transparent border border-transparent hover:bg-black/0 focus:bg-black/0 ring-0 hover:border-white/10 data-[state=open]:border-white/10 data-[state=open]:hover:bg-black/10 data-[state=open]:text-white data-[state=open]:focus:bg-black/10 data-[state=open]:bg-black/10 transition-all duration-200";
-
-//     const pageTextColor =
-//       pathname === `/${locale}`
-//         ? "text-[#282828] lg:text-white hover:text-white focus:text-white"
-//         : "text-[#282828] hover:text-[#282828] focus:text-[#282828]";
-
-//     const activeColor = isActive ? "text-[#f17423]" : "";
-
-//     return `${baseStyle} ${pageTextColor} ${activeColor}`;
-//   };
-
-//   return (
-//     <NavigationMenu
-//       viewport={false}
-//       className="w-full max-w-full justify-start lg:justify-center max-lg:[&>div]:w-full"
-//     >
-//       <NavigationMenuList className="xl:gap-x-3 2xl:gap-x-4 max-lg:flex-col max-lg:[&>div]:w-full">
-//         {menuItems.map((item, i) => {
-//           const isActive = pathname === item.slug;
-//           return (
-//             <motion.div key={i} variants={itemVariants}>
-//               <NavigationMenuItem>
-//                 <NavigationMenuLink
-//                   asChild
-//                   className={cn(getNavigationMenuTriggerStyle(isActive))}
-//                 >
-//                   <Link
-//                     href={`/${locale}${item.slug}`}
-//                     onClick={onNavigationClick}
-//                   >
-//                     {item.name}
-//                   </Link>
-//                 </NavigationMenuLink>
-//               </NavigationMenuItem>
-//             </motion.div>
-//           );
-//         })}
-//       </NavigationMenuList>
-//     </NavigationMenu>
-//   );
-// }

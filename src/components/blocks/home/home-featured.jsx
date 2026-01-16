@@ -52,7 +52,7 @@ export default function HomeFeatured({ data, products, locale }) {
               {products?.map((item, index) => (
                 <div key={"product" + index} className="flex-[0_0_176px] sm:flex-[0_0_25%] min-w-0 px-1 select-none">
                   <Suspense fallback={<FeaturedCard />}>
-                    <div className="w-full h-auto block">
+                    <div className="group w-full h-auto block">
                       <div className="w-full aspect-440/576 overflow-hidden mb-1 xl:mb-3 2xl:mb-5">
                         <Image
                           src={item?.media?.path}
@@ -63,8 +63,8 @@ export default function HomeFeatured({ data, products, locale }) {
                         />
                       </div>
                       <div className="w-full">
-                        <Heading as="div" size="heading3" className="font-normal capitalize text-[#282828]">
-                          {parse(item?.name)}
+                        <Heading as="div" size="heading3" className="font-normal capitalize text-[#282828] flex items-center gap-2">
+                          {parse(item?.name)} <span className="w-6 xl:w-10 2xl:w-14 h-1 bg-[#f17423] opacity-0 -translate-x-5 transition group-hover:opacity-100 not group-hover:translate-x-0"/>
                         </Heading>
                       </div>
                     </div>
