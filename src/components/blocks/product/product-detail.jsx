@@ -526,28 +526,6 @@ export default function ProductDetail({ locale, data = local_data }) {
 
               <hr className="my-3 sm:my-3 2xl:my-5 mx-[-5px]" />
 
-              {/* <Button
-                variant={"link"}
-                className={
-                  "text-[12px] 2xl:text-[14px] 3xl:text-[18px] font-normal h-auto! flex justify-between gap-1 not-disabled:hover:scale-100"
-                }
-                asChild
-              >
-                <Link href={"/"}>
-                  Matching Products - You may also like
-                  <Image
-                    src={"/images/icon-right-arrow.svg"}
-                    alt={"icon-right-arrow"}
-                    width={15}
-                    height={15}
-                    className={cn(
-                      "w-[15px] mx-1",
-                      locale === "ar" && "rotate-180"
-                    )}
-                  />
-                </Link>
-              </Button> */}
-
               <Heading
                 as="div"
                 size="heading5"
@@ -580,7 +558,9 @@ export default function ProductDetail({ locale, data = local_data }) {
                               className={cn(
                                 "w-[8px] xl:w-[10px] 2xl:w-[12px]",
                                 "absolute top-1/2 -translate-y-1/2",
-                                locale === "ar" ? "left-0 -translate-x-1/2" : "right-0 translate-x-1/2"
+                                locale === "ar"
+                                  ? "left-0 -translate-x-1/2"
+                                  : "right-0 translate-x-1/2"
                               )}
                             />
                           )}

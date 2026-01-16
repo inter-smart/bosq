@@ -100,7 +100,10 @@ export default function AccountAddress({ data, locale }) {
                         variant={"black"}
                         disabled={false}
                         onClick={() => setShowAddForm((prev) => !prev)}
-                        className={cn("min-w-[130px] xl:min-w-[155px] 2xl:min-w-[240px]", showAddForm && "bg-[#f17423]")}
+                        className={cn(
+                          "min-w-[130px] xl:min-w-[155px] 2xl:min-w-[240px]",
+                          showAddForm && "bg-[#f17423]"
+                        )}
                       >
                         <Plus className="size-3" />
                         Add New Address
