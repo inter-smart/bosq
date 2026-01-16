@@ -1,6 +1,11 @@
 import CartHero from "@/components/blocks/cart/cart-hero";
 import CheckoutList from "@/components/blocks/checkout/checkout-list";
 
+/**
+ * @typedef {import('@/types/shop').CheckoutPageResponse} CheckoutPageResponse
+ */
+
+/** @type {CheckoutPageResponse} */
 const local_data = {
   heroData: {
     title: "Checkout",

@@ -3,6 +3,11 @@ import CartHero from "@/components/blocks/cart/cart-hero";
 import CartList from "@/components/blocks/cart/cart-list";
 import ProductSimilar from "@/components/blocks/product/product-similar";
 
+/**
+ * @typedef {import('@/types/shop').CartPageResponse} CartPageResponse
+ */
+
+/** @type {CartPageResponse} */
 const local_data = {
   heroData: {
     title: "Shopping Cart",

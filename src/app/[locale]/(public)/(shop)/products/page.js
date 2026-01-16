@@ -1,6 +1,11 @@
 import ProductHero from "@/components/blocks/product/product-hero";
 import ProductList from "@/components/blocks/product/product-list";
 
+/**
+ * @typedef {import('@/types/shop').ProductListResponse} ProductListResponse
+ */
+
+/** @type {ProductListResponse} */
 const local_data = {
   heroData: {
     title: "Office Chairs",

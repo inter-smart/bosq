@@ -2,6 +2,11 @@ import ProductDetail from "@/components/blocks/product/product-detail";
 import ProductHero from "@/components/blocks/product/product-hero";
 import ProductSimilar from "@/components/blocks/product/product-similar";
 
+/**
+ * @typedef {import('@/types/shop').ProductDetailResponse} ProductDetailResponse
+ */
+
+/** @type {ProductDetailResponse} */
 const local_data = {
   heroData: {
     title: null,
