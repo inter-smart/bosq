@@ -207,8 +207,10 @@ export default function ProductDetail({ locale, data = local_data }) {
 
   const [isChooseDesignOpen, setIsChooseDesignOpen] = useState(false);
 
+  const [wishlist, setWishlist] = useState(false);
+
   return (
-    <section className="w-full block py-[10px_30px] xl:py-[15px_60px] 2xl:py-[20px_100px]">
+    <section className="w-full block py-[10px_30px] xl:py-[0_60px] 2xl:py-[5px_100px]">
       <div className="container">
         <div className="flex flex-wrap -mx-2.5 xl:-mx-4 2xl:-mx-5 [&>*]:p-2.5 xl:[&>*]:p-4 2xl:[&>*]:p-5">
           <div className="w-full lg:w-[520px] xl:w-[668px] 2xl:w-[800px] 3xl:w-[1000px]">
@@ -230,7 +232,7 @@ export default function ProductDetail({ locale, data = local_data }) {
                           onClick={() => onThumbClick(index)}
                           type="button"
                           className={cn(
-                            "w-full h-full bg-black rounded-lg overflow-hidden border transition select-none",
+                            "w-full h-full bg-black rounded-[4px] overflow-hidden border transition select-none",
                             index === selectedIndex
                               ? " border-[#282828]"
                               : "border-[#e9e9e9]"
@@ -253,11 +255,11 @@ export default function ProductDetail({ locale, data = local_data }) {
                 className={cn(
                   "w-[calc(100%-60px)] sm:w-[calc(100%-80px)] xl:w-[calc(100%-100px)] 2xl:w-[calc(100%-140px)]",
                   locale === "ar" ? "pr-2 xl:pr-4" : "pl-2 xl:pl-4",
-                  isChooseDesignOpen && "lg:relative lg:z-51"
+                  isChooseDesignOpen ? "lg:relative lg:z-51" : "relative z-0"
                 )}
               >
                 <div className="overflow-hidden" ref={emblaMainRef}>
-                  <div className="flex h-[320px] sm:h-[376px] xl:h-[420px]  2xl:h-[576px] 3xl:h-[740px] touch-pan-y touch-pinch-zoom">
+                  <div className="flex h-[320px] sm:h-[376px] xl:h-[420px] 2xl:h-[576px] 3xl:h-[740px] touch-pan-y touch-pinch-zoom">
                     {data?.productMedia?.map((item, index) => (
                       <div
                         key={index}
@@ -269,7 +271,7 @@ export default function ProductDetail({ locale, data = local_data }) {
                       >
                         <div
                           className={cn(
-                            "w-full h-full rounded-lg overflow-hidden border transition-all duration-300 bg-white select-none"
+                            "w-full h-full rounded-[4px] overflow-hidden border transition-all duration-300 bg-white select-none"
                           )}
                         >
                           {item?.type === "video" ? (
@@ -327,11 +329,48 @@ export default function ProductDetail({ locale, data = local_data }) {
                     />
                   </div>
                 </div>
+
+                <div
+                  className={cn(
+                    "flex gap-3 2xl:gap-4 absolute z-2 top-2 xl:top-4",
+                    locale === "ar" ? "left-2 xl:left-4 2xl:left-5" : "right-2 xl:right-4 2xl:right-5"
+                  )}
+                >
+                  <button
+                    onClick={() => setWishlist(!wishlist)}
+                    className="w-3 2xl:w-4.5 hover:cursor-pointer transition hover:scale-105"
+                  >
+                    <svg
+                      width="15"
+                      height="15"
+                      viewBox="0 0 15 15"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-full h-full block"
+                    >
+                      <path
+                        d="M7.39062 2.03027C8.85818 0.419111 10.5094 0.0894194 11.749 0.544922C12.9908 1.00129 13.9263 2.28275 13.8955 4.12402C13.8676 5.78912 12.7686 7.51198 11.3096 9.04004C9.9379 10.4766 8.3011 11.6826 7.12598 12.4326C5.95106 11.6827 4.3155 10.4769 2.94434 9.04102C1.48523 7.51297 0.385558 5.78917 0.357422 4.12402C0.326449 2.28301 1.26218 1.00146 2.50391 0.544922C3.74349 0.0891915 5.39453 0.418918 6.8623 2.03027L7.12695 2.32031L7.39062 2.03027Z"
+                        fill={wishlist ? "black" : "none"}
+                        stroke="#282828"
+                        strokeWidth="1"
+                      />
+                    </svg>
+                  </button>
+                  <button className="w-2.5 2xl:w-3.5 hover:cursor-pointer transition hover:scale-105">
+                    <Image
+                      src="/images/icon-share.svg"
+                      alt="icon-share"
+                      width={12}
+                      height={12}
+                      className="w-full h-full block"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
           <div className="w-full lg:w-[calc(100%-520px)] xl:w-[calc(100%-668px)] 2xl:w-[calc(100%-800px)] 3xl:w-[calc(100%-1000px)] max-sm:mb-2">
-            <div className="w-full xl:max-w-[376px] 2xl:max-w-[468px] 3xl:max-w-[576px]">
+            <div className="w-full xl:max-w-[390px] 2xl:max-w-[468px] 3xl:max-w-[576px]">
               <Heading
                 as="div"
                 size="none"
@@ -351,9 +390,7 @@ export default function ProductDetail({ locale, data = local_data }) {
                 size="text3"
                 className="text-[#282828] mb-2 2xl:mb-4"
               >
-                {parse(
-                  "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>"
-                )}
+                {parse(data?.shortDescription)}
               </Text>
 
               <hr className="my-3 sm:my-3 2xl:my-5 mx-[-5px]" />
@@ -367,8 +404,8 @@ export default function ProductDetail({ locale, data = local_data }) {
               </Heading>
               {[1].map((index) => (
                 <div key={index} className="mb-2">
-                  <div className="w-full max-w-[468px] bg-[#f2f2f2] border border-[#dedede] flex items-center p-1 rounded-lg">
-                    <div className="w-[40px] xl:w-[45px] 2xl:w-[55px] aspect-square rounded-lg overflow-hidden bg-white">
+                  <div className="w-full max-w-[468px] bg-[#f2f2f2] border border-[#dedede] flex items-center p-1 rounded-[4px]">
+                    <div className="w-[40px] xl:w-[45px] 2xl:w-[55px] aspect-square rounded-[4px] overflow-hidden bg-white">
                       <Image
                         src={data?.chooseDesign?.selectedDesign?.image}
                         alt={data?.chooseDesign?.selectedDesign?.title}
@@ -441,7 +478,7 @@ export default function ProductDetail({ locale, data = local_data }) {
                 </div>
                 <Button
                   variant={"black"}
-                  className="flex-1 max-w-[768px]"
+                  className="flex-1 max-w-[320px] xl:max-w-[768px]"
                   asChild
                 >
                   <Link href={"/"}>
@@ -472,7 +509,7 @@ export default function ProductDetail({ locale, data = local_data }) {
                 </div>
               )}
 
-              <div className="flex flex-wrap items-center justify-between gap-4 xl:gap-6 mb-2 xl:mb-3 2xl:mb-5 max-lg:flex-wrap-reverse">
+              <div className="flex flex-wrap items-center justify-between gap-4 2xl:gap-6 mb-2 xl:mb-3 2xl:mb-5 max-lg:flex-wrap-reverse">
                 <div className="flex lg:flex-1">
                   <Text
                     as="div"
@@ -507,7 +544,7 @@ export default function ProductDetail({ locale, data = local_data }) {
                     <Text
                       as="div"
                       size="text3"
-                      className="text-[#282828] flex gap-x-2 max-sm:bg-[#f2f2f2] max-sm:border max-sm:border-[#dedede] max-sm:p-1.5 max-sm:rounded-lg"
+                      className="text-[#282828] flex gap-x-1 2xl:gap-x-2 max-sm:bg-[#f2f2f2] max-sm:border max-sm:border-[#dedede] max-sm:p-1.5 max-sm:rounded-lg"
                     >
                       <Image
                         src={item?.iconPath || "/images/placeholder.jpg"}
@@ -650,7 +687,7 @@ export default function ProductDetail({ locale, data = local_data }) {
                       focused throughout the day.
                     </p>
                   </div>
-                  <div className="xl:max-w-[468px] 2xl:max-w-[576px] 3xl:max-w-[700px] border border-[#e9e9e9] rounded-lg p-2.5 xl:p-5 2xl:p-7.5">
+                  <div className="xl:max-w-[468px] 2xl:max-w-[576px] 3xl:max-w-[700px] border border-[#e9e9e9] rounded-lg px-2.5 xl:px-5 2xl:px-7.5 py-1 xl:py-2.5 2xl:py-4">
                     <ul>
                       <li>
                         <b>Adjustable Backrest:</b> Independent height
@@ -987,7 +1024,7 @@ function EnquireModal({ children, data, locale }) {
           <Heading
             as="div"
             size="heading5"
-            className="font-normal text-[#282828] mb-2 2xl:mb-3 mt-2.5 2xl:mt-4"
+            className="font-medium text-[#282828] mb-2 2xl:mb-3 mt-2.5 2xl:mt-4"
           >
             {data?.subtitle}
           </Heading>

@@ -64,7 +64,7 @@ export default function HomeFeatured({ data, products, locale }) {
                       </div>
                       <div className="w-full">
                         <Heading as="div" size="heading3" className="font-normal capitalize text-[#282828] flex items-center gap-2">
-                          {parse(item?.name)} <span className="w-6 xl:w-10 2xl:w-14 h-1 bg-[#f17423] opacity-0 -translate-x-5 transition group-hover:opacity-100 not group-hover:translate-x-0"/>
+                          {parse(item?.name)} <span className="w-6 xl:w-7 2xl:w-9 h-0.5 bg-[#f17423] opacity-0 -translate-x-5 transition group-hover:opacity-100 not group-hover:translate-x-0"/>
                         </Heading>
                       </div>
                     </div>

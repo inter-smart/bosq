@@ -33,16 +33,13 @@ export default function CartHero({ data, locale, slug, itemsCount }) {
         </Breadcrumb>
         {data?.title && (
           <Heading as="h2" size="heading6" className="line-clamp-2 text-black">
-            {parse(data?.title)}
-
+            {parse(data?.title)}{" "}
             {itemsCount > 0 && (
               <Text as="span" size="text2" className="text-[#28282a]">
                 {" "}
-                ({itemsCount} items)
-                {" "}
+                ({itemsCount} items){" "}
               </Text>
             )}
-
             <span
               className={cn(
                 "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",

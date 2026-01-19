@@ -207,11 +207,11 @@ export default function CheckoutList({ locale, data }) {
 
             <div className="w-full lg:w-[calc(100%-320px)] xl:w-[calc(100%-460px)] 2xl:w-[calc(100%-540px)] 3xl:w-[calc(100%-668px)]">
               {/* Personal Information */}
-              <div className="w-full h-auto block p-3 lg:p-4 xl:p-4 2xl:p-7 rounded-lg border border-[#e0e0e0] mb-1 xl:mb-2.5 2xl:mb-4">
+              <div className="w-full h-auto block p-3 lg:p-4 xl:p-4 2xl:p-7 rounded-[4px] border border-[#e0e0e0] mb-1 xl:mb-2.5 2xl:mb-4">
                 <Heading
                   as="h4"
                   size="heading4"
-                  className="font-normal text-[#282828] mb-3 xl:mb-5 2xl:mb-8"
+                  className="font-normal text-[#282828] mb-3 2xl:mb-4"
                 >
                   Personal Information
                 </Heading>
@@ -263,7 +263,7 @@ export default function CheckoutList({ locale, data }) {
                   <Button
                     variant={"white"}
                     onClick={() => setShowShippingAddressForm(true)}
-                    className="xl:text-[12px] 2xl:text-[14px] font-medium min-w-[120px] xl:min-w-[140px] 2xl:min-w-[268px] bg-white"
+                    className="xl:text-[12px] 2xl:text-[14px] font-medium min-w-[120px] xl:min-w-[150px] 2xl:min-w-[190px] bg-white"
                   >
                     Add New Address
                     <Plus className="size-3" />
@@ -295,7 +295,7 @@ export default function CheckoutList({ locale, data }) {
                       <Button
                         variant={"white"}
                         onClick={() => setShowBillingAddressForm(true)}
-                        className="xl:text-[12px] 2xl:text-[14px] font-medium min-w-[120px] xl:min-w-[140px] 2xl:min-w-[268px] bg-white"
+                        className="xl:text-[12px] 2xl:text-[14px] font-medium min-w-[120px] xl:min-w-[150px] 2xl:min-w-[190px] bg-white"
                       >
                         Add New Address
                         <Plus className="size-3" />
@@ -323,7 +323,7 @@ export default function CheckoutList({ locale, data }) {
             {/* Order Summary Sidebar */}
             <div className="w-full lg:w-[320px] xl:w-[460px] 2xl:w-[540px] 3xl:w-[668px]">
               {/* Order Summary */}
-              <div className="w-full bg-[#f4f4f4] border border-[#e0e0e0] rounded-lg p-3 sm:p-4 xl:p-7 2xl:p-8 mb-2 xl:mb-4">
+              <div className="w-full bg-[#f4f4f4] border border-[#e0e0e0] rounded-[4px] p-3 sm:p-4 xl:px-7 2xl:px-8 xl:py-4 2xl:py-6 mb-2 xl:mb-4">
                 <Text
                   as="div"
                   size="text3"
@@ -347,7 +347,7 @@ export default function CheckoutList({ locale, data }) {
                 {/* Cart Items List */}
                 <div
                   className={cn(
-                    "w-full bg-white rounded-lg border border-[#e0e0e0] p-1 xl:p-2 transition duration-300 ease-in-out",
+                    "w-full bg-white rounded-[4px] border border-[#e0e0e0] p-1 xl:p-2 transition duration-300 ease-in-out",
                     checkoutList ? "h-auto block" : "h-0 hidden"
                   )}
                 >
@@ -356,7 +356,7 @@ export default function CheckoutList({ locale, data }) {
                       key={"checkout-item-" + index}
                       className="group w-full flex flex-wrap items-center py-0.5"
                     >
-                      <div className="w-[30px] xl:w-[30px] 2xl:w-[40px] aspect-3/4 rounded-lg bg-white border border-gray-100 ">
+                      <div className="w-[30px] xl:w-[30px] 2xl:w-[40px] aspect-3/4 rounded-[4px] bg-white border border-gray-100 ">
                         <Image
                           src={item?.media?.path}
                           alt={item?.media?.alt}
@@ -369,10 +369,10 @@ export default function CheckoutList({ locale, data }) {
                         <div className="w-[calc(100%-50px)]">
                           <Text
                             as="div"
-                            size="text3"
-                            className="truncate leading-none text-[#282828] mb-0.5 xl:mb-1"
+                            size="none"
+                            className="text-[10px] 2xl:text-[12px] leading-none truncate leading-none text-[#282828] mb-0.5 xl:mb-1"
                           >
-                            {item?.name}
+                            {item?.name} x {item?.quantity}
                           </Text>
                           <Text
                             as="div"
@@ -416,7 +416,7 @@ export default function CheckoutList({ locale, data }) {
 
                 {/* Coupon Code Section */}
                 <div className="w-full mb-2 xl:mb-3 2xl:mb-4">
-                  <div className="w-full bg-[#eee] p-1 xl:p-2 rounded-lg flex gap-1.5">
+                  <div className="w-full bg-[#eee] p-1 xl:p-2 rounded-[4px] flex gap-1.5">
                     <Input
                       type="text"
                       placeholder="Have a coupon code?"
@@ -446,7 +446,7 @@ export default function CheckoutList({ locale, data }) {
                         '{couponCode}' Coupon Applied
                       </Text>
                       <button
-                        className="text-[10px] 2xl:text-[12px] leading-normal font-normal hover:underline cursor-pointer hover:text-red-600"
+                        className="text-[10px] 2xl:text-[12px] leading-normal font-normal text-black hover:underline cursor-pointer hover:text-red-600"
                         onClick={handleRemoveCoupon}
                         disabled={loading}
                       >
@@ -474,7 +474,7 @@ export default function CheckoutList({ locale, data }) {
               </div>
 
               {/* Payment Methods */}
-              <div className="w-full bg-[#f4f4f4] border border-[#e0e0e0] rounded-lg p-3 sm:p-4 xl:p-7 2xl:p-8 mb-2 xl:mb-4">
+              <div className="w-full bg-[#f4f4f4] border border-[#e0e0e0] rounded-[4px] p-3 sm:p-4 xl:py-4 2xl:py-6 xl:px-7 2xl:px-8 mb-2 xl:mb-4">
                 <RadioGroup
                   dir={locale === "ar" ? "rtl" : "ltr"}
                   value={selectedPaymentMethod}
@@ -643,7 +643,7 @@ function AddressBlock({
 
   return (
     <>
-      <div className="w-full h-auto block rounded-lg border border-[#e0e0e0] overflow-hidden mb-1 xl:mb-2.5 2xl:mb-4">
+      <div className="w-full h-auto block rounded-[4px] border border-[#e0e0e0] overflow-hidden mb-1 xl:mb-2.5 2xl:mb-4">
         <div className="w-full h-auto bg-black px-3 lg:px-4 xl:px-4 2xl:px-7 py-2.5 lg:py-2 xl:py-4 2xl:py-5 flex justify-between items-center gap-2">
           <Heading as="h4" size="heading4" className="text-white">
             {data?.title}
@@ -842,7 +842,7 @@ function AddressBlock({
 
 function AddAddressBlock({ locale, onCancel, onSuccess }) {
   return (
-    <div className="w-full h-auto block p-3 lg:p-4 xl:p-4 2xl:p-7 rounded-lg border border-[#e0e0e0] mb-1 xl:mb-2.5 2xl:mb-4">
+    <div className="w-full h-auto block p-3 lg:p-4 xl:p-4 2xl:p-7 rounded-[4px] border border-[#e0e0e0] mb-1 xl:mb-2.5 2xl:mb-4">
       <div className="flex justify-between items-center mb-3 xl:mb-5 2xl:mb-8">
         <Heading as="h4" size="heading4" className="font-normal text-[#282828]">
           Add New Address

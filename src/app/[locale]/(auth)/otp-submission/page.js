@@ -5,9 +5,9 @@ const local_data = {
   media: {
     type: "image",
     alt: "hero",
-    path: "/images/auth-login-1.jpg",
+    path: "/images/auth-login-2.jpg",
   },
-  title: "Create Your Account",
+  title: "Recover your Password",
   description:
     "<p>Enter the verification code we just sent you on your mail address.</p>",
 };

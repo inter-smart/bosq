@@ -222,7 +222,7 @@ export default function HomeHero({ data, locale }) {
         <PrevButton
           onClick={onPrevButtonClick}
           disabled={prevBtnDisabled}
-          className="w-[10px] xl:w-[16px] absolute z-1 top-1/2 left-3 -translate-y-1/2 disabled:opacity-50 not-disabled:hover:scale-110"
+          className="w-[10px] xl:w-[12px] 2xl:w-[15px] absolute z-1 top-1/2 left-4 -translate-y-1/2 disabled:opacity-50 not-disabled:hover:scale-110"
         >
           <Image
             src="/images/icon-embla-prev.svg"
@@ -234,7 +234,7 @@ export default function HomeHero({ data, locale }) {
         <NextButton
           onClick={onNextButtonClick}
           disabled={nextBtnDisabled}
-          className="w-[10px] xl:w-[16px] absolute z-1 top-1/2 right-3 -translate-y-1/2 disabled:opacity-50 not-disabled:hover:scale-110"
+          className="w-[10px] xl:w-[12px] 2xl:w-[15px] absolute z-1 top-1/2 right-4 -translate-y-1/2 disabled:opacity-50 not-disabled:hover:scale-110"
         >
           <Image
             src="/images/icon-embla-next.svg"

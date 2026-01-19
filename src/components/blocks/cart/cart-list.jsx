@@ -13,7 +13,7 @@ const MediaQuery = dynamic(() => import("react-responsive"), {
 export default function CartList({ locale, data }) {
   const [loading, setLoading] = useState(false);
   return (
-    <section className="w-full block py-[15px_30px] xl:py-[30px_60px] 2xl:py-[40px_100px] relative z-0">
+    <section className="w-full block py-[15px_30px] xl:py-[20px_60px] 2xl:py-[30px_100px] relative z-0">
       <div className="container">
         <div className="flex flex-wrap -mx-2.5 xl:-mx-8 2xl:-mx-10 [&>*]:p-2.5 xl:[&>*]:p-8 2xl:[&>*]:p-10">
           <div className="w-full lg:w-[calc(100%-320px)] xl:w-[calc(100%-460px)] 2xl:w-[calc(100%-540px)] 3xl:w-[calc(100%-668px)] max-sm:mb-2">
@@ -28,7 +28,7 @@ export default function CartList({ locale, data }) {
               ))}
             </div>
             <div className="mt-3 xl:mt-6">
-              <Button variant={"link"} className={"h-auto! has-[>svg]:px-0"}>
+              <Button variant={"link"} className={"h-auto! gap-1 has-[>svg]:px-0"}>
                 <svg
                   width="3"
                   height="6"
@@ -47,7 +47,7 @@ export default function CartList({ locale, data }) {
             </div>
           </div>
           <div className="w-full lg:w-[320px] xl:w-[460px] 2xl:w-[540px] 3xl:w-[668px]">
-            <div className="w-full bg-[#f4f4f4] border border-[#e0e0e0] rounded-lg p-3 sm:p-4 xl:p-7 2xl:p-8 sticky top-[var(--header-y)] ">
+            <div className="w-full bg-[#f4f4f4] border border-[#e0e0e0] rounded-[4px] p-3 sm:p-4 xl:p-7 2xl:p-8 sticky top-[var(--header-y)] ">
               <Heading
                 as="div"
                 size="heading4"

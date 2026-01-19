@@ -151,7 +151,7 @@ export default function EnquiryForm() {
                   {...field}
                   type="email"
                   className={inputStyle}
-                  placeholder="Enter email"
+                  placeholder="Enter email id"
                 />
               </FormControl>
               <FormMessage />
