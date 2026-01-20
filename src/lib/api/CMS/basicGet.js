@@ -18,7 +18,6 @@ export const getErgonomicChairData = async () => {
   }
 };
 
-
 export const getFaqData = async () => {
   try {
     const data = await apiClient(`/api/frontend/faq`);
@@ -28,7 +27,14 @@ export const getFaqData = async () => {
   }
 };
 
-export const getMaterialData = async () => {
+export const getAuthData = async () => {
+  try {
+    const data = await apiClient(`/api/frontend/auth-cms`);
+    return sendSuccess(data?.data);
+  } catch (error) {
+    return sendError(error);
+  }
+};export const getMaterialData = async () => {
   try {
     const data = await apiClient(`/api/frontend/materials-guide`);
     return sendSuccess(data?.data);

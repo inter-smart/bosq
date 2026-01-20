@@ -1,5 +1,6 @@
 import AuthLayout from "@/components/blocks/auth/auth-layout";
 import AuthLogin from "@/components/blocks/auth/auth-login";
+import { getAuthData } from "@/lib/api/CMS/basicGet";
 
 const local_data = {
   media: {
@@ -14,9 +15,19 @@ const local_data = {
 export default async function LoginPage({ params }) {
   const resolvedParams = await params;
   const { locale } = resolvedParams;
+
+  const { data, error } = await getAuthData();
+
+  if (error) {
+    notFound();
+  }
+
+  const { authPageData } = data;
+  const loginData = authPageData?.login_data;
+
   return (
     <>
-      <AuthLayout locale={locale} data={local_data}>
+      <AuthLayout locale={locale} data={loginData} isApiData={true}>
         <AuthLogin locale={locale} />
       </AuthLayout>
     </>
