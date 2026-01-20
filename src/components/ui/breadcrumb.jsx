@@ -18,7 +18,7 @@ function BreadcrumbList({
     <ol
       data-slot="breadcrumb-list"
       className={cn(
-        "text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-light text-[#939393] flex flex-wrap items-center gap-1.5 sm:gap-2 break-words ",
+        "text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-light text-[#939393] flex flex-wrap items-center gap-1 sm:gap-1.5 break-words ",
         className
       )}
       {...props} />

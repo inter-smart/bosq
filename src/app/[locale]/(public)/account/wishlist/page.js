@@ -1,5 +1,6 @@
 import ProductHero from "@/components/blocks/product/product-hero";
 import AccountWishlist from "@/components/blocks/account/account-wishlist";
+import AccountLayout from "@/components/blocks/account/account-layout";
 
 const local_data = {
   heroData: {
@@ -169,7 +170,10 @@ export default async function Wishlist({ params }) {
         data={local_data?.heroData}
         slug={"My Profile"}
       />
-      <AccountWishlist locale={locale} data={local_data?.wishlistData} />
+
+      <AccountLayout locale={locale}>
+        <AccountWishlist locale={locale} data={local_data?.wishlistData} />
+      </AccountLayout>
     </>
   );
 }

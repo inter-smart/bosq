@@ -287,7 +287,7 @@ const local_data = {
       {
         id: "01",
         label: "Ergonomic Chair Guide",
-        link: "/products/office-chair-1",
+        link: "/ergonomic-chair-guide",
       },
       {
         id: "02",
@@ -297,7 +297,7 @@ const local_data = {
       {
         id: "03",
         label: "Material Guide",
-        link: "/",
+        link: "/material-guide",
       },
       {
         id: "04",

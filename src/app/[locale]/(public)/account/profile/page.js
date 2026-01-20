@@ -1,3 +1,4 @@
+import AccountLayout from "@/components/blocks/account/account-layout";
 import AccountProfile from "@/components/blocks/account/account-profile";
 import ProductHero from "@/components/blocks/product/product-hero";
 
@@ -37,7 +38,9 @@ export default async function ProfilePage({ params }) {
         data={local_data?.heroData}
         slug={"My Profile"}
       />
-      <AccountProfile locale={locale} data={local_data?.userData} />
+      <AccountLayout locale={locale}>
+        <AccountProfile locale={locale} data={local_data?.userData} />
+      </AccountLayout>
     </>
   );
 }

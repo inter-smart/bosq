@@ -1,4 +1,5 @@
 import AccountCoupons from "@/components/blocks/account/account-coupons";
+import AccountLayout from "@/components/blocks/account/account-layout";
 import ProductHero from "@/components/blocks/product/product-hero";
 
 const local_data = {
@@ -116,7 +117,10 @@ export default async function CouponsPage({ params }) {
         data={local_data?.heroData}
         slug={"My Profile"}
       />
-      <AccountCoupons locale={locale} data={local_data?.couponsData} />
+
+      <AccountLayout locale={locale}>
+        <AccountCoupons locale={locale} data={local_data?.couponsData} />
+      </AccountLayout>
     </>
   );
 }

@@ -32,11 +32,11 @@ const formSchema = z.object({
 
 // Shared styles
 const labelStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]"
+  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]",
 );
 
 const inputStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1"
+  "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1",
 );
 
 const errorStyle = cn("text-[#f17423]");
@@ -116,7 +116,10 @@ export default function AuthCreateForm() {
                 <PhoneInput
                   defaultCountry="ae"
                   {...field}
-                  className={cn(inputStyle, "w-full p-0 [&_input]:flex-1")}
+                  className={cn(
+                    inputStyle,
+                    "w-full p-0 [&_input]:flex-1 [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px] [--react-international-phone-flag-width:20px] [--react-international-phone-flag-height:20px]",
+                  )}
                   placeholder="Enter your mobile number"
                 />
               </FormControl>
@@ -166,7 +169,7 @@ export default function AuthCreateForm() {
               "text-[10px] mt-1 w-full",
               success.includes("successfully")
                 ? "text-green-600"
-                : "text-red-600"
+                : "text-red-600",
             )}
           >
             {success}

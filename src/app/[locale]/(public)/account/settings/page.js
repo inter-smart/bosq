@@ -1,3 +1,4 @@
+import AccountLayout from "@/components/blocks/account/account-layout";
 import AccountSettings from "@/components/blocks/account/account-settings";
 import ProductHero from "@/components/blocks/product/product-hero";
 
@@ -116,7 +117,10 @@ export default async function SettingsPage({ params }) {
         data={local_data?.heroData}
         slug={"My Profile"}
       />
-      <AccountSettings locale={locale} data={local_data?.settingsData} />
+
+      <AccountLayout locale={locale}>
+        <AccountSettings locale={locale} data={local_data?.settingsData} />
+      </AccountLayout>
     </>
   );
 }

@@ -36,7 +36,7 @@ const local_data = {
           media_alt: "project-item-1",
         },
         title: "Wonderworld Ltd - Office Space",
-        slug: "/projects/wonderworld-office-space",
+        slug: "/en/projects/wonderworld-office-space",
         category: "Hospitality",
       },
       {
@@ -47,7 +47,7 @@ const local_data = {
           media_alt: "project-item-2",
         },
         title: "Dawn  Ltd - Creative Workspace",
-        slug: "/projects/wonderworld-office-space",
+        slug: "/en/projects/wonderworld-office-space",
         category: "Workspace",
       },
       {
@@ -58,7 +58,7 @@ const local_data = {
           media_alt: "project-item-3",
         },
         title: "JOY  Accounts - Innovative Office Design",
-        slug: "/projects/wonderworld-office-space",
+        slug: "/en/projects/wonderworld-office-space",
         category: "Workspace Healthcare",
       },
       {
@@ -69,7 +69,7 @@ const local_data = {
           media_alt: "project-item-4",
         },
         title: "Wonderworld Ltd - Office Space",
-        slug: "/projects/wonderworld-office-space",
+        slug: "/en/projects/wonderworld-office-space",
         category: "Education",
       },
       {
@@ -80,7 +80,7 @@ const local_data = {
           media_alt: "project-item-5",
         },
         title: "Wonderworld Ltd - Office Space",
-        slug: "/projects/wonderworld-office-space",
+        slug: "/en/projects/wonderworld-office-space",
         category: "Hospitality",
       },
       {
@@ -91,7 +91,7 @@ const local_data = {
           media_alt: "project-item-6",
         },
         title: "Wonderworld Ltd - Office Space",
-        slug: "/projects/wonderworld-office-space",
+        slug: "/en/projects/wonderworld-office-space",
         category: "Hospitality",
       },
       {
@@ -102,7 +102,7 @@ const local_data = {
           media_alt: "project-item-1",
         },
         title: "Wonderworld Ltd - Office Space",
-        slug: "/projects/wonderworld-office-space",
+        slug: "/en/projects/wonderworld-office-space",
         category: "Hospitality",
       },
       {
@@ -113,7 +113,7 @@ const local_data = {
           media_alt: "project-item-2",
         },
         title: "Wonderworld Ltd - Office Space",
-        slug: "/projects/wonderworld-office-space",
+        slug: "/en/projects/wonderworld-office-space",
         category: "Education",
       },
     ],

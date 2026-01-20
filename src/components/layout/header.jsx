@@ -200,7 +200,7 @@ export default function Header({ headerData, navigationData, locale }) {
             </MediaQuery>
 
             {/* Brand Logo */}
-            <div className="w-[70px] 2xs:w-[80px] sm:w-[100px] xl:w-[120px] 2xl:w-[140px] 3xl:w-[176px]">
+            <div className="w-[80px] 2xs:w-[90px] sm:w-[100px] xl:w-[120px] 2xl:w-[140px] 3xl:w-[176px]">
               <Link href={`/${locale}${headerData?.slug}`}>
                 <Image
                   src={
@@ -209,8 +209,8 @@ export default function Header({ headerData, navigationData, locale }) {
                       : headerData?.logoWhiteUrl
                   }
                   alt={headerData?.name}
-                  width={173}
-                  height={58}
+                  width={176}
+                  height={57}
                   unoptimized
                   className="w-full h-full block object-contain"
                   priority
@@ -231,12 +231,6 @@ export default function Header({ headerData, navigationData, locale }) {
                   onNavigationClick={handleNavigationLinkClick}
                   showDarkHeader={showDarkHeader}
                 />
-                {/* <NavigationMenuBar
-                  locale={locale}
-                  pathname={pathname}
-                  menuItems={navigationData}
-                  onNavigationClick={handleNavigationLinkClick}
-                /> */}
               </MediaQuery>
               <SearchDialog locale={locale}>
                 <Button variant="none" size="none">
@@ -300,7 +294,7 @@ export default function Header({ headerData, navigationData, locale }) {
                     alt="lang-1"
                     width={12}
                     height={12}
-                    className="w-[15px] lg:w-[18px] aspect-square rounded-full block border-black border-1"
+                    className="w-[15px] 2xl:w-[18px] aspect-square rounded-full block border-black border-1"
                   />
                   English
                 </Button>
@@ -318,7 +312,7 @@ export default function Header({ headerData, navigationData, locale }) {
                     alt="lang-1"
                     width={12}
                     height={12}
-                    className="w-[15px] lg:w-[18px] aspect-square rounded-full block border-black border-1"
+                    className="w-[15px] 2xl:w-[18px] aspect-square rounded-full block border-black border-1"
                   />
                   العربية
                 </Button>

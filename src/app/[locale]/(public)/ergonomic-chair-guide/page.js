@@ -1,4 +1,4 @@
-import ErgonomicChairSection from "@/components/blocks/ergonomic-chair-guide/ErgonomicChairSection";
+import ErgonomicChairSection from "@/components/blocks/ergonomic-chair-guide/ergonomic-chair-section";
 import ProductHero from "@/components/blocks/product/product-hero";
 
 const local_data = {

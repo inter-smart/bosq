@@ -27,15 +27,17 @@ const MediaQuery = dynamic(() => import("react-responsive"), {
 });
 
 const navBtnStyle = cn(
-  "text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-white flex items-center gap-0.5 disabled:opacity-50 not-disabled:hover:scale-110 transition"
+  "text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-white flex items-center gap-0.5 disabled:opacity-50 not-disabled:hover:scale-110 transition",
 );
 
 export default function BlogInfo({ data, popularData, relatedData, locale }) {
   let formattedDate = "";
+
   if (data?.publishedAt) {
-    const date = new Date(data?.publishedAt);
+    const date = new Date(data.publishedAt);
+
     if (!isNaN(date)) {
-      formattedDate = format(date, "dd MMMM yyyy");
+      formattedDate = format(date, "MMMM dd, yyyy");
     }
   }
 
@@ -45,7 +47,7 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
       align: "start",
       direction: locale === "ar" ? "rtl" : "ltr",
     },
-    [Autoplay({ delay: 4000, stopOnInteraction: true }), Fade()]
+    [Autoplay({ delay: 4000, stopOnInteraction: true }), Fade()],
   );
 
   const {
@@ -65,7 +67,7 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
                 <div
                   key={"brand" + index}
                   className={cn(
-                    "flex-[0_0_100%] min-w-0 select-none transition aspect-6/4 sm:aspect-1920/740 bg-black"
+                    "flex-[0_0_100%] min-w-0 select-none transition aspect-6/4 sm:aspect-1920/740 bg-black",
                   )}
                 >
                   <picture className="absolute -z-2 inset-0 opacity-95">
@@ -134,7 +136,7 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
                   "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
                   locale === "ar"
                     ? "-translate-x-1 xl:-translate-x-2 "
-                    : "translate-x-1 xl:translate-x-2 "
+                    : "translate-x-1 xl:translate-x-2 ",
                 )}
               />
             </Heading>
@@ -144,11 +146,11 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
       <div className="w-full py-[15px] sm:py-[20px] xl:py-[30px] 2xl:py-[40px]">
         <div className="container">
           <div className="flex flex-wrap -mx-3 xl:-mx-7 2xl:-mx-9 [&>*]:p-3 xl:[&>*]:p-7 2xl:[&>*]:p-9">
-            <div className="w-full lg:w-[calc(100%-368px)] 2xl:w-[calc(100%-540px)] max-lg:mb-5">
+            <div className="w-full lg:w-[calc(100%-368px)] 2xl:w-[calc(100%-420px)] max-lg:mb-5">
               <div dir={locale === "ar" ? "rtl" : "ltr"} className="typography">
                 {parse(data?.description)}
               </div>
-              <hr className="my-6 xl:my-8 2xl:my-10" />
+              <hr className="my-6 xl:my-7 2xl:my-8" />
               <div className="flex justify-between">
                 <div>
                   <div className="flex items-center gap-2 xl:gap-2 2xl:gap-3">
@@ -170,7 +172,7 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
                               width={10}
                               height={10}
                               unoptimized
-                              className="w-[13px] xl:w-[15px] 2xl:w-[17px] aspect-square block hover:scale-110 transition"
+                              className="w-[13px] xl:w-[13px] 2xl:w-[15px] aspect-square block hover:scale-110 transition"
                             />
                           </a>
                         </Button>
@@ -179,7 +181,7 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
                   </div>
                 </div>
                 <div>
-                  <div className="flex gap-4 xl:gap-8">
+                  <div className="flex gap-4 xl:gap-6">
                     <PrevButton
                       onClick={onPrevButtonClick}
                       disabled={prevBtnDisabled}
@@ -188,7 +190,7 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
                       <ChevronLeft
                         className={cn(
                           "size-3.5",
-                          locale === "ar" && "rotate-180"
+                          locale === "ar" && "rotate-180",
                         )}
                       />
                       <span className="hidded sm:block">Previous </span>
@@ -202,7 +204,7 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
                       <ChevronRight
                         className={cn(
                           "size-3.5",
-                          locale === "ar" && "rotate-180"
+                          locale === "ar" && "rotate-180",
                         )}
                       />
                     </NextButton>
@@ -213,7 +215,7 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
               <BlogRelated locale={locale} data={relatedData} />
             </div>
             <MediaQuery minWidth={1024}>
-              <div className="w-full lg:w-[368px] 2xl:w-[540px]">
+              <div className="w-full lg:w-[368px] 2xl:w-[420px]">
                 <div className="w-full sticky top-[var(--header-y)]">
                   <Heading
                     as="h2"
@@ -226,7 +228,7 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
                         "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
                         locale === "ar"
                           ? "-translate-x-1 xl:-translate-x-2 "
-                          : "translate-x-1 xl:translate-x-2 "
+                          : "translate-x-1 xl:translate-x-2 ",
                       )}
                     />
                   </Heading>
@@ -238,7 +240,7 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
                           <div className="group w-full h-auto flex flex-wrap items-center sm:mb-4 xl:mb-6 3xl:mb-8">
                             <Link
                               href={item?.slug}
-                              className="w-20 xl:w-[90px] 2xl:w-[140px] h-20 xl:h-[90px] 2xl:h-[140px] aspect-aquare overflow-hidden border border-gray-100 block"
+                              className="w-20 xl:w-[90px] 2xl:w-[120px] h-20 xl:h-[90px] 2xl:h-[120px] aspect-aquare overflow-hidden border border-gray-100 block"
                             >
                               <Image
                                 src={
@@ -250,11 +252,18 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                               />
                             </Link>
-                            <div className="flex-1 flex flex-col justify-between px-3 xl:px-5">
+                            <div
+                              className={cn(
+                                "flex-1 flex flex-col justify-between",
+                                locale === "ar"
+                                  ? "pr-3 2xl:pr-4"
+                                  : "pl-3 2xl:pl-4",
+                              )}
+                            >
                               <Heading
                                 as="div"
                                 size="heading5"
-                                className="leading-tight tracking-tight line-clamp-2 text-[#282828] mb-2 xl:mb-3 2xl:mb-4 hover:underline"
+                                className="leading-tight tracking-tight line-clamp-2 text-[#282828]  mb-2 xl:mb-3 2xl:mb-4 hover:underline"
                               >
                                 <Link href={item?.slug}>{item?.title}</Link>
                               </Heading>
@@ -286,7 +295,7 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
                         <ChevronRight
                           className={cn(
                             "size-3.5",
-                            locale === "ar" && "rotate-180"
+                            locale === "ar" && "rotate-180",
                           )}
                         />
                       </Link>

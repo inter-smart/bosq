@@ -15,7 +15,7 @@ export default function CartHero({ data, locale, slug, itemsCount }) {
   return (
     <section className="w-full pt-[calc(var(--header-y)_+_20px)] sm:pt-[calc(var(--header-y)_+_10px)] pb-1 sm:pb-2.5">
       <div className="container">
-        <Breadcrumb className="mb-2 sm:mb-4">
+        <Breadcrumb className="mb-1.5 2xl:mb-2">
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink href="/">Home</BreadcrumbLink>

@@ -1,4 +1,5 @@
 import AccountCancelled from "@/components/blocks/account/account-cancelled";
+import AccountLayout from "@/components/blocks/account/account-layout";
 import ProductHero from "@/components/blocks/product/product-hero";
 
 const local_data = {
@@ -17,8 +18,9 @@ const local_data = {
       type: "configurable",
       name: "Orca Mid Back Ergonomic Office Chair Orca Mid Back Ergonomic Office Chair",
       description: null,
-      cancelledReason: "<p>Changed mind about color Changed mind about color</p>",
-      
+      cancelledReason:
+        "<p>Changed mind about color</p>",
+
       cancelled_date: "10.08.2025",
       formatted_cancelled_date: "10 Aug 2025",
 
@@ -78,7 +80,10 @@ export default function CancelledOrdersPage() {
         data={local_data?.heroData}
         slug={"My Profile"}
       />
-      <AccountCancelled locale={locale} data={local_data?.cancelledOrders} />
+
+      <AccountLayout locale={locale}>
+        <AccountCancelled locale={locale} data={local_data?.cancelledOrders} />
+      </AccountLayout>
     </>
   );
 }

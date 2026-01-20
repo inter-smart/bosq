@@ -16,14 +16,10 @@ export default function AuthLogin({ locale }) {
       <div className="w-full p-2 bg-gray-400 text-center my-1.5 xl:my-3">
         Continue with Google
       </div>
-      <Text
-        as="div"
-        size="text1"
-        className="line-clamp-4 font-light text-black"
-      >
-        Already have an account?{" "}
+      <Text as="div" size="text1" className="text-center text-black">
+        New here?{" "}
         <Link href="/en/signup" className="font-normal hover:underline">
-          signup
+          Create an Account
         </Link>
       </Text>
     </>

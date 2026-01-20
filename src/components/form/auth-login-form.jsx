@@ -92,7 +92,7 @@ export default function AuthLoginForm({ locale }) {
   };
 
   const toggleStyle = cn(
-    "absolute top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700",
+    "absolute top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700",
     locale === "ar" ? "left-3" : "right-3"
   );
 
@@ -109,7 +109,7 @@ export default function AuthLoginForm({ locale }) {
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                Email<span className={errorStyle}>*</span>
+                Email
               </FormLabel>
               <FormControl>
                 <Input
@@ -131,7 +131,7 @@ export default function AuthLoginForm({ locale }) {
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                Password<span className={errorStyle}>*</span>
+                Password
               </FormLabel>
               <FormControl>
                 <div className="relative">
@@ -168,7 +168,7 @@ export default function AuthLoginForm({ locale }) {
             control={form.control}
             name="rememberMe"
             render={({ field }) => (
-              <FormItem className="flex items-center gap-3 space-y-0">
+              <FormItem className="flex items-center gap-2 space-y-0">
                 <FormControl>
                   <Checkbox
                     id="rememberMe"
@@ -184,7 +184,7 @@ export default function AuthLoginForm({ locale }) {
           />
           <Button
             variant="link"
-            className="font-normal underline h-auto! p-0 text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px]"
+            className="font-light h-auto! p-0 text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px]"
             asChild
           >
             <Link href="/en/forgot-password">Forgot Password?</Link>

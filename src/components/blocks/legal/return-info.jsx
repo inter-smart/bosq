@@ -11,10 +11,10 @@ export default function ReturnInfo({ data, locale }) {
         <div className={cn("w-full h-auto")}>
           <div
             className={cn(
-              "w-full max-w-[220px] sm:max-w-[44%] aspect-4/3 overflow-hidden mb-4 xl:mb-8",
+              "w-full max-w-[220px] sm:max-w-[44%] xl:max-w-[48%] aspect-4/3 overflow-hidden mb-4 xl:mb-8",
               locale === "ar"
-                ? "sm:float-left sm:mr-20 xl:mr-34 2xl:mr-42 3xl:mr-52 sm:ml-0"
-                : "sm:float-right sm:ml-20 xl:ml-34 2xl:ml-42 3xl:ml-52 sm:mr-0"
+                ? "sm:float-left sm:mr-20 xl:mr-22 2xl:mr-34 3xl:mr-52 sm:ml-0"
+                : "sm:float-right sm:ml-20 xl:ml-22 2xl:ml-34 3xl:ml-52 sm:mr-0"
             )}
           >
             <Image

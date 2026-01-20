@@ -3,20 +3,20 @@ import { Heading } from "../../utils/heading";
 import { Text } from "../../utils/text";
 import Link from "next/link";
 import { Suspense } from "react";
-import parse from "html-react-parser";
 
 import { Skeleton } from "../../ui/skeleton";
 import { format } from "date-fns";
 
 export default function BlogCard({ data }) {
-  
-    let formattedDate = "";
-    if (data?.publishedAt) {
-        const date = new Date(data.publishedAt);
-        if (!isNaN(date)) {
-        formattedDate = format(date, "dd MMMM yyyy");
-        }
+  let formattedDate = "";
+
+  if (data?.publishedAt) {
+    const date = new Date(data.publishedAt);
+
+    if (!isNaN(date)) {
+      formattedDate = format(date, "MMMM dd, yyyy");
     }
+  }
 
   return (
     <Suspense fallback={<CartCardSkeleton />}>

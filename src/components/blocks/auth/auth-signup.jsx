@@ -9,21 +9,17 @@ export default function AuthSignup() {
       <Text
         as="div"
         size="text1"
-        className="text-center text-black my-1.5 xl:my-3"
+        className="text-center text-black mt-1 xl:mt-2 mb-1.5 xl:mb-3"
       >
         or
       </Text>
       <div className="w-full p-2 bg-gray-400 text-center my-1.5 xl:my-3">
         Continue with Google
       </div>
-      <Text
-        as="div"
-        size="text1"
-        className="line-clamp-4 font-light text-center text-black "
-      >
-        New here?{" "}
+      <Text as="div" size="text1" className="text-[#282828]">
+        Already have an account?{" "}
         <Link href="/en/signup" className="font-normal hover:underline">
-          Create an Account
+          Log in
         </Link>
       </Text>
     </>

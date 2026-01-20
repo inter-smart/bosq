@@ -41,7 +41,7 @@ export default function CustomizationInfo({
                   "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block",
                   locale === "ar"
                     ? "-translate-x-1 xl:-translate-x-2 "
-                    : "translate-x-1 xl:translate-x-2 "
+                    : "translate-x-1 xl:translate-x-2 ",
                 )}
               />
             </Heading>
@@ -97,7 +97,7 @@ export default function CustomizationInfo({
             <div
               className={cn(
                 "w-full max-w-[220px] sm:max-w-[46%] aspect-54/41 overflow-hidden mb-3 xl:mb-5",
-                "sm:float-right sm:ml-20 xl:ml-34 2xl:ml-42 3xl:ml-52 sm:mr-0"
+                "sm:float-right sm:ml-20 xl:ml-34 2xl:ml-42 3xl:ml-52 sm:mr-0",
               )}
             >
               <Image
@@ -116,7 +116,7 @@ export default function CustomizationInfo({
                     "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
                     locale === "ar"
                       ? "-translate-x-1 xl:-translate-x-2 "
-                      : "translate-x-1 xl:translate-x-2 "
+                      : "translate-x-1 xl:translate-x-2 ",
                   )}
                 />
                 &nbsp;
@@ -127,7 +127,7 @@ export default function CustomizationInfo({
                 dir={locale === "ar" ? "rtl" : "ltr"}
                 className={cn(
                   "typography mb-6 xl:mb-7 2xl:mb-14",
-                  "[--text-color:#282828]"
+                  "[--text-color:#282828]",
                 )}
               >
                 {parse(customizationProcess?.description)}
@@ -137,7 +137,7 @@ export default function CustomizationInfo({
               <div key={"customizationProcess-info-" + index}>
                 <div
                   className={cn(
-                    "flex gap-2 xl:gap-3 2xl:gap-4 mb-4 xl:mb-5 2xl:mb-10"
+                    "flex gap-2 xl:gap-3 2xl:gap-4 mb-4 xl:mb-5 2xl:mb-10",
                   )}
                 >
                   <div>
@@ -185,7 +185,7 @@ export default function CustomizationInfo({
                     "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block",
                     locale === "ar"
                       ? "-translate-x-1 xl:-translate-x-2 "
-                      : "translate-x-1 xl:translate-x-2 "
+                      : "translate-x-1 xl:translate-x-2 ",
                   )}
                 />
               </Heading>
@@ -209,7 +209,7 @@ export default function CustomizationInfo({
                   "w-full max-w-[220px] sm:max-w-[46%] aspect-55/26 overflow-hidden mb-3 xl:mb-5",
                   index % 2 === 0
                     ? "sm:float-left sm:mr-15 xl:mr-24 2xl:mr-28 3xl:mr-36 sm:ml-0"
-                    : "sm:float-right sm:ml-15 xl:ml-24 2xl:ml-28 3xl:ml-36 sm:mr-0"
+                    : "sm:float-right sm:ml-15 xl:ml-24 2xl:ml-28 3xl:ml-36 sm:mr-0",
                 )}
               >
                 <Image
@@ -232,7 +232,7 @@ export default function CustomizationInfo({
                       "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
                       locale === "ar"
                         ? "-translate-x-1 xl:-translate-x-2 "
-                        : "translate-x-1 xl:translate-x-2 "
+                        : "translate-x-1 xl:translate-x-2 ",
                     )}
                   />
                   &nbsp;
@@ -241,7 +241,12 @@ export default function CustomizationInfo({
               {item?.description && (
                 <div
                   dir={locale === "ar" ? "rtl" : "ltr"}
-                  className={cn("typography", "[--text-color:#282828]")}
+                  className={cn(
+                    "typography [--text-color:#282828]",
+                    index % 2 === 1
+                      ? "[&_ul>li]:list-outside"
+                      : "[&_ul>li]:list-inside",
+                  )}
                 >
                   {parse(item?.description)}
                 </div>
@@ -255,12 +260,12 @@ export default function CustomizationInfo({
       {/* REQUEST_CUSTOM_QUOTE */}
       <div className="w-full bg-[#f4f4f4] py-[40px_30px] sm:py-[60px_40px] xl:py-[100px_60px] 2xl:py-[140px_100px]">
         <div className="container">
-          <div className="w-full h-auto flex flex-wrap mb-2 sm:mb-4 xl:mb-12 2xl:mb-16">
+          <div className="w-full h-auto flex flex-wrap mb-2 sm:mb-4 xl:mb-8 2xl:mb-14">
             <div className="w-full lg:max-w-[54%]">
               <Heading
                 as="h1"
                 size="heading1"
-                className="text-[#282828] mb-1 sm:mb-2 xl:mb-4 2xl:mb-6"
+                className="text-[#282828] mb-1 xl:mb-2 2xl:mb-4"
               >
                 {parse(requestCustomQuote?.title)}
                 <span
@@ -268,7 +273,7 @@ export default function CustomizationInfo({
                     "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block",
                     locale === "ar"
                       ? "-translate-x-1 xl:-translate-x-2 "
-                      : "translate-x-1 xl:translate-x-2 "
+                      : "translate-x-1 xl:translate-x-2 ",
                   )}
                 />
               </Heading>
