@@ -16,7 +16,13 @@ const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
 });
 
-export default function Footer({ footerData, socialLinkData, locale }) {
+export default function Footer({ footerData, socialLinkData, locale, data }) {
+
+  const isEn = locale === "en";
+
+
+  console.log("data", data?.sale_enquiry)
+
   const placeholders = [
     "Enter Your Email",
     "Enter Your Email Address",
@@ -40,8 +46,8 @@ export default function Footer({ footerData, socialLinkData, locale }) {
               className="w-[90px] xl:w-[100px] 2xl:w-[140px] block mb-3 xl:mb-4 2xl:mb-6"
             >
               <Image
-                src={footerData?.logoWhiteUrl}
-                alt={footerData?.name}
+                src={data?.media?.path}
+                alt={isEn ? data?.media?.alt: data?.media?.alt_ar}
                 width={114}
                 height={37}
                 unoptimized
@@ -54,7 +60,7 @@ export default function Footer({ footerData, socialLinkData, locale }) {
               size="text3"
               className="text-white mb-4 xl:mb-5 2xl:mb-7"
             >
-              {parse(footerData?.address)}
+              {parse(isEn? data?.address_block?.address: data?.address_block?.address_ar)}
             </Text>
 
             <div className="flex flex-wrap items-center gap-x-[15px] xl:gap-x-[20px]">
@@ -63,8 +69,8 @@ export default function Footer({ footerData, socialLinkData, locale }) {
                   <Button variant="link" size="none" asChild>
                     <a href={item?.link || "#"} target="_blank">
                       <Image
-                        src={item?.media?.media_path}
-                        alt={item?.media?.media_alt}
+                        src={item?.media?.path}
+                        alt={isEn? item?.media?.alt: item?.media?.alt_ar}
                         width={10}
                         height={10}
                         unoptimized
@@ -224,70 +230,70 @@ export default function Footer({ footerData, socialLinkData, locale }) {
 
         <div className="flex flex-wrap items-center -mx-[10px] [&>*]:p-[10px] ">
           <div className="w-full lg:w-[36%]">
-            {footerData?.sale_enquiry && (
+            {data?.sale_enquiry && (
               <Text
                 as="div"
                 size="text3"
                 className="text-white [&_span]:text-normal mb-1 [&_a]:hover:text-[#f47123]"
               >
-                <span>{footerData.sale_enquiry.title} :</span>&nbsp;
-                {footerData.sale_enquiry.phone && (
+                <span>{data?.sale_enquiry.title} :</span>&nbsp;
+                {data?.sale_enquiry.phone && (
                   <>
                     Ph:{" "}
                     <a
-                      href={`tel:${footerData.sale_enquiry.phone}`}
+                      href={`tel:${data?.sale_enquiry.phone}`}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      {footerData.sale_enquiry.phone}
+                      {data?.sale_enquiry.phone}
                     </a>
                     &nbsp;
                   </>
                 )}
-                {footerData.sale_enquiry.email && (
+                {data?.sale_enquiry.email && (
                   <>
                     Email:{" "}
                     <a
-                      href={`mailto:${footerData.sale_enquiry.email}`}
+                      href={`mailto:${data?.sale_enquiry.email}`}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      {footerData.sale_enquiry.email}
+                      {data?.sale_enquiry.email}
                     </a>
                   </>
                 )}
               </Text>
             )}
 
-            {footerData?.support_enquiry && (
+            {data?.support_enquiry && (
               <Text
                 as="div"
                 size="text3"
                 className="text-white [&_span]:text-normal [&_a]:hover:text-[#f47123]"
               >
-                <span>{footerData.support_enquiry.title} :</span>&nbsp;
-                {footerData.support_enquiry.phone && (
+                <span>{data?.support_enquiry.title} :</span>&nbsp;
+                {/* {data?.support_enquiry.phone && (
                   <>
                     Ph:{" "}
                     <a
-                      href={`tel:${footerData.support_enquiry.phone}`}
+                      href={`tel:${data?.support_enquiry.phone}`}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      {footerData.support_enquiry.phone}
+                      {data?.support_enquiry.phone}
                     </a>
                     &nbsp;
                   </>
-                )}
-                {footerData.support_enquiry.email && (
+                )} */}
+                {data?.support_enquiry.email && (
                   <>
                     Email:{" "}
                     <a
-                      href={`mailto:${footerData.support_enquiry.email}`}
+                      href={`mailto:${data?.support_enquiry.email}`}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      {footerData.support_enquiry.email}
+                      {data?.support_enquiry.email}
                     </a>
                   </>
                 )}
@@ -302,7 +308,7 @@ export default function Footer({ footerData, socialLinkData, locale }) {
                 size="text3"
                 className="text-white w-full sm:w-[40%] pr-[15px] xl:pr-[30px] max-sm:mb-4"
               >
-                {parse(footerData?.subscription_title)}
+                {parse(data?.newsletter?.main_title)}
               </Text>
               <div className="w-full sm:w-[60%]">
                 <PlaceholdersAndVanishInput

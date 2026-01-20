@@ -108,7 +108,7 @@ export default function MaterialsList({ data, locale, extraMaterialsInfo}) {
                     {extraMaterialsInfo?.info_list?.map((item, index) => (
                     <div
                         key={index}
-                        className={`[--padding:40px] sm:[--padding:50px] lg:[--padding:60px] 2xl:[--padding:80px] 3xl:[--padding:100px] w-full h-auto py-[40px] sm:py-[60px] lg:py-[100px] 2xl:py-[120px] 3xl:py-[150px] first:pt-[var(--padding)] last:pb-[var(--padding)] block bg-[#F4F4F4] `}
+                        className={`[--padding:40px] sm:[--padding:50px] lg:[--padding:60px] 2xl:[--padding:80px] 3xl:[--padding:100px] w-full h-auto py-[40px] sm:py-[60px] lg:py-[100px] 2xl:py-[120px] 3xl:py-[150px] first:pt-[var(--padding)] last:pb-[var(--padding)] block ${materialCount % 2 == 0 ? "bg-[#F4F4F4]": "bg-white"} `}
                     >
                         <div className="container">
                             <div className="w-full h-auto block">

@@ -1,5 +1,6 @@
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
+import { getSiteData } from "@/lib/api/CMS/basicGet";
 
 const local_data = {
   header_data: {
@@ -287,7 +288,7 @@ const local_data = {
       {
         id: "01",
         label: "Ergonomic Chair Guide",
-        link: "/products/office-chair-1",
+        link: "/ergonomic-chair-guide",
       },
       {
         id: "02",
@@ -297,7 +298,7 @@ const local_data = {
       {
         id: "03",
         label: "Material Guide",
-        link: "/",
+        link: "/material-guide",
       },
       {
         id: "04",
@@ -399,12 +400,20 @@ export default async function PublicLayout({ children, params }) {
   const resolvedParams = await params;
   const { locale } = resolvedParams;
 
+  const {data} = await getSiteData();
+
+
+  const {headerData, footerData, socialMedia, cards} = data;
+
+
+
   return (
     <>
       <Header
         locale={locale}
         headerData={local_data.header_data}
         navigationData={local_data.navigation_data}
+        data = {headerData}
       />
 
       <main>{children}</main>
@@ -412,7 +421,9 @@ export default async function PublicLayout({ children, params }) {
       <Footer
         locale={locale}
         footerData={local_data.footer_data}
-        socialLinkData={local_data.social_link_data}
+        socialLinkData={socialMedia}
+        data={footerData}
+        paymentCards={cards}
       />
     </>
   );

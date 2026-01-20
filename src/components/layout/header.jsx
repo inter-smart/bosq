@@ -47,7 +47,7 @@ const itemVariants = {
   exit: { opacity: 0, x: -20, transition: { duration: 0.2 } },
 };
 
-export default function Header({ headerData, navigationData, locale }) {
+export default function Header({ headerData, navigationData, locale, data }) {
   const { scrollYProgress } = useScroll();
   const [visible, setVisible] = useState(true);
   const [bg, setBg] = useState(false);
