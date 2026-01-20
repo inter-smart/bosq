@@ -83,6 +83,9 @@ export default function HomeProject({ data, locale }) {
                       className="w-full h-[268px] sm:h-[368px] xl:h-[468px] 2xl:h-[576px] 3xl:h-[668px] bg-black overflow-hidden relative z-0"
                       onClick={() => setActiveIndex(index)}
                     >
+                      <div className={cn("w-full h-0.5 bg-[#f17423] absolute bottom-0 left-0 right-0 z-1 transition",
+                        isActive ? "visible" : "invisible"
+                      )} />
                       <Image
                         src={item?.media?.path}
                         alt={item?.media?.alt}

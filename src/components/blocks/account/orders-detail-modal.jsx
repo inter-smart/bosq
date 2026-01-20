@@ -6,16 +6,15 @@ import { cn } from "@/lib/utils";
 import parse from "html-react-parser";
 
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { X } from "lucide-react";
 
 const labelStyle = cn(
@@ -24,24 +23,19 @@ const labelStyle = cn(
 
 export default function OrdersDetailModal({ children, data, locale }) {
   return (
-    <AlertDialog dir={locale === "ar" ? "rtl" : "ltr"}>
-      <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
-      <AlertDialogContent
-        className={"xl:max-w-[576px] 2xl:max-w-[840px] gap-0"}
-      >
-        <AlertDialogHeader
-          className={"flex-row items-center justify-between mb-2 2xl:mb-4"}
+    <Dialog dir={locale === "ar" ? "rtl" : "ltr"}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent className={"xl:max-w-[576px] 2xl:max-w-[840px] gap-0"}>
+        <DialogHeader
+          className={"flex-row items-center justify-between mb-1 2xl:mb-3"}
         >
-          <AlertDialogTitle className="text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-semibold text-[#282828]">
+          <DialogTitle className="text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-semibold text-[#282828]">
             Order Details
-          </AlertDialogTitle>
-          <AlertDialogDescription className={"sr-only"}>
+          </DialogTitle>
+          <DialogDescription className={"sr-only"}>
             Order Details go here.
-          </AlertDialogDescription>
-          <AlertDialogCancel className={"h-auto! p-0!"}>
-            <X className="size-5 text-black" />
-          </AlertDialogCancel>
-        </AlertDialogHeader>
+          </DialogDescription>
+        </DialogHeader>
 
         <div className="w-full max-h-[60vh] xl:max-h-[70vh] mask-[linear-gradient(to_bottom,transparent_0%,white_2%,white_98%,transparent_100%)]">
           <div className="h-full overflow-auto flex flex-wrap -mx-1 xl:-mx-1.5 2xl:-mx-2.5 [&>*]:p-1 xl:[&>*]:p-1.5 2xl:[&>*]:p-2.5">
@@ -143,7 +137,7 @@ export default function OrdersDetailModal({ children, data, locale }) {
                 <Heading
                   as="div"
                   size="none"
-                  className="text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-medium text-[#282828] mb-2 xl:mb-3 2xl:mb-5"
+                  className="text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-medium text-[#282828] mb-2 2xl:mb-3"
                 >
                   Billing Address
                 </Heading>
@@ -161,7 +155,7 @@ export default function OrdersDetailModal({ children, data, locale }) {
                 <Heading
                   as="div"
                   size="none"
-                  className="text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-medium text-[#282828] mb-2 xl:mb-3 2xl:mb-5"
+                  className="text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-medium text-[#282828] mb-2 2xl:mb-3"
                 >
                   Shipping Address
                 </Heading>
@@ -176,9 +170,7 @@ export default function OrdersDetailModal({ children, data, locale }) {
           </div>
         </div>
 
-        <AlertDialogFooter
-          className={"sm:justify-center mt-2 xl:mt-4 2xl:mt-10"}
-        >
+        <DialogFooter className={"sm:justify-center mt-2 xl:mt-4 2xl:mt-10"}>
           <Button
             variant={"black"}
             disabled={false}
@@ -193,8 +185,8 @@ export default function OrdersDetailModal({ children, data, locale }) {
           >
             Reorder
           </Button>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

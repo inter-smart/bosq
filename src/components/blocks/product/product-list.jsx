@@ -70,6 +70,18 @@ const FILTER_OPTIONS = {
 
 const ITEMS_PER_PAGE = 12;
 
+const accordionTriggerStyle = cn(
+  "text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-4 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5 [&[data-state=open]>svg]:bg-black [&[data-state=open]>svg]:text-white"
+);
+
+const sortByOptions = [
+  { value: "default", label: "Default" },
+  { value: "price-low-high", label: "Price: Low to High" },
+  { value: "price-high-low", label: "Price: High to Low" },
+  { value: "name-a-z", label: "Name: A to Z" },
+  { value: "name-z-a", label: "Name: Z to A" },
+];
+
 export default function ProductList({ data, locale }) {
   const products = data?.product || [];
 
@@ -290,11 +302,11 @@ export default function ProductList({ data, locale }) {
   );
 
   return (
-    <section className="w-full block py-[15px_30px] xl:py-[30px_60px] 2xl:py-[40px_100px]">
+    <section className="w-full block py-[15px_30px] xl:py-[20px_60px] 2xl:py-[30px_100px]">
       <div className="container max-sm:bg-white max-sm:py-2 max-sm:px-4 max-sm:shadow-sm max-sm:sticky top-0 left-0 right-0 z-1 max-sm:mb-2">
         {/* Filters and Sort Section */}
-        <div className="flex flex-row justify-between items-center gap-4 sm:mb-4 2xl:mb-6">
-          <div className="flex flex-wrap items-center gap-2 xl:gap-3 2xl:gap-4 ">
+        <div className="flex flex-row justify-between items-center gap-4 sm:mb-1.5 2xl:mb-3">
+          <div className="flex flex-wrap items-center gap-2 xl:gap-2 2xl:gap-3 ">
             {/* Filter Button */}
 
             <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
@@ -338,7 +350,7 @@ export default function ProductList({ data, locale }) {
                   >
                     {/* Categories */}
                     <AccordionItem value="item-1" className="py-2 sm:py-3">
-                      <AccordionTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-4 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5 ">
+                      <AccordionTrigger className={accordionTriggerStyle}>
                         Categories
                       </AccordionTrigger>
                       <AccordionContent className="p-2">
@@ -367,7 +379,7 @@ export default function ProductList({ data, locale }) {
 
                     {/* Sub Categories */}
                     <AccordionItem value="item-2" className="py-2 sm:py-3">
-                      <AccordionTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-4 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5">
+                      <AccordionTrigger className={accordionTriggerStyle}>
                         Sub Categories
                       </AccordionTrigger>
                       <AccordionContent className="p-2">
@@ -401,7 +413,7 @@ export default function ProductList({ data, locale }) {
 
                     {/* Sectors */}
                     <AccordionItem value="item-3" className="py-2 sm:py-3">
-                      <AccordionTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-4 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5">
+                      <AccordionTrigger className={accordionTriggerStyle}>
                         Sectors
                       </AccordionTrigger>
                       <AccordionContent className="p-2">
@@ -433,7 +445,7 @@ export default function ProductList({ data, locale }) {
 
                     {/* Price Range */}
                     <AccordionItem value="item-4" className="py-2 sm:py-3">
-                      <AccordionTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-4 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5">
+                      <AccordionTrigger className={accordionTriggerStyle}>
                         Price Range
                       </AccordionTrigger>
                       <AccordionContent className="p-2">
@@ -467,7 +479,7 @@ export default function ProductList({ data, locale }) {
 
                     {/* Color Option */}
                     <AccordionItem value="item-5" className="py-2 sm:py-3">
-                      <AccordionTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-4 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5">
+                      <AccordionTrigger className={accordionTriggerStyle}>
                         Color
                       </AccordionTrigger>
                       <AccordionContent className="p-2">
@@ -499,7 +511,7 @@ export default function ProductList({ data, locale }) {
 
                     {/* Pattern */}
                     <AccordionItem value="item-6" className="py-2 sm:py-3">
-                      <AccordionTrigger className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-4 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5">
+                      <AccordionTrigger className={accordionTriggerStyle}>
                         Pattern
                       </AccordionTrigger>
                       <AccordionContent className="p-2">
@@ -609,21 +621,21 @@ export default function ProductList({ data, locale }) {
               {activeFilterCount > 0 && (
                 <button
                   onClick={clearAllFilters}
-                  className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-none font-normal text-black hover:text-[#f17423] underline"
+                  className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-none font-normal text-[#282828] hover:text-[#f17423] underline"
                 >
-                  Clear All
+                  Clear Filters
                 </button>
               )}
             </MediaQuery>
           </div>
 
           {/* Sort Dropdown */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 2xl:gap-2">
             <span className="text-[10px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-tight font-medium text-black">
               Sort by:
             </span>
             <Select value={sortBy} onValueChange={(value) => setSortBy(value)}>
-              <SelectTrigger className="text-[10px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-tight font-medium truncate text-black w-[80px] sm:w-[100px] 2xl:w-[130px] border-none bg-transparent p-0 [&>svg]:hidden focus-visible:ring-0 rounded-none shadow-none">
+              <SelectTrigger className="text-[10px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-tight font-medium truncate text-black w-[80px] sm:w-[110px] 2xl:w-[130px] border-none bg-transparent p-0 [&>svg]:hidden focus-visible:ring-0 rounded-none shadow-none">
                 <SelectValue placeholder="Default" />
 
                 {/* Custom Dropdown Icon */}
@@ -640,36 +652,15 @@ export default function ProductList({ data, locale }) {
 
               <SelectContent>
                 <SelectGroup>
-                  <SelectItem
-                    className="text-[10px] sm:text-[12px] leading-tight font-medium text-black"
-                    value="default"
-                  >
-                    Default
-                  </SelectItem>
-                  <SelectItem
-                    className="text-[10px] sm:text-[12px] leading-tight font-medium text-black"
-                    value="price-low-high"
-                  >
-                    Price: Low to High
-                  </SelectItem>
-                  <SelectItem
-                    className="text-[10px] sm:text-[12px] leading-tight font-medium text-black"
-                    value="price-high-low"
-                  >
-                    Price: High to Low
-                  </SelectItem>
-                  <SelectItem
-                    className="text-[10px] sm:text-[12px] leading-tight font-medium text-black"
-                    value="name-a-z"
-                  >
-                    Name: A to Z
-                  </SelectItem>
-                  <SelectItem
-                    className="text-[10px] sm:text-[12px] leading-tight font-medium text-black"
-                    value="name-z-a"
-                  >
-                    Name: Z to A
-                  </SelectItem>
+                  {sortByOptions.map((option) => (
+                    <SelectItem
+                      className="text-[10px] sm:text-[12px] leading-tight font-medium text-black"
+                      key={option.value}
+                      value={option.value}
+                    >
+                      {option.label}
+                    </SelectItem>
+                  ))}
                 </SelectGroup>
               </SelectContent>
             </Select>
@@ -691,7 +682,7 @@ export default function ProductList({ data, locale }) {
             <p className="text-gray-500 text-lg mb-4">No products found</p>
             <button
               onClick={clearAllFilters}
-              className="px-6 py-2 bg-black text-white rounded hover:bg-gray-800 transition-colors"
+              className="text-sm px-6 py-2 bg-black text-white rounded hover:bg-gray-800 transition-colors"
             >
               Clear All Filters
             </button>
@@ -766,14 +757,14 @@ export default function ProductList({ data, locale }) {
 
 function FilterPill({ label, onRemove }) {
   return (
-    <div className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-none font-light text-[#282828] flex gap-x-2 px-3 py-2 bg-gray-100 rounded-full">
+    <div className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-none font-light text-[#282828] flex items-center gap-x-2 px-2.5 py-1 bg-gray-100 rounded-full">
       <span>{label}</span>
       <button
         onClick={onRemove}
         className="hover:scale-105 transition-transform duration-300"
         aria-label="Remove filter"
       >
-        <X className="size-2 xl:size-4 text-gray-600" />
+        <X className="size-2 xl:size-3.5 text-gray-600" />
       </button>
     </div>
   );

@@ -43,7 +43,7 @@ export default function CartHero({ data, locale, slug, itemsCount }) {
               >
                 {parse(
                   locale === "en" ? data?.title ?? "" : data?.title_ar ?? ""
-                )}
+                )}{" "}
 
                 {itemsCount > 0 && (
                   <Text as="span" size="text2" className="text-[#28282a]">

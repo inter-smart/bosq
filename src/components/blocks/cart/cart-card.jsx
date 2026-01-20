@@ -30,8 +30,8 @@ export default function CartCard({ product }) {
 
   return (
     <Suspense fallback={<CartCardSkeleton />}>
-      <div className="group w-full flex flex-wrap items-center border border-[#e9e9e9] rounded-lg p-3 sm:p-3 xl:p-5 2xl:p-6 hover:shadow-sm transition-shadow ">
-        <div className="w-[60px] sm:w-[100px] xl:w-[168px] 2xl:w-[200px] aspect-[168/186] rounded-lg bg-white border border-gray-100 sm:border-white max-sm:mb-3">
+      <div className="group w-full flex flex-wrap items-center border border-[#e9e9e9] rounded-[4px] p-3 sm:p-3 xl:p-5 2xl:p-6 hover:shadow-sm transition-shadow ">
+        <div className="w-[60px] sm:w-[100px] xl:w-[150px] 2xl:w-[200px] aspect-[168/186] rounded-lg bg-white border border-gray-100 sm:border-white max-sm:mb-3">
           <Image
             src={product?.media?.path}
             alt={product?.media?.alt}
@@ -40,7 +40,7 @@ export default function CartCard({ product }) {
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
         </div>
-        <div className="w-full sm:w-[calc(100%-100px)] xl:w-[calc(100%-168px)] 2xl:w-[calc(100%-200px)] sm:px-2.5 xl:px-4 2xl:px-5">
+        <div className="w-full sm:w-[calc(100%-100px)] xl:w-[calc(100%-150px)] 2xl:w-[calc(100%-200px)] sm:px-2.5 xl:px-4 2xl:px-5">
           <Heading
             as="div"
             size="heading3"
@@ -77,10 +77,10 @@ export default function CartCard({ product }) {
                   className="transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={quantity <= 1}
                 >
-                  <ChevronUp className="size-3 text-black" />
+                  <ChevronUp className="size-2.5 text-black" />
                 </button>
                 <button onClick={handleIncrement} className="transition-colors">
-                  <ChevronDown className="size-3 text-black" />
+                  <ChevronDown className="size-2.5 text-black" />
                 </button>
               </div>
             </div>
@@ -97,7 +97,7 @@ export default function CartCard({ product }) {
             <Button
               variant={"link"}
               className={
-                "h-auto! has-[>svg]:px-0 transition hover:filter-[brightness(0)_saturate(100%)_invert(31%)_sepia(86%)_saturate(6865%)_hue-rotate(354deg)_brightness(100%)_contrast(128%)]"
+                "not-hover:opacity-60 h-auto! has-[>svg]:px-0 transition hover:filter-[brightness(0)_saturate(100%)_invert(31%)_sepia(86%)_saturate(6865%)_hue-rotate(354deg)_brightness(100%)_contrast(128%)]"
               }
             >
               Remove
