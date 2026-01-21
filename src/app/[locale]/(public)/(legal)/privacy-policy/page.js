@@ -1,8 +1,23 @@
 import PrivacyInfo from "@/components/blocks/legal/privacy-info";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getPolicyCms } from "@/lib/api/privacyPolicy";
+import { getMetaData } from "@/lib/api/metaApi";
 
+export async function generateMetadata({ params }) {
+  const resolvedParams = await params;
+  const locale = resolvedParams.locale;
+  const { title, description, keywords, twitter, openGraph, alternates, other } = await getMetaData("privacy", locale, "privacy-policy");
 
+  return {
+    title,
+    description,
+    keywords,
+    twitter,
+    openGraph,
+    alternates,
+    other,
+  };
+}
 
 export default async function PrivacyPolicyPage({ params }) {
   const resolvedParams = await params;

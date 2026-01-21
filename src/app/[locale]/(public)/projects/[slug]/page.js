@@ -5,6 +5,24 @@ import ProductSimilar from "@/components/blocks/product/product-similar";
 import ProjectDetail from "@/components/blocks/project/project-detail";
 import ProjectSolution from "@/components/blocks/project/project-solution";
 import ProjectSpecialized from "@/components/blocks/project/project-specialized";
+import { getMetaData } from "@/lib/api/metaApi";
+
+export async function generateMetadata({ params }) {
+  const resolvedParams = await params;
+  const locale = resolvedParams.locale;
+  const slug = resolvedParams.slug;
+  const { title, description, keywords, twitter, openGraph, alternates, other } = await getMetaData(`project-${slug}`, locale, `projects/${slug}`);
+
+  return {
+    title,
+    description,
+    keywords,
+    twitter,
+    openGraph,
+    alternates,
+    other,
+  };
+}
 
 const local_data = {
   heroData: {

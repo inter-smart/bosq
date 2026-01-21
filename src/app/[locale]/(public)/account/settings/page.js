@@ -1,5 +1,22 @@
 import AccountSettings from "@/components/blocks/account/account-settings";
 import ProductHero from "@/components/blocks/product/product-hero";
+import { getMetaData } from "@/lib/api/metaApi";
+
+export async function generateMetadata({ params }) {
+  const resolvedParams = await params;
+  const locale = resolvedParams.locale;
+  const { title, description, keywords, twitter, openGraph, alternates, other } = await getMetaData("settings", locale, "account/settings");
+
+  return {
+    title,
+    description,
+    keywords,
+    twitter,
+    openGraph,
+    alternates,
+    other,
+  };
+}
 
 const local_data = {
   heroData: {

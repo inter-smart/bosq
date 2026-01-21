@@ -10,8 +10,10 @@ import Autoplay from "embla-carousel-autoplay";
 
 export default function NewsSection({ data, locale }) {
   const isEn = locale === "en";
+  const enableSlider = data?.list?.length > 2;
 
   const [emblaRef] = useEmblaCarousel(
+    enableSlider?
     {
       loop: true,
       axis: "x",
@@ -20,14 +22,15 @@ export default function NewsSection({ data, locale }) {
       containScroll: false,
       watchSlides: true,
       direction: locale === "ar" ? "rtl" : "ltr",
-    },
+    }: false,
+    enableSlider?
     [
       Autoplay({
         delay: 2500,
         stopOnInteraction: true,
         stopOnMouseEnter: true,
       }),
-    ]
+    ]: [],
   );
   return (
     <section className="w-full h-auto py-10 sm:py-20 lg:py-25 2xl:py-30 3xl:py-38 block">
@@ -45,7 +48,7 @@ export default function NewsSection({ data, locale }) {
                   "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
                   locale === "ar"
                     ? "-translate-x-1 xl:-translate-x-2 "
-                    : "translate-x-1 xl:translate-x-2 "
+                    : "translate-x-1 xl:translate-x-2 ",
                 )}
               />
             </Heading>
@@ -62,7 +65,7 @@ export default function NewsSection({ data, locale }) {
             </Button>
           </div>
         </div>
-        <div ref={emblaRef} className="overflow-hidden">
+        <div ref={enableSlider ? emblaRef : null} className="overflow-hidden">
           <div className="select-none flex">
             {data?.list?.map((item) => (
               <div
@@ -93,7 +96,7 @@ export default function NewsSection({ data, locale }) {
                           "relative z-0 before:content-[''] before:w-4.5 2xl:before:w-7 before:h-[2px] 2xl:before:h-[3px] before:my-auto before:bg-[#B1B2B4] before:absolute before:z-1",
                           locale === "ar"
                             ? "pr-7 2xl:pr-10 before:inset-[0_0_0_auto]"
-                            : "pl-7 2xl:pl-10 before:inset-[0_auto_0_0]"
+                            : "pl-7 2xl:pl-10 before:inset-[0_auto_0_0]",
                         )}
                       >
                         {isEn ? item?.name : item?.name_ar}
@@ -103,7 +106,7 @@ export default function NewsSection({ data, locale }) {
                           "relative z-0 before:content-[''] before:w-1.5 2xl:before:w-2 before:h-1.5 2xl:before:h-2 before:my-auto before:bg-[#B1B2B4] before:rounded-full before:absolute before:z-1",
                           locale === "ar"
                             ? "pr-3 2xl:pr-5 before:inset-[0_0_0_auto]"
-                            : "pl-3 2xl:pl-5 before:inset-[0_auto_0_0]"
+                            : "pl-3 2xl:pl-5 before:inset-[0_auto_0_0]",
                         )}
                       >
                         {item?.date}
@@ -112,7 +115,7 @@ export default function NewsSection({ data, locale }) {
                     <div
                       className={cn(
                         "text-[16px] sm:text-[18px] lg:text-[20px] 2xl:text-[24px] 3xl:text-[30px] leading-[1.4] font-light text-[#282828]",
-                        locale === "ar" ? "pr-7 2xl:pr-10" : "pl-7 2xl:pl-10"
+                        locale === "ar" ? "pr-7 2xl:pr-10" : "pl-7 2xl:pl-10",
                       )}
                     >
                       {isEn ? item?.title : item?.title_ar}

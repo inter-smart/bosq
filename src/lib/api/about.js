@@ -5,7 +5,6 @@ export const getAboutData = {
     try {
       const {data} = await apiClient(`/api/frontend/about`);
       
-      console.log(data)
       return sendSuccess(data);
     } catch (error) {
       return sendError(error);

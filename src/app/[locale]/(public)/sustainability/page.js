@@ -1,10 +1,25 @@
 import ProductHero from "@/components/blocks/product/product-hero";
 import SustainabilityInfo from "@/components/blocks/sustainability/sustainability-info";
 import { getSustainabilityData, sustainabilityData } from "@/lib/api/CMS/basicGet";
+import { getMetaData } from "@/lib/api/metaApi";
 import { notFound } from "next/navigation";
 import NotFound from "../not-found/page";
 
+export async function generateMetadata({ params }) {
+  const resolvedParams = await params;
+  const locale = resolvedParams.locale;
+  const { title, description, keywords, twitter, openGraph, alternates, other } = await getMetaData("sustainability", locale, "sustainability");
 
+  return {
+    title,
+    description,
+    keywords,
+    twitter,
+    openGraph,
+    alternates,
+    other,
+  };
+}
 
 export default async function SustainabilityPage({ params }) {
   const resolvedParams = await params;

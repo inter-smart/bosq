@@ -1,6 +1,23 @@
 import ProductHero from "@/components/blocks/product/product-hero";
 import ProjectHero from "@/components/blocks/project/project-hero";
 import ProjectList from "@/components/blocks/project/project-list";
+import { getMetaData } from "@/lib/api/metaApi";
+
+export async function generateMetadata({ params }) {
+  const resolvedParams = await params;
+  const locale = resolvedParams.locale;
+  const { title, description, keywords, twitter, openGraph, alternates, other } = await getMetaData("projects", locale, "projects");
+
+  return {
+    title,
+    description,
+    keywords,
+    twitter,
+    openGraph,
+    alternates,
+    other,
+  };
+}
 
 const local_data = {
   heroData: {
@@ -119,6 +136,9 @@ const local_data = {
     ],
   },
 };
+
+
+
 
 export default async function ProjectsPage({ params }) {
   const resolvedParams = await params;

@@ -1,5 +1,22 @@
 import AccountCoupons from "@/components/blocks/account/account-coupons";
 import ProductHero from "@/components/blocks/product/product-hero";
+import { getMetaData } from "@/lib/api/metaApi";
+
+export async function generateMetadata({ params }) {
+  const resolvedParams = await params;
+  const locale = resolvedParams.locale;
+  const { title, description, keywords, twitter, openGraph, alternates, other } = await getMetaData("coupons", locale, "account/coupons");
+
+  return {
+    title,
+    description,
+    keywords,
+    twitter,
+    openGraph,
+    alternates,
+    other,
+  };
+}
 
 const local_data = {
   heroData: {

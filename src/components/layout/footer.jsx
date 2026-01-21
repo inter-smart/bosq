@@ -21,7 +21,6 @@ export default function Footer({ footerData, socialLinkData, locale, data }) {
   const isEn = locale === "en";
 
 
-  console.log("data", data?.sale_enquiry)
 
   const placeholders = [
     "Enter Your Email",
@@ -34,7 +33,6 @@ export default function Footer({ footerData, socialLinkData, locale, data }) {
   };
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log("submitted");
   };
   return (
     <footer className="w-full py-[20px_10px] xl:py-[40px_10px] 2xl:py-[60px_15px] bg-[#282828] overflow-hidden relative z-0">

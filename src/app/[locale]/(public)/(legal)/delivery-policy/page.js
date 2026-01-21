@@ -4,6 +4,25 @@ import { getDeliveryPolicyCms } from "@/lib/api/deliveryPolicy";
 
 
 
+export async function generateMetadata({ params }) {
+  const resolvedParams = await params;
+  const locale = resolvedParams.locale;
+  const { title, description, keywords, twitter, openGraph, alternates, other } = await getMetaData("delivery-policy", locale);
+
+
+  return {
+    title,
+    description,
+    keywords,
+    twitter,
+    openGraph,
+    alternates,
+    other,
+  };
+}
+
+
+
 export default async function DeliveryPage({ params }) {
   const resolvedParams = await params;
   const { locale } = resolvedParams;

@@ -2,6 +2,23 @@ import CartEmpty from "@/components/blocks/cart/cart-empty";
 import CartHero from "@/components/blocks/cart/cart-hero";
 import CartList from "@/components/blocks/cart/cart-list";
 import ProductSimilar from "@/components/blocks/product/product-similar";
+import { getMetaData } from "@/lib/api/metaApi";
+
+export async function generateMetadata({ params }) {
+  const resolvedParams = await params;
+  const locale = resolvedParams.locale;
+  const { title, description, keywords, twitter, openGraph, alternates, other } = await getMetaData("cart", locale, "cart");
+
+  return {
+    title,
+    description,
+    keywords,
+    twitter,
+    openGraph,
+    alternates,
+    other,
+  };
+}
 
 const local_data = {
   heroData: {

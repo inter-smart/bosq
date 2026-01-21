@@ -3,6 +3,8 @@ import HomeHero from "@/components/blocks/home/home-hero"; // keep SSR for SEO
 
 import { notFound } from "next/navigation";
 import { getHomeData } from "@/lib/api/home";
+import { getMetaData } from "@/lib/api/metaApi";
+import NotFound from "./not-found/page";
 
 const HomeAbout = dynamic(() => import("@/components/blocks/home/home-about"));
 const HomeFeatured = dynamic(() =>
@@ -551,6 +553,27 @@ const local_data = {
   },
 };
 
+
+
+export async function generateMetadata({ params }) {
+  const resolvedParams = await params;
+  const lang = resolvedParams.locale;
+
+  console.log("params: ", lang)
+  const { title, description, keywords, twitter, openGraph, alternates, other } = await getMetaData("home", lang);
+
+  return {
+    title,
+    description,
+    keywords,
+    twitter,
+    openGraph,
+    alternates,
+    other,
+  };
+}
+
+
 export default async function HomePage({ params }) {
   const resolvedParams = await params;
   const { locale } = resolvedParams;
@@ -558,7 +581,7 @@ export default async function HomePage({ params }) {
   const { data, error } = await getHomeData.getCmsData();
 
   if (error) {
-    notFound();
+    NotFound();
   }
 
   const {

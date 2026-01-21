@@ -1,5 +1,22 @@
 import ProductHero from "@/components/blocks/product/product-hero";
 import AccountWishlist from "@/components/blocks/account/account-wishlist";
+import { getMetaData } from "@/lib/api/metaApi";
+
+export async function generateMetadata({ params }) {
+  const resolvedParams = await params;
+  const locale = resolvedParams.locale;
+  const { title, description, keywords, twitter, openGraph, alternates, other } = await getMetaData("wishlist", locale, "account/wishlist");
+
+  return {
+    title,
+    description,
+    keywords,
+    twitter,
+    openGraph,
+    alternates,
+    other,
+  };
+}
 
 const local_data = {
   heroData: {

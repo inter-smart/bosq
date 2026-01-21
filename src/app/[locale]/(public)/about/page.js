@@ -6,6 +6,27 @@ import TestimonialSection from "@/components/blocks/about/TestimonialSection";
 import ClinetSection from "@/components/blocks/about/ClinetSection";
 import NewsSection from "@/components/blocks/about/NewsSection";
 import { getAboutData } from "@/lib/api/about";
+import NotFound from "../not-found/page";
+import { getMetaData } from "@/lib/api/metaApi";
+
+
+
+export async function generateMetadata({ params }) {
+  const resolvedParams = await params;
+  const locale = resolvedParams.locale;
+  const { title, description, keywords, twitter, openGraph, alternates, other } = await getMetaData("about", locale);
+
+  return {
+    title,
+    description,
+    keywords,
+    twitter,
+    openGraph,
+    alternates,
+    other,
+  };
+}
+
 
 export default async function AboutPage({ params }) {
   const resolvedParams = await params;
@@ -15,7 +36,7 @@ export default async function AboutPage({ params }) {
   const { data, error } = await getAboutData.getCmsData();
 
   if (error) {
-    notFound();
+    NotFound();
   }
 
   const {
