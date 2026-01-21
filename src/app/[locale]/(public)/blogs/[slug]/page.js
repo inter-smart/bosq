@@ -1,44 +1,135 @@
 import BlogInfo from "@/components/blocks/blog/blog-info";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getBlogsData } from "@/lib/api/blog";
-import { getMetaData } from "@/lib/api/metaApi";
 import NotFound from "../../not-found/page";
+import { parseOtherMeta } from "@/lib/helper";
+import { DefaultOgImage } from "@/lib/api/constants";
+import { apiClient } from "@/lib/api/client";
 
 export async function generateMetadata({ params }) {
-  const resolvedParams = await params;
-  const locale = resolvedParams.locale;
-  const slug = resolvedParams.slug;
-  const { title, description, keywords, twitter, openGraph, alternates, other } = await getMetaData(`blog-${slug}`, locale, `blogs/${slug}`);
+  const { slug, locale } = await params;
+  
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend/blog-details?slug=${slug}`,
+    );
+    
+     // Check if response is ok
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
 
-  return {
-    title,
-    description,
-    keywords,
-    twitter,
-    openGraph,
-    alternates,
-    other,
-  };
+    // Parse JSON response
+    const data = await response.json();
+    
+    
+    const isEN = locale === "en";
+    const metadata = data?.data?.metaData;
+    console.log("data:", metadata);
+    
+
+    if (!metadata) {
+      return {
+        title: "Blog Not Found",
+        description: "The requested blog post could not be found.",
+      };
+    }
+
+    const {
+      meta_title,
+      meta_description,
+      meta_keywords,
+      other_meta,
+      meta_title_ar,
+      meta_description_ar,
+      meta_keywords_ar,
+      other_meta_ar,
+    } = metadata;
+
+    // Select language-specific metadata
+    const title = isEN ? meta_title : meta_title_ar;
+    const description = isEN ? meta_description : meta_description_ar;
+    const keywords = isEN ? meta_keywords : meta_keywords_ar;
+
+    // Use blog's own image or fallback
+    const ogImage = DefaultOgImage;
+    const { other } = isEN?  parseOtherMeta(other_meta): parseOtherMeta(other_meta_ar);
+
+    return {
+      title: title || "Blog Post",
+      description: description || "Read our latest blog post",
+      keywords: keywords || "",
+
+      openGraph: {
+        title: title || "Blog Post",
+        description: description || "Read our latest blog post",
+        images: [
+          {
+            url: ogImage,
+            width: 1200,
+            height: 630,
+            alt: "Blog post image",
+          },
+        ],
+        type: "article",
+        publishedTime: data?.blogData?.publishedAt || undefined,
+        authors: undefined,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL}/${locale}/blog/${slug}`,
+        locale: isEN ? "en_US" : "ar_AR",
+      },
+
+      twitter: {
+        card: "summary_large_image",
+        title: title || "Blog Post",
+        description: description || "Read our latest blog post",
+        images: [ogImage],
+      },
+
+      other: {
+        ...other,
+      },
+
+      alternates: {
+        canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/${locale}/blog/${slug}`,
+        languages: {
+          en: `${process.env.NEXT_PUBLIC_SITE_URL}/en/blog/${slug}`,
+          ar: `${process.env.NEXT_PUBLIC_SITE_URL}/ar/blog/${slug}`,
+        },
+      },
+    };
+  } catch (error) {
+    console.error("Error generating metadata:", error);
+    return {
+      title: "Blog Not Found",
+      description: "The requested blog post could not be found.",
+    };
+  }
 }
+
 
 export default async function BlogDetailPage({ params }) {
-const resolvedParams = await params;
-  const { locale, slug } = resolvedParams;
+  const resolvedParams = await params;
+  const { slug } = resolvedParams;
+  const locale = resolvedParams.locale;
 
-  const slugData = locale === "en"? "Blog" : "تفاصيل المقالة";
+  const slugData = locale === "en" ? "Blog" : "تفاصيل المقالة";
 
-  const {data, error} = await getBlogsData.getBlogDetailsData(slug);
+  const { data, error } = await getBlogsData.getBlogDetailsData(slug);
 
-if (!data || error) {
-  return <NotFound />;
-}
-
+  if (!data || error) {
+    return <NotFound />;
+  }
 
   const { heroData, blogData, popularBlogData, relatedBlogData } = data;
 
   return (
     <>
-      <ProductHero locale={locale} data={heroData} slug={slugData} link={"/blogs"} />
+      <ProductHero
+        locale={locale}
+        data={heroData}
+        slug={slugData}
+        link={"/blogs"}
+      />
       <BlogInfo
         locale={locale}
         data={blogData}
