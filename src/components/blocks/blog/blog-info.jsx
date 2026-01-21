@@ -303,7 +303,7 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
                                 size="text3"
                                 className="truncate text-[#b1b3b4]"
                               >
-                                {data?.publishedDate}
+                                {data?.publishedAt}
                               </Text>
                             </div>
                           </div>

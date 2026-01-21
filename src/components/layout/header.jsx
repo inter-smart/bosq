@@ -75,7 +75,9 @@ export default function Header({ headerData, navigationData, locale, data }) {
   const handleNavigationLinkClick = () => setSheetOpen(false);
 
   const switchLocale = (newLocale) => {
+    console.log("locale: ", locale)
     if (newLocale === locale) return;
+
 
     // Remove current locale from pathname and add new one
     const segments = pathname.split("/").filter(Boolean);
@@ -289,7 +291,7 @@ export default function Header({ headerData, navigationData, locale, data }) {
               {locale == "ar" ? (
                 <Button
                   variant="link"
-                  onClick={() => switchLocale("ar")}
+                  onClick={() => switchLocale("en")}
                   className={cn(
                     "text-[12px] leading-none font-normal font-cairo text-white min-w-[60px] sm:min-w-[60px] lg:min-w-[80px] 2xl:min-w-[100px] gap-1",
                     showDarkHeader ? "text-[#282828]" : "text-white"
@@ -307,7 +309,7 @@ export default function Header({ headerData, navigationData, locale, data }) {
               ) : (
                 <Button
                   variant="link"
-                  onClick={() => switchLocale("en")}
+                  onClick={() => switchLocale("ar")}
                   className={cn(
                     "text-[12px] leading-none font-normal font-cairo min-w-[60px] sm:min-w-[60px] lg:min-w-[80px] 2xl:min-w-[100px] gap-1",
                     showDarkHeader ? "text-[#282828]" : "text-white"
