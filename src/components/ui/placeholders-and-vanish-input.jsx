@@ -5,8 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Search } from "lucide-react";
 import { toast } from "sonner";
-import { fetchFromAPI } from "@/lib/helper";
-
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 export function PlaceholdersAndVanishInput({
   placeholders,
   onChange,
@@ -14,8 +13,9 @@ export function PlaceholdersAndVanishInput({
   locale,
   variant = "default",
 }) {
-  const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
+  const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
   const intervalRef = useRef(null);
   const startAnimation = () => {
     intervalRef.current = setInterval(() => {
@@ -188,11 +188,14 @@ export function PlaceholdersAndVanishInput({
     setIsSubmitting(true);
     const API_URL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend/enquiries/news-letter`;
     try {
+      const recaptchaToken = await executeRecaptcha("contact_enquiry_form");
+
       const res = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email,
+          recaptcha_token: recaptchaToken,
         }),
       });
 
@@ -200,13 +203,14 @@ export function PlaceholdersAndVanishInput({
 
       const data = await res.json();
 
-      console.log("data:",data);
-
+      console.log("data:", data);
 
       toast.success(data?.message);
     } catch (error) {
       console.log("Newsletter subscription error:", error);
-      toast.error(error.message || "An error occurred. Please try again later.");
+      toast.error(
+        error.message || "An error occurred. Please try again later.",
+      );
     } finally {
       setIsSubmitting(false);
     }
