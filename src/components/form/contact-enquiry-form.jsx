@@ -1,6 +1,5 @@
 "use client";
 
-
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -36,26 +35,22 @@ const formSchema = z.object({
 
 // Shared styles
 const labelStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]"
+  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]",
 );
 
 const inputStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1"
+  "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1",
 );
 
 const errorStyle = cn("text-[#f17423]");
 
 const textareaStyle = cn(
   inputStyle,
-  "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none"
+  "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none",
 );
 
 export default function ContactEnquiryForm({ locale }) {
-
-
   const { executeRecaptcha } = useGoogleReCaptcha();
-
-  
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -70,7 +65,6 @@ export default function ContactEnquiryForm({ locale }) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
 
-
   const API_URL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend/enquiries/contact`;
 
   const onSubmit = async (values) => {
@@ -78,18 +72,19 @@ export default function ContactEnquiryForm({ locale }) {
     setSuccess("");
 
     try {
-
-
       const recaptchaToken = await executeRecaptcha("contact_enquiry_form");
-      
+
       const res = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ recaptcha_token: recaptchaToken, ...values}),
+        body: JSON.stringify({
+          recaptcha_token: recaptchaToken,
+          type: "contact",
+          ...values,
+        }),
       });
 
-
-      console.log("result: ", res)
+      console.log("result: ", res);
 
       if (!res.ok) throw new Error("Failed to send enquiry");
 
@@ -146,7 +141,7 @@ export default function ContactEnquiryForm({ locale }) {
                   {...field}
                   className={cn(
                     inputStyle,
-                    "w-full p-0 [&_input]:flex-1 [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px]"
+                    "w-full p-0 [&_input]:flex-1 [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px]",
                   )}
                   placeholder="Enter your mobile number"
                 />
@@ -216,7 +211,7 @@ export default function ContactEnquiryForm({ locale }) {
               "text-[10px] mt-1 w-full",
               success.includes("successfully")
                 ? "text-green-600"
-                : "text-red-600"
+                : "text-red-600",
             )}
           >
             {success}

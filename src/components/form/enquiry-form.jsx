@@ -17,10 +17,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 // ✅ Validation schema
 const formSchema = z.object({
-  fullName: z
+  name: z
     .string()
     .min(2, "Full name must be at least 2 characters")
     .max(50, "Full name cannot exceed 50 characters"),
@@ -37,25 +38,25 @@ const formSchema = z.object({
 
 // ✅ Shared styles
 const labelStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]"
+  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]",
 );
 
 const inputStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#bababa] rounded-[4px] px-[15px] focus-visible:ring-1"
+  "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#bababa] rounded-[4px] px-[15px] focus-visible:ring-1",
 );
 
 const errorStyle = cn("text-[#f17423]");
 
 const textareaStyle = cn(
   inputStyle,
-  "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none"
+  "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none",
 );
 
 export default function EnquiryForm() {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      fullName: "",
+      name: "",
       email: "",
       phone: "",
       additionalDetails: "",
@@ -65,15 +66,25 @@ export default function EnquiryForm() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(null);
 
+  const { executeRecaptcha } = useGoogleReCaptcha();
+  const API_URL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend/enquiries/contact`;
+
   const onSubmit = async (values) => {
     setLoading(true);
     setSuccess(null);
 
     try {
-      const res = await fetch("http://localhost:1337/api/enquiry", {
+      const recaptchaToken = await executeRecaptcha("lead_generation_form");
+
+      const res = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: values }),
+        body: JSON.stringify({
+          ...values,
+          message: values.additionalDetails,
+          recaptcha_token: recaptchaToken,
+          type: "lead-generation",
+        }),
       });
 
       if (!res.ok) throw new Error("Failed to send enquiry");
@@ -97,7 +108,7 @@ export default function EnquiryForm() {
         {/* Full Name */}
         <FormField
           control={form.control}
-          name="fullName"
+          name="name"
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
