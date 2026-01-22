@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
 import ContactEnquiryForm from "@/components/form/contact-enquiry-form";
 import parse from "html-react-parser";
+import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
 
 const ContactMap = dynamic(() => import("./contact-map"));
 
@@ -31,7 +32,7 @@ export default function ContactInfo({ locale, data }) {
                     "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
                     !isEn
                       ? "-translate-x-1 xl:-translate-x-2 "
-                      : "translate-x-1 xl:translate-x-2 "
+                      : "translate-x-1 xl:translate-x-2 ",
                   )}
                 />
               </Heading>
@@ -40,13 +41,14 @@ export default function ContactInfo({ locale, data }) {
                 size="text1"
                 className="leading-tight text-[#808080] mb-2 xl:mb-4 2xl:mb-6"
               >
-                {(
-                  isEn
-                    ? data?.formData?.description
-                    : data?.formData?.description_ar
-                )}
+                {isEn
+                  ? data?.formData?.description
+                  : data?.formData?.description_ar}
               </Text>
-              <ContactEnquiryForm locale={locale} />
+
+              <RecaptchaProvider>
+                <ContactEnquiryForm locale={locale} />
+              </RecaptchaProvider>
             </div>
           </div>
           <div className="w-full lg:w-1/2">
@@ -68,9 +70,7 @@ export default function ContactInfo({ locale, data }) {
                 {isEn ? data?.title : data?.title_ar}
               </Heading>
               <Text as="div" size="text1" className="text-[#808080]">
-                {isEn
-                  ? parse(data?.description)
-                  : parse(data?.description_ar)}
+                {isEn ? parse(data?.description) : parse(data?.description_ar)}
               </Text>
             </div>
           </div>
@@ -94,13 +94,13 @@ export default function ContactInfo({ locale, data }) {
                   {(isEn
                     ? item?.value
                     : item?.value_ar?.length
-                    ? item.value_ar
-                    : item.value
+                      ? item.value_ar
+                      : item.value
                   )?.map((valueItem, idx) => {
                     const isEmail = item?.type === "email";
                     const isPhone = item?.type === "phone";
                     const isAddress = item?.type === "address";
-                    
+
                     if (isEmail) {
                       return (
                         <div key={"valueItem" + idx}>
@@ -132,7 +132,7 @@ export default function ContactInfo({ locale, data }) {
                         </div>
                       );
                     }
-                    
+
                     return (
                       <div key={"valueItem" + idx}>
                         <Text

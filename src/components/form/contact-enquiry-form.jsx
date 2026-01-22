@@ -1,5 +1,7 @@
 "use client";
 
+
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
@@ -23,7 +25,7 @@ import "react-international-phone/style.css";
 
 // Validation schema
 const formSchema = z.object({
-  fullName: z
+  name: z
     .string()
     .min(2, "Full name must be at least 2 characters")
     .max(50, "Full name cannot exceed 50 characters"),
@@ -49,10 +51,16 @@ const textareaStyle = cn(
 );
 
 export default function ContactEnquiryForm({ locale }) {
+
+
+  const { executeRecaptcha } = useGoogleReCaptcha();
+
+  
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      fullName: "",
+      name: "",
       email: "",
       phone: "",
       message: "",
@@ -62,16 +70,26 @@ export default function ContactEnquiryForm({ locale }) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
 
+
+  const API_URL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend/enquiries/contact`;
+
   const onSubmit = async (values) => {
     setLoading(true);
     setSuccess("");
 
     try {
-      const res = await fetch("http://localhost:1337/api/enquiry", {
+
+
+      const recaptchaToken = await executeRecaptcha("contact_enquiry_form");
+      
+      const res = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: values }),
+        body: JSON.stringify({ recaptcha_token: recaptchaToken, ...values}),
       });
+
+
+      console.log("result: ", res)
 
       if (!res.ok) throw new Error("Failed to send enquiry");
 
@@ -94,7 +112,7 @@ export default function ContactEnquiryForm({ locale }) {
         {/* Full Name */}
         <FormField
           control={form.control}
-          name="fullName"
+          name="name"
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
