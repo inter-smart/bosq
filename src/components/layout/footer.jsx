@@ -11,16 +11,14 @@ import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useState } from "react";
+import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
 });
 
 export default function Footer({ footerData, socialLinkData, locale, data }) {
-
   const isEn = locale === "en";
-
-
 
   const placeholders = [
     "Enter Your Email",
@@ -45,7 +43,7 @@ export default function Footer({ footerData, socialLinkData, locale, data }) {
             >
               <Image
                 src={data?.media?.path}
-                alt={isEn ? data?.media?.alt: data?.media?.alt_ar}
+                alt={isEn ? data?.media?.alt : data?.media?.alt_ar}
                 width={114}
                 height={37}
                 unoptimized
@@ -58,7 +56,11 @@ export default function Footer({ footerData, socialLinkData, locale, data }) {
               size="text3"
               className="text-white mb-4 xl:mb-5 2xl:mb-7"
             >
-              {parse(isEn? data?.address_block?.address: data?.address_block?.address_ar)}
+              {parse(
+                isEn
+                  ? data?.address_block?.address
+                  : data?.address_block?.address_ar,
+              )}
             </Text>
 
             <div className="flex flex-wrap items-center gap-x-[15px] xl:gap-x-[20px]">
@@ -68,7 +70,7 @@ export default function Footer({ footerData, socialLinkData, locale, data }) {
                     <a href={item?.link || "#"} target="_blank">
                       <Image
                         src={item?.media?.path}
-                        alt={isEn? item?.media?.alt: item?.media?.alt_ar}
+                        alt={isEn ? item?.media?.alt : item?.media?.alt_ar}
                         width={10}
                         height={10}
                         unoptimized
@@ -309,12 +311,14 @@ export default function Footer({ footerData, socialLinkData, locale, data }) {
                 {parse(data?.newsletter?.main_title)}
               </Text>
               <div className="w-full sm:w-[60%]">
-                <PlaceholdersAndVanishInput
-                  placeholders={placeholders}
-                  onChange={handleChange}
-                  onSubmit={onSubmit}
-                  locale={locale}
-                />
+                <RecaptchaProvider>
+                  <PlaceholdersAndVanishInput
+                    placeholders={placeholders}
+                    onChange={handleChange}
+                    onSubmit={onSubmit}
+                    locale={locale}
+                  />
+                </RecaptchaProvider>
               </div>
             </div>
           </div>
@@ -391,14 +395,14 @@ function AccordionItem({ title, children, section }) {
         <ChevronDown
           className={cn(
             "w-4 h-4 text-white transition-transform duration-200",
-            isOpen && "rotate-180"
+            isOpen && "rotate-180",
           )}
         />
       </button>
       <div
         className={cn(
           "overflow-hidden transition-all duration-300",
-          isOpen ? "max-h-[500px] mt-5" : "max-h-0"
+          isOpen ? "max-h-[500px] mt-5" : "max-h-0",
         )}
       >
         {children}

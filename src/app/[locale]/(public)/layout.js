@@ -1,6 +1,7 @@
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import { getSiteData } from "@/lib/api/CMS/basicGet";
+import { Toaster } from "sonner";
 
 const local_data = {
   header_data: {
@@ -386,7 +387,7 @@ const local_data = {
       id: "04",
       name: "linkedin",
       link: "https://www.linkedin.com/",
-    media: {
+      media: {
         media_type: "image",
         media_path: "/images/social-linkedin.svg",
         media_alt: "social-linkedin",
@@ -396,16 +397,12 @@ const local_data = {
 };
 
 export default async function PublicLayout({ children, params }) {
-
   const resolvedParams = await params;
   const { locale } = resolvedParams;
 
-  const {data} = await getSiteData();
+  const { data } = await getSiteData();
 
-
-  const {headerData, footerData, socialMedia, cards} = data;
-
-
+  const { headerData, footerData, socialMedia, cards } = data;
 
   return (
     <>
@@ -413,11 +410,11 @@ export default async function PublicLayout({ children, params }) {
         locale={locale}
         headerData={local_data.header_data}
         navigationData={local_data.navigation_data}
-        data = {headerData}
+        data={headerData}
       />
 
       <main>{children}</main>
-
+      <Toaster position="top-right" richColors closeButton />
       <Footer
         locale={locale}
         footerData={local_data.footer_data}

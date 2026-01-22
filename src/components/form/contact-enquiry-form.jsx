@@ -21,6 +21,7 @@ import { cn } from "@/lib/utils";
 
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
+import { toast } from "sonner";
 
 // Validation schema
 const formSchema = z.object({
@@ -84,15 +85,20 @@ export default function ContactEnquiryForm({ locale }) {
         }),
       });
 
-      console.log("result: ", res);
-
+      
+      
       if (!res.ok) throw new Error("Failed to send enquiry");
-
+      
+      const data = await res.json();
       form.reset();
-      setSuccess("Message sent successfully!");
+
+      console.log(data)
+      setSuccess(data?.message);
+      toast.success(data?.message);
     } catch (err) {
       console.error(err);
       setSuccess("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.");
     }
 
     setLoading(false);

@@ -4,6 +4,8 @@ import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Search } from "lucide-react";
+import { toast } from "sonner";
+import { fetchFromAPI } from "@/lib/helper";
 
 export function PlaceholdersAndVanishInput({
   placeholders,
@@ -46,6 +48,7 @@ export function PlaceholdersAndVanishInput({
   const inputRef = useRef(null);
   const [value, setValue] = useState("");
   const [animating, setAnimating] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const draw = useCallback(() => {
     if (!inputRef.current) return;
@@ -162,24 +165,70 @@ export function PlaceholdersAndVanishInput({
     if (value && inputRef.current) {
       const maxX = newDataRef.current.reduce(
         (prev, current) => (current.x > prev ? current.x : prev),
-        0
+        0,
       );
       animate(maxX);
     }
   };
+  const handleNewsletterSubmit = async (email) => {
+    if (isSubmitting) return;
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    vanishAndSubmit();
-    onSubmit && onSubmit(e);
+    if (!email) {
+      toast.error("Please enter your email address");
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    setIsSubmitting(true);
+    const API_URL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend/enquiries/news-letter`;
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Failed to send enquiry");
+
+      const data = await res.json();
+
+      console.log("data:",data);
+
+
+      toast.success(data?.message);
+    } catch (error) {
+      console.log("Newsletter subscription error:", error);
+      toast.error(error.message || "An error occurred. Please try again later.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // ✅ Success UX only after API success
+    vanishAndSubmit();
+    onSubmit?.(e);
+
+    const emailInput = e.target.querySelector('input[type="text"]');
+    const email = emailInput?.value?.trim();
+    handleNewsletterSubmit(email);
+  };
+
   return (
     <form
       className={cn(
         "w-full relative max-w-full mx-auto bg-none border-b border-white dark:bg-zinc-800 h-7 2xl:h-8 overflow-hidden transition duration-200",
         value && "bg-none",
         variant === "search" &&
-          "h-9 2xl:h-10 3xl:h-13 bg-white border border-[#e9e9e9]"
+          "h-9 2xl:h-10 3xl:h-13 bg-white border border-[#e9e9e9]",
       )}
       onSubmit={handleSubmit}
     >
@@ -188,7 +237,7 @@ export function PlaceholdersAndVanishInput({
           "absolute pointer-events-none text-base transform scale-50 top-0 origin-top-left filter",
           !animating ? "opacity-0" : "opacity-100",
           locale === "ar" ? "right-0 pl-20" : "left-0 pr-20",
-          variant === "search" && "px-0"
+          variant === "search" && "px-0",
         )}
         ref={canvasRef}
       />
@@ -208,7 +257,7 @@ export function PlaceholdersAndVanishInput({
           animating && "text-transparent dark:text-transparent",
           locale === "ar" ? "pr-0 pl-20" : "pl-0 pr-20",
           variant === "search" && "text-black selection:bg-gray-500",
-          variant === "search" && (locale === "ar" ? "pr-3" : "pl-3")
+          variant === "search" && (locale === "ar" ? "pr-3" : "pl-3"),
         )}
       />
       <button
@@ -218,7 +267,7 @@ export function PlaceholdersAndVanishInput({
         className={cn(
           "w-3.5 absolute top-1/2 z-50 -translate-y-1/2 rounded-full transition duration-200 flex items-center justify-center",
           locale === "ar" ? "left-0 rotate-180" : "right-0 rotate-0",
-          variant === "search" && (locale === "ar" ? "ml-3" : "mr-3")
+          variant === "search" && (locale === "ar" ? "ml-3" : "mr-3"),
         )}
       >
         {variant === "search" ? (
@@ -226,7 +275,7 @@ export function PlaceholdersAndVanishInput({
             className={cn(
               "size-3",
               value ? "text-black" : "text-[#282828]",
-              locale === "ar" && "rotate-180"
+              locale === "ar" && "rotate-180",
             )}
           />
         ) : (
@@ -273,7 +322,7 @@ export function PlaceholdersAndVanishInput({
               }}
               className={cn(
                 "text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[16px] leading-tight font-light text-white/50 dark:text-zinc-500 pl-0 text-start w-[calc(100%-2rem)] truncate",
-                variant === "search" && "text-black/50 px-3"
+                variant === "search" && "text-black/50 px-3",
               )}
             >
               {placeholders[currentPlaceholder]}
