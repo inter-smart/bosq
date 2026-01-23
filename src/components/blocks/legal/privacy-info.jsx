@@ -7,13 +7,16 @@ export default function PrivacyInfo({ data, locale }) {
   const isEN = locale === "en";
 
   return (
-    <section className="w-full h-auto block py-[30px] sm:py-[40px] xl:py-[60px] 2xl:py-[100px]">
+    <section className="w-full h-auto block py-[30px] sm:py-[40px] xl:py-[30px_60px] 2xl:py-[60px_100px]">
       <div className="container">
         {data?.categories?.map((item, index) => (
           <div
             key={"privacy-info-" + index}
             className="flex flex-wrap -mx-1 xl:-mx-4 2xl:-mx-6 [&>*]:p-1 xl:[&>*]:p-4 2xl:[&>*]:p-6"
           >
+            <div className="w-full py-0!">
+              <hr />
+            </div>
             <div className="w-full xl:w-[360px] 2xl:sm:w-[520px]">
               <Heading
                 as="h2"
@@ -31,6 +34,11 @@ export default function PrivacyInfo({ data, locale }) {
                 {parse(isEN ? item?.description : item?.description_ar)}
               </div>
             </div>
+            {index === data?.categories?.length - 1 && (
+              <div className="w-full py-0!">
+                <hr />
+              </div>
+            )}
           </div>
         ))}
       </div>

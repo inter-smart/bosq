@@ -80,7 +80,7 @@ export default function HeaderNavigation({
     <NavigationMenu
       data-motion="from-end"
       viewport={isDesktop ? false : true}
-      defaultValue={"toplevel1"}
+      // defaultValue={"toplevel1"}
       className="w-full max-w-full justify-start lg:justify-center max-lg:[&>div]:w-full static"
     >
       <NavigationMenuList className="xl:gap-x-3 2xl:gap-x-4 max-lg:flex-col max-lg:[&>div]:w-full">

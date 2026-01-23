@@ -39,12 +39,12 @@ export default function MobileHeaderNavigation({
         return (
           <motion.div key={i} variants={itemVariants} className="px-4">
             {/* TOP LEVEL */}
-            <div className="flex items-center justify-between py-3">
+            <div className="flex items-center justify-between py-3.5">
               <Link
                 href={`/${locale}${item.slug ?? ""}`}
                 onClick={onNavigationClick}
                 className={cn(
-                  "text-[20px] font-medium",
+                  "text-[21px] font-medium",
                   isActive && "text-[#f17423]"
                 )}
               >
@@ -69,7 +69,7 @@ export default function MobileHeaderNavigation({
 
             {/* SUB MENU */}
             {item.hasSubmenu && isOpen && (
-              <div className="space-y-4">
+              <div className="pl-1 space-y-4">
                 {item.items?.map((subItem) => {
                   const isSubOpen = openSubMenu === subItem.id;
                   const hasSubSub = subItem.items?.length > 0;
@@ -81,12 +81,12 @@ export default function MobileHeaderNavigation({
                           <Link
                             href={`/${locale}${subItem.slug}`}
                             onClick={onNavigationClick}
-                            className="text-[15px] text-black/80"
+                            className="text-[16px] text-black/80"
                           >
                             {subItem.name}
                           </Link>
                         ) : (
-                          <span className="text-[15px]">{subItem.name}</span>
+                          <span className="text-[16px]">{subItem.name}</span>
                         )}
 
                         {hasSubSub && (
@@ -106,14 +106,14 @@ export default function MobileHeaderNavigation({
 
                       {/* SUB SUB MENU */}
                       {hasSubSub && isSubOpen && (
-                        <div className="pt-4 space-y-3">
+                        <div className="pt-4 space-y-3 pl-1">
                           {subItem.items.map((subSubItem) => (
                             <Link
                               key={subSubItem.id}
                               href={`/${locale}${subSubItem.slug}`}
                               onClick={onNavigationClick}
                               className={cn(
-                                "block text-[13px] text-black/60",
+                                "block text-[14px] text-black/60",
                                 pathname === subSubItem.slug && "text-[#f17423]"
                               )}
                             >

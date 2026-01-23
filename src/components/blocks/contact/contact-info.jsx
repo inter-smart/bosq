@@ -15,11 +15,11 @@ export default function ContactInfo({ locale, data }) {
   const isEn = locale === "en";
 
   return (
-    <section className="w-full block py-[15px_30px] xl:py-[30px_60px] 2xl:py-[40px_100px] relative z-0">
+    <section className="w-full block py-[10px_30px] xl:py-[10px_60px] 2xl:py-[15px_100px] relative z-0">
       <div className="container">
         <div className="flex flex-wrap -mx-2.5 xl:-mx-5 2xl:-mx-6 [&>*]:p-2.5 xl:[&>*]:p-5 2xl:[&>*]:p-6">
           <div className="w-full lg:w-1/2">
-            <div className="w-full bg-[#f2f2f2] p-[15px] xl:p-10 2xl:p-[60px] max-xl:mb-6">
+            <div className="w-full bg-[#f2f2f2] rounded-[4px] p-[15px] xl:p-10 2xl:p-[60px] max-xl:mb-6">
               <Heading
                 as="h4"
                 size="none"
@@ -39,7 +39,7 @@ export default function ContactInfo({ locale, data }) {
               <Text
                 as="div"
                 size="text1"
-                className="leading-tight text-[#808080] mb-2 xl:mb-4 2xl:mb-6"
+                className="leading-tight text-[#282828] mb-2 xl:mb-4 2xl:mb-6"
               >
                 {isEn
                   ? data?.formData?.description
@@ -69,18 +69,18 @@ export default function ContactInfo({ locale, data }) {
               >
                 {isEn ? data?.title : data?.title_ar}
               </Heading>
-              <Text as="div" size="text1" className="text-[#808080]">
+              <Text as="div" size="text1" className="text-[#282828]">
                 {isEn ? parse(data?.description) : parse(data?.description_ar)}
               </Text>
             </div>
           </div>
           <div className="w-full lg:w-1/2">
-            <div className="w-full h-full bg-[#f2f2f2]">
+            <div className="w-full h-full bg-[#f2f2f2] rounded-[4px] overflow-hidden">
               <ContactMap data={data?.map} />
             </div>
           </div>
           <div className="w-full lg:w-1/2">
-            <div className="w-full bg-[#f2f2f2] p-[15px] xl:p-10 2xl:p-[60px] grid grid-cols-1 sm:grid-cols-2 gap-5 xl:gap-10">
+            <div className="w-full bg-[#f2f2f2] border-1 border-[#dedede] rounded-[4px] p-[15px] xl:p-10 2xl:p-[60px] grid grid-cols-1 sm:grid-cols-2 gap-5 xl:gap-10">
               {data?.contactMethods?.map((item, index) => (
                 <div key={"contactMethods" + index} className="w-full">
                   <Heading
@@ -107,7 +107,7 @@ export default function ContactInfo({ locale, data }) {
                           <Text
                             as="div"
                             size="text1"
-                            className="text-[#808080] [&_a]:hover:underline [&_a]:hover:text-primary transition my-0.5"
+                            className="text-[#282828] [&_a]:hover:underline [&_a]:hover:text-primary transition my-0.5"
                           >
                             <Link href={`mailto:${valueItem}`}>
                               {valueItem}
@@ -123,7 +123,7 @@ export default function ContactInfo({ locale, data }) {
                           <Text
                             as="div"
                             size="text1"
-                            className="text-[#808080] [&_a]:hover:underline [&_a]:hover:text-primary transition my-0.5"
+                            className="text-[#282828] [&_a]:hover:underline [&_a]:hover:text-primary transition my-0.5"
                           >
                             <Link href={`tel:${valueItem.replace(/\s+/g, "")}`}>
                               {valueItem}
@@ -138,7 +138,7 @@ export default function ContactInfo({ locale, data }) {
                         <Text
                           as="div"
                           size="text1"
-                          className="text-[#808080] hover:text-primary my-0.5"
+                          className="text-[#282828] hover:text-primary my-0.5"
                         >
                           {parse(valueItem)}
                         </Text>
@@ -176,7 +176,7 @@ export default function ContactInfo({ locale, data }) {
                               alt={isEn ? media.label : media.label_ar}
                               width={12}
                               height={12}
-                              className="w-3.5 sm:w-3 xl:w-4 aspect-square hover:scale-110 transition"
+                              className="w-3.5 aspect-square hover:scale-110 transition"
                             />
                           </a>
                         </div>

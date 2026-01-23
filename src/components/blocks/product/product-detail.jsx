@@ -857,7 +857,7 @@ function ChooseDesign({ children, data, locale, onOpenChange }) {
           </SheetDescription>
         </SheetHeader>
 
-        <div className="w-full min-h-[calc(100vh-(var(--header-y)+77px))] overflow-y-scroll px-2 sm:px-5">
+        <div className="w-full min-h-[calc(100dvh-(var(--header-y)+77px))] overflow-y-scroll px-2 sm:px-5">
           <Accordion
             type="single"
             collapsible

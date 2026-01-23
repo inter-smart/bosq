@@ -12,11 +12,11 @@ export default function BlogRelated({ locale, data }) {
   const isEn = locale === "en";
   const [emblaRef] = useEmblaCarousel(
     { loop: false, align: "start", direction: locale === "ar" ? "rtl" : "ltr" },
-    [Autoplay({ delay: 3000, stopOnInteraction: true })]
+    [Autoplay({ delay: 3000, stopOnInteraction: true })],
   );
 
   return (
-    <div className="w-full pt-[40px] sm:pt-[60px] xl:pt-[100px] 2xl:pt-[120px]">
+    <div className="w-full pt-[40px] sm:pt-[60px] xl:pt-[90px] 2xl:pt-[100px]">
       <Heading
         as="h2"
         size="heading1"
@@ -28,7 +28,7 @@ export default function BlogRelated({ locale, data }) {
             "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
             locale === "ar"
               ? "-translate-x-1 xl:-translate-x-2 "
-              : "translate-x-1 xl:translate-x-2 "
+              : "translate-x-1 xl:translate-x-2 ",
           )}
         />
       </Heading>

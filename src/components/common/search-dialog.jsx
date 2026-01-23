@@ -303,7 +303,7 @@ export default function SearchDialog({ children, locale }) {
           >
             <div className="container">
               <div className="flex flex-wrap -mx-4 xl:-mx-10 2xl:-mx-16 [&>div]:px-4 xl:[&>div]:px-10 2xl:[&>div]:px-16">
-                <div className="w-full sm:w-[200px] lg:w-[220px] xl:w-[376px] 2xl:w-[468px] 3xl:w-[576px]">
+                <div className="w-full sm:w-[200px] lg:w-[220px] xl:w-[420px] 2xl:w-[468px] 3xl:w-[576px]">
                   <Heading
                     as="div"
                     size="heading6"
@@ -379,7 +379,7 @@ export default function SearchDialog({ children, locale }) {
                 </div>
 
                 <MediaQuery minWidth={639}>
-                  <div className="w-full sm:w-[calc(100%-200px)] lg:w-[calc(100%-220px)] xl:w-[calc(100%-376px)] 2xl:w-[calc(100%-468px)] 3xl:w-[calc(100%-576px)]">
+                  <div className="w-full sm:w-[calc(100%-200px)] lg:w-[calc(100%-220px)] xl:w-[calc(100%-420px)] 2xl:w-[calc(100%-468px)] 3xl:w-[calc(100%-576px)]">
                     <Heading
                       as="div"
                       size="heading4"

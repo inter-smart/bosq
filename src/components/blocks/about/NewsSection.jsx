@@ -7,13 +7,13 @@ import { Heading } from "@/components/utils/heading";
 import { Button } from "@/components/ui/button";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
+import {
+  DotButton,
+  useDotButton,
+} from "@/components/utils/embla-carousel-dot-button";
 
 export default function NewsSection({ data, locale }) {
-  const isEn = locale === "en";
-  const enableSlider = data?.list?.length > 2;
-
-  const [emblaRef] = useEmblaCarousel(
-    enableSlider?
+  const [emblaRef, emblaApi] = useEmblaCarousel(
     {
       loop: true,
       axis: "x",
@@ -22,16 +22,18 @@ export default function NewsSection({ data, locale }) {
       containScroll: false,
       watchSlides: true,
       direction: locale === "ar" ? "rtl" : "ltr",
-    }: false,
-    enableSlider?
+    },
     [
       Autoplay({
         delay: 2500,
         stopOnInteraction: true,
         stopOnMouseEnter: true,
       }),
-    ]: [],
+    ],
   );
+
+  const { selectedIndex, scrollSnaps, onDotButtonClick } =
+    useDotButton(emblaApi);
   return (
     <section className="w-full h-auto py-10 sm:py-20 lg:py-25 2xl:py-30 3xl:py-38 block">
       <div className="container">
@@ -42,7 +44,7 @@ export default function NewsSection({ data, locale }) {
               size="heading1"
               className="leading-tight text-[#282828]"
             >
-              {parse(isEn ? data?.title : data?.title_ar)}
+              {parse(data?.title)}
               <span
                 className={cn(
                   "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
@@ -59,31 +61,28 @@ export default function NewsSection({ data, locale }) {
               className="min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-40 mb-0"
               asChild
             >
-              <Link href={`/${locale}/news`}>
+              <Link href={"/"}>
                 {locale == "ar" ? "قراءة المزيد" : "View All"}
               </Link>
             </Button>
           </div>
         </div>
-        <div ref={enableSlider ? emblaRef : null} className="overflow-hidden">
+        <div ref={emblaRef} className="overflow-hidden">
           <div className="select-none flex">
-            {data?.list?.map((item) => (
+            {data?.news_list?.map((item) => (
               <div
                 key={item?.id}
                 className="flex-[0_0_100%] 3xs:flex-[0_0_46%] lg:flex-[0_0_28%] mr-5 sm:mr-15 lg:mr-20 xl:mr-23 2xl:mr-30 3xl:mr-35"
               >
                 <Link
-                  href={
-                    `${locale}/news/${item?.slug}` ||
-                    `/${locale}/news/${item?.id}`
-                  }
+                  href={item?.lnik?.href || "/"}
                   target={item?.lnik?.target ? "_blank" : "_self"}
                   className="group w-full h-full block"
                 >
                   <div className="w-full h-auto aspect-[500/440] mb-5 2xl:mb-7.5 overflow-hidden block">
                     <Image
                       src={item?.media?.path}
-                      alt={isEn ? item?.media?.alt : item?.media?.alt_ar}
+                      alt={item?.media?.alt}
                       width={500}
                       height={440}
                       className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
@@ -99,7 +98,7 @@ export default function NewsSection({ data, locale }) {
                             : "pl-7 2xl:pl-10 before:inset-[0_auto_0_0]",
                         )}
                       >
-                        {isEn ? item?.name : item?.name_ar}
+                        {item?.name}
                       </div>
                       <div
                         className={cn(
@@ -114,17 +113,29 @@ export default function NewsSection({ data, locale }) {
                     </div>
                     <div
                       className={cn(
-                        "text-[16px] sm:text-[18px] lg:text-[20px] 2xl:text-[24px] 3xl:text-[30px] leading-[1.4] font-light text-[#282828]",
-                        locale === "ar" ? "pr-7 2xl:pr-10" : "pl-7 2xl:pl-10",
+                        "text-[14px] sm:text-[16px] lg:text-[20px] 2xl:text-[24px] 3xl:text-[30px] leading-[1.4] font-light text-[#282828]",
+                        locale === "ar" ? "xl:pr-7 2xl:pr-10" : "xl:pl-7 2xl:pl-10",
                       )}
                     >
-                      {isEn ? item?.title : item?.title_ar}
+                      {item?.title}
                     </div>
                   </div>
                 </Link>
               </div>
             ))}
           </div>
+        </div>
+        <div className="flex justify-center mt-15 xl:mt-20 gap-2 2xl:gap-3">
+          {scrollSnaps.map((_, index) => (
+            <DotButton
+              key={index}
+              onClick={() => onDotButtonClick(index)}
+              className={cn(
+                "w-2.25 2xl:w-3 h-2.25 2xl:h-3 bg-[#D9D9D9]",
+                index === selectedIndex && "bg-[#282828]",
+              )}
+            />
+          ))}
         </div>
       </div>
     </section>

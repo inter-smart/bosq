@@ -115,7 +115,7 @@ export default function AccountNav({locale}) {
         </div>
         <div
           className={cn(
-            "w-full max-w-40 sm:max-w-full bg-[#f4f4f4] border border-[#e0e0e0] rounded-tb-lg sm:rounded-s-lg shadow-xl sm:shadow-none overflow-hidden max-sm:absolute max-sm:top-full",
+            "w-full max-w-40 sm:max-w-full bg-[#f4f4f4] border border-[#e0e0e0] rounded-tb-[4px] sm:rounded-s-[4px] shadow-xl sm:shadow-none overflow-hidden max-sm:absolute max-sm:top-full",
             open ? "max-sm:block" : "max-sm:hidden",
             locale === "ar" ? "max-sm:left-0" : "max-sm:right-0"
           )}

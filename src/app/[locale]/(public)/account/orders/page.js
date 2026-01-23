@@ -1,3 +1,4 @@
+import AccountLayout from "@/components/blocks/account/account-layout";
 import AccountOrders from "@/components/blocks/account/account-orders";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getMetaData } from "@/lib/api/metaApi";
@@ -542,7 +543,9 @@ export default async function OrdersPage({ params }) {
         data={local_data?.heroData}
         slug={"My Profile"}
       />
-      <AccountOrders locale={locale} data={local_data?.orders} />
+      <AccountLayout locale={locale}>
+        <AccountOrders locale={locale} data={local_data?.orders} />
+      </AccountLayout>
     </>
   );
 }

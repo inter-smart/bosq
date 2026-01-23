@@ -18,7 +18,7 @@ import {
 import { X } from "lucide-react";
 
 const labelStyle = cn(
-  "text-[#282828] my-2 xl:my-2.5 2xl:my-4 [&>span]:font-normal flex justify-between"
+  "text-[#282828] my-2 xl:my-2.5 2xl:my-4 [&>span]:font-normal flex justify-between",
 );
 
 export default function OrdersDetailModal({ children, data, locale }) {
@@ -44,7 +44,7 @@ export default function OrdersDetailModal({ children, data, locale }) {
                 <Heading
                   as="div"
                   size="none"
-                  className="text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-medium text-[#282828] mb-2 xl:mb-3 2xl:mb-5"
+                  className="text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-bold text-[#282828] mb-2 xl:mb-3 2xl:mb-5"
                 >
                   Order Information
                 </Heading>
@@ -80,7 +80,7 @@ export default function OrdersDetailModal({ children, data, locale }) {
                 <Heading
                   as="div"
                   size="none"
-                  className="text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-medium text-[#282828] mb-2 xl:mb-3 2xl:mb-5"
+                  className="text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-bold text-[#282828] mb-2 xl:mb-3 2xl:mb-5"
                 >
                   Products ({data?.no_of_items} Items)
                 </Heading>
@@ -124,7 +124,10 @@ export default function OrdersDetailModal({ children, data, locale }) {
                 <Text
                   as="div"
                   size="text3"
-                  className={cn(labelStyle, "font-medium mb-1!")}
+                  className={cn(
+                    labelStyle,
+                    "font-bold mb-1! [&>span]:font-bold",
+                  )}
                 >
                   Total Amount : {""}
                   <span>{data?.formatted_total}</span>
@@ -137,7 +140,7 @@ export default function OrdersDetailModal({ children, data, locale }) {
                 <Heading
                   as="div"
                   size="none"
-                  className="text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-medium text-[#282828] mb-2 2xl:mb-3"
+                  className="text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-bold text-[#282828] mb-2 2xl:mb-3"
                 >
                   Billing Address
                 </Heading>
@@ -155,7 +158,7 @@ export default function OrdersDetailModal({ children, data, locale }) {
                 <Heading
                   as="div"
                   size="none"
-                  className="text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-medium text-[#282828] mb-2 2xl:mb-3"
+                  className="text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-bold text-[#282828] mb-2 2xl:mb-3"
                 >
                   Shipping Address
                 </Heading>

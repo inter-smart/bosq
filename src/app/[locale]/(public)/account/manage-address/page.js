@@ -1,4 +1,5 @@
 import AccountAddress from "@/components/blocks/account/account-address";
+import AccountLayout from "@/components/blocks/account/account-layout";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getMetaData } from "@/lib/api/metaApi";
 
@@ -82,7 +83,9 @@ export default async function ManageAddressPage({ params }) {
         data={local_data?.heroData}
         slug={"My Profile"}
       />
-      <AccountAddress locale={locale} data={local_data?.address} />
+      <AccountLayout locale={locale}>
+        <AccountAddress locale={locale} data={local_data?.address} />
+      </AccountLayout>
     </>
   );
 }

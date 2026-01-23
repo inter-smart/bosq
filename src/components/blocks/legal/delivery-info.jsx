@@ -176,7 +176,9 @@ export default function DeliveryInfo({ data, deliveryInfo, locale }) {
               {item?.description && (
                 <div
                   dir={locale === "ar" ? "rtl" : "ltr"}
-                  className={cn("typography", "[--text-color:#282828]")}
+                  className={cn("typography [--text-color:#282828]",
+                    index % 2 === 0 ? "[&_ul>li]:list-outside" : "[&_ul>li]:list-inside"
+                  )}
                 >
                   {parse(isEn ? item?.description : item?.description_ar)}
                 </div>

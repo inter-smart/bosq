@@ -74,7 +74,7 @@ export default function ProjectList({ locale, data }) {
               transition={{ duration: 0.2 }}
               className="w-full 2xs:w-1/2 sm:w-1/2 md:w-1/3"
             >
-              <ProjectCard data={item} />
+              <ProjectCard locale={locale} data={item} />
             </motion.div>
           ))}
         </div>
