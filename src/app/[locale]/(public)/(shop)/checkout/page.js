@@ -18,6 +18,11 @@ export async function generateMetadata({ params }) {
   };
 }
 
+/**
+ * @typedef {import('@/types/shop').CheckoutPageResponse} CheckoutPageResponse
+ */
+
+/** @type {CheckoutPageResponse} */
 const local_data = {
   heroData: {
     title: "Checkout",

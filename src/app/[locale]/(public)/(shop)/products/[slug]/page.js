@@ -20,6 +20,11 @@ export async function generateMetadata({ params }) {
   };
 }
 
+/**
+ * @typedef {import('@/types/shop').ProductDetailResponse} ProductDetailResponse
+ */
+
+/** @type {ProductDetailResponse} */
 const local_data = {
   heroData: {
     title: null,

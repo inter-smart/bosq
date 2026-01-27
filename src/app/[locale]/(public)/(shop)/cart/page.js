@@ -20,6 +20,11 @@ export async function generateMetadata({ params }) {
   };
 }
 
+/**
+ * @typedef {import('@/types/shop').CartPageResponse} CartPageResponse
+ */
+
+/** @type {CartPageResponse} */
 const local_data = {
   heroData: {
     title: "Shopping Cart",
