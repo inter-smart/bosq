@@ -8,7 +8,7 @@ import { motion } from "motion/react";
 import { Skeleton } from "../../ui/skeleton";
 import { Button } from "@/components/ui/button";
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, isEn }) {
   const [wishlist, setWishlist] = useState(product?.isWishlisted || false);
 
   return (
@@ -36,7 +36,7 @@ export default function ProductCard({ product }) {
               />
             </svg>
           </motion.button>
-          {!product?.isStock && (
+          {product?.isStock && (
             <div className="w-full h-full bg-[#f4f4f4]/90 flex items-center justify-center absolute z-2 inset-0">
               <Button
                 variant={"black"}
@@ -48,8 +48,8 @@ export default function ProductCard({ product }) {
             </div>
           )}
           <Image
-            src={product?.media?.path}
-            alt={product?.media?.alt}
+            src={product?.media_path}
+            alt={isEn ? product?.title : product?.title_ar}
             width={550}
             height={440}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -71,14 +71,14 @@ export default function ProductCard({ product }) {
             size="none"
             className="text-[10px] xl:text-[8px] 2xl:text-[10px] 3xl:text-[12px] leading-normal font-light truncate text-[#bbbcbc] mb-0.5"
           >
-            <Link href={product?.slug}>{product?.category}</Link>
+            <Link href={product?.slug}>{product?.category?.name}</Link>
           </Heading>
           <Heading
             as="div"
             size="none"
             className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-normal truncate text-[#282828] mb-0.5"
           >
-            <Link href={product?.slug}>{product?.name}</Link>
+            <Link href={product?.slug}>{isEn ? product?.title : product?.title_ar}</Link>
           </Heading>
           <Text
             as="div"

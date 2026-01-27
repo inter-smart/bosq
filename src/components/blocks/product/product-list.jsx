@@ -43,6 +43,7 @@ import {
 import { SelectIcon } from "@radix-ui/react-select";
 import dynamic from "next/dynamic";
 import ProductCard from "@/components/blocks/product/product-card";
+import { ProductData } from "@/lib/api/products/ResourcesApi";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
@@ -70,7 +71,6 @@ const sortByOptions = [
 ];
 
 export default function ProductList({ data, locale, filterData }) {
-  const products = data?.product || [];
 
   const isEn = locale === "en";
 
@@ -78,7 +78,8 @@ export default function ProductList({ data, locale, filterData }) {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [sortBy, setSortBy] = useState("default");
   const [currentPage, setCurrentPage] = useState(1);
-
+  const [products, setProducts] = useState([]);
+  const [pagination, setPagination] = useState({ total: 0, page: 1, limit: 12, totalPages: 0 });
   // Applied Filter States (using IDs from backend)
   const [filters, setFilters] = useState({
     categories: [],      // array of category IDs (parent_id === null)
@@ -222,84 +223,11 @@ export default function ProductList({ data, locale, filterData }) {
     [filterData]
   );
 
-  // Filter and sort products
-  const filteredAndSortedProducts = useMemo(() => {
-    let filtered = [...products];
-
-    // Apply category filter
-    if (filters.categories.length > 0) {
-      filtered = filtered.filter((p) =>
-        filters.categories.includes(p.category)
-      );
-    }
-
-    // Apply sub-category filter
-    if (filters.subCategories.length > 0) {
-      filtered = filtered.filter((p) =>
-        p.productType?.some((type) => filters.subCategories.includes(type))
-      );
-    }
-
-    // Apply sector filter (assuming products have sector property)
-    if (filters.sectors.length > 0) {
-      filtered = filtered.filter((p) => filters.sectors.includes(p.sector));
-    }
-
-    // Apply price range filter
-    if (filters.priceRanges.length > 0) {
-      filtered = filtered.filter((p) => {
-        return filters.priceRanges.some((rangeLabel) => {
-          const range = PRICE_RANGES.find((r) => r.label === rangeLabel);
-          return range && p.price >= range.min && p.price < range.max;
-        });
-      });
-    }
-
-    
-
-    // Apply other attribute filters
-    const attributeFilters = Object.entries(filters.attributes || {});
-    if (attributeFilters.length > 0) {
-      filtered = filtered.filter((p) =>
-        attributeFilters.every(([attrId, valueIds]) => {
-          if (!valueIds || valueIds.length === 0) return true;
-          return p.attributes?.some(
-            (attr) =>
-              attr.id === parseInt(attrId) &&
-              attr.values?.some((v) => valueIds.includes(v.id))
-          );
-        })
-      );
-    }
-
-    // Apply sorting
-    switch (sortBy) {
-      case "price-low-high":
-        filtered.sort((a, b) => a.price - b.price);
-        break;
-      case "price-high-low":
-        filtered.sort((a, b) => b.price - a.price);
-        break;
-      case "name-a-z":
-        filtered.sort((a, b) => a.name.localeCompare(b.name));
-        break;
-      case "name-z-a":
-        filtered.sort((a, b) => b.name.localeCompare(a.name));
-        break;
-      default:
-        break;
-    }
-
-    return filtered;
-  }, [products, filters, sortBy]);
-
-  // Pagination calculations
-  const totalPages = Math.ceil(
-    filteredAndSortedProducts.length / ITEMS_PER_PAGE
-  );
+  // Server handles filtering, sorting, and pagination
+  // Use pagination from server response
+  const totalPages = pagination.totalPages;
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const endIndex = startIndex + ITEMS_PER_PAGE;
-  const currentProducts = filteredAndSortedProducts.slice(startIndex, endIndex);
+  const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, pagination.total);
 
   // Pagination helpers
   const goToPage = useCallback(
@@ -373,6 +301,49 @@ export default function ProductList({ data, locale, filterData }) {
     });
     return count;
   }, [filters]);
+
+
+
+  const fetchProducts = useCallback(async () => {
+    try {
+      // Build query params from filters
+      const params = new URLSearchParams();
+
+      if (filters.categories.length > 0) {
+        params.append('categories', filters.categories.join(','));
+      }
+      if (filters.subCategories.length > 0) {
+        params.append('subCategories', filters.subCategories.join(','));
+      }
+      if (filters.sectors.length > 0) {
+        params.append('sectors', filters.sectors.join(','));
+      }
+      if (Object.keys(filters.attributes).length > 0) {
+        params.append('attributes', JSON.stringify(filters.attributes));
+      }
+      if (sortBy && sortBy !== 'default') {
+        params.append('sortBy', sortBy);
+      }
+      params.append('page', currentPage.toString());
+      params.append('limit', ITEMS_PER_PAGE.toString());
+
+      const { data, error } = await ProductData.getProductList(params.toString());
+      if(error){
+        console.log(error)
+      }
+      setProducts(data?.products || []);
+      setPagination(data?.pagination || { total: 0, page: 1, limit: 12, totalPages: 0 });
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  }, [filters, sortBy, currentPage]);
+
+
+    // fetch products
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
+
 
   return (
     <section className="w-full block py-[15px_30px] xl:py-[20px_60px] 2xl:py-[30px_100px]">
@@ -731,15 +702,15 @@ export default function ProductList({ data, locale, filterData }) {
       </div>
       <div className="container">
         <div className="flex flex-wrap -mx-3 sm:-mx-2 xl:-mx-5 2xl:-mx-8 [&>*]:p-3 sm:[&>*]:p-2 xl:[&>*]:p-5 2xl:[&>*]:p-8">
-          {currentProducts.map((item) => (
+          {products.map((item) => (
             <div key={item.id} className="w-full 2xs:w-1/2 sm:w-1/2 md:w-1/3">
-              <ProductCard product={item} />
+              <ProductCard isEn={isEn} product={item} />
             </div>
           ))}
         </div>
 
         {/* No Results */}
-        {filteredAndSortedProducts.length === 0 && (
+        {products.length === 0 && (
           <div className="text-center py-16 xl:py-20">
             <p className="text-gray-500 text-lg mb-4">{isEn? "No results found" : "لم يتم العثور على منتجات"}</p>
             <button
@@ -752,12 +723,12 @@ export default function ProductList({ data, locale, filterData }) {
         )}
 
         {/* Bottom Section with Pagination */}
-        {filteredAndSortedProducts.length > 0 && (
+        {products.length > 0 && (
           <div className="w-full flex flex-col sm:flex-row sm:justify-between items-center gap-4 mt-5 xl:mt-10 2xl:mt-16">
             <div className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-normal text-[#bbb]">
               Showing {startIndex + 1}-
-              {Math.min(endIndex, filteredAndSortedProducts.length)} of{" "}
-              {filteredAndSortedProducts.length} products
+              {Math.min(endIndex, pagination.total)} of{" "}
+              {pagination.total} products
             </div>
             {totalPages > 1 && (
               <div>
