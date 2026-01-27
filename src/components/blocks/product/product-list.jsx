@@ -72,6 +72,8 @@ const sortByOptions = [
 export default function ProductList({ data, locale, filterData }) {
   const products = data?.product || [];
 
+  const isEn = locale === "en";
+
   // UI States
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [sortBy, setSortBy] = useState("default");
@@ -319,6 +321,8 @@ export default function ProductList({ data, locale, filterData }) {
     }
   }, [currentPage, totalPages]);
 
+
+
   // Generate pagination items
   const getPaginationItems = useCallback(() => {
     const items = [];
@@ -388,7 +392,7 @@ export default function ProductList({ data, locale, filterData }) {
                     height={20}
                     className="w-[10px] xl:w-[15px] block"
                   />
-                  <span>Filters</span>
+                  <span>{isEn? "Filters": "المرشحات"}</span>
                   {activeFilterCount > 0 && (
                     <span className="text-[8px] sm:text-[10px] leading-normal bg-black text-white px-2 py-0.5 rounded-full">
                       {activeFilterCount}
@@ -420,7 +424,7 @@ export default function ProductList({ data, locale, filterData }) {
                     {/* Categories */}
                     <AccordionItem value="item-1" className="py-2 sm:py-3">
                       <AccordionTrigger className={accordionTriggerStyle}>
-                        Categories
+                        {isEn? "Categories": "الاقسام"}
                       </AccordionTrigger>
                       <AccordionContent className="p-2">
                         <div className="flex flex-col gap-2 sm:gap-4">
@@ -445,7 +449,7 @@ export default function ProductList({ data, locale, filterData }) {
                                   htmlFor={`cat-${cat.id}`}
                                   className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
                                 >
-                                  {cat.name}
+                                  {isEn? cat.name: cat.name_ar}
                                 </Label>
                               </div>
                             ))}
@@ -456,7 +460,7 @@ export default function ProductList({ data, locale, filterData }) {
                     {/* Sub Categories */}
                     <AccordionItem value="item-2" className="py-2 sm:py-3">
                       <AccordionTrigger className={accordionTriggerStyle}>
-                        Sub Categories
+                        {isEn? "Sub Categories": "الاقسام الفرعية"}
                       </AccordionTrigger>
                       <AccordionContent className="p-2">
                         <div className="flex flex-col gap-2 sm:gap-4">
@@ -526,7 +530,7 @@ export default function ProductList({ data, locale, filterData }) {
                     {/* Price Range */}
                     <AccordionItem value="item-4" className="py-2 sm:py-3">
                       <AccordionTrigger className={accordionTriggerStyle}>
-                        Price Range
+                        {isEn? "Price Range": "نطاق السعر"}
                       </AccordionTrigger>
                       <AccordionContent className="p-2">
                         <div className="flex flex-col gap-2 sm:gap-4">
@@ -549,7 +553,7 @@ export default function ProductList({ data, locale, filterData }) {
                                 htmlFor={`price-${range.label}`}
                                 className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
                               >
-                                {range.label}
+                                {isEn? range.label: range.label_ar}
                               </Label>
                             </div>
                           ))}
@@ -566,7 +570,7 @@ export default function ProductList({ data, locale, filterData }) {
                         className="py-2 sm:py-3"
                       >
                         <AccordionTrigger className={accordionTriggerStyle}>
-                          {attr.name}
+                          {isEn ? attr.name : attr.name_ar}
                         </AccordionTrigger>
                         <AccordionContent className="p-2">
                           <div className="flex flex-col gap-2 sm:gap-4">
@@ -591,7 +595,7 @@ export default function ProductList({ data, locale, filterData }) {
                                   htmlFor={`attr-${attr.id}-${val.id}`}
                                   className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
                                 >
-                                  {val.value}
+                                  {isEn? val.value: val.value_ar}
                                 </Label>
                               </div>
                             ))}
@@ -608,14 +612,14 @@ export default function ProductList({ data, locale, filterData }) {
                     variant="white"
                     className="min-w-[100px] sm:min-w-[45%]"
                   >
-                    Clear
+                    {isEn? "Clear": "واضح"}
                   </Button>
                   <Button
                     onClick={applyFilters}
                     variant="black"
                     className="min-w-[100px] sm:min-w-[45%]"
                   >
-                    Apply Filters
+                    {isEn? "Apply Filters": "تطبيق المرشحات"}
                   </Button>
                 </SheetFooter>
                 <SheetClose
@@ -637,7 +641,7 @@ export default function ProductList({ data, locale, filterData }) {
               {filters.categories.map((catId) => (
                 <FilterPill
                   key={`cat-${catId}`}
-                  label={`Category: ${getCategoryName(catId)}`}
+                  label={`${isEn? "Category": "فئة"}: ${getCategoryName(catId)}`}
                   onRemove={() => removeFilter("categories", catId)}
                 />
               ))}
@@ -681,7 +685,7 @@ export default function ProductList({ data, locale, filterData }) {
                   onClick={clearAllFilters}
                   className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-none font-normal text-[#282828] hover:text-[#f17423] underline"
                 >
-                  Clear Filters
+                  {isEn? "Clear Filters": "مسح المرشحات"}
                 </button>
               )}
             </MediaQuery>
@@ -690,7 +694,7 @@ export default function ProductList({ data, locale, filterData }) {
           {/* Sort Dropdown */}
           <div className="flex items-center gap-1 2xl:gap-2">
             <span className="text-[10px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-tight font-medium text-black">
-              Sort by:
+              {isEn? "Sort by": "الترتيب حسب"}:
             </span>
             <Select value={sortBy} onValueChange={(value) => setSortBy(value)}>
               <SelectTrigger className="text-[10px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-tight font-medium truncate text-black w-[80px] sm:w-[110px] 2xl:w-[130px] border-none bg-transparent p-0 [&>svg]:hidden focus-visible:ring-0 rounded-none shadow-none">
@@ -737,12 +741,12 @@ export default function ProductList({ data, locale, filterData }) {
         {/* No Results */}
         {filteredAndSortedProducts.length === 0 && (
           <div className="text-center py-16 xl:py-20">
-            <p className="text-gray-500 text-lg mb-4">No products found</p>
+            <p className="text-gray-500 text-lg mb-4">{isEn? "No results found" : "لم يتم العثور على منتجات"}</p>
             <button
               onClick={clearAllFilters}
               className="text-sm px-6 py-2 bg-black text-white rounded hover:bg-gray-800 transition-colors"
             >
-              Clear All Filters
+              {isEn? "Clear All Filters": "مسح كافة عوامل التصفية"}
             </button>
           </div>
         )}
