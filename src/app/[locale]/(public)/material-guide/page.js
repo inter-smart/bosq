@@ -1,4 +1,4 @@
-import MaterialInfoSection from "@/components/blocks/material-guide/material-info-section";
+// import MaterialInfoSection from "@/components/blocks/material-guide/material-info-section";
 import ProductHero from "@/components/blocks/product/product-hero";
 import NotFound from "../not-found/page";
 
@@ -146,11 +146,11 @@ export default async function MaterialGuidePage({ params }) {
         data={heroData}
         slug={"Material Guide"}
       />
-      <MaterialInfoSection
+      {/* <MaterialInfoSection
         locale={locale}
         data={materialsInfo}
         extraMaterialsInfo={extraMaterialsInfo}
-      />
+      /> */}
     </>
   );
 }

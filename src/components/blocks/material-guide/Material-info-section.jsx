@@ -2,7 +2,6 @@ import Image from "next/image";
 import { Heading } from "@/components/utils/heading";
 import parse from "html-react-parser";
 import { cn } from "@/lib/utils";
-import MaterialsList from "./materialsList";
 
 export default function MaterialInfoSection({ data, locale }) {
   return (

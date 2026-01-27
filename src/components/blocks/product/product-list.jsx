@@ -48,30 +48,17 @@ const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
 });
 
-const FILTER_OPTIONS = {
-  categories: ["Office Chair"],
-  subCategories: [
-    "Task Chairs",
-    "Leather Chairs",
-    "Meeting Chairs",
-    "Visitors Chairs",
-    "Ergonomic Chairs",
-  ],
-  sectors: ["Corporate", "Healthcare", "Education", "Hospitality"],
-  priceRanges: [
-    { label: "Under AED 300", min: 0, max: 300 },
-    { label: "AED 300 - 500", min: 300, max: 500 },
-    { label: "AED 500 - 700", min: 500, max: 700 },
-    { label: "Above AED 700", min: 700, max: Infinity },
-  ],
-  colors: ["Black", "White", "Gray", "Brown"],
-  patterns: ["Solid", "Mesh", "Leather"],
-};
+const PRICE_RANGES = [
+  { label: "Under AED 300", min: 0, max: 300 },
+  { label: "AED 300 - 500", min: 300, max: 500 },
+  { label: "AED 500 - 700", min: 500, max: 700 },
+  { label: "Above AED 700", min: 700, max: Infinity },
+];
 
 const ITEMS_PER_PAGE = 12;
 
 const accordionTriggerStyle = cn(
-  "text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-4 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5 [&[data-state=open]>svg]:bg-black [&[data-state=open]>svg]:text-white"
+  "text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-4 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5 [&[data-state=open]>svg]:bg-black [&[data-state=open]>svg]:text-white capitalize"
 );
 
 const sortByOptions = [
@@ -82,7 +69,7 @@ const sortByOptions = [
   { value: "name-z-a", label: "Name: Z to A" },
 ];
 
-export default function ProductList({ data, locale }) {
+export default function ProductList({ data, locale, filterData }) {
   const products = data?.product || [];
 
   // UI States
@@ -90,14 +77,13 @@ export default function ProductList({ data, locale }) {
   const [sortBy, setSortBy] = useState("default");
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Applied Filter States
+  // Applied Filter States (using IDs from backend)
   const [filters, setFilters] = useState({
-    categories: [],
-    subCategories: [],
-    sectors: [],
-    priceRanges: [],
-    colors: [],
-    patterns: [],
+    categories: [],      // array of category IDs (parent_id === null)
+    subCategories: [],   // array of subcategory IDs (parent_id !== null)
+    sectors: [],         // array of sector IDs
+    priceRanges: [],     // array of price range labels (static)
+    attributes: {},      // object: { [attributeId]: [valueId, ...] } 
   });
 
   // Temporary Filter States (for sheet)
@@ -125,6 +111,24 @@ export default function ProductList({ data, locale }) {
     }));
   }, []);
 
+  // Toggle attribute filter helper
+  const toggleTempAttributeFilter = useCallback((attributeId, valueId) => {
+    setTempFilters((prev) => {
+      const currentValues = prev.attributes[attributeId] || [];
+      const newValues = currentValues.includes(valueId)
+        ? currentValues.filter((id) => id !== valueId)
+        : [...currentValues, valueId];
+
+      return {
+        ...prev,
+        attributes: {
+          ...prev.attributes,
+          [attributeId]: newValues,
+        },
+      };
+    });
+  }, []);
+
   // Apply filters from sheet
   const applyFilters = useCallback(() => {
     setFilters({ ...tempFilters });
@@ -138,8 +142,7 @@ export default function ProductList({ data, locale }) {
       subCategories: [],
       sectors: [],
       priceRanges: [],
-      colors: [],
-      patterns: [],
+      attributes: {},
     };
     setFilters(emptyFilters);
     setTempFilters(emptyFilters);
@@ -153,6 +156,26 @@ export default function ProductList({ data, locale }) {
     }));
   }, []);
 
+  // Remove attribute filter
+  const removeAttributeFilter = useCallback((attrId, valueId) => {
+    setFilters((prev) => {
+      const currentValues = prev.attributes[attrId] || [];
+      const newValues = currentValues.filter((id) => id !== valueId);
+      const newAttributes = { ...prev.attributes };
+
+      if (newValues.length === 0) {
+        delete newAttributes[attrId];
+      } else {
+        newAttributes[attrId] = newValues;
+      }
+
+      return {
+        ...prev,
+        attributes: newAttributes,
+      };
+    });
+  }, []);
+
   // Clear temp filters in sheet
   const clearTempFilters = useCallback(() => {
     setTempFilters({
@@ -160,10 +183,42 @@ export default function ProductList({ data, locale }) {
       subCategories: [],
       sectors: [],
       priceRanges: [],
-      colors: [],
-      patterns: [],
+      attributes: {},
     });
   }, []);
+
+  // Helper functions to get display names from IDs
+  const getCategoryName = useCallback(
+    (id) => filterData?.categories?.find((c) => c.id === id)?.name,
+    [filterData]
+  );
+
+  const getSectorName = useCallback(
+    (id) => filterData?.sectors?.find((s) => s.id === id)?.name,
+    [filterData]
+  );
+
+  
+
+  const getAttributeValueName = useCallback(
+    (attrId, valueId) => {
+      const attr = filterData?.attributes?.find((a) => a.id === attrId);
+      return attr?.values?.find((v) => v.id === valueId)?.value;
+    },
+    [filterData]
+  );
+
+  const getAttributeName = useCallback(
+    (attrId) => filterData?.attributes?.find((a) => a.id === attrId)?.name,
+    [filterData]
+  );
+
+
+  // Get other attributes 
+  const getAttributes = useMemo(
+    () => filterData?.attributes || [],
+    [filterData]
+  );
 
   // Filter and sort products
   const filteredAndSortedProducts = useMemo(() => {
@@ -192,22 +247,27 @@ export default function ProductList({ data, locale }) {
     if (filters.priceRanges.length > 0) {
       filtered = filtered.filter((p) => {
         return filters.priceRanges.some((rangeLabel) => {
-          const range = FILTER_OPTIONS.priceRanges.find(
-            (r) => r.label === rangeLabel
-          );
+          const range = PRICE_RANGES.find((r) => r.label === rangeLabel);
           return range && p.price >= range.min && p.price < range.max;
         });
       });
     }
 
-    // Apply color filter (assuming products have color property)
-    if (filters.colors.length > 0) {
-      filtered = filtered.filter((p) => filters.colors.includes(p.color));
-    }
+    
 
-    // Apply pattern filter (assuming products have pattern property)
-    if (filters.patterns.length > 0) {
-      filtered = filtered.filter((p) => filters.patterns.includes(p.pattern));
+    // Apply other attribute filters
+    const attributeFilters = Object.entries(filters.attributes || {});
+    if (attributeFilters.length > 0) {
+      filtered = filtered.filter((p) =>
+        attributeFilters.every(([attrId, valueIds]) => {
+          if (!valueIds || valueIds.length === 0) return true;
+          return p.attributes?.some(
+            (attr) =>
+              attr.id === parseInt(attrId) &&
+              attr.values?.some((v) => valueIds.includes(v.id))
+          );
+        })
+      );
     }
 
     // Apply sorting
@@ -296,10 +356,19 @@ export default function ProductList({ data, locale }) {
   }, [currentPage, totalPages]);
 
   // Count active filters
-  const activeFilterCount = Object.values(filters).reduce(
-    (sum, arr) => sum + arr.length,
-    0
-  );
+  const activeFilterCount = useMemo(() => {
+    let count = 0;
+    // Count array filters
+    count += filters.categories.length;
+    count += filters.subCategories.length;
+    count += filters.sectors.length;
+    count += filters.priceRanges.length;
+    // Count attribute filters
+    Object.values(filters.attributes || {}).forEach((values) => {
+      count += values.length;
+    });
+    return count;
+  }, [filters]);
 
   return (
     <section className="w-full block py-[15px_30px] xl:py-[20px_60px] 2xl:py-[30px_100px]">
@@ -355,24 +424,31 @@ export default function ProductList({ data, locale }) {
                       </AccordionTrigger>
                       <AccordionContent className="p-2">
                         <div className="flex flex-col gap-2 sm:gap-4">
-                          {FILTER_OPTIONS.categories.map((cat) => (
-                            <div key={cat} className="flex items-center gap-2">
-                              <Checkbox
-                                id={`cat-${cat}`}
-                                checked={tempFilters.categories.includes(cat)}
-                                onCheckedChange={() =>
-                                  toggleTempFilter("categories", cat)
-                                }
-                                className="rounded-none"
-                              />
-                              <Label
-                                htmlFor={`cat-${cat}`}
-                                className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
+                          {filterData?.categories
+                            ?.filter((cat) => cat.parent_id === null)
+                            ?.map((cat) => (
+                              <div
+                                key={cat.id}
+                                className="flex items-center gap-2"
                               >
-                                {cat}
-                              </Label>
-                            </div>
-                          ))}
+                                <Checkbox
+                                  id={`cat-${cat.id}`}
+                                  checked={tempFilters.categories.includes(
+                                    cat.id
+                                  )}
+                                  onCheckedChange={() =>
+                                    toggleTempFilter("categories", cat.id)
+                                  }
+                                  className="rounded-none"
+                                />
+                                <Label
+                                  htmlFor={`cat-${cat.id}`}
+                                  className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
+                                >
+                                  {cat.name}
+                                </Label>
+                              </div>
+                            ))}
                         </div>
                       </AccordionContent>
                     </AccordionItem>
@@ -384,29 +460,31 @@ export default function ProductList({ data, locale }) {
                       </AccordionTrigger>
                       <AccordionContent className="p-2">
                         <div className="flex flex-col gap-2 sm:gap-4">
-                          {FILTER_OPTIONS.subCategories.map((subCat) => (
-                            <div
-                              key={subCat}
-                              className="flex items-center gap-2"
-                            >
-                              <Checkbox
-                                id={`subcat-${subCat}`}
-                                checked={tempFilters.subCategories.includes(
-                                  subCat
-                                )}
-                                onCheckedChange={() =>
-                                  toggleTempFilter("subCategories", subCat)
-                                }
-                                className="rounded-none"
-                              />
-                              <Label
-                                htmlFor={`subcat-${subCat}`}
-                                className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
+                          {filterData?.categories
+                            ?.filter((cat) => cat.parent_id !== null)
+                            ?.map((subCat) => (
+                              <div
+                                key={subCat.id}
+                                className="flex items-center gap-2"
                               >
-                                {subCat}
-                              </Label>
-                            </div>
-                          ))}
+                                <Checkbox
+                                  id={`subcat-${subCat.id}`}
+                                  checked={tempFilters.subCategories.includes(
+                                    subCat.id
+                                  )}
+                                  onCheckedChange={() =>
+                                    toggleTempFilter("subCategories", subCat.id)
+                                  }
+                                  className="rounded-none"
+                                />
+                                <Label
+                                  htmlFor={`subcat-${subCat.id}`}
+                                  className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
+                                >
+                                  {subCat.name}
+                                </Label>
+                              </div>
+                            ))}
                         </div>
                       </AccordionContent>
                     </AccordionItem>
@@ -418,24 +496,26 @@ export default function ProductList({ data, locale }) {
                       </AccordionTrigger>
                       <AccordionContent className="p-2">
                         <div className="flex flex-col gap-2 sm:gap-4">
-                          {FILTER_OPTIONS.sectors.map((sector) => (
+                          {filterData?.sectors?.map((sector) => (
                             <div
-                              key={sector}
+                              key={sector.id}
                               className="flex items-center gap-2"
                             >
                               <Checkbox
-                                id={`sector-${sector}`}
-                                checked={tempFilters.sectors.includes(sector)}
+                                id={`sector-${sector.id}`}
+                                checked={tempFilters.sectors.includes(
+                                  sector.id
+                                )}
                                 onCheckedChange={() =>
-                                  toggleTempFilter("sectors", sector)
+                                  toggleTempFilter("sectors", sector.id)
                                 }
                                 className="rounded-none"
                               />
                               <Label
-                                htmlFor={`sector-${sector}`}
+                                htmlFor={`sector-${sector.id}`}
                                 className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
                               >
-                                {sector}
+                                {sector.name}
                               </Label>
                             </div>
                           ))}
@@ -450,7 +530,7 @@ export default function ProductList({ data, locale }) {
                       </AccordionTrigger>
                       <AccordionContent className="p-2">
                         <div className="flex flex-col gap-2 sm:gap-4">
-                          {FILTER_OPTIONS.priceRanges.map((range) => (
+                          {PRICE_RANGES.map((range) => (
                             <div
                               key={range.label}
                               className="flex items-center gap-2"
@@ -477,69 +557,48 @@ export default function ProductList({ data, locale }) {
                       </AccordionContent>
                     </AccordionItem>
 
-                    {/* Color Option */}
-                    <AccordionItem value="item-5" className="py-2 sm:py-3">
-                      <AccordionTrigger className={accordionTriggerStyle}>
-                        Color
-                      </AccordionTrigger>
-                      <AccordionContent className="p-2">
-                        <div className="flex flex-col gap-2 sm:gap-4">
-                          {FILTER_OPTIONS.colors.map((color) => (
-                            <div
-                              key={color}
-                              className="flex items-center gap-2"
-                            >
-                              <Checkbox
-                                id={`color-${color}`}
-                                checked={tempFilters.colors.includes(color)}
-                                onCheckedChange={() =>
-                                  toggleTempFilter("colors", color)
-                                }
-                                className="rounded-none"
-                              />
-                              <Label
-                                htmlFor={`color-${color}`}
-                                className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
+                
+                    {/* Other Attributes (dynamically rendered) */}
+                    {getAttributes.map((attr) => (
+                      <AccordionItem
+                        key={attr.id}
+                        value={`attr-${attr.id}`}
+                        className="py-2 sm:py-3"
+                      >
+                        <AccordionTrigger className={accordionTriggerStyle}>
+                          {attr.name}
+                        </AccordionTrigger>
+                        <AccordionContent className="p-2">
+                          <div className="flex flex-col gap-2 sm:gap-4">
+                            {attr.values?.map((val) => (
+                              <div
+                                key={val.id}
+                                className="flex items-center gap-2"
                               >
-                                {color}
-                              </Label>
-                            </div>
-                          ))}
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-
-                    {/* Pattern */}
-                    <AccordionItem value="item-6" className="py-2 sm:py-3">
-                      <AccordionTrigger className={accordionTriggerStyle}>
-                        Pattern
-                      </AccordionTrigger>
-                      <AccordionContent className="p-2">
-                        <div className="flex flex-col gap-2 sm:gap-4">
-                          {FILTER_OPTIONS.patterns.map((pattern) => (
-                            <div
-                              key={pattern}
-                              className="flex items-center gap-2"
-                            >
-                              <Checkbox
-                                id={`pattern-${pattern}`}
-                                checked={tempFilters.patterns.includes(pattern)}
-                                onCheckedChange={() =>
-                                  toggleTempFilter("patterns", pattern)
-                                }
-                                className="rounded-none"
-                              />
-                              <Label
-                                htmlFor={`pattern-${pattern}`}
-                                className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
-                              >
-                                {pattern}
-                              </Label>
-                            </div>
-                          ))}
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
+                                <Checkbox
+                                  id={`attr-${attr.id}-${val.id}`}
+                                  checked={
+                                    tempFilters.attributes[attr.id]?.includes(
+                                      val.id
+                                    ) || false
+                                  }
+                                  onCheckedChange={() =>
+                                    toggleTempAttributeFilter(attr.id, val.id)
+                                  }
+                                  className="rounded-none"
+                                />
+                                <Label
+                                  htmlFor={`attr-${attr.id}-${val.id}`}
+                                  className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
+                                >
+                                  {val.value}
+                                </Label>
+                              </div>
+                            ))}
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
                   </Accordion>
                 </div>
 
@@ -575,25 +634,25 @@ export default function ProductList({ data, locale }) {
 
             <MediaQuery minWidth={640}>
               {/* Active Filter Pills */}
-              {filters.categories.map((cat) => (
+              {filters.categories.map((catId) => (
                 <FilterPill
-                  key={`cat-${cat}`}
-                  label={`Category: ${cat}`}
-                  onRemove={() => removeFilter("categories", cat)}
+                  key={`cat-${catId}`}
+                  label={`Category: ${getCategoryName(catId)}`}
+                  onRemove={() => removeFilter("categories", catId)}
                 />
               ))}
-              {filters.subCategories.map((subCat) => (
+              {filters.subCategories.map((subCatId) => (
                 <FilterPill
-                  key={`subcat-${subCat}`}
-                  label={`Sub: ${subCat}`}
-                  onRemove={() => removeFilter("subCategories", subCat)}
+                  key={`subcat-${subCatId}`}
+                  label={`Sub: ${getCategoryName(subCatId)}`}
+                  onRemove={() => removeFilter("subCategories", subCatId)}
                 />
               ))}
-              {filters.sectors.map((sector) => (
+              {filters.sectors.map((sectorId) => (
                 <FilterPill
-                  key={`sector-${sector}`}
-                  label={`Sector: ${sector}`}
-                  onRemove={() => removeFilter("sectors", sector)}
+                  key={`sector-${sectorId}`}
+                  label={`Sector: ${getSectorName(sectorId)}`}
+                  onRemove={() => removeFilter("sectors", sectorId)}
                 />
               ))}
               {filters.priceRanges.map((range) => (
@@ -603,20 +662,19 @@ export default function ProductList({ data, locale }) {
                   onRemove={() => removeFilter("priceRanges", range)}
                 />
               ))}
-              {filters.colors.map((color) => (
-                <FilterPill
-                  key={`color-${color}`}
-                  label={`Color: ${color}`}
-                  onRemove={() => removeFilter("colors", color)}
-                />
-              ))}
-              {filters.patterns.map((pattern) => (
-                <FilterPill
-                  key={`pattern-${pattern}`}
-                  label={`Pattern: ${pattern}`}
-                  onRemove={() => removeFilter("patterns", pattern)}
-                />
-              ))}
+              {/* Dynamic attribute filter pills */}
+              {Object.entries(filters.attributes || {}).map(
+                ([attrId, valueIds]) =>
+                  valueIds.map((valueId) => (
+                    <FilterPill
+                      key={`attr-${attrId}-${valueId}`}
+                      label={`${getAttributeName(parseInt(attrId))}: ${getAttributeValueName(parseInt(attrId), valueId)}`}
+                      onRemove={() =>
+                        removeAttributeFilter(parseInt(attrId), valueId)
+                      }
+                    />
+                  ))
+              )}
               {/* Clear All Button */}
               {activeFilterCount > 0 && (
                 <button

@@ -34,7 +34,9 @@ export const getAuthData = async () => {
   } catch (error) {
     return sendError(error);
   }
-};export const getMaterialData = async () => {
+};
+
+export const getMaterialData = async () => {
   try {
     const data = await apiClient(`/api/frontend/materials-guide`);
     return sendSuccess(data?.data);
