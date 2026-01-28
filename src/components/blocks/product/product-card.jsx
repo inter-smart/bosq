@@ -111,7 +111,7 @@ export default function ProductCard({ product, isEn }) {
               </>
             ) : (
               <Link
-                href={product?.slug}
+                href={`/products/${product?.slug}`}
                 className="text-[8px] 2xl:text-[10px] leading-normal font-light text-[#28288] hover:text-[#f17423]"
               >
                 View Product

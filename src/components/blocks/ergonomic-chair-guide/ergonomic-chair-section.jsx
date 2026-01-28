@@ -8,10 +8,10 @@ export default function ErgonomicChairSection({ data, locale }) {
     <section className="w-full h-auto py-[10px_40px] sm:py-[10px_50px] lg:py-[20px_70px] 2xl:py-[30px_90px] block">
       <div className="w-full aspect-6/5 sm:aspect-1920/740 overflow-hidden flex items-center relative z-0">
         <picture className="absolute -z-2 inset-0 opacity-95">
-          <source media="(max-width: 640px)" srcSet={data?.media?.mobilePath} />
+          <source media="(max-width: 640px)" srcSet={data?.media?.mobile?.path} />
           <Image
-            src={data?.media?.desktopPath}
-            alt={data?.media?.media_alt}
+            src={data?.media?.desktop?.path}
+            alt={data?.media?.desktop?.alt}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 80vw"
             className="-z-2 object-cover"
@@ -40,7 +40,7 @@ export default function ErgonomicChairSection({ data, locale }) {
         </div>
       </div>
       <div className="container pt-7 sm:pt-10 lg:pt-17 2xl:pt-20 3xl:pt-25">
-        {data?.chair_info_list?.map((item) => (
+        {data?.sections?.map((item) => (
           <div
             key={item.id}
             className="w-full h-auto py-2.5 sm:py-5 lg:py-8 2xl:py-10 3xl:py-12 first:pt-0 last:pb-0 block"
