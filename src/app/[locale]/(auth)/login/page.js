@@ -28,7 +28,7 @@ export default async function LoginPage({ params }) {
   return (
     <>
       <AuthLayout locale={locale} data={loginData} isApiData={true}>
-        <AuthLogin locale={locale} />
+        <AuthLogin locale={locale} data={loginData} />
       </AuthLayout>
     </>
   );

@@ -61,8 +61,7 @@ const inputStyle = cn(
 
 const errorStyle = cn("text-[#f17423]");
 
-export default function AuthForgotPasswordForm({ locale }) {
-  const [step, setStep] = useState(1); // 1: Email, 2: OTP, 3: Password
+export default function AuthForgotPasswordForm({ locale, setStep, step }) {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
@@ -100,6 +99,7 @@ export default function AuthForgotPasswordForm({ locale }) {
 
       if (error) {
         setSuccess(message);
+        setLoading(false)
         return;
       }
 
@@ -132,6 +132,7 @@ export default function AuthForgotPasswordForm({ locale }) {
 
       if (error) {
         setSuccess(message);
+        setLoading(false);
         return;
       }
 
@@ -163,6 +164,7 @@ export default function AuthForgotPasswordForm({ locale }) {
 
       if (error) {
         setSuccess(message);
+        setLoading(false);
         return;
       }
 

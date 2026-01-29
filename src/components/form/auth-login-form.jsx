@@ -42,7 +42,7 @@ const inputStyle = cn(
 
 const errorStyle = cn("text-[#f17423]");
 
-export default function AuthLoginForm({ locale }) {
+export default function AuthLoginForm({ locale, data }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
