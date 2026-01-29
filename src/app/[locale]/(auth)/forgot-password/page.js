@@ -1,5 +1,7 @@
 import AuthLayout from "@/components/blocks/auth/auth-layout";
 import AuthForgotPasswordForm from "@/components/form/auth-forgot-password-form";
+import { getAuthData } from "@/lib/api/CMS/basicGet";
+import NotFound from "../../(public)/not-found/page";
 
 const local_data = {
   media: {
@@ -15,6 +17,18 @@ const local_data = {
 export default async function ForgotPasswordPage({ params }) {
   const resolvedParams = await params;
   const { locale } = resolvedParams;
+
+  const { data, error } = await getAuthData();
+
+
+  if (error) {
+    return <NotFound />
+  }
+
+  const { authPageData } = data;
+  const loginData = authPageData?.login_data;
+
+
   return (
     <>
       <AuthLayout locale={locale} data={local_data}>

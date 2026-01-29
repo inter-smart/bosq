@@ -20,15 +20,15 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
+import { commonValidations } from "@/lib/validations";
+import { login } from "@/lib/helper";
+import { useRouter } from "next/navigation";
 
 // Validation schema
 const formSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z
-    .string()
-    .min(6, "Password must be at least 6 characters")
-    .max(100, "Password is too long"),
-  rememberMe: z.boolean().default(false),
+  email: commonValidations.email(),
+  password:commonValidations.password(),
+  rememberMe: commonValidations.rememberMe
 });
 
 // Shared styles
@@ -56,30 +56,28 @@ export default function AuthLoginForm({ locale }) {
   const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  const router = useRouter();
   const onSubmit = async (values) => {
     setLoading(true);
     setSuccess("");
 
     try {
-      const res = await fetch("http://localhost:1337/api/auth/local", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          identifier: values.email,
-          password: values.password,
-        }),
-      });
+   
 
-      if (!res.ok) throw new Error("Login failed");
+      const {data, error, message} = await login(values);
 
-      const data = await res.json();
-
-      // Store token if remember me is checked
-      if (values.rememberMe) {
-        localStorage.setItem("token", data.jwt);
+      if(error){
+        setSuccess(message);
+        return;
       }
 
-      setSuccess("Login successful!");
+
+      if(data){
+        localStorage.setItem("auth_token", data.accessToken);
+        setSuccess("Login successful!");
+        router.push("/")
+      }
+
 
       // Redirect to dashboard
       // window.location.href = "/dashboard";

@@ -17,19 +17,15 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
+import { commonValidations } from "@/lib/validations";
+import { createPassword } from "@/lib/helper";
+import { useRouter } from "next/navigation";
 
 // Validation schema
 const formSchema = z
   .object({
-    password: z
-      .string()
-      .min(8, "Password must be at least 8 characters")
-      .max(100, "Password cannot exceed 100 characters")
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-        "Password must contain at least one uppercase letter, one lowercase letter, and one number"
-      ),
-    confirmPassword: z.string(),
+    password: commonValidations.password(),
+    confirmPassword: commonValidations.password(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -49,24 +45,24 @@ export default function AuthPasswordForm({ locale }) {
   const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+  const router = useRouter();
   const onSubmit = async (values) => {
     setLoading(true);
     setSuccess("");
 
     try {
-      const res = await fetch(
-        "http://localhost:1337/api/auth/create-password",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ data: { password: values.password } }),
-        }
-      );
+      const { data, error, message } = await createPassword(values.password);
 
-      if (!res.ok) throw new Error("Failed to create password");
+      if (error) {
+        setSuccess(message);
+        return;
+      }
 
-      setSuccess("Password created successfully!");
+      if (data || !error) {
+        localStorage.removeItem("auth-token");
+        setSuccess("Password created successfully!");
+        router.push("/login");
+      }
 
       // Redirect to login or dashboard
       // window.location.href = "/login";
@@ -80,17 +76,17 @@ export default function AuthPasswordForm({ locale }) {
 
   // Shared styles
   const labelStyle = cn(
-    "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]"
+    "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]",
   );
 
   const inputStyle = cn(
     "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1",
-    locale === "ar" ? "pl-10" : "pr-10"
+    locale === "ar" ? "pl-10" : "pr-10",
   );
 
   const toggleStyle = cn(
     "absolute top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700",
-    locale === "ar" ? "left-3" : "right-3"
+    locale === "ar" ? "left-3" : "right-3",
   );
 
   const errorStyle = cn("text-[#f17423]");
@@ -190,7 +186,7 @@ export default function AuthPasswordForm({ locale }) {
               "text-[10px] mt-1 w-full",
               success.includes("successfully")
                 ? "text-green-600"
-                : "text-red-600"
+                : "text-red-600",
             )}
           >
             {success}

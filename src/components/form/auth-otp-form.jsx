@@ -23,22 +23,22 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { commonValidations } from "@/lib/validations";
+import { verifyOtp } from "@/lib/helper";
+import { useRouter } from "next/navigation";
 
 // Validation schema
 const formSchema = z.object({
-  otp: z
-    .string()
-    .length(6, "OTP must be exactly 6 digits")
-    .regex(/^\d+$/, "OTP must contain only numbers"),
+  otp: commonValidations.otp,
 });
 
 // Shared styles
 const labelStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]"
+  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]",
 );
 
 const inputStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] focus-visible:ring-1"
+  "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] focus-visible:ring-1",
   // "bg-red-500"
 );
 
@@ -55,25 +55,30 @@ export default function AuthOtpForm() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
 
+  const router = useRouter();
   const onSubmit = async (values) => {
     setLoading(true);
     setSuccess("");
 
     try {
-      const res = await fetch("http://localhost:1337/api/auth/verify-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: values }),
-      });
+      const res = await verifyOtp(values);
 
-      if (!res.ok) throw new Error("Failed to verify OTP");
+    const { data, error, message } = res
 
-      const data = await res.json();
+    console.log("validaiton: ",res)
 
-      setSuccess("OTP verified successfully!");
+      if (error) {
+        setSuccess(message);
+        return;
+      }
 
-      // Redirect to password creation or next step
-      // window.location.href = "/create-password";
+
+      if (data || !error) {
+        localStorage.setItem("auth-token", data.tempToken);
+        localStorage.removeItem("email");
+        setSuccess("OTP verified successfully!");
+        router.push("/create-password");
+      }
     } catch (err) {
       console.error(err);
       setSuccess("Invalid OTP. Please try again.");
@@ -97,7 +102,7 @@ export default function AuthOtpForm() {
               <FormLabel className={labelStyle}>Enter OTP</FormLabel>
               <FormControl>
                 <InputOTP
-                  maxLength={6}
+                  maxLength={4}
                   value={field.value}
                   onChange={field.onChange}
                 >
@@ -112,12 +117,6 @@ export default function AuthOtpForm() {
                   </InputOTPGroup>
                   <InputOTPGroup>
                     <InputOTPSlot index={3} className={inputStyle} />
-                  </InputOTPGroup>
-                  <InputOTPGroup>
-                    <InputOTPSlot index={4} className={inputStyle} />
-                  </InputOTPGroup>
-                  <InputOTPGroup>
-                    <InputOTPSlot index={5} className={inputStyle} />
                   </InputOTPGroup>
                 </InputOTP>
               </FormControl>
@@ -145,7 +144,7 @@ export default function AuthOtpForm() {
               "text-[10px] mt-1 w-full",
               success.includes("successfully")
                 ? "text-green-600"
-                : "text-red-600"
+                : "text-red-600",
             )}
           >
             {success}

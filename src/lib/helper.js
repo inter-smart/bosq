@@ -31,7 +31,8 @@ export function parseOtherMeta(htmlString) {
   }
 
   // Extract script tags (for JSON-LD)
-  const scriptRegex = /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
+  const scriptRegex =
+    /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
   let scriptMatch;
 
   while ((scriptMatch = scriptRegex.exec(htmlString)) !== null) {
@@ -46,12 +47,9 @@ export function parseOtherMeta(htmlString) {
   return { other, scripts };
 }
 
-
-
-
 export async function fetchFromAPI(endpoint, options = {}) {
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
-  
+
   const url = `${API_BASE_URL}${endpoint}`;
   const defaultOptions = {
     headers: {
@@ -70,14 +68,17 @@ export async function fetchFromAPI(endpoint, options = {}) {
       return {
         data: null,
         error: true,
-        message: data?.message || data?.error || `Error: ${response.status} ${response.statusText}`,
+        message:
+          data?.message ||
+          data?.error?.message ||
+          `Error: ${response.status} ${response.statusText}`,
       };
     }
 
     return {
       data: data?.success ? data?.data : null,
       error: !data?.success,
-      message: data?.success ? null : (data?.message || data?.error || "An error occurred"),
+      message: data?.message || data?.error.message || "An error occurred",
     };
   } catch (error) {
     return {
@@ -86,4 +87,71 @@ export async function fetchFromAPI(endpoint, options = {}) {
       message: error?.message || "Network error. Please check your connection.",
     };
   }
+}
+
+export async function register(credentials) {
+  return fetchFromAPI("/api/frontend/auth/register", {
+    method: "POST",
+    body: JSON.stringify(credentials),
+  });
+}
+
+export async function verifyOtp(credentials) {
+  const email = localStorage.getItem("email");
+  return fetchFromAPI("/api/frontend/auth/verify-otp", {
+    method: "POST",
+    body: JSON.stringify({ ...credentials, email }),
+  });
+}
+
+export async function createPassword(password) {
+  const token = localStorage.getItem("auth-token");
+  return fetchFromAPI("/api/frontend/auth/create-password", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ password }),
+  });
+}
+
+// login
+export async function login(credentials) {
+  return fetchFromAPI("/api/frontend/auth/login", {
+    method: "POST",
+    body: JSON.stringify(credentials),
+  });
+}
+
+// forgot password
+export async function forgotPassword(email) {
+  return fetchFromAPI("/api/frontend/auth/forgot-password", {
+    method: "POST",
+    body: JSON.stringify({ email }),
+  });
+}
+
+// verifyResetPasswordOtp
+
+export async function verifyResetPasswordOtp({ otp, email }) {
+
+  console.log(otp, email)
+  return fetchFromAPI("/api/frontend/auth/verify-reset-password-otp", {
+    method: "POST",
+    body: JSON.stringify({ otp, email }),
+  });
+}
+
+// reset password
+export async function resetPassword({password}) {
+  const resetToken = localStorage.getItem("reset_token");
+  return fetchFromAPI("/api/frontend/auth/reset-password", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${resetToken}`,
+    },
+    body: JSON.stringify({ password }),
+  });
 }
