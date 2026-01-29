@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { z } from "zod";
+import { useRouter } from "next/navigation";
 
 import {
   Form,
@@ -19,14 +20,15 @@ import { cn } from "@/lib/utils";
 
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
+import { commonValidations } from "@/lib/validations";
+import { parsePhoneNumberFromString } from "libphonenumber-js";
+import { register } from "@/lib/helper";
+import { sendError } from "next/dist/server/api-utils";
 
 // Validation schema
 const formSchema = z.object({
-  fullName: z
-    .string()
-    .min(2, "Full name must be at least 2 characters")
-    .max(50, "Full name cannot exceed 50 characters"),
-  email: z.string().email("Invalid email address"),
+  fullName: commonValidations.name(),
+  email: commonValidations.email(),
   phone: z.string().min(8, "Phone number is required"),
 });
 
@@ -54,23 +56,43 @@ export default function AuthCreateForm() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
 
+  
+const router = useRouter();
+
   const onSubmit = async (values) => {
     setLoading(true);
     setSuccess("");
 
     try {
-      const res = await fetch("http://localhost:1337/api/auth/send-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: values }),
-      });
+      const phoneNumber = parsePhoneNumberFromString(values.phone);
 
-      if (!res.ok) throw new Error("Failed to send OTP");
+      if (!phoneNumber || !phoneNumber.isValid()) {
+        throw new Error("Invalid phone number");
+      }
+      const payload = {
+        name: values.fullName,
+        email: values.email,
+      countryCode: `+${phoneNumber.countryCallingCode}`,
+        mobile: phoneNumber.nationalNumber,
+      };
 
-      setSuccess("OTP sent successfully!");
+      const {data, error, message } = await register(payload);
+
+      if (error) {
+        setSuccess(message);
+      }
+
+      
+      if(data){
+        localStorage.setItem("email", values.email);
+        router.push("/verify-otp");
+        setSuccess("OTP sent successfully!");
+      }
+
+
     } catch (err) {
       console.error(err);
-      setSuccess("Something went wrong. Please try again.");
+      setSuccess(err.message);
     }
 
     setLoading(false);

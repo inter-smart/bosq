@@ -22,6 +22,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
+import { commonValidations } from "@/lib/validations";
+import {
+  forgotPassword,
+  resetPassword,
+  verifyResetPasswordOtp,
+} from "@/lib/helper";
 
 // Step 1: Email validation schema
 const emailSchema = z.object({
@@ -30,24 +36,14 @@ const emailSchema = z.object({
 
 // Step 2: OTP validation schema
 const otpSchema = z.object({
-  otp: z
-    .string()
-    .length(6, "OTP must be exactly 6 digits")
-    .regex(/^\d+$/, "OTP must contain only numbers"),
+  otp: commonValidations.otp,
 });
 
 // Step 3: Password validation schema
 const passwordSchema = z
   .object({
-    password: z
-      .string()
-      .min(8, "Password must be at least 8 characters")
-      .max(100, "Password cannot exceed 100 characters")
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-        "Password must contain at least one uppercase letter, one lowercase letter, and one number",
-      ),
-    confirmPassword: z.string(),
+    password: commonValidations.password(),
+    confirmPassword: commonValidations.password(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -99,38 +95,27 @@ export default function AuthForgotPasswordForm({ locale }) {
     setLoading(true);
     setSuccess("");
 
-    // Simulate API call for local testing
-    setTimeout(() => {
-      console.log("Step 1 - Email:", values.email);
-      setEmail(values.email);
-      setSuccess("OTP sent to your email!");
-      setLoading(false);
+    try {
+      const { data, error, message } = await forgotPassword(values.email);
 
-      setTimeout(() => {
-        setStep(2);
-        setSuccess("");
-      }, 1500);
-    }, 1000);
+      if (error) {
+        setSuccess(message);
+        return;
+      }
 
-    // TODO: Connect to API when ready
-    // try {
-    //   const res = await fetch("http://localhost:1337/api/auth/forgot-password", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({ email: values.email }),
-    //   });
-    //   if (!res.ok) throw new Error("Failed to send OTP");
-    //   setEmail(values.email);
-    //   setSuccess("OTP sent to your email!");
-    //   setTimeout(() => {
-    //     setStep(2);
-    //     setSuccess("");
-    //   }, 1500);
-    // } catch (err) {
-    //   console.error(err);
-    //   setSuccess("Email not found. Please try again.");
-    // }
-    // setLoading(false);
+      if (data) {
+        setEmail(values.email);
+        setSuccess("OTP sent to your email!");
+        setTimeout(() => {
+          setStep(2);
+          setSuccess("");
+        }, 1500);
+      }
+    } catch (err) {
+      console.error(err);
+      setSuccess(err.message);
+    }
+    setLoading(false);
   };
 
   // Step 2: Verify OTP
@@ -138,43 +123,31 @@ export default function AuthForgotPasswordForm({ locale }) {
     setLoading(true);
     setSuccess("");
 
-    // Simulate API call for local testing
-    setTimeout(() => {
-      console.log("Step 2 - OTP:", values.otp, "Email:", email);
+    // TODO: Connect to API when ready
+    try {
+      const { data, error, message } = await verifyResetPasswordOtp({
+        otp: values.otp,
+        email,
+      });
 
-      // Accept any 6-digit OTP for testing
-      if (values.otp.length === 6) {
+      if (error) {
+        setSuccess(message);
+        return;
+      }
+
+      if (data) {
+        localStorage.setItem("reset_token", data.resetToken);
         setSuccess("OTP verified successfully!");
-        setLoading(false);
-
         setTimeout(() => {
           setStep(3);
           setSuccess("");
         }, 1500);
-      } else {
-        setSuccess("Invalid OTP. Please try again.");
-        setLoading(false);
       }
-    }, 1000);
-
-    // TODO: Connect to API when ready
-    // try {
-    //   const res = await fetch("http://localhost:1337/api/auth/verify-reset-otp", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({ email, otp: values.otp }),
-    //   });
-    //   if (!res.ok) throw new Error("Invalid OTP");
-    //   setSuccess("OTP verified successfully!");
-    //   setTimeout(() => {
-    //     setStep(3);
-    //     setSuccess("");
-    //   }, 1500);
-    // } catch (err) {
-    //   console.error(err);
-    //   setSuccess("Invalid OTP. Please try again.");
-    // }
-    // setLoading(false);
+    } catch (err) {
+      console.error(err);
+      setSuccess("Invalid OTP. Please try again.");
+    }
+    setLoading(false);
   };
 
   // Step 3: Reset password
@@ -182,43 +155,29 @@ export default function AuthForgotPasswordForm({ locale }) {
     setLoading(true);
     setSuccess("");
 
-    // Simulate API call for local testing
-    setTimeout(() => {
-      console.log("Step 3 - Password Reset:", {
-        email,
+    // TODO: Connect to API when ready
+    try {
+      const { data, error, message } = await resetPassword({
         password: values.password,
       });
 
-      setSuccess("Password reset successfully!");
-      setLoading(false);
+      if (error) {
+        setSuccess(message);
+        return;
+      }
 
-      // Simulate redirect to login after 2 seconds
-      setTimeout(() => {
-        console.log("Redirecting to /login...");
-        // Uncomment when ready: window.location.href = "/login";
-      }, 2000);
-    }, 1000);
-
-    // TODO: Connect to API when ready
-    // try {
-    //   const res = await fetch("http://localhost:1337/api/auth/reset-password", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({
-    //       email,
-    //       password: values.password,
-    //     }),
-    //   });
-    //   if (!res.ok) throw new Error("Failed to reset password");
-    //   setSuccess("Password reset successfully!");
-    //   setTimeout(() => {
-    //     window.location.href = "/login";
-    //   }, 2000);
-    // } catch (err) {
-    //   console.error(err);
-    //   setSuccess("Something went wrong. Please try again.");
-    // }
-    // setLoading(false);
+      if (data) {
+        setSuccess("Password reset successfully!");
+        localStorage.removeItem("reset_token");
+        setTimeout(() => {
+          window.location.href = "/login";
+        }, 2000);
+      }
+    } catch (err) {
+      console.error(err);
+      setSuccess("Something went wrong. Please try again.");
+    }
+    setLoading(false);
   };
 
   const toggleStyle = cn(
@@ -298,7 +257,7 @@ export default function AuthForgotPasswordForm({ locale }) {
                   </FormLabel>
                   <FormControl>
                     <InputOTP
-                      maxLength={6}
+                      maxLength={4}
                       value={field.value}
                       onChange={field.onChange}
                     >
@@ -313,12 +272,6 @@ export default function AuthForgotPasswordForm({ locale }) {
                       </InputOTPGroup>
                       <InputOTPGroup>
                         <InputOTPSlot index={3} />
-                      </InputOTPGroup>
-                      <InputOTPGroup>
-                        <InputOTPSlot index={4} />
-                      </InputOTPGroup>
-                      <InputOTPGroup>
-                        <InputOTPSlot index={5} />
                       </InputOTPGroup>
                     </InputOTP>
                   </FormControl>
