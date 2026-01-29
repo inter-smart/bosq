@@ -1,8 +1,8 @@
 import ProductHero from "@/components/blocks/product/product-hero";
-import ProductList from "@/components/blocks/product/product-list";
 import { getMetaData } from "@/lib/api/metaApi";
 import NotFound from "../../not-found/page";
 import { ProductData } from "@/lib/api/products/ResourcesApi";
+import ProductList from "@/components/blocks/product/Listing/ProductList";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -606,16 +606,18 @@ export default async function ProductsPage({ params }) {
 
   const slug = locale === "en" ? "Products" : "المنتجات";
 
-  const { data: filterData, error } = await ProductData.getFilterData();
+  const [filters, products] = await Promise.all([
+    ProductData.getFilterData().then(({ data }) => data),
+    ProductData.getProductInitialListing().then(({ data }) => data),
+  ]);
 
-  if (error || !filterData) {
-    return <NotFound />;
-  }
+  const initialPagination = products?.pagination;
+  const initialProducts = products?.products;
 
   return (
     <>
       <ProductHero locale={locale} data={local_data?.heroData} slug={slug} />
-      <ProductList locale={locale} data={local_data?.productData} filterData={filterData} />
+      <ProductList locale={locale} initialPagination={initialPagination} initialProducts={initialProducts} filters={filters} />
     </>
   );
 }

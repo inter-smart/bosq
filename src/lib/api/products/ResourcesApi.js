@@ -11,6 +11,16 @@ export const ProductData = {
     }
   },
 
+  getProductInitialListing: async () => {
+    try {
+      const data = await apiClient(`/api/frontend/products/initial-product-list`);
+
+      return sendSuccess(data?.data);
+    } catch (error) {
+      return sendError(error);
+    }
+  },
+
   getProductList: async (params) => {
     try {
       const data = await apiClient(`/api/frontend/products/product-listing?${params}`);
