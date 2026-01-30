@@ -26,12 +26,18 @@ import ProductEnquireModal from "./ProductEnquireModal";
 import ProductDetails from "./ProductDetails";
 import { ProductData } from "@/lib/api/products/ResourcesApi";
 
+const enq = {
+  title: "Enquire Now",
+  subtitle: "Bulk Orders & Customisation Available!",
+  description: "<p>Need 10 or 100 chairs? Want them in your brand colours or a unique design? No problem. Just tell us what you need below!</p>",
+};
+
 export default function ProductDetailCopy({ locale, initialData, productData, models }) {
   const [currentModelData, setCurrentModelData] = useState(initialData);
   const [isModelLoading, setIsModelLoading] = useState(false);
 
   const productImages = currentModelData?.images || [];
-  const currentModelId = currentModelData?.id;
+  const currentModelId = currentModelData?.model_id;
 
   const handleModelChange = async (model) => {
     if (model.id === currentModelId) return;
@@ -92,6 +98,8 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
   const [quantity, setQuantity] = useState(1);
 
   const handleIncrement = () => {
+    console.log(currentModelData?.stock);
+
     setQuantity((prev) => prev + 1);
   };
 
@@ -248,7 +256,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                 {productData?.category_name}
               </Heading>
               <Heading as="div" size="heading2" className="font-normal text-[#282828] mb-1 2xl:mb-2 max-sm:font-bold">
-                {productData?.title}
+                {currentModelData?.title}
               </Heading>
               <Text as="div" size="text3" className="text-[#282828] mb-2 2xl:mb-4">
                 {parse(productData?.description)}
@@ -264,7 +272,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                 <div className="w-full max-w-[468px] bg-[#f2f2f2] border border-[#dedede] flex items-center p-1 rounded-[4px]">
                   <div className="w-[40px] xl:w-[45px] 2xl:w-[55px] aspect-square rounded-[4px] overflow-hidden bg-white">
                     <Image
-                      src={currentModelData?.media_path}
+                      src={currentModelData?.model_media}
                       alt={currentModelData?.alt || "design"}
                       width={1080}
                       height={1080}
@@ -273,7 +281,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                   </div>
                   <div className="flex-1 flex justify-between gap-2 p-2 xl:p-2.5 2xl:p-[15px] ">
                     <div className="text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#282828]">
-                      {currentModelData?.title}
+                      {currentModelData?.model_title}
                     </div>
                     <ProductChooseDesign
                       data={currentModelData}
@@ -281,7 +289,6 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                       onOpenChange={setIsChooseDesignOpen}
                       models={models}
                       currentModelId={currentModelId}
-                      designOptions={currentModelData?.attributes}
                       onModelChange={handleModelChange}
                       isModelLoading={isModelLoading}
                     >
@@ -309,7 +316,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                 size="none"
                 className="text-[12px] xl:text-[14px] 2xl:text-[18px] 3xl:text-[22px] leading-tight font-normal text-[#282828] [&_span]:text-[70%] [&_span]:font-light [&_span]:text-[#bbbcbc] mb-2 xl:mb-3 2xl:mb-5"
               >
-                {/* {data?.formattedPrice} <span>Inc Tax</span> */}
+                AED {currentModelData?.price} <span>Inc Tax</span>
               </Heading>
               <div className="w-full flex flex-wrap gap-2.5 mb-3 xl:mb-3 2xl:mb-5">
                 <div className="w-[60px] xl:w-[60px] 2xl:w-[80px] h-[35px] lg:h-[40px] 2xl:h-[45px] 3xl:h-[55px] flex items-center rounded-[6px] overflow-hidden bg-white border border-[#dedede]">
@@ -328,7 +335,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                       <ChevronUp className="size-3 text-black" />
                     </button>
 
-                    <button onClick={handleIncrement} className="transition-colors">
+                    <button onClick={handleIncrement} className="transition-colors" disabled={quantity == currentModelData?.stock}>
                       <ChevronDown className="size-3 text-black" />
                     </button>
                   </div>
@@ -341,29 +348,27 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                 </Button>
               </div>
 
-              {/* {quantity * data?.price > data?.price && (
-                <div className="w-full mb-1 xl:mb-2">
-                  <Text as="div" size="text3" className="text-[#282828] max-w-[95%]">
-                    {"Total: $"}
-                    <span className="font-medium">{(quantity * data?.price).toFixed(2)}</span>
-                  </Text>
-                </div>
-              )} */}
+              <div className="w-full mb-1 xl:mb-2">
+                <Text as="div" size="text3" className="text-[#282828] max-w-[95%]">
+                  {"Total: $"}
+                  <span className="font-medium">{(quantity * currentModelData?.price).toFixed(2)}</span>
+                </Text>
+              </div>
 
               <div className="flex flex-wrap items-center justify-between gap-4 2xl:gap-6 mb-2 xl:mb-3 2xl:mb-5 max-lg:flex-wrap-reverse">
                 <div className="flex lg:flex-1">
-                  {/* <Text as="div" size="text3" className="text-[#282828] max-w-[95%]">
-                    {parse(data?.purchaseTagline)}
-                  </Text> */}
+                  <Text as="div" size="text3" className="text-[#282828] max-w-[95%]">
+                    {"Enhance Your Productivity by Upgrading Your Workspace Comfort Today"}
+                  </Text>
                 </div>
                 <Button variant={"link"} className={"font-normal underline h-auto "} asChild>
                   <Link href={"/"}>Buy Now</Link>
                 </Button>
-                {/* <ProductEnquireModal data={data?.enquiry} locale={locale}>
+                <ProductEnquireModal data={enq} locale={locale}>
                   <Button variant={"link"} className={"font-normal underline h-auto"}>
                     Enquire Now
                   </Button>
-                </ProductEnquireModal> */}
+                </ProductEnquireModal>
               </div>
 
               <hr className="my-3 sm:my-3 2xl:my-5 mx-[-5px]" />
@@ -391,7 +396,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                 ))}
               </div>
 
-              <hr className="my-3 sm:my-3 2xl:my-5 mx-[-5px]" />
+              {/* <hr className="my-3 sm:my-3 2xl:my-5 mx-[-5px]" /> */}
 
               {/* <Heading as="div" size="heading5" className="font-normal text-[#282828] mb-3 2xl:mb-4 mt-2.5 2xl:mt-4">
                 Frequently Bought Together
@@ -432,9 +437,9 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                 </div>
               </div> */}
 
-              <hr className="my-2 sm:my-2 2xl:my-3 mx-[-5px]" />
+              {/* <hr className="my-2 sm:my-2 2xl:my-3 mx-[-5px]" /> */}
               <div className="flex justify-between items-center gap-2">
-                <div>
+                {/* <div>
                   <Heading
                     as="div"
                     size="none"
@@ -449,17 +454,17 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                   >
                     AED 667
                   </Text>
-                </div>
-                <div>
+                </div> */}
+                {/* <div>
                   <Button variant={"black"} className="min-w-[100px] xl:min-w-[120px] 2xl:min-w-[160px] mx-auto" asChild>
                     <Link href={"/"}>
                       <Image src={"/images/icon-cart.svg"} alt={"icon-cart"} width={15} height={15} className="w-[15px]" />
                       Add to Cart
                     </Link>
                   </Button>
-                </div>
+                </div> */}
               </div>
-              <hr className="my-2 sm:my-2 2xl:my-3 mx-[-5px]" />
+              {/* <hr className="my-2 sm:my-2 2xl:my-3 mx-[-5px]" /> */}
             </div>
           </div>
         </div>

@@ -52,9 +52,9 @@ export const ProductData = {
     }
   },
 
-  getProductDetailsBySlug: async (slug) => {
+  getProductDetailsBySlug: async (slug, base_slug, model) => {
     try {
-      const data = await apiClient(`/api/frontend/products/product?slug=${slug}`);
+      const data = await apiClient(`/api/frontend/products/product?slug=${slug}&base_slug=${base_slug || ""}&model_slug=${model || ""}`);
 
       return sendSuccess(data?.data);
     } catch (error) {

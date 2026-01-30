@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
@@ -10,11 +10,54 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { X, Loader2 } from "lucide-react";
 
-const ProductChooseDesign = ({ children, data, locale, onOpenChange, models, currentModelId, designOptions, onModelChange, isModelLoading }) => {
+const ProductChooseDesign = ({ children, data, locale, onOpenChange, models, currentModelId, onModelChange, isModelLoading }) => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [selectedFilters, setSelectedFilters] = useState({});
+
+  // Get design options from the currently selected model's attributes
+  const currentModel = models?.find((model) => model.id === currentModelId);
+  const designOptions = currentModel?.attributes || [];
+
+  // Auto-fill selected filters based on data.attributes
+  useEffect(() => {
+    if (data?.attributes) {
+      const initialFilters = {};
+      data.attributes.forEach((attr) => {
+        // Auto-select all values for each attribute from data
+        initialFilters[attr.slug] = attr.values.map((v) => v.slug);
+      });
+      setSelectedFilters(initialFilters);
+    }
+  }, [data]);
 
   const handleModelClick = (model) => {
     onModelChange?.(model);
+  };
+
+  const handleCheckboxChange = (attributeSlug, valueSlug, isChecked) => {
+    setSelectedFilters((prev) => {
+      const currentValues = prev[attributeSlug] || [];
+
+      if (isChecked) {
+        // Add the value if checked
+        return {
+          ...prev,
+          [attributeSlug]: [...currentValues, valueSlug],
+        };
+      } else {
+        // Remove the value if unchecked
+        return {
+          ...prev,
+          [attributeSlug]: currentValues.filter((v) => v !== valueSlug),
+        };
+      }
+    });
+  };
+
+  const handleApplyFilters = () => {
+    console.log("Applied filters:", selectedFilters);
+    // You can add your filter logic here
+    setIsSheetOpen(false);
   };
 
   const sheetAccordionTriggerStyle = cn(
@@ -27,7 +70,7 @@ const ProductChooseDesign = ({ children, data, locale, onOpenChange, models, cur
       open={isSheetOpen}
       onOpenChange={(open) => {
         setIsSheetOpen(open);
-        onOpenChange?.(open); // notify parent
+        onOpenChange?.(open);
       }}
     >
       <SheetTrigger asChild>{children}</SheetTrigger>
@@ -71,42 +114,44 @@ const ProductChooseDesign = ({ children, data, locale, onOpenChange, models, cur
                 </div>
               </AccordionContent>
             </AccordionItem>
+
             {/* Dynamic Attributes */}
             {isModelLoading ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="w-6 h-6 animate-spin text-gray-500" />
               </div>
-            ) : designOptions?.map((attribute, attrIndex) => (
-              <AccordionItem key={attribute.id} value={`item-${attrIndex + 2}`} className="py-2 sm:py-3">
-                <AccordionTrigger className={sheetAccordionTriggerStyle}>
-                  {locale === "ar" ? attribute.name_ar : attribute.name}
-                </AccordionTrigger>
-                <AccordionContent className="p-2">
-                  <div className="flex flex-col gap-2 sm:gap-4">
-                    {attribute.values?.map((option) => (
-                      <div key={option.id} className="flex items-center gap-2">
-                        <Checkbox
-                          id={`${attribute.slug}-${option.slug}`}
-                          onCheckedChange={null}
-                          className="rounded-none"
-                        />
-                        <Label
-                          htmlFor={`${attribute.slug}-${option.slug}`}
-                          className="text-[12px] xl:text-[11px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
-                        >
-                          {locale === "ar" ? option.value_ar : option.value}
-                        </Label>
-                      </div>
-                    ))}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
+            ) : (
+              designOptions?.map((attribute, attrIndex) => (
+                <AccordionItem key={attribute.id} value={`item-${attrIndex + 2}`} className="py-2 sm:py-3">
+                  <AccordionTrigger className={sheetAccordionTriggerStyle}>{locale === "ar" ? attribute.name_ar : attribute.name}</AccordionTrigger>
+                  <AccordionContent className="p-2">
+                    <div className="flex flex-col gap-2 sm:gap-4">
+                      {attribute.values?.map((option) => (
+                        <div key={option.id} className="flex items-center gap-2">
+                          <Checkbox
+                            id={`${attribute.slug}-${option.slug}`}
+                            checked={selectedFilters[attribute.slug]?.includes(option.slug)}
+                            onCheckedChange={(checked) => handleCheckboxChange(attribute.slug, option.slug, checked)}
+                            className="rounded-none"
+                          />
+                          <Label
+                            htmlFor={`${attribute.slug}-${option.slug}`}
+                            className="text-[12px] xl:text-[11px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
+                          >
+                            {locale === "ar" ? option.value_ar : option.value}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              ))
+            )}
           </Accordion>
         </div>
 
         <SheetFooter className="flex flex-row justify-between">
-          <Button onClick={null} variant="black" className="min-w-full">
+          <Button onClick={handleApplyFilters} variant="black" className="min-w-full">
             Apply Filters
           </Button>
         </SheetFooter>

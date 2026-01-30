@@ -417,21 +417,31 @@ const local_data = {
   },
 };
 
-export default async function ProductDetailPage({ params }) {
+export default async function ProductDetailPage({ params, searchParams }) {
   const resolvedParams = await params;
+  const resolvedSearchParams = await searchParams;
   const { locale, slug } = resolvedParams;
+  const base_slug = resolvedSearchParams?.base || "";
+  const model = resolvedSearchParams?.model || "";
 
-  const { data, error } = await ProductData.getProductDetailsBySlug(slug);
+  const { data, error } = await ProductData.getProductDetailsBySlug(slug, base_slug, model);
 
-  if (error || !data) {
-    return <NotFound />;
+  const initial = data?.initialVariant;
+
+  
+    const defaultParams = new URLSearchParams();
+    initial.attributes.forEach((attr) => {
+      if (attr.values?.[0]) {
+        defaultParams.set(attr.slug, attr.values[0].slug);
+      }
+    });
+    redirect(`/product/${params.slug}?${defaultParams.toString()}`);
   }
 
   return (
     <>
       <ProductHero locale={locale} data={local_data?.heroData} slug={slug} />
-      {/* <ProductDetail locale={locale} data={local_data?.productData} /> */}
-      <ProductDetailCopy locale={locale} initialData={data?.initialModel} productData={data?.product} models={data?.models} />
+      <ProductDetailCopy locale={locale} initialData={data?.initialVariant} productData={data?.product} models={data?.models} />
       <ProductSimilar locale={locale} data={local_data?.similarData} />
     </>
   );
