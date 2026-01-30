@@ -3,6 +3,7 @@ import { Cairo } from "next/font/google";
 import "./../globals.css";
 import { cn } from "@/lib/utils";
 import { locales, localeDirection } from "../../il8n/config";
+import ReduxProvider from "@/store/provider";
 
 const heroNew = localFont({
   src: [
@@ -82,7 +83,7 @@ export default async function RootLayout({ children, params }) {
       )}
     >
       <body className={locale === "ar" ? "font-cairo" : "font-hero"}>
-        {children}
+        <ReduxProvider>{children}</ReduxProvider>
       </body>
     </html>
   );

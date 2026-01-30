@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
 import { commonValidations } from "@/lib/validations";
-import { createPassword } from "@/lib/helper";
+import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 
 // Validation schema
@@ -41,37 +41,24 @@ export default function AuthPasswordForm({ locale }) {
     },
   });
 
-  const [loading, setLoading] = useState(false);
+  const { createPassword, isLoading, clearAuthError } = useAuth();
   const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const router = useRouter();
+
   const onSubmit = async (values) => {
-    setLoading(true);
+    clearAuthError();
     setSuccess("");
 
-    try {
-      const { data, error, message } = await createPassword(values.password);
+    const result = await createPassword(values.password);
 
-      if (error) {
-        setSuccess(message);
-        return;
-      }
-
-      if (data || !error) {
-        localStorage.removeItem("auth-token");
-        setSuccess("Password created successfully!");
-        router.push("/login");
-      }
-
-      // Redirect to login or dashboard
-      // window.location.href = "/login";
-    } catch (err) {
-      console.error(err);
-      setSuccess("Something went wrong. Please try again.");
+    if (result.success) {
+      setSuccess("Password created successfully!");
+      router.push("/login");
+    } else {
+      setSuccess(result.error || "Something went wrong. Please try again.");
     }
-
-    setLoading(false);
   };
 
   // Shared styles
@@ -172,15 +159,15 @@ export default function AuthPasswordForm({ locale }) {
           <Button
             type="submit"
             variant="black"
-            disabled={loading}
+            disabled={isLoading}
             className="w-full"
           >
-            {loading ? "Creating..." : "Create Password"}
+            {isLoading ? "Creating..." : "Create Password"}
           </Button>
         </div>
 
         {/* Success/Error Message */}
-        {success && !loading && (
+        {success && !isLoading && (
           <p
             className={cn(
               "text-[10px] mt-1 w-full",

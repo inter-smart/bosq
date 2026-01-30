@@ -1,6 +1,7 @@
 import DeliveryInfo from "@/components/blocks/legal/delivery-info";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getDeliveryPolicyCms } from "@/lib/api/deliveryPolicy";
+import { getMetaData } from "@/lib/api/metaApi";
 
 
 

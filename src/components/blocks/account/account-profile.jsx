@@ -1,11 +1,21 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/utils/heading";
 import { Text } from "@/components/utils/text";
 import Image from "next/image";
 
 import parse from "html-react-parser";
+import { useSelector } from "react-redux";
 
 export default function AccountProfile({ data, locale }) {
+
+const user = useSelector((state) => state.auth.user);
+const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
+console.log("userdata: ",user)
+console.log("isauth: ", isAuthenticated)
+
   return (
     <div className="w-full border border-[#e9e9e9] sm:rounded-e-[4px] py-3 xl:py-6 3xl:py-9 px-3 xl:px-4 3xl:px-5">
       <Heading

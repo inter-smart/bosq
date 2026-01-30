@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { commonValidations } from "@/lib/validations";
-import { login } from "@/lib/helper";
+import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 
 // Validation schema
@@ -52,41 +52,24 @@ export default function AuthLoginForm({ locale, data }) {
     },
   });
 
-  const [loading, setLoading] = useState(false);
+  const { login, isLoading, clearAuthError } = useAuth();
   const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
   const onSubmit = async (values) => {
-    setLoading(true);
+    clearAuthError();
     setSuccess("");
 
-    try {
-   
+    const result = await login(values);
 
-      const {data, error, message} = await login(values);
-
-      if(error){
-        setSuccess(message);
-        return;
-      }
-
-
-      if(data){
-        localStorage.setItem("auth_token", data.accessToken);
-        setSuccess("Login successful!");
-        router.push("/")
-      }
-
-
-      // Redirect to dashboard
-      // window.location.href = "/dashboard";
-    } catch (err) {
-      console.error(err);
-      setSuccess("Invalid email or password. Please try again.");
+    if (result.success) {
+      localStorage.setItem("auth_token", result?.data?.accessToken);
+      setSuccess("Login successful!");
+      router.push("/");
+    } else {
+      setSuccess(result.error || "Invalid email or password. Please try again.");
     }
-
-    setLoading(false);
   };
 
   const toggleStyle = cn(
@@ -194,15 +177,15 @@ export default function AuthLoginForm({ locale, data }) {
           <Button
             type="submit"
             variant="black"
-            disabled={loading}
+            disabled={isLoading}
             className="w-full"
           >
-            {loading ? "Logging in..." : "Login"}
+            {isLoading ? "Logging in..." : "Login"}
           </Button>
         </div>
 
         {/* Success/Error Message */}
-        {success && !loading && (
+        {success && !isLoading && (
           <p
             className={cn(
               "text-[10px] mt-1 w-full",
