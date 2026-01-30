@@ -3,9 +3,7 @@ import { apiClient, sendError, sendSuccess } from "../client";
 export const ProductData = {
   getFilterData: async () => {
     try {
-      const data = await apiClient(
-        `/api/frontend/common-actions/listing/filters`,
-      );
+      const data = await apiClient(`/api/frontend/common-actions/listing/filters`);
 
       return sendSuccess(data?.data);
     } catch (error) {
@@ -13,14 +11,64 @@ export const ProductData = {
     }
   },
 
-
-   getProductList : async (params) => {
+  getProductInitialListing: async () => {
     try {
-        const data = await apiClient(`/api/frontend/products/product-listing?${params}`);
-        return sendSuccess(data?.data);
+      const data = await apiClient(`/api/frontend/products/initial-product-list`);
+
+      return sendSuccess(data?.data);
     } catch (error) {
-        return sendError(error);
+      return sendError(error);
     }
   },
 
+  getProductList: async (params) => {
+    const endpoint = `/api/frontend/products/product-listing?${params}`;
+
+    try {
+      console.info("[ProductService:getProductList] Request", {
+        endpoint,
+        params,
+        time: new Date().toISOString(),
+      });
+
+      const data = await apiClient(endpoint);
+
+      console.info("[ProductService:getProductList] Success", {
+        endpoint,
+        count: data?.data?.length ?? 0,
+      });
+
+      return sendSuccess(data?.data);
+    } catch (error) {
+      console.error("[ProductService:getProductList] Error", {
+        endpoint,
+        params,
+        message: error?.message,
+        status: error?.response?.status,
+        response: error?.response?.data,
+      });
+
+      return sendError(error);
+    }
+  },
+
+  getProductDetailsBySlug: async (slug) => {
+    try {
+      const data = await apiClient(`/api/frontend/products/product?slug=${slug}`);
+
+      return sendSuccess(data?.data);
+    } catch (error) {
+      return sendError(error);
+    }
+  },
+
+  getProductModelBySlug: async (slug) => {
+    try {
+      const data = await apiClient(`/api/frontend/products/product-model?slug=${slug}`);
+
+      return sendSuccess(data?.data);
+    } catch (error) {
+      return sendError(error);
+    }
+  },
 };

@@ -1,7 +1,9 @@
 import ProductDetail from "@/components/blocks/product/product-detail";
+import ProductDetailCopy from "@/components/blocks/product/product-detail copy";
 import ProductHero from "@/components/blocks/product/product-hero";
 import ProductSimilar from "@/components/blocks/product/product-similar";
 import { getMetaData } from "@/lib/api/metaApi";
+import { ProductData } from "@/lib/api/products/ResourcesApi";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -106,10 +108,8 @@ const local_data = {
     currency: "AED",
     category: "OFFICE CHAIR",
     colorVariant: ["#bababa", "#333333", "#8db600", "#ff0000", "#000000"],
-    shortDescription:
-      "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
-    purchaseTagline:
-      "Enhance Your Productivity by Upgrading Your Workspace Comfort Today",
+    shortDescription: "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
+    purchaseTagline: "Enhance Your Productivity by Upgrading Your Workspace Comfort Today",
     specification: [
       {
         id: 1,
@@ -212,23 +212,19 @@ const local_data = {
           },
           {
             title: "Seat Customization:",
-            description:
-              "Sliding seat with depth adjustment for personalized comfort.",
+            description: "Sliding seat with depth adjustment for personalized comfort.",
           },
           {
             title: "Lumbar Support:",
-            description:
-              "Dynamic variable lumbar support adapts to your spine's natural curve.",
+            description: "Dynamic variable lumbar support adapts to your spine's natural curve.",
           },
           {
             title: "Breathable Mesh Backrest:",
-            description:
-              "Enhances air circulation to keep you cool during long work hours.",
+            description: "Enhances air circulation to keep you cool during long work hours.",
           },
           {
             title: "Modern Aesthetic:",
-            description:
-              "Sleek, futuristic design perfect for contemporary office setups.",
+            description: "Sleek, futuristic design perfect for contemporary office setups.",
           },
         ],
       },
@@ -244,14 +240,12 @@ const local_data = {
         {
           id: 1,
           question: "What is the warranty period for this chair?",
-          answer:
-            "This chair comes with a 5-year warranty covering manufacturing defects.",
+          answer: "This chair comes with a 5-year warranty covering manufacturing defects.",
         },
         {
           id: 2,
           question: "Is assembly required?",
-          answer:
-            "Minimal assembly is required. All tools and instructions are included.",
+          answer: "Minimal assembly is required. All tools and instructions are included.",
         },
         {
           id: 3,
@@ -261,16 +255,14 @@ const local_data = {
         {
           id: 4,
           question: "Can I customize the color?",
-          answer:
-            "Yes, bulk orders can be customized. Please use the enquiry form for details.",
+          answer: "Yes, bulk orders can be customized. Please use the enquiry form for details.",
         },
       ],
     },
     enquiry: {
       title: "Enquire Now",
       subtitle: "Bulk Orders & Customisation Available!",
-      description:
-        "<p>Need 10 or 100 chairs? Want them in your brand colours or a unique design? No problem. Just tell us what you need below!</p>",
+      description: "<p>Need 10 or 100 chairs? Want them in your brand colours or a unique design? No problem. Just tell us what you need below!</p>",
     },
     relatedLinks: {
       matchingProducts: {
@@ -298,8 +290,7 @@ const local_data = {
         price: 458,
         category: "Office Chair",
         colorVariant: ["#bababa", "#333333", "#8db600", "#ff0000", "#000000"],
-        shortDescription:
-          "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
+        shortDescription: "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
         description:
           "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
         productType: ["Office Chairs", "Ergonomic Chairs"],
@@ -317,8 +308,7 @@ const local_data = {
         price: 458,
         category: "Office Chair",
         colorVariant: ["#bababa", "#333333", "#8db600", "#ff0000", "#000000"],
-        shortDescription:
-          "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
+        shortDescription: "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
         description:
           "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
         productType: ["Office Chairs", "Ergonomic Chairs"],
@@ -346,8 +336,7 @@ const local_data = {
         price: 458,
         category: "Office Chair",
         colorVariant: ["#bababa", "#333333", "#8db600", "#ff0000", "#000000"],
-        shortDescription:
-          "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
+        shortDescription: "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
         description:
           "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
         productType: ["Office Chairs", "Ergonomic Chairs"],
@@ -365,8 +354,7 @@ const local_data = {
         price: 458,
         category: "Office Chair",
         colorVariant: ["#bababa", "#333333", "#8db600", "#ff0000", "#000000"],
-        shortDescription:
-          "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
+        shortDescription: "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
         description:
           "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
         productType: ["Office Chairs", "Ergonomic Chairs"],
@@ -384,8 +372,7 @@ const local_data = {
         price: 458,
         category: "Office Chair",
         colorVariant: null,
-        shortDescription:
-          "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
+        shortDescription: "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
         description:
           "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
         productType: ["Office Chairs", "Ergonomic Chairs"],
@@ -403,8 +390,7 @@ const local_data = {
         price: 458,
         category: "Office Chair",
         colorVariant: ["#bababa", "#333333", "#8db600", "#ff0000", "#000000"],
-        shortDescription:
-          "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
+        shortDescription: "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
         description:
           "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
         productType: ["Office Chairs", "Ergonomic Chairs"],
@@ -422,8 +408,7 @@ const local_data = {
         price: 458,
         category: "Office Chair",
         colorVariant: ["#bababa", "#333333", "#8db600", "#ff0000", "#000000"],
-        shortDescription:
-          "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
+        shortDescription: "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
         description:
           "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
         productType: ["Office Chairs", "Ergonomic Chairs"],
@@ -435,10 +420,18 @@ const local_data = {
 export default async function ProductDetailPage({ params }) {
   const resolvedParams = await params;
   const { locale, slug } = resolvedParams;
+
+  const { data, error } = await ProductData.getProductDetailsBySlug(slug);
+
+  if (error || !data) {
+    return <NotFound />;
+  }
+
   return (
     <>
       <ProductHero locale={locale} data={local_data?.heroData} slug={slug} />
-      <ProductDetail locale={locale} data={local_data?.productData} />
+      {/* <ProductDetail locale={locale} data={local_data?.productData} /> */}
+      <ProductDetailCopy locale={locale} initialData={data?.initialModel} productData={data?.product} models={data?.models} />
       <ProductSimilar locale={locale} data={local_data?.similarData} />
     </>
   );

@@ -1,11 +1,4 @@
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import parse from "html-react-parser";
 import { cn } from "@/lib/utils";
 import { Heading } from "@/components/utils/heading";
@@ -19,24 +12,16 @@ export default function ProductHero({ data, locale, slug, link }) {
         <Breadcrumb className="mb-1 xl:mb-2">
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href={`/${locale}`}>
-                {isEn ? "Home" : "بيت"}
-              </BreadcrumbLink>
+              <BreadcrumbLink href={`/${locale}`}>{isEn ? "Home" : "بيت"}</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>/</BreadcrumbSeparator>
-            {/* <BreadcrumbItem>
-              <BreadcrumbLink href="/components">Components</BreadcrumbLink>
-            </BreadcrumbItem> */}
+
             {slug && (
               <BreadcrumbItem>
                 {link ? (
-                  <BreadcrumbLink href={`/${locale}${link}`}>
-                    {slug}
-                  </BreadcrumbLink>
+                  <BreadcrumbLink href={`/${locale}${link}`}>{slug}</BreadcrumbLink>
                 ) : (
-                  <BreadcrumbPage className={"capitalize"}>
-                    {slug}
-                  </BreadcrumbPage>
+                  <BreadcrumbPage className={"capitalize"}>{slug}</BreadcrumbPage>
                 )}
               </BreadcrumbItem>
             )}
@@ -44,23 +29,18 @@ export default function ProductHero({ data, locale, slug, link }) {
         </Breadcrumb>
         {(data?.title || data?.title_ar) && (
           <Heading as="h2" size="heading6" className="line-clamp-2 text-black">
-            {parse(isEn ? data?.title : (data?.title_ar || data?.title))}
+            {parse(isEn ? data?.title : data?.title_ar || data?.title)}
             <span
               className={cn(
                 "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
-                locale === "ar"
-                  ? "-translate-x-1 xl:-translate-x-2 "
-                  : "translate-x-1 xl:translate-x-2 "
+                locale === "ar" ? "-translate-x-1 xl:-translate-x-2 " : "translate-x-1 xl:translate-x-2 ",
               )}
             />
           </Heading>
         )}
 
         {data?.description && (
-          <div
-            dir={locale === "ar" ? "rtl" : "ltr"}
-            className={cn("typography", "[--text-color:#282828]")}
-          >
+          <div dir={locale === "ar" ? "rtl" : "ltr"} className={cn("typography", "[--text-color:#282828]")}>
             {parse(isEn ? data?.description : data?.description_ar)}
           </div>
         )}
