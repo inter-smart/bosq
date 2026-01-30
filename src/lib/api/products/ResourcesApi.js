@@ -22,10 +22,32 @@ export const ProductData = {
   },
 
   getProductList: async (params) => {
+    const endpoint = `/api/frontend/products/product-listing?${params}`;
+
     try {
-      const data = await apiClient(`/api/frontend/products/product-listing?${params}`);
+      console.info("[ProductService:getProductList] Request", {
+        endpoint,
+        params,
+        time: new Date().toISOString(),
+      });
+
+      const data = await apiClient(endpoint);
+
+      console.info("[ProductService:getProductList] Success", {
+        endpoint,
+        count: data?.data?.length ?? 0,
+      });
+
       return sendSuccess(data?.data);
     } catch (error) {
+      console.error("[ProductService:getProductList] Error", {
+        endpoint,
+        params,
+        message: error?.message,
+        status: error?.response?.status,
+        response: error?.response?.data,
+      });
+
       return sendError(error);
     }
   },

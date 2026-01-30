@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useTransition } from "react";
 import { parseAsInteger, useQueryState } from "nuqs";
 import { cn } from "@/lib/utils";
 
@@ -16,12 +16,15 @@ import {
 const ITEMS_PER_PAGE = 12;
 
 const ProductListPagination = ({ pagination, isEn }) => {
+  const [isPending, startTransition] = useTransition();
+
   // Use nuqs for page state - synced with URL
   const [currentPage, setCurrentPage] = useQueryState(
     "page",
     parseAsInteger.withDefault(1).withOptions({
       history: "push",
       shallow: false,
+      startTransition,
     }),
   );
 
@@ -90,7 +93,7 @@ const ProductListPagination = ({ pagination, isEn }) => {
   if (total === 0) return null;
 
   return (
-    <div className="w-full flex flex-col sm:flex-row sm:justify-between items-center gap-4 mt-5 xl:mt-10 2xl:mt-16">
+    <div className={cn("w-full flex flex-col sm:flex-row sm:justify-between items-center gap-4 mt-5 xl:mt-10 2xl:mt-16", isPending && "opacity-50 pointer-events-none")}>
       <div className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-normal text-[#bbb]">
         {isEn
           ? `Showing ${startIndex + 1}-${Math.min(endIndex, total)} of ${total} products`
