@@ -2,6 +2,7 @@ import AccountLayout from "@/components/blocks/account/account-layout";
 import AccountSettings from "@/components/blocks/account/account-settings";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getMetaData } from "@/lib/api/metaApi";
+import { ProfileData } from "@/lib/api/profile/profileApi";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -127,6 +128,17 @@ const local_data = {
 export default async function SettingsPage({ params }) {
   const resolvedParams = await params;
   const { locale } = resolvedParams;
+
+
+  const { data, error } = await ProfileData.fetchProfileById();
+  
+    if (error) {
+      return notFound();
+    }
+  
+  
+
+
   return (
     <>
       <ProductHero
@@ -136,7 +148,7 @@ export default async function SettingsPage({ params }) {
       />
 
       <AccountLayout locale={locale}>
-        <AccountSettings locale={locale} data={local_data?.settingsData} />
+        <AccountSettings locale={locale} data={data? data: local_data?.settingsData} />
       </AccountLayout>
     </>
   );

@@ -39,7 +39,7 @@ export default function AccountSettings({ data, locale }) {
             >
               Personal Information
             </Heading>
-            <PersonalInformationForm />
+            <PersonalInformationForm data={data}/>
             <Heading
               as="h4"
               size="heading5"

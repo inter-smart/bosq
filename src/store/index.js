@@ -39,7 +39,7 @@ const storage =
 const authPersistConfig = {
   key: "auth",
   storage,
-  whitelist: ["accessToken", "user", "isAuthenticated", "pendingEmail", "tempToken"],
+  whitelist: ["user", "isAuthenticated", "pendingEmail", "tempToken"],
 };
 
 const rootReducer = combineReducers({

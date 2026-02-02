@@ -2,11 +2,22 @@ import AccountLayout from "@/components/blocks/account/account-layout";
 import AccountProfile from "@/components/blocks/account/account-profile";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getMetaData } from "@/lib/api/metaApi";
+import { ProfileData } from "@/lib/api/profile/profileApi";
+import NotFound from "../../not-found/page";
+import { notFound, redirect } from "next/navigation";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
   const locale = resolvedParams.locale;
-  const { title, description, keywords, twitter, openGraph, alternates, other } = await getMetaData("profile", locale, "account/profile");
+  const {
+    title,
+    description,
+    keywords,
+    twitter,
+    openGraph,
+    alternates,
+    other,
+  } = await getMetaData("profile", locale, "account/profile");
 
   return {
     title,
@@ -29,10 +40,7 @@ const local_data = {
     first_name: "John",
     last_name: "Doe",
     status: "1",
-    is_guest: true,
-    is_active: true,
     email: "john.doe@email.com",
-    gender: "Male",
     date_of_birth: "1991-05-15",
     phone: "+971 50 123 4567",
     address:
@@ -48,6 +56,16 @@ const local_data = {
 export default async function ProfilePage({ params }) {
   const resolvedParams = await params;
   const { locale } = resolvedParams;
+
+  const { data, error } = await ProfileData.getMyProfile();
+
+  console.log("error:", error)
+  if (error) {
+    return notFound();
+  }
+
+  console.log(data)
+
   return (
     <>
       <ProductHero
@@ -56,7 +74,10 @@ export default async function ProfilePage({ params }) {
         slug={"My Profile"}
       />
       <AccountLayout locale={locale}>
-        <AccountProfile locale={locale} data={local_data?.userData} />
+        <AccountProfile
+          locale={locale}
+          data={data? data: local_data?.userData}
+        />
       </AccountLayout>
     </>
   );

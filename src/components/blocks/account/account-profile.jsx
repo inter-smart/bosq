@@ -7,14 +7,10 @@ import Image from "next/image";
 
 import parse from "html-react-parser";
 import { useSelector } from "react-redux";
+import Link from "next/link";
 
 export default function AccountProfile({ data, locale }) {
 
-const user = useSelector((state) => state.auth.user);
-const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-
-console.log("userdata: ",user)
-console.log("isauth: ", isAuthenticated)
 
   return (
     <div className="w-full border border-[#e9e9e9] sm:rounded-e-[4px] py-3 xl:py-6 3xl:py-9 px-3 xl:px-4 3xl:px-5">
@@ -28,7 +24,7 @@ console.log("isauth: ", isAuthenticated)
       <div className="w-full flex flex-wrap items-center mb-4 xl:mb-8">
         <div className="w-[50px] 2xl:w-[70px] aspect-square overflow-hidden rounded-full border">
           <Image
-            src={data?.image}
+            src={data?.image ?? "/images/user-1.jpg"}
             alt={data?.first_name}
             width={100}
             height={100}
@@ -112,6 +108,7 @@ console.log("isauth: ", isAuthenticated)
           </Text>
         </div>
       </div>
+      <Link href={"/account/settings"}>
       <Button
         variant={"black"}
         disabled={false}
@@ -119,6 +116,7 @@ console.log("isauth: ", isAuthenticated)
       >
         Edit Profile
       </Button>
+        </Link>
     </div>
   );
 }

@@ -76,6 +76,10 @@ const local_data = {
 export default async function ManageAddressPage({ params }) {
   const resolvedParams = await params;
   const { locale } = resolvedParams;
+
+
+  
+
   return (
     <>
       <ProductHero

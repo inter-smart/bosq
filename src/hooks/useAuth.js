@@ -129,14 +129,6 @@ export function useAuth() {
     [dispatch]
   );
 
-  // Fetch profile
-  const fetchProfile = useCallback(async () => {
-    const result = await dispatch(fetchUserProfile());
-    if (fetchUserProfile.fulfilled.match(result)) {
-      return { success: true, data: result.payload };
-    }
-    return { success: false, error: result.payload };
-  }, [dispatch]);
 
   // Clear error
   const clearAuthError = useCallback(() => {
@@ -169,7 +161,6 @@ export function useAuth() {
     forgotPassword,
     verifyResetOtp,
     resetPassword,
-    fetchProfile,
     clearAuthError,
     clearAllAuth,
   };

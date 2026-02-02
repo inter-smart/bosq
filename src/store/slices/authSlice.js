@@ -7,7 +7,9 @@ import {
   verifyOtp as verifyOtpAPI,
   forgotPassword as forgotPasswordAPI,
   verifyResetPasswordOtp as verifyResetPasswordOtpAPI,
+  logout as logoutAPI,
   fetchFromAPI,
+  fetchUserProfileAPI,
 } from "@/lib/helper";
 
 // Async Thunks
@@ -35,6 +37,8 @@ export const loginUser = createAsyncThunk(
 
 // Logout user
 export const logoutUser = createAsyncThunk("auth/logout", async () => {
+  // Call server to clear HTTP-only cookie (cookie sent automatically via credentials: include)
+  await logoutAPI();
   return true;
 });
 
@@ -81,7 +85,7 @@ export const verifyOtpThunk = createAsyncThunk(
       if (data) {
         localStorage.removeItem("email");
       }
-      
+
       return {
         tempToken: data.tempToken,
       };
@@ -197,24 +201,10 @@ export const resetPasswordThunk = createAsyncThunk(
 
 // Fetch user profile
 export const fetchUserProfile = createAsyncThunk(
-  "auth/fetchProfile",
-  async (_, { rejectWithValue, getState }) => {
+  "frontend/profile/my-profile",
+  async (_, { rejectWithValue }) => {
     try {
-      const { auth } = getState();
-
-      if (!auth.accessToken) {
-        return rejectWithValue("No access token");
-      }
-
-      const { data, error, message } = await fetchFromAPI(
-        "/api/frontend/auth/profile",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${auth.accessToken}`,
-          },
-        },
-      );
+      const { data, error, message } = await fetchUserProfileAPI();
 
       if (error) {
         return rejectWithValue(message);
@@ -230,7 +220,6 @@ export const fetchUserProfile = createAsyncThunk(
 // Initial state
 const initialState = {
   user: null,
-  accessToken: null,
   tempToken: null,
   resetToken: null,
   pendingEmail: null,
@@ -249,7 +238,6 @@ const authSlice = createSlice({
     },
     clearAuth: (state) => {
       state.user = null;
-      state.accessToken = null;
       state.tempToken = null;
       state.resetToken = null;
       state.pendingEmail = null;
@@ -265,9 +253,6 @@ const authSlice = createSlice({
     setPendingEmail: (state, action) => {
       state.pendingEmail = action.payload;
     },
-    updateAccessToken: (state, action) => {
-      state.accessToken = action.payload;
-    },
     setUser: (state, action) => {
       state.user = action.payload;
     },
@@ -282,7 +267,6 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isAuthenticated = true;
-        state.accessToken = action.payload.accessToken;
         state.user = action.payload.user || null;
         state.error = null;
       })
@@ -294,7 +278,6 @@ const authSlice = createSlice({
       // Logout
       .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
-        state.accessToken = null;
         state.tempToken = null;
         state.resetToken = null;
         state.pendingEmail = null;
@@ -406,7 +389,6 @@ const authSlice = createSlice({
         state.isLoading = false;
         if (action.payload === "Unauthorized") {
           state.user = null;
-          state.accessToken = null;
           state.isAuthenticated = false;
         }
       });
@@ -419,7 +401,6 @@ export const {
   setTempToken,
   setResetToken,
   setPendingEmail,
-  updateAccessToken,
   setUser,
 } = authSlice.actions;
 

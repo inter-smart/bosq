@@ -1,47 +1,86 @@
 // middleware.ts
-import { NextRequest, NextResponse } from "next/server";
-import { Locale, locales, localeDirection, defaultLocale } from "./il8n/config"; 
+import { NextResponse } from "next/server";
+import { locales, defaultLocale } from "./il8n/config";
+
+const PROTECTED_PATHS = ["/account", "/checkout"];
 
 export function middleware(request) {
-  const pathname = request.nextUrl.pathname;
+  const { pathname } = request.nextUrl;
 
-  // Check if pathname already has a locale
-  const pathnameHasLocale = locales.some((locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`);
+  /* --------------------------------------------------
+     1️⃣ LOCALE DETECTION & EXTRACTION
+  -------------------------------------------------- */
+  const pathnameHasLocale = locales.some(
+    (locale) => pathname === `/${locale}` || pathname.startsWith(`/${locale}/`),
+  );
 
-  if (pathnameHasLocale) return NextResponse.next();
+  let locale;
+  let pathnameWithoutLocale;
 
-  // Detect locale from Accept-Language header or use default
-  const locale = getLocale(request) || defaultLocale;
+  if (pathnameHasLocale) {
+    // Extract locale from pathname
+    const segments = pathname.split("/").filter(Boolean);
+    locale = segments[0];
+    pathnameWithoutLocale = "/" + segments.slice(1).join("/");
+  } else {
+    // Get locale from detection
+    locale = getLocale(request) || defaultLocale;
+    pathnameWithoutLocale = pathname;
+  }
 
-  // Redirect to locale-prefixed URL
-  const newUrl = new URL(`/${locale}${pathname}`, request.url);
-  return NextResponse.redirect(newUrl);
+  /* --------------------------------------------------
+     2️⃣ AUTH PROTECTION
+  -------------------------------------------------- */
+  const isProtected = PROTECTED_PATHS.some(
+    (protectedPath) =>
+      pathnameWithoutLocale === protectedPath ||
+      pathnameWithoutLocale.startsWith(`${protectedPath}/`),
+  );
+
+  const token = request.cookies.get("access_token")?.value;
+
+  if (isProtected && !token) {
+    const loginUrl = new URL(`/${locale}/login`, request.url);
+    loginUrl.searchParams.set("redirect", pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  /* --------------------------------------------------
+     3️⃣ LOCALE REDIRECT (if needed)
+  -------------------------------------------------- */
+  if (!pathnameHasLocale) {
+    const localeUrl = new URL(`/${locale}${pathname}`, request.url);
+    return NextResponse.redirect(localeUrl);
+  }
+
+  return NextResponse.next();
 }
 
+/* --------------------------------------------------
+   LOCALE DETECTION
+-------------------------------------------------- */
 function getLocale(request) {
-  // Check cookie first
   const cookieLocale = request.cookies.get("NEXT_LOCALE")?.value;
   if (cookieLocale && locales.includes(cookieLocale)) {
     return cookieLocale;
   }
 
-  // Check Accept-Language header
   const acceptLanguage = request.headers.get("accept-language");
-  if (acceptLanguage) {
-    const preferredLocale = acceptLanguage
+  if (!acceptLanguage) return null;
+
+  return (
+    acceptLanguage
       .split(",")
       .map((lang) => lang.split(";")[0].trim().toLowerCase())
-      .find((lang) => locales.includes(lang));
-
-    if (preferredLocale) return preferredLocale;
-  }
-
-  return null;
+      .find((lang) => locales.includes(lang)) ?? null
+  );
 }
 
+/* --------------------------------------------------
+   MATCHER
+-------------------------------------------------- */
 export const config = {
   matcher: [
-    // Skip all internal paths (_next, api, static files)
     "/((?!api|_next/static|_next/image|favicon.ico|.*\\..*|manifest.json).*)",
   ],
 };
