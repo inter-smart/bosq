@@ -7,9 +7,10 @@ import { Suspense, useState } from "react";
 import { motion } from "motion/react";
 import { Skeleton } from "../../ui/skeleton";
 import { Button } from "@/components/ui/button";
+const colorVariant = ["#bababa", "#333333", "#8db600", "#ff0000", "#000000"];
 
 export default function ProductCard({ product, isEn, locale = "en" }) {
-  const productUrl = `/${locale}/products/${product?.slug}?base=${product?.base_slug || ""}&model=${product?.model_slug || ""}`;
+  const productUrl = `/${locale}/products/${product?.base_slug}${product?.query_params}`;
   const [wishlist, setWishlist] = useState(product?.isWishlisted || false);
 
   return (
@@ -85,9 +86,9 @@ export default function ProductCard({ product, isEn, locale = "en" }) {
             </Link>
           </Text>
           <div className="flex items-center gap-0.5 xl:gap-1">
-            {product?.colorVariant?.length > 0 ? (
+            {product?.hasMoreVariants ? (
               <>
-                {product?.colorVariant?.slice(0, 3).map((color, index) => (
+                {colorVariant?.slice(0, 3).map((color, index) => (
                   <Link
                     key={"color" + index}
                     href={productUrl}
@@ -95,11 +96,9 @@ export default function ProductCard({ product, isEn, locale = "en" }) {
                     style={{ backgroundColor: color }}
                   ></Link>
                 ))}
-                {product?.colorVariant?.length > 3 && (
-                  <div className="text-[8px] 2xl:text-[10px] leading-normal font-light text-[#28288] pt-0.5">
-                    <Link href={productUrl}>+ More</Link>
-                  </div>
-                )}
+                <div className="text-[8px] 2xl:text-[10px] leading-normal font-light text-[#28288] pt-0.5">
+                  <Link href={productUrl}>+ More</Link>
+                </div>
               </>
             ) : (
               <Link href={productUrl} className="text-[8px] 2xl:text-[10px] leading-normal font-light text-[#28288] hover:text-[#f17423]">

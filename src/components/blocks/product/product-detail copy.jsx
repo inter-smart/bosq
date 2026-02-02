@@ -25,6 +25,7 @@ import ProductChooseDesign from "./ProductChooseDesign";
 import ProductEnquireModal from "./ProductEnquireModal";
 import ProductDetails from "./ProductDetails";
 import { ProductData } from "@/lib/api/products/ResourcesApi";
+import { useSearchParams, usePathname, useRouter } from "next/navigation";
 
 const enq = {
   title: "Enquire Now",
@@ -35,9 +36,26 @@ const enq = {
 export default function ProductDetailCopy({ locale, initialData, productData, models }) {
   const [currentModelData, setCurrentModelData] = useState(initialData);
   const [isModelLoading, setIsModelLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
 
   const productImages = currentModelData?.images || [];
   const currentModelId = currentModelData?.model_id;
+
+  // Update URL with the current variant's SKU when data changes
+  // useEffect(() => {
+  //   if (currentModelData?.slug) {
+  //     const params = new URLSearchParams(searchParams.toString());
+  //     const currentSku = params.get("sku");
+
+  //     // Only update if SKU has changed
+  //     if (currentSku !== currentModelData.slug) {
+  //       params.set("sku", currentModelData.slug);
+  //       router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  //     }
+  //   }
+  // }, [currentModelData?.slug, searchParams, pathname, router]);
 
   const handleModelChange = async (model) => {
     if (model.id === currentModelId) return;
@@ -98,8 +116,6 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
   const [quantity, setQuantity] = useState(1);
 
   const handleIncrement = () => {
-    console.log(currentModelData?.stock);
-
     setQuantity((prev) => prev + 1);
   };
 
@@ -289,6 +305,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                       onOpenChange={setIsChooseDesignOpen}
                       models={models}
                       currentModelId={currentModelId}
+                      currentModelSlug={currentModelData?.slug}
                       onModelChange={handleModelChange}
                       isModelLoading={isModelLoading}
                     >

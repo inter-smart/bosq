@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
@@ -9,14 +9,23 @@ import { cn } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { X, Loader2 } from "lucide-react";
+import { useRouter, usePathname } from "next/navigation";
 
-const ProductChooseDesign = ({ children, data, locale, onOpenChange, models, currentModelId, onModelChange, isModelLoading }) => {
+const ProductChooseDesign = ({ children, data, locale, onOpenChange, models, currentModelId, onModelChange, isModelLoading, currentModelSlug }) => {
+  const router = useRouter();
+  const pathname = usePathname();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState({});
+  const [selectedModelId, setSelectedModelId] = useState(currentModelId);
 
-  // Get design options from the currently selected model's attributes
-  const currentModel = models?.find((model) => model.id === currentModelId);
-  const designOptions = currentModel?.attributes || [];
+  // Get design options from the selected model's attributes (temporary selection in sheet)
+  const selectedModel = useMemo(() => models?.find((model) => model.id === selectedModelId), [models, selectedModelId]);
+  const designOptions = selectedModel?.attributes || [];
+
+  // Sync selectedModelId when currentModelId changes (external changes)
+  useEffect(() => {
+    setSelectedModelId(currentModelId);
+  }, [currentModelId]);
 
   // Auto-fill selected filters based on data.attributes
   useEffect(() => {
@@ -30,9 +39,10 @@ const ProductChooseDesign = ({ children, data, locale, onOpenChange, models, cur
     }
   }, [data]);
 
-  const handleModelClick = (model) => {
-    onModelChange?.(model);
-  };
+  // Handle model click in the sheet (temporary selection)
+  const handleModelClick = useCallback((model) => {
+    setSelectedModelId(model.id);
+  }, []);
 
   const handleCheckboxChange = (attributeSlug, valueSlug, isChecked) => {
     setSelectedFilters((prev) => {
@@ -54,11 +64,101 @@ const ProductChooseDesign = ({ children, data, locale, onOpenChange, models, cur
     });
   };
 
-  const handleApplyFilters = () => {
-    console.log("Applied filters:", selectedFilters);
-    // You can add your filter logic here
+  // Find the best matching model based on selected filters
+  const findMatchingModel = useCallback(() => {
+    if (!models || models.length === 0) return null;
+
+    // Get the selected attribute value slugs as a flat set for matching
+    const selectedValueSlugs = new Set();
+    Object.values(selectedFilters).forEach((valueSlugs) => {
+      valueSlugs.forEach((slug) => selectedValueSlugs.add(slug));
+    });
+
+    // If no filters selected, use the selected model from the sheet
+    if (selectedValueSlugs.size === 0) {
+      return selectedModel;
+    }
+
+    // Find a model that best matches the selected filter values
+    let bestMatch = selectedModel;
+    let bestMatchScore = 0;
+
+    for (const model of models) {
+      if (!model.attributes) continue;
+
+      let matchScore = 0;
+      let totalValues = 0;
+
+      model.attributes.forEach((attr) => {
+        attr.values?.forEach((val) => {
+          totalValues++;
+          if (selectedValueSlugs.has(val.slug)) {
+            matchScore++;
+          }
+        });
+      });
+
+      // Calculate match percentage
+      const matchPercentage = totalValues > 0 ? matchScore / totalValues : 0;
+
+      if (matchPercentage > bestMatchScore) {
+        bestMatchScore = matchPercentage;
+        bestMatch = model;
+      }
+    }
+
+    return bestMatch;
+  }, [models, selectedFilters, selectedModel]);
+
+  const handleApplyFilters = useCallback(() => {
+    // Get the matching model based on selected filters
+    const matchingModel = findMatchingModel();
+
+    if (matchingModel && matchingModel.slug) {
+      // Build URL search params
+      const params = new URLSearchParams();
+
+      // Set initial_fetch to false
+      params.set("initial_fetch", "false");
+
+      // Add model slug
+      params.set("model", matchingModel.slug);
+
+      // Add selected attributes in the format attr_[attributeSlug]=value1,value2
+      Object.entries(selectedFilters).forEach(([attributeSlug, valueSlugs]) => {
+        if (valueSlugs && valueSlugs.length > 0) {
+          params.set(`attr_${attributeSlug}`, valueSlugs.join(","));
+        }
+      });
+
+      // Navigate to the new URL with query params
+      const queryString = params.toString();
+      const newUrl = queryString ? `${pathname}?${queryString}` : pathname;
+      router.push(newUrl);
+    } else if (matchingModel) {
+      // If no slug but model exists, use the onModelChange callback
+      onModelChange?.(matchingModel);
+    }
+
+    // Close the sheet
     setIsSheetOpen(false);
-  };
+    onOpenChange?.(false);
+  }, [findMatchingModel, pathname, router, onModelChange, onOpenChange, selectedFilters]);
+
+  // Clear all selected filters (reset to all values selected)
+  const handleClearFilters = useCallback(() => {
+    if (selectedModel?.attributes) {
+      const resetFilters = {};
+      selectedModel.attributes.forEach((attr) => {
+        resetFilters[attr.slug] = attr.values.map((v) => v.slug);
+      });
+      setSelectedFilters(resetFilters);
+    } else {
+      setSelectedFilters({});
+    }
+    // Reset to current model
+    setSelectedModelId(currentModelId);
+  }, [selectedModel, currentModelId]);
 
   const sheetAccordionTriggerStyle = cn(
     "text-[12px] xl:text-[11px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-medium text-black p-2 [&>svg]:w-4 sm:[&>svg]:w-4 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5 [&[data-state=open]>svg]:invert-100",
@@ -96,7 +196,7 @@ const ProductChooseDesign = ({ children, data, locale, onOpenChange, models, cur
                       <div
                         className={cn(
                           "w-full h-full border rounded-[6px] p-1 2xl:p-2 cursor-pointer",
-                          currentModelId === item?.id ? "border-[#282828]" : "border-white",
+                          selectedModelId === item?.id ? "border-[#282828]" : "border-white",
                         )}
                         onClick={() => handleModelClick(item)}
                       >
@@ -150,9 +250,12 @@ const ProductChooseDesign = ({ children, data, locale, onOpenChange, models, cur
           </Accordion>
         </div>
 
-        <SheetFooter className="flex flex-row justify-between">
-          <Button onClick={handleApplyFilters} variant="black" className="min-w-full">
-            Apply Filters
+        <SheetFooter className="flex flex-row justify-between gap-2">
+          <Button onClick={handleClearFilters} variant="white" className="min-w-[100px] sm:min-w-[45%]">
+            {locale === "ar" ? "مسح" : "Clear"}
+          </Button>
+          <Button onClick={handleApplyFilters} variant="black" className="min-w-[100px] sm:min-w-[45%]">
+            {locale === "ar" ? "تطبيق" : "Apply Filters"}
           </Button>
         </SheetFooter>
         <SheetClose

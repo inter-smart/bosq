@@ -113,8 +113,7 @@ const defaultSuggestionData = {
       price: 458,
       category: "Office Chair",
       colorVariant: ["#bababa", "#333333", "#8db600", "#ff0000", "#000000"],
-      shortDescription:
-        "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
+      shortDescription: "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
       description:
         "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
       productType: ["Office Chairs", "Ergonomic Chairs"],
@@ -133,8 +132,7 @@ const defaultSuggestionData = {
       price: 458,
       category: "Office Chair",
       colorVariant: ["#bababa", "#333333", "#8db600", "#ff0000", "#000000"],
-      shortDescription:
-        "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
+      shortDescription: "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
       description:
         "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
       productType: ["Office Chairs", "Ergonomic Chairs"],
@@ -153,8 +151,7 @@ const defaultSuggestionData = {
       price: 458,
       category: "Office Chair",
       colorVariant: null,
-      shortDescription:
-        "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
+      shortDescription: "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
       description:
         "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
       productType: ["Office Chairs", "Ergonomic Chairs"],
@@ -173,8 +170,7 @@ const defaultSuggestionData = {
       price: 458,
       category: "Office Chair",
       colorVariant: ["#bababa", "#333333", "#8db600", "#ff0000", "#000000"],
-      shortDescription:
-        "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
+      shortDescription: "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
       description:
         "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
       productType: ["Office Chairs", "Ergonomic Chairs"],
@@ -193,8 +189,7 @@ const defaultSuggestionData = {
       price: 458,
       category: "Office Chair",
       colorVariant: ["#bababa", "#333333", "#8db600", "#ff0000", "#000000"],
-      shortDescription:
-        "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
+      shortDescription: "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
       description:
         "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
       productType: ["Office Chairs", "Ergonomic Chairs"],
@@ -213,8 +208,7 @@ const defaultSuggestionData = {
       price: 458,
       category: "Office Chair",
       colorVariant: ["#bababa", "#333333", "#8db600", "#ff0000", "#000000"],
-      shortDescription:
-        "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
+      shortDescription: "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
       description:
         "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
       productType: ["Office Chairs", "Ergonomic Chairs"],
@@ -233,8 +227,7 @@ const defaultSuggestionData = {
       price: 458,
       category: "Office Chair",
       colorVariant: ["#bababa", "#333333", "#8db600", "#ff0000", "#000000"],
-      shortDescription:
-        "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
+      shortDescription: "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
       description:
         "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
       productType: ["Office Chairs", "Ergonomic Chairs"],
@@ -242,11 +235,7 @@ const defaultSuggestionData = {
   ],
 };
 
-const placeholders = [
-  "Search by Category",
-  "Ergonomic Chairs",
-  "Office Chairs",
-];
+const placeholders = ["Search by Category", "Ergonomic Chairs", "Office Chairs"];
 
 export default function SearchDialog({ children, locale }) {
   const handleChange = (e) => {
@@ -261,15 +250,10 @@ export default function SearchDialog({ children, locale }) {
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent
-        showCloseButton={false}
-        className="inset-0 translate-none rounded-none p-0 max-w-full sm:max-w-full mt-(--header-y) mt-0"
-      >
+      <DialogContent showCloseButton={false} className="inset-0 translate-none rounded-none p-0 max-w-full sm:max-w-full mt-(--header-y) mt-0">
         <DialogHeader className={"sr-only"}>
           <DialogTitle>Search products</DialogTitle>
-          <DialogDescription>
-            Make changes to your profile here. Click save when you&apos;re done.
-          </DialogDescription>
+          <DialogDescription>Make changes to your profile here. Click save when you&apos;re done.</DialogDescription>
         </DialogHeader>
 
         <DialogClose asChild>
@@ -280,7 +264,7 @@ export default function SearchDialog({ children, locale }) {
               "block fixed z-1 top-4 xl:top-8 2xl:top-10 ",
               locale === "ar"
                 ? "mr-auto left-4 sm:left-[calc((100%-var(--container-sm))/2)] md:left-[calc((100%-var(--container-md))/2)] lg:left-[calc((100%-var(--container-lg))/2)] xl:left-[calc((100%-var(--container-xl))/2)] 2xl:left-[calc((100%-var(--container-2xl))/2)] 3xl:left-[calc((100%-var(--container-3xl))/2)]"
-                : "ml-auto right-4 sm:right-[calc((100%-var(--container-sm))/2)] md:right-[calc((100%-var(--container-md))/2)] lg:right-[calc((100%-var(--container-lg))/2)] xl:right-[calc((100%-var(--container-xl))/2)] 2xl:right-[calc((100%-var(--container-2xl))/2)] 3xl:right-[calc((100%-var(--container-3xl))/2)]"
+                : "ml-auto right-4 sm:right-[calc((100%-var(--container-sm))/2)] md:right-[calc((100%-var(--container-md))/2)] lg:right-[calc((100%-var(--container-lg))/2)] xl:right-[calc((100%-var(--container-xl))/2)] 2xl:right-[calc((100%-var(--container-2xl))/2)] 3xl:right-[calc((100%-var(--container-3xl))/2)]",
             )}
           >
             <X className="size-5 sm:size-4 2xl:size-5 text-black" />
@@ -289,7 +273,7 @@ export default function SearchDialog({ children, locale }) {
 
         <div
           className={cn(
-            "w-full min-h-10 bg-[#f4f4f4] transition duration-800 shadow-lg"
+            "w-full min-h-10 bg-[#f4f4f4] transition duration-800 shadow-lg",
             //  "absolute z-10 top-(--header-y) left-0 right-0 "
           )}
         >
@@ -298,24 +282,18 @@ export default function SearchDialog({ children, locale }) {
               "py-8 sm:py-8 xl:py-10 2xl:py-12",
               // "lg:h-[calc(100vh-var(--header-y))]",
               "lg:h-screen",
-              "mask-[linear-gradient(to_bottom,transparent_0%,white_4%,white_98%,transparent_100%)] overflow-y-auto"
+              "mask-[linear-gradient(to_bottom,transparent_0%,white_4%,white_98%,transparent_100%)] overflow-y-auto",
             )}
           >
             <div className="container">
               <div className="flex flex-wrap -mx-4 xl:-mx-10 2xl:-mx-16 [&>div]:px-4 xl:[&>div]:px-10 2xl:[&>div]:px-16">
                 <div className="w-full sm:w-[200px] lg:w-[220px] xl:w-[420px] 2xl:w-[468px] 3xl:w-[576px]">
-                  <Heading
-                    as="div"
-                    size="heading6"
-                    className="text-[#282828] mb-2 xl:mb-3 2xl:mb-6"
-                  >
+                  <Heading as="div" size="heading6" className="text-[#282828] mb-2 xl:mb-3 2xl:mb-6">
                     Search Now
                     <span
                       className={cn(
                         "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
-                        locale === "ar"
-                          ? "-translate-x-1 xl:-translate-x-2 "
-                          : "translate-x-1 xl:translate-x-2 "
+                        locale === "ar" ? "-translate-x-1 xl:-translate-x-2 " : "translate-x-1 xl:translate-x-2 ",
                       )}
                     />
                   </Heading>
@@ -330,47 +308,27 @@ export default function SearchDialog({ children, locale }) {
                   />
 
                   {suggestionData.map((item, i) => (
-                    <div
-                      key={"suggesions-" + i}
-                      className="w-full mt-4 sm:mt-3 xl:mt-4 2xl:mt-8"
-                    >
-                      <Heading
-                        as="div"
-                        size="heading4"
-                        className="text-[#282828] mb-2 xl:mb-3 2xl:mb-4"
-                      >
+                    <div key={"suggesions-" + i} className="w-full mt-4 sm:mt-3 xl:mt-4 2xl:mt-8">
+                      <Heading as="div" size="heading4" className="text-[#282828] mb-2 xl:mb-3 2xl:mb-4">
                         {item?.title}
                       </Heading>
                       {item?.items?.slice(0, 5).map((item, idx) => (
-                        <Text
-                          key={"suggesions-item-" + idx}
-                          as="div"
-                          size="text3"
-                          className="text-black flex items-center gap-1 my-1 xl:my-1.5"
-                        >
+                        <Text key={"suggesions-item-" + idx} as="div" size="text3" className="text-black flex items-center gap-1 my-1 xl:my-1.5">
                           <Image
                             src={"/images/search-right.svg"}
                             alt={"search-right"}
                             width={6}
                             height={4}
-                            className={cn(
-                              "w-1 xl:w-1.5",
-                              locale === "ar" && "rotate-180"
-                            )}
+                            className={cn("w-1 xl:w-1.5", locale === "ar" && "rotate-180")}
                           />
                           <Link href={item.url}>{item.label}</Link>
                         </Text>
                       ))}
 
                       {defaultSuggestionData?.items?.length > 5 && (
-                        <Text
-                          as="div"
-                          size="text3"
-                          className="text-black hover:underline flex items-center gap-1 my-1 xl:my-1.5"
-                        >
+                        <Text as="div" size="text3" className="text-black hover:underline flex items-center gap-1 my-1 xl:my-1.5">
                           <Link href={"#"}>
-                            <Plus className="size-2 xl:size-2 inline-block" />{" "}
-                            See More
+                            <Plus className="size-2 xl:size-2 inline-block" /> See More
                           </Link>
                         </Text>
                       )}
@@ -380,21 +338,13 @@ export default function SearchDialog({ children, locale }) {
 
                 <MediaQuery minWidth={639}>
                   <div className="w-full sm:w-[calc(100%-200px)] lg:w-[calc(100%-220px)] xl:w-[calc(100%-420px)] 2xl:w-[calc(100%-468px)] 3xl:w-[calc(100%-576px)]">
-                    <Heading
-                      as="div"
-                      size="heading4"
-                      className="text-[#282828] my-2 xl:my-3 2xl:my-4"
-                    >
-                      Found {defaultSuggestionData?.no_of_items} results for
-                      "Ergonomic"
+                    <Heading as="div" size="heading4" className="text-[#282828] my-2 xl:my-3 2xl:my-4">
+                      Found {defaultSuggestionData?.no_of_items} results for "Ergonomic"
                     </Heading>
 
                     <div className="flex flex-wrap -mx-1 sm:-mx-1.5 xl:-mx-2 2xl:-mx-2.5 [&>*]:p-1 sm:[&>*]:p-1.5 xl:[&>*]:p-2 2xl:[&>*]:p-2.5">
                       {defaultSuggestionData?.items?.slice(0, 5).map((item) => (
-                        <div
-                          key={item.id}
-                          className="w-full 2xs:w-1/2 sm:w-1/3 md:w-1/3"
-                        >
+                        <div key={item.id} className="w-full 2xs:w-1/2 sm:w-1/3 md:w-1/3">
                           <div className="group w-full block">
                             <div className="w-full aspect-[550/440] overflow-hidden rounded-[4px] border border-white mb-2 2xl:mb-3 bg-white relative z-0">
                               {!item?.isStock && (
@@ -449,15 +399,8 @@ export default function SearchDialog({ children, locale }) {
                         <div className="w-full 2xs:w-1/2 sm:w-1/3 md:w-1/3">
                           <div className="group w-full block">
                             <div className="w-full aspect-[550/440] overflow-hidden rounded-[4px] border border-[#e9e9e9] bg-[#f4f4f4] flex items-center justify-center">
-                              <Text
-                                as="div"
-                                size="text3"
-                                className="font-normal text-black hover:underline"
-                              >
-                                <Link href={`${locale}/search-results`}>
-                                  See All Results (
-                                  {defaultSuggestionData?.no_of_items})
-                                </Link>
+                              <Text as="div" size="text3" className="font-normal text-black hover:underline">
+                                <Link href={`${locale}/search-results`}>See All Results ({defaultSuggestionData?.no_of_items})</Link>
                               </Text>
                             </div>
                           </div>

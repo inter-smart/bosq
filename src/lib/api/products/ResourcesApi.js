@@ -52,9 +52,19 @@ export const ProductData = {
     }
   },
 
-  getProductDetailsBySlug: async (slug, base_slug, model) => {
+  getProductDetailsBySlug: async (initialFetch, slug, variantSku = null, model = null) => {
     try {
-      const data = await apiClient(`/api/frontend/products/product?slug=${slug}&base_slug=${base_slug || ""}&model_slug=${model || ""}`);
+      const params = new URLSearchParams({
+        slug,
+        initialFetch,
+      });
+
+      if (variantSku) params.append("variantSku", variantSku);
+      if (model) params.append("model", model);
+
+      console.log(params);
+
+      const data = await apiClient(`/api/frontend/products/product?${params.toString()}`);
 
       return sendSuccess(data?.data);
     } catch (error) {
@@ -66,6 +76,15 @@ export const ProductData = {
     try {
       const data = await apiClient(`/api/frontend/products/product-model?slug=${slug}`);
 
+      return sendSuccess(data?.data);
+    } catch (error) {
+      return sendError(error);
+    }
+  },
+
+  getSearchSectionSections: async () => {
+    try {
+      const data = await apiClient(`/api/frontend/product-search/categories`);
       return sendSuccess(data?.data);
     } catch (error) {
       return sendError(error);
