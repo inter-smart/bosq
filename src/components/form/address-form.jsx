@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { z } from "zod";
 
 import {
@@ -30,32 +30,29 @@ import { cn } from "@/lib/utils";
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 import { Heading } from "../utils/heading";
+import { commonValidations } from "@/lib/validations";
+import { fetchFromAPIWithCredentials } from "@/lib/helper";
+import { useRouter } from "next/navigation";
 
 // Validation schema
 const formSchema = z
   .object({
-    fullName: z
-      .string()
-      .min(2, "Full name must be at least 2 characters")
-      .max(50, "Full name cannot exceed 50 characters"),
-    companyName: z.string().optional(),
-    email: z.string().email("Invalid email address"),
-    phone: z
-      .string()
-      .min(10, "Phone number is required")
-      .max(20, "Phone number is too long"),
-    region: z.string().min(1, "Please select a region"),
-    streetAddress: z.string().min(1, "Street address is required"),
-    apartment: z.string().optional(),
+    fullName: commonValidations.name("Full Name"),
+    companyName: commonValidations.optionalString(),
+    email: commonValidations.email(),
+    phone: commonValidations.phone,
+    streetAddress: commonValidations.requiredString("Street Adress"),
+    apartment: commonValidations.optionalString(),
     country: z.string().min(1, "Please select a country"),
-    orderNotes: z.string().optional(),
-    shipToDifferentAddress: z.boolean().default(false),
-    shippingFullName: z.string().optional(),
-    shippingCompanyName: z.string().optional(),
-    shippingRegion: z.string().optional(),
-    shippingStreetAddress: z.string().optional(),
-    shippingApartment: z.string().optional(),
-    shippingCountry: z.string().optional(),
+    state: z.string().min(1, "Please select a state"),
+    orderNotes: commonValidations.optionalString(),
+    shipToDifferentAddress: commonValidations.optionalBoolean(),
+    shippingFullName: commonValidations.optionalString(),
+    shippingCompanyName: commonValidations.optionalString(),
+    shippingCountry: commonValidations.optionalString(),
+    shippingState: commonValidations.optionalString(),
+    shippingStreetAddress: commonValidations.optionalString(),
+    shippingApartment: commonValidations.optionalString(),
   })
   .superRefine((data, ctx) => {
     // Validate shipping fields only if checkbox is checked
@@ -67,11 +64,18 @@ const formSchema = z
           path: ["shippingFullName"],
         });
       }
-      if (!data.shippingRegion) {
+      if (!data.shippingCountry) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Shipping region is required",
-          path: ["shippingRegion"],
+          message: "Shipping country is required",
+          path: ["shippingCountry"],
+        });
+      }
+      if (!data.shippingState) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Shipping state is required",
+          path: ["shippingState"],
         });
       }
       if (!data.shippingStreetAddress) {
@@ -79,13 +83,6 @@ const formSchema = z
           code: z.ZodIssueCode.custom,
           message: "Shipping street address is required",
           path: ["shippingStreetAddress"],
-        });
-      }
-      if (!data.shippingCountry) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Shipping country is required",
-          path: ["shippingCountry"],
         });
       }
     }
@@ -107,7 +104,7 @@ const textareaStyle = cn(
   "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none"
 );
 
-export default function AddressForm({locale}) {
+export default function AddressForm({locale, setShowAddForm}) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -115,47 +112,115 @@ export default function AddressForm({locale}) {
       companyName: "",
       email: "",
       phone: "",
-      region: "",
       streetAddress: "",
       apartment: "",
       country: "",
+      state: "",
       orderNotes: "",
       shipToDifferentAddress: false,
       shippingFullName: "",
       shippingCompanyName: "",
-      shippingRegion: "",
+      shippingCountry: "",
+      shippingState: "",
       shippingStreetAddress: "",
       shippingApartment: "",
-      shippingCountry: "",
     },
   });
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(null);
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]);
+  const [shippingStates, setShippingStates] = useState([]);
+
+  const router = useRouter();
 
   const shipToDifferent = form.watch("shipToDifferentAddress");
+  const selectedCountry = form.watch("country");
+  const selectedShippingCountry = form.watch("shippingCountry");
 
-  const regions = ["United Arab Emirates", "Asia", "Europe", "North America"];
-  const countries = ["Dubai", "India", "United States", "United Kingdom"];
+  // Fetch countries on mount
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const { data } = await fetchFromAPIWithCredentials("/api/frontend/country");
+        if (data) {
+          setCountries(data);
+        }
+      } catch (error) {
+        console.error("Error fetching countries:", error);
+      }
+    };
+    fetchCountries();
+  }, []);
+
+  // Fetch states when country changes
+  useEffect(() => {
+    const fetchStates = async () => {
+      if (!selectedCountry) {
+        setStates([]);
+        return;
+      }
+      try {
+        const { data } = await fetchFromAPIWithCredentials(
+          `/api/frontend/state?slug=${selectedCountry}`
+        );
+        if (data) {
+          setStates(data);
+        }
+      } catch (error) {
+        console.error("Error fetching states:", error);
+      }
+    };
+    fetchStates();
+  }, [selectedCountry]);
+
+  // Fetch shipping states when shipping country changes
+  useEffect(() => {
+    const fetchShippingStates = async () => {
+      if (!selectedShippingCountry) {
+        setShippingStates([]);
+        return;
+      }
+      try {
+        const { data } = await fetchFromAPIWithCredentials(
+          `/api/frontend/state?slug=${selectedShippingCountry}`
+        );
+        if (data) {
+          setShippingStates(data);
+        }
+      } catch (error) {
+        console.error("Error fetching shipping states:", error);
+      }
+    };
+    fetchShippingStates();
+  }, [selectedShippingCountry]);
 
   const onSubmit = async (values) => {
     setLoading(true);
     setSuccess(null);
 
     try {
-      const res = await fetch("http://localhost:1337/api/enquiry", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: values }),
-      });
+   
+      const {data, error, message} = await fetchFromAPIWithCredentials(
+        "/api/frontend/address",
+        {
+          method: "POST",
+          body: JSON.stringify(values),
+        },
+      );
 
-      if (!res.ok) throw new Error("Failed to send enquiry");
-
-      form.reset();
-      setSuccess("Order submitted successfully!");
+      if (!error || data) {
+        form.reset()
+        router.refresh();
+        setShowAddForm?.(false);
+        setSuccess(message);
+      } else {
+        throw new Error(message || "Failed to save information");
+      }
     } catch (err) {
       console.error(err);
-      setSuccess("Something went wrong. Please try again.");
+      setSuccess(err.message);
     }
 
     setLoading(false);
@@ -251,25 +316,32 @@ export default function AddressForm({locale}) {
           )}
         />
 
-        {/* Region */}
+        {/* Country */}
         <FormField
           control={form.control}
-          name="region"
+          name="country"
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                Country / Region<span className={errorStyle}>*</span>
+                Country<span className={errorStyle}>*</span>
               </FormLabel>
-              <Select dir={locale === "ar" ? "rtl" : "ltr"} onValueChange={field.onChange} value={field.value}>
+              <Select
+                dir={locale === "ar" ? "rtl" : "ltr"}
+                onValueChange={(value) => {
+                  field.onChange(value);
+                  form.setValue("state", ""); // Reset state when country changes
+                }}
+                value={field.value}
+              >
                 <FormControl>
                   <SelectTrigger className={cn(inputStyle, "w-full")}>
-                    <SelectValue placeholder="Select region" />
+                    <SelectValue placeholder="Select country" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {regions.map((item, index) => (
-                    <SelectItem key={index} value={item} className={labelStyle}>
-                      {item}
+                  {countries.map((item) => (
+                    <SelectItem key={item.slug} value={item.slug} className={labelStyle}>
+                      {item.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -319,25 +391,30 @@ export default function AddressForm({locale}) {
           )}
         />
 
-        {/* Country */}
+        {/* State */}
         <FormField
           control={form.control}
-          name="country"
+          name="state"
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                State / Country<span className={errorStyle}>*</span>
+                State<span className={errorStyle}>*</span>
               </FormLabel>
-              <Select dir={locale === "ar" ? "rtl" : "ltr"} onValueChange={field.onChange} value={field.value}>
+              <Select
+                dir={locale === "ar" ? "rtl" : "ltr"}
+                onValueChange={field.onChange}
+                value={field.value}
+                disabled={!selectedCountry || states.length === 0}
+              >
                 <FormControl>
                   <SelectTrigger className={cn(inputStyle, "w-full")}>
-                    <SelectValue placeholder="Select country" />
+                    <SelectValue placeholder={selectedCountry ? "Select state" : "Select country first"} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {countries.map((item, index) => (
-                    <SelectItem key={index} value={item} className={labelStyle}>
-                      {item}
+                  {states.map((item) => (
+                    <SelectItem key={item.slug} value={item.slug} className={labelStyle}>
+                      {item.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -442,26 +519,33 @@ export default function AddressForm({locale}) {
 
             <FormField
               control={form.control}
-              name="shippingRegion"
+              name="shippingCountry"
               render={({ field }) => (
                 <FormItem className="w-full sm:w-1/2">
                   <FormLabel className={labelStyle}>
-                    Country / Region<span className={errorStyle}>*</span>
+                    Country<span className={errorStyle}>*</span>
                   </FormLabel>
-                  <Select dir={locale === "ar" ? "rtl" : "ltr"} onValueChange={field.onChange} value={field.value}>
+                  <Select
+                    dir={locale === "ar" ? "rtl" : "ltr"}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      form.setValue("shippingState", ""); // Reset state when country changes
+                    }}
+                    value={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger className={cn(inputStyle, "w-full")}>
-                        <SelectValue placeholder="Select region" />
+                        <SelectValue placeholder="Select country" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {regions.map((item, index) => (
+                      {countries.map((item) => (
                         <SelectItem
-                          key={index}
-                          value={item}
+                          key={item.slug}
+                          value={item.slug}
                           className={labelStyle}
                         >
-                          {item}
+                          {item.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -511,26 +595,31 @@ export default function AddressForm({locale}) {
 
             <FormField
               control={form.control}
-              name="shippingCountry"
+              name="shippingState"
               render={({ field }) => (
                 <FormItem className="w-full sm:w-1/2">
                   <FormLabel className={labelStyle}>
-                    State / Country<span className={errorStyle}>*</span>
+                    State<span className={errorStyle}>*</span>
                   </FormLabel>
-                  <Select dir={locale === "ar" ? "rtl" : "ltr"} onValueChange={field.onChange} value={field.value}>
+                  <Select
+                    dir={locale === "ar" ? "rtl" : "ltr"}
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    disabled={!selectedShippingCountry || shippingStates.length === 0}
+                  >
                     <FormControl>
                       <SelectTrigger className={cn(inputStyle, "w-full")}>
-                        <SelectValue placeholder="Select country" />
+                        <SelectValue placeholder={selectedShippingCountry ? "Select state" : "Select country first"} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {countries.map((item, index) => (
+                      {shippingStates.map((item) => (
                         <SelectItem
-                          key={index}
-                          value={item}
+                          key={item.slug}
+                          value={item.slug}
                           className={labelStyle}
                         >
-                          {item}
+                          {item.name}
                         </SelectItem>
                       ))}
                     </SelectContent>

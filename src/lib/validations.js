@@ -69,33 +69,42 @@ export const commonValidations = {
   rememberMe: z.boolean().default(false),
 
   phone: z
-  .string()
-  .trim()
-  .min(1, "Phone number is required")
+    .string()
+    .trim()
+    .min(1, "Phone number is required")
 
-  // Allow only digits, spaces, +, -, ()
-  .refine((val) => /^[0-9+\s()-]+$/.test(val), {
-    message: "Phone number contains invalid characters",
-  })
+    // Allow only digits, spaces, +, -, ()
+    .refine((val) => /^[0-9+\s()-]+$/.test(val), {
+      message: "Phone number contains invalid characters",
+    })
 
-  // Normalize → remove spaces, -, ()
-  .transform((val) => val.replace(/[\s()-]/g, ""))
+    // Normalize → remove spaces, -, ()
+    .transform((val) => val.replace(/[\s()-]/g, ""))
 
-  // Allow optional leading +
-  .refine((val) => /^\+?[0-9]+$/.test(val), {
-    message: "Invalid phone number format",
-  })
+    // Allow optional leading +
+    .refine((val) => /^\+?[0-9]+$/.test(val), {
+      message: "Invalid phone number format",
+    })
 
-  // Length check (E.164: max 15 digits, min 8 is practical)
-  .refine((val) => {
-    const digits = val.replace("+", "");
-    return digits.length >= 8 && digits.length <= 15;
-  }, {
-    message: "Phone number length is invalid",
-  })
+    // Length check (E.164: max 15 digits, min 8 is practical)
+    .refine(
+      (val) => {
+        const digits = val.replace("+", "");
+        return digits.length >= 8 && digits.length <= 15;
+      },
+      {
+        message: "Phone number length is invalid",
+      },
+    )
 
-  // Reject all zeros
-  .refine((val) => !/^(\+)?0+$/.test(val), {
-    message: "Phone number cannot be all zeros",
-  })
+    // Reject all zeros
+    .refine((val) => !/^(\+)?0+$/.test(val), {
+      message: "Phone number cannot be all zeros",
+    }),
+
+  requiredString: (val) => z.string().min(1, `${val} is required`),
+
+  optionalBoolean: () => z.boolean().optional(),
+
+  optionalString: () => z.string().optional(),
 };

@@ -10,8 +10,6 @@ import { useSelector } from "react-redux";
 import Link from "next/link";
 
 export default function AccountProfile({ data, locale }) {
-
-
   return (
     <div className="w-full border border-[#e9e9e9] sm:rounded-e-[4px] py-3 xl:py-6 3xl:py-9 px-3 xl:px-4 3xl:px-5">
       <Heading
@@ -90,7 +88,7 @@ export default function AccountProfile({ data, locale }) {
             {data?.phone}
           </Text>
         </div>
-        <div className="w-full sm:w-1/2">
+        <div className={`w-full ${data?.shipping_address ? "sm:w-1/4" : "sm:w-1/2"}`}>
           <Heading
             as="h2"
             size={"heading5"}
@@ -107,16 +105,36 @@ export default function AccountProfile({ data, locale }) {
             {parse(data?.address)}
           </Text>
         </div>
+
+        {data?.shipping_address && (
+          <div className="w-full sm:w-1/4">
+            <Heading
+              as="h2"
+              size={"heading5"}
+              className="font-normal text-[#282828] mb-1.5 xl:mb-2"
+            >
+              Shipping Address
+            </Heading>
+
+            <Text
+              as="div"
+              size="text3"
+              className="leading-relaxed text-[#282828]"
+            >
+              {parse(data?.shipping_address)}
+            </Text>
+          </div>
+        )}
       </div>
       <Link href={"/account/settings"}>
-      <Button
-        variant={"black"}
-        disabled={false}
-        className="min-w-[100px] xl:min-w-[120px] 2xl:min-w-[180px] mt-3 xl:mt-4 2xl:mt-6"
-      >
-        Edit Profile
-      </Button>
-        </Link>
+        <Button
+          variant={"black"}
+          disabled={false}
+          className="min-w-[100px] xl:min-w-[120px] 2xl:min-w-[180px] mt-3 xl:mt-4 2xl:mt-6"
+        >
+          Edit Profile
+        </Button>
+      </Link>
     </div>
   );
 }

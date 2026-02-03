@@ -40,4 +40,16 @@ export const ProfileData = {
       return sendError(error);
     }
   },
+
+   getAddress: async () => {
+    try {
+      const data = await fetchApi(`/api/frontend/address`, {
+        method: "GET",
+        credentials: "include",
+      });
+      return sendSuccess(data?.data);
+    } catch (error) {
+      return sendError(error);
+    }
+  },
 };
