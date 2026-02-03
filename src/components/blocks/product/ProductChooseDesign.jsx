@@ -119,7 +119,6 @@ const ProductChooseDesign = ({
   const handleApplyFilters = useCallback(() => {
     const params = new URLSearchParams();
 
-    params.set("initial_fetch", "false");
     isModelChanged && params.set("model", selectedModel?.slug);
 
     isFiltersChanged &&

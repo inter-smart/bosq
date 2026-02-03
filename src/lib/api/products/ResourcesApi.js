@@ -52,11 +52,10 @@ export const ProductData = {
     }
   },
 
-  getProductDetailsBySlug: async (initialFetch, slug, variantSku = null, model = null, attributeFilters = {}) => {
+  getProductDetailsBySlug: async (slug, variantSku = null, model = null, attributeFilters = {}) => {
     try {
       const params = new URLSearchParams({
         slug,
-        initialFetch,
       });
 
       if (variantSku) params.append("variantSku", variantSku);

@@ -4,7 +4,7 @@ import ProductHero from "@/components/blocks/product/product-hero";
 import ProductSimilar from "@/components/blocks/product/product-similar";
 import { getMetaData } from "@/lib/api/metaApi";
 import { ProductData } from "@/lib/api/products/ResourcesApi";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -423,7 +423,6 @@ export default async function ProductDetailPage({ params, searchParams }) {
   const resolvedSearchParams = await searchParams;
   const { locale, slug } = resolvedParams;
 
-  const isinitialFetch = resolvedSearchParams?.initial_fetch === "true";
   const variantSku = resolvedSearchParams?.sku || null;
   const model = resolvedSearchParams?.model || null;
 
@@ -436,7 +435,11 @@ export default async function ProductDetailPage({ params, searchParams }) {
     }
   });
 
-  const { data, error } = await ProductData.getProductDetailsBySlug(isinitialFetch, slug, variantSku, model, attributeFilters);
+  const { data, error } = await ProductData.getProductDetailsBySlug(slug, variantSku, model, attributeFilters);
+
+  if (!data?.initialVariant) {
+    notFound();
+  }
 
   return (
     <>
