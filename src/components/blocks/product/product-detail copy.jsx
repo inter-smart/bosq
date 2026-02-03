@@ -20,12 +20,9 @@ import Video from "yet-another-react-lightbox/plugins/video";
 import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 
-import FrequentlyBoughtCard from "./frequently-bought-card";
-import ProductChooseDesign from "./ProductChooseDesign";
 import ProductEnquireModal from "./ProductEnquireModal";
 import ProductDetails from "./ProductDetails";
-import { ProductData } from "@/lib/api/products/ResourcesApi";
-import { useSearchParams, usePathname, useRouter } from "next/navigation";
+import ProductChooseDesign from "./ProductChooseDesign";
 
 const enq = {
   title: "Enquire Now",
@@ -33,45 +30,14 @@ const enq = {
   description: "<p>Need 10 or 100 chairs? Want them in your brand colours or a unique design? No problem. Just tell us what you need below!</p>",
 };
 
-export default function ProductDetailCopy({ locale, initialData, productData, models }) {
-  const [currentModelData, setCurrentModelData] = useState(initialData);
+export default function ProductDetailCopy({ locale, initialData, productData, models, productSlug }) {
+  console.log("initialData", initialData?.title);
   const [isModelLoading, setIsModelLoading] = useState(false);
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const router = useRouter();
 
-  const productImages = currentModelData?.images || [];
-  const currentModelId = currentModelData?.model_id;
+  console.log("initialData", initialData);
 
-  // Update URL with the current variant's SKU when data changes
-  // useEffect(() => {
-  //   if (currentModelData?.slug) {
-  //     const params = new URLSearchParams(searchParams.toString());
-  //     const currentSku = params.get("sku");
-
-  //     // Only update if SKU has changed
-  //     if (currentSku !== currentModelData.slug) {
-  //       params.set("sku", currentModelData.slug);
-  //       router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-  //     }
-  //   }
-  // }, [currentModelData?.slug, searchParams, pathname, router]);
-
-  const handleModelChange = async (model) => {
-    if (model.id === currentModelId) return;
-
-    setIsModelLoading(true);
-    try {
-      const response = await ProductData.getProductModelBySlug(model.slug);
-      if (response.success && response.data) {
-        setCurrentModelData(response.data);
-      }
-    } catch (error) {
-      console.error("Failed to fetch model data:", error);
-    } finally {
-      setIsModelLoading(false);
-    }
-  };
+  const productImages = initialData?.images || [];
+  const currentModelId = initialData?.model_id;
 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [emblaMainRef, emblaMainApi] = useEmblaCarousel(
@@ -272,7 +238,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                 {productData?.category_name}
               </Heading>
               <Heading as="div" size="heading2" className="font-normal text-[#282828] mb-1 2xl:mb-2 max-sm:font-bold">
-                {currentModelData?.title}
+                {initialData?.title}
               </Heading>
               <Text as="div" size="text3" className="text-[#282828] mb-2 2xl:mb-4">
                 {parse(productData?.description)}
@@ -288,8 +254,8 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                 <div className="w-full max-w-[468px] bg-[#f2f2f2] border border-[#dedede] flex items-center p-1 rounded-[4px]">
                   <div className="w-[40px] xl:w-[45px] 2xl:w-[55px] aspect-square rounded-[4px] overflow-hidden bg-white">
                     <Image
-                      src={currentModelData?.model_media}
-                      alt={currentModelData?.alt || "design"}
+                      src={initialData?.model_media}
+                      alt={initialData?.alt || "design"}
                       width={1080}
                       height={1080}
                       className="w-full h-full object-contain"
@@ -297,17 +263,15 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                   </div>
                   <div className="flex-1 flex justify-between gap-2 p-2 xl:p-2.5 2xl:p-[15px] ">
                     <div className="text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#282828]">
-                      {currentModelData?.model_title}
+                      {initialData?.model_title}
                     </div>
                     <ProductChooseDesign
-                      data={currentModelData}
+                      data={initialData}
                       locale={locale}
                       onOpenChange={setIsChooseDesignOpen}
-                      models={models}
                       currentModelId={currentModelId}
-                      currentModelSlug={currentModelData?.slug}
-                      onModelChange={handleModelChange}
                       isModelLoading={isModelLoading}
+                      productSlug={productSlug}
                     >
                       <Button
                         variant={"link"}
@@ -333,7 +297,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                 size="none"
                 className="text-[12px] xl:text-[14px] 2xl:text-[18px] 3xl:text-[22px] leading-tight font-normal text-[#282828] [&_span]:text-[70%] [&_span]:font-light [&_span]:text-[#bbbcbc] mb-2 xl:mb-3 2xl:mb-5"
               >
-                AED {currentModelData?.price} <span>Inc Tax</span>
+                AED {initialData?.price} <span>Inc Tax</span>
               </Heading>
               <div className="w-full flex flex-wrap gap-2.5 mb-3 xl:mb-3 2xl:mb-5">
                 <div className="w-[60px] xl:w-[60px] 2xl:w-[80px] h-[35px] lg:h-[40px] 2xl:h-[45px] 3xl:h-[55px] flex items-center rounded-[6px] overflow-hidden bg-white border border-[#dedede]">
@@ -352,7 +316,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                       <ChevronUp className="size-3 text-black" />
                     </button>
 
-                    <button onClick={handleIncrement} className="transition-colors" disabled={quantity == currentModelData?.stock}>
+                    <button onClick={handleIncrement} className="transition-colors" disabled={quantity == initialData?.stock}>
                       <ChevronDown className="size-3 text-black" />
                     </button>
                   </div>
@@ -368,7 +332,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
               <div className="w-full mb-1 xl:mb-2">
                 <Text as="div" size="text3" className="text-[#282828] max-w-[95%]">
                   {"Total: $"}
-                  <span className="font-medium">{(quantity * currentModelData?.price).toFixed(2)}</span>
+                  <span className="font-medium">{(quantity * initialData?.price).toFixed(2)}</span>
                 </Text>
               </div>
 

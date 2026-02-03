@@ -427,12 +427,21 @@ export default async function ProductDetailPage({ params, searchParams }) {
   const variantSku = resolvedSearchParams?.sku || null;
   const model = resolvedSearchParams?.model || null;
 
-  const { data, error } = await ProductData.getProductDetailsBySlug(isinitialFetch, slug, variantSku, model);
+  // Extract all attr_* params from the URL (e.g., attr_pattern=striped, attr_color=blue)
+  const attributeFilters = {};
+  Object.entries(resolvedSearchParams || {}).forEach(([key, value]) => {
+    if (key.startsWith("attr_") && value) {
+      const attrSlug = key.replace("attr_", "");
+      attributeFilters[attrSlug] = value;
+    }
+  });
+
+  const { data, error } = await ProductData.getProductDetailsBySlug(isinitialFetch, slug, variantSku, model, attributeFilters);
 
   return (
     <>
       <ProductHero locale={locale} data={local_data?.heroData} slug={slug} />
-      <ProductDetailCopy locale={locale} initialData={data?.initialVariant} productData={data?.product} models={data?.models} />
+      <ProductDetailCopy locale={locale} initialData={data?.initialVariant} productData={data?.product} models={data?.models} productSlug={slug} />
       {/* <ProductSimilar locale={locale} data={local_data?.similarData} /> */}
     </>
   );

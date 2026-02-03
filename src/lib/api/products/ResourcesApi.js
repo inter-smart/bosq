@@ -52,7 +52,7 @@ export const ProductData = {
     }
   },
 
-  getProductDetailsBySlug: async (initialFetch, slug, variantSku = null, model = null) => {
+  getProductDetailsBySlug: async (initialFetch, slug, variantSku = null, model = null, attributeFilters = {}) => {
     try {
       const params = new URLSearchParams({
         slug,
@@ -61,6 +61,11 @@ export const ProductData = {
 
       if (variantSku) params.append("variantSku", variantSku);
       if (model) params.append("model", model);
+
+      // Append attribute filters (e.g., attr_pattern=striped becomes attr[pattern]=striped)
+      Object.entries(attributeFilters).forEach(([attrSlug, valueSlug]) => {
+        params.append(`attr[${attrSlug}]`, valueSlug);
+      });
 
       console.log(params);
 
