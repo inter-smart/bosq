@@ -18,7 +18,7 @@ export default function AuthSignup() {
       </div>
       <Text as="div" size="text1" className="text-[#282828]">
         Already have an account?{" "}
-        <Link href="/en/signup" className="font-normal hover:underline">
+        <Link href="/login" className="font-normal hover:underline">
           Log in
         </Link>
       </Text>

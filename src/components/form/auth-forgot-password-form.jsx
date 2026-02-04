@@ -23,11 +23,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
 import { commonValidations } from "@/lib/validations";
-import {
-  forgotPassword,
-  resetPassword,
-  verifyResetPasswordOtp,
-} from "@/lib/helper";
+import { useAuth } from "@/hooks/useAuth";
 
 // Step 1: Email validation schema
 const emailSchema = z.object({
@@ -61,10 +57,16 @@ const inputStyle = cn(
 
 const errorStyle = cn("text-[#f17423]");
 
-export default function AuthForgotPasswordForm({ locale }) {
-  const [step, setStep] = useState(1); // 1: Email, 2: OTP, 3: Password
-  const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
+export default function AuthForgotPasswordForm({ locale, setStep, step }) {
+  const {
+    forgotPassword,
+    verifyResetOtp,
+    resetPassword,
+    pendingEmail,
+    isLoading,
+    clearAuthError,
+  } = useAuth();
+
   const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -92,92 +94,55 @@ export default function AuthForgotPasswordForm({ locale }) {
 
   // Step 1: Submit email
   const onSubmitEmail = async (values) => {
-    setLoading(true);
+    clearAuthError();
     setSuccess("");
 
-    try {
-      const { data, error, message } = await forgotPassword(values.email);
+    const result = await forgotPassword(values.email);
 
-      if (error) {
-        setSuccess(message);
-        return;
-      }
-
-      if (data) {
-        setEmail(values.email);
-        setSuccess("OTP sent to your email!");
-        setTimeout(() => {
-          setStep(2);
-          setSuccess("");
-        }, 1500);
-      }
-    } catch (err) {
-      console.error(err);
-      setSuccess(err.message);
+    if (result.success) {
+      setSuccess("OTP sent to your email!");
+      setTimeout(() => {
+        setStep(2);
+        setSuccess("");
+      }, 1500);
+    } else {
+      setSuccess(result.error || "Failed to send OTP");
     }
-    setLoading(false);
   };
 
   // Step 2: Verify OTP
   const onSubmitOtp = async (values) => {
-    setLoading(true);
+    clearAuthError();
     setSuccess("");
 
-    // TODO: Connect to API when ready
-    try {
-      const { data, error, message } = await verifyResetPasswordOtp({
-        otp: values.otp,
-        email,
-      });
+    const result = await verifyResetOtp(values.otp, pendingEmail);
 
-      if (error) {
-        setSuccess(message);
-        return;
-      }
-
-      if (data) {
-        localStorage.setItem("reset_token", data.resetToken);
-        setSuccess("OTP verified successfully!");
-        setTimeout(() => {
-          setStep(3);
-          setSuccess("");
-        }, 1500);
-      }
-    } catch (err) {
-      console.error(err);
-      setSuccess("Invalid OTP. Please try again.");
+    if (result.success) {
+      setSuccess("OTP verified successfully!");
+      setTimeout(() => {
+        setStep(3);
+        setSuccess("");
+      }, 1500);
+    } else {
+      setSuccess(result.error || "Invalid OTP. Please try again.");
     }
-    setLoading(false);
   };
 
   // Step 3: Reset password
   const onSubmitPassword = async (values) => {
-    setLoading(true);
+    clearAuthError();
     setSuccess("");
 
-    // TODO: Connect to API when ready
-    try {
-      const { data, error, message } = await resetPassword({
-        password: values.password,
-      });
+    const result = await resetPassword(values.password);
 
-      if (error) {
-        setSuccess(message);
-        return;
-      }
-
-      if (data) {
-        setSuccess("Password reset successfully!");
-        localStorage.removeItem("reset_token");
-        setTimeout(() => {
-          window.location.href = "/login";
-        }, 2000);
-      }
-    } catch (err) {
-      console.error(err);
-      setSuccess("Something went wrong. Please try again.");
+    if (result.success) {
+      setSuccess("Password reset successfully!");
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 2000);
+    } else {
+      setSuccess(result.error || "Something went wrong. Please try again.");
     }
-    setLoading(false);
   };
 
   const toggleStyle = cn(
@@ -219,14 +184,14 @@ export default function AuthForgotPasswordForm({ locale }) {
               <Button
                 type="submit"
                 variant="black"
-                disabled={loading}
+                disabled={isLoading}
                 className="w-full"
               >
-                {loading ? "Sending..." : "Send OTP"}
+                {isLoading ? "Sending..." : "Send OTP"}
               </Button>
             </div>
 
-            {success && !loading && (
+            {success && !isLoading && (
               <p
                 className={cn(
                   "text-[10px] mt-1 w-full",
@@ -284,14 +249,14 @@ export default function AuthForgotPasswordForm({ locale }) {
               <Button
                 type="submit"
                 variant="black"
-                disabled={loading}
+                disabled={isLoading}
                 className="w-full"
               >
-                {loading ? "Verifying..." : "Verify OTP"}
+                {isLoading ? "Verifying..." : "Verify OTP"}
               </Button>
             </div>
 
-            {success && !loading && (
+            {success && !isLoading && (
               <p
                 className={cn(
                   "text-[10px] mt-1 w-full",
@@ -394,14 +359,14 @@ export default function AuthForgotPasswordForm({ locale }) {
               <Button
                 type="submit"
                 variant="black"
-                disabled={loading}
+                disabled={isLoading}
                 className="w-full"
               >
-                {loading ? "Resetting..." : "Reset Password"}
+                {isLoading ? "Resetting..." : "Reset Password"}
               </Button>
             </div>
 
-            {success && !loading && (
+            {success && !isLoading && (
               <p
                 className={cn(
                   "text-[10px] mt-1 w-full",

@@ -22,8 +22,7 @@ import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 import { commonValidations } from "@/lib/validations";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
-import { register } from "@/lib/helper";
-import { sendError } from "next/dist/server/api-utils";
+import { useAuth } from "@/hooks/useAuth";
 
 // Validation schema
 const formSchema = z.object({
@@ -53,49 +52,42 @@ export default function AuthCreateForm() {
     },
   });
 
-  const [loading, setLoading] = useState(false);
+  const { register, isLoading, clearAuthError } = useAuth();
   const [success, setSuccess] = useState("");
 
-  
-const router = useRouter();
+  const router = useRouter();
 
   const onSubmit = async (values) => {
-    setLoading(true);
+    clearAuthError();
     setSuccess("");
 
     try {
       const phoneNumber = parsePhoneNumberFromString(values.phone);
 
       if (!phoneNumber || !phoneNumber.isValid()) {
-        throw new Error("Invalid phone number");
+        setSuccess("Invalid phone number");
+        return;
       }
+
       const payload = {
         name: values.fullName,
         email: values.email,
-      countryCode: `+${phoneNumber.countryCallingCode}`,
+        countryCode: `+${phoneNumber.countryCallingCode}`,
         mobile: phoneNumber.nationalNumber,
       };
 
-      const {data, error, message } = await register(payload);
+      const result = await register(payload);
 
-      if (error) {
-        setSuccess(message);
-      }
-
-      
-      if(data){
-        localStorage.setItem("email", values.email);
-        router.push("/verify-otp");
+      if (result.success) {
         setSuccess("OTP sent successfully!");
+        router.push("/otp-submission");
+      } else {
+        setSuccess(result.error || "Registration failed");
       }
-
-
     } catch (err) {
       console.error(err);
       setSuccess(err.message);
     }
-
-    setLoading(false);
   };
 
   return (
@@ -177,15 +169,15 @@ const router = useRouter();
           <Button
             type="submit"
             variant="black"
-            disabled={loading}
+            disabled={isLoading}
             className="w-full"
           >
-            {loading ? "Sending..." : "Send OTP"}
+            {isLoading ? "Sending..." : "Send OTP"}
           </Button>
         </div>
 
         {/* Success/Error Message */}
-        {success && !loading && (
+        {success && !isLoading && (
           <p
             className={cn(
               "text-[10px] mt-1 w-full",

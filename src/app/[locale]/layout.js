@@ -4,6 +4,7 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 import "./../globals.css";
 import { cn } from "@/lib/utils";
 import { locales, localeDirection } from "../../il8n/config";
+import ReduxProvider from "@/store/provider";
 
 const heroNew = localFont({
   src: [
@@ -74,9 +75,18 @@ export default async function RootLayout({ children, params }) {
   const dir = localeDirection[resolvedParams.locale];
 
   return (
-    <html lang={locale} dir={dir} className={cn(locale === "ar" ? cairo.className : heroNew.className, "antialiased")}>
+    <html
+      lang={locale}
+      dir={dir}
+      className={cn(
+        locale === "ar" ? cairo.className : heroNew.className,
+        "antialiased",
+      )}
+    >
       <body className={locale === "ar" ? "font-cairo" : "font-hero"}>
-        <NuqsAdapter>{children}</NuqsAdapter>
+        <ReduxProvider>
+          <NuqsAdapter>{children}</NuqsAdapter>
+        </ReduxProvider>
       </body>
     </html>
   );

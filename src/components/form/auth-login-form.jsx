@@ -21,28 +21,28 @@ import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { commonValidations } from "@/lib/validations";
-import { login } from "@/lib/helper";
-import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
+import { useRouter, useSearchParams } from "next/navigation";
 
 // Validation schema
 const formSchema = z.object({
   email: commonValidations.email(),
-  password:commonValidations.password(),
-  rememberMe: commonValidations.rememberMe
+  password: commonValidations.password(),
+  rememberMe: commonValidations.rememberMe,
 });
 
 // Shared styles
 const labelStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]"
+  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]",
 );
 
 const inputStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1"
+  "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1",
 );
 
 const errorStyle = cn("text-[#f17423]");
 
-export default function AuthLoginForm({ locale }) {
+export default function AuthLoginForm({ locale, data }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -52,46 +52,34 @@ export default function AuthLoginForm({ locale }) {
     },
   });
 
-  const [loading, setLoading] = useState(false);
+  const { login, isLoading, clearAuthError } = useAuth();
   const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const redirectTo = searchParams.get("redirect") || "/";
+
   const onSubmit = async (values) => {
-    setLoading(true);
+    clearAuthError();
     setSuccess("");
 
-    try {
-   
+    const result = await login(values);
 
-      const {data, error, message} = await login(values);
-
-      if(error){
-        setSuccess(message);
-        return;
-      }
-
-
-      if(data){
-        localStorage.setItem("auth_token", data.accessToken);
-        setSuccess("Login successful!");
-        router.push("/")
-      }
-
-
-      // Redirect to dashboard
-      // window.location.href = "/dashboard";
-    } catch (err) {
-      console.error(err);
-      setSuccess("Invalid email or password. Please try again.");
+    if (result.success) {
+      setSuccess("Login successful!");
+      router.push(redirectTo);
+    } else {
+      setSuccess(
+        result.error || "Invalid email or password. Please try again.",
+      );
     }
-
-    setLoading(false);
   };
 
   const toggleStyle = cn(
     "absolute top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700",
-    locale === "ar" ? "left-3" : "right-3"
+    locale === "ar" ? "left-3" : "right-3",
   );
 
   return (
@@ -106,9 +94,7 @@ export default function AuthLoginForm({ locale }) {
           name="email"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel className={labelStyle}>
-                Email
-              </FormLabel>
+              <FormLabel className={labelStyle}>Email</FormLabel>
               <FormControl>
                 <Input
                   {...field}
@@ -128,9 +114,7 @@ export default function AuthLoginForm({ locale }) {
           name="password"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel className={labelStyle}>
-                Password
-              </FormLabel>
+              <FormLabel className={labelStyle}>Password</FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
@@ -138,7 +122,7 @@ export default function AuthLoginForm({ locale }) {
                     type={showPassword ? "text" : "password"}
                     className={cn(
                       inputStyle,
-                      locale === "ar" ? "pl-10" : "pr-10"
+                      locale === "ar" ? "pl-10" : "pr-10",
                     )}
                     placeholder="Enter your password"
                   />
@@ -194,19 +178,21 @@ export default function AuthLoginForm({ locale }) {
           <Button
             type="submit"
             variant="black"
-            disabled={loading}
+            disabled={isLoading}
             className="w-full"
           >
-            {loading ? "Logging in..." : "Login"}
+            {isLoading ? "Logging in..." : "Login"}
           </Button>
         </div>
 
         {/* Success/Error Message */}
-        {success && !loading && (
+        {success && !isLoading && (
           <p
             className={cn(
               "text-[10px] mt-1 w-full",
-              success.includes("successful") ? "text-green-600" : "text-red-600"
+              success.includes("successful")
+                ? "text-green-600"
+                : "text-red-600",
             )}
           >
             {success}

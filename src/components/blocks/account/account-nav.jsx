@@ -3,7 +3,8 @@ import { Text } from "@/components/utils/text";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 
 import dynamic from "next/dynamic";
 import { Menu } from "lucide-react";
@@ -98,7 +99,18 @@ const ASIDE_ITEMS = [
 
 export default function AccountNav({locale}) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { logout } = useAuth();
   const [open, setOpen] = useState(false);
+
+  const handleLogout = async () => {
+
+    
+    const res = await logout();
+
+    console.log(res)
+    router.push(`/${locale}/login`);
+  };
   return (
     <>
       <div className="relative z-2 sm:sticky sm:top-(--header-y)">
@@ -122,10 +134,40 @@ export default function AccountNav({locale}) {
         >
           {ASIDE_ITEMS.map((item) => {
             const isActive = pathname === item.href;
+            const isLogout = item.id === 8;
+
+            if (isLogout) {
+              return (
+                <button
+                  key={"account-nav-" + item.id}
+                  onClick={handleLogout}
+                  className={cn(
+                    "w-full flex gap-x-1.5 xl:gap-x-2.5 items-center py-2.5 xl:py-3 3xl:py-4.5 px-3 xl:px-5 3xl:px-6 transition bg-transparent hover:bg-gray-200 cursor-pointer"
+                  )}
+                >
+                  <Image
+                    src={item?.media?.path}
+                    alt={item?.media?.alt}
+                    width={12}
+                    height={14}
+                    className="w-3 xl:w-3 2xl:w-4 aspect-square object-contain hover:scale-105 transition duration-300 invert-0"
+                  />
+                  <Text
+                    as="div"
+                    size="text3"
+                    className="leading-none text-black"
+                  >
+                    {item?.title}
+                  </Text>
+                </button>
+              );
+            }
+
             return (
               <Link
                 key={"account-nav-" + item.id}
                 href={item.href}
+
                 className={cn(
                   "w-full flex gap-x-1.5 xl:gap-x-2.5 items-center py-2.5 xl:py-3 3xl:py-4.5 px-3 xl:px-5 3xl:px-6 transition ",
                   isActive ? "bg-black" : "bg-transparent hover:bg-gray-200"

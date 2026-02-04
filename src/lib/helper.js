@@ -89,6 +89,53 @@ export async function fetchFromAPI(endpoint, options = {}) {
   }
 }
 
+
+export async function fetchFromAPIWithCredentials(endpoint, options = {}) {
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+
+  const url = `${API_BASE_URL}${endpoint}`;
+  const defaultOptions = {
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+    ...options,
+  };
+
+  try {
+    const response = await fetch(url, defaultOptions);
+
+    const data = await response.json();
+
+    if (!response.ok) {
+
+      console.log(data)
+      return {
+        data: null,
+        error: true,
+        message:
+          data?.message ||
+          data?.error?.message ||
+          `Error: ${response.status} ${response.statusText}`,
+      };
+    }
+
+    return {
+      data: data?.success ? data?.data : null,
+      error: !data?.success,
+      message: data?.message || data?.error.message || "An error occurred",
+    };
+  } catch (error) {
+    return {
+      data: null,
+      error: true,
+      message: error?.message || "Network error. Please check your connection.",
+    };
+  }
+}
+
+
 export async function register(credentials) {
   return fetchFromAPI("/api/frontend/auth/register", {
     method: "POST",
@@ -118,7 +165,7 @@ export async function createPassword(password) {
 
 // login
 export async function login(credentials) {
-  return fetchFromAPI("/api/frontend/auth/login", {
+  return fetchFromAPIWithCredentials("/api/frontend/auth/login", {
     method: "POST",
     body: JSON.stringify(credentials),
   });
@@ -147,11 +194,26 @@ export async function verifyResetPasswordOtp({ otp, email }) {
 export async function resetPassword({password}) {
   const resetToken = localStorage.getItem("reset_token");
   return fetchFromAPI("/api/frontend/auth/reset-password", {
+    credentials: "include",
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${resetToken}`,
     },
     body: JSON.stringify({ password }),
+  });
+}
+
+// logout
+export async function logout() {
+  return fetchFromAPIWithCredentials("/api/frontend/profile/logout", {
+    method: "POST",
+  });
+}
+
+// fetch user profile
+export async function fetchUserProfileAPI() {
+  return fetchFromAPIWithCredentials("/api/frontend/auth/profile", {
+    method: "GET",
   });
 }

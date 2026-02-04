@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
+import { fetchFromAPIWithCredentials } from "@/lib/helper";
 
 // Validation schema
 const formSchema = z
@@ -57,35 +58,29 @@ export default function PasswordChangeForm({ locale }) {
     setLoading(true);
     setSuccess(null);
 
-    // Simulate API call for local testing
-    setTimeout(() => {
-      console.log("Password Change:", {
-        currentPassword: values.currentPassword,
-        newPassword: values.newPassword,
+    try {
+      const {error, message} = await fetchFromAPIWithCredentials("/api/frontend/profile/change-password", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          currentPassword: values.currentPassword,
+          newPassword: values.newPassword,
+        }),
       });
-      form.reset();
-      setSuccess("Password changed successfully!");
-      setLoading(false);
-    }, 1000);
 
-    // TODO: Connect to API when ready
-    // try {
-    //   const res = await fetch("http://localhost:1337/api/auth/change-password", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({
-    //       currentPassword: values.currentPassword,
-    //       newPassword: values.newPassword,
-    //     }),
-    //   });
-    //   if (!res.ok) throw new Error("Failed to change password");
-    //   form.reset();
-    //   setSuccess("Password changed successfully!");
-    // } catch (err) {
-    //   console.error(err);
-    //   setSuccess("Current password is incorrect. Please try again.");
-    // }
-    // setLoading(false);
+
+     if(error){
+      setSuccess(message);
+     }
+
+      form.reset();
+      setSuccess(message);
+    } catch (err) {
+      console.error(err);
+      setSuccess(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Shared styles

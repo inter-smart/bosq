@@ -1,9 +1,13 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/utils/heading";
 import { Text } from "@/components/utils/text";
 import Image from "next/image";
 
 import parse from "html-react-parser";
+import { useSelector } from "react-redux";
+import Link from "next/link";
 
 export default function AccountProfile({ data, locale }) {
   return (
@@ -18,7 +22,7 @@ export default function AccountProfile({ data, locale }) {
       <div className="w-full flex flex-wrap items-center mb-4 xl:mb-8">
         <div className="w-[50px] 2xl:w-[70px] aspect-square overflow-hidden rounded-full border">
           <Image
-            src={data?.image}
+            src={data?.image ?? "/images/user-1.jpg"}
             alt={data?.first_name}
             width={100}
             height={100}
@@ -84,7 +88,7 @@ export default function AccountProfile({ data, locale }) {
             {data?.phone}
           </Text>
         </div>
-        <div className="w-full sm:w-1/2">
+        <div className={`w-full ${data?.shipping_address ? "sm:w-1/4" : "sm:w-1/2"}`}>
           <Heading
             as="h2"
             size={"heading5"}
@@ -101,14 +105,36 @@ export default function AccountProfile({ data, locale }) {
             {parse(data?.address)}
           </Text>
         </div>
+
+        {data?.shipping_address && (
+          <div className="w-full sm:w-1/4">
+            <Heading
+              as="h2"
+              size={"heading5"}
+              className="font-normal text-[#282828] mb-1.5 xl:mb-2"
+            >
+              Shipping Address
+            </Heading>
+
+            <Text
+              as="div"
+              size="text3"
+              className="leading-relaxed text-[#282828]"
+            >
+              {parse(data?.shipping_address)}
+            </Text>
+          </div>
+        )}
       </div>
-      <Button
-        variant={"black"}
-        disabled={false}
-        className="min-w-[100px] xl:min-w-[120px] 2xl:min-w-[180px] mt-3 xl:mt-4 2xl:mt-6"
-      >
-        Edit Profile
-      </Button>
+      <Link href={"/account/settings"}>
+        <Button
+          variant={"black"}
+          disabled={false}
+          className="min-w-[100px] xl:min-w-[120px] 2xl:min-w-[180px] mt-3 xl:mt-4 2xl:mt-6"
+        >
+          Edit Profile
+        </Button>
+      </Link>
     </div>
   );
 }

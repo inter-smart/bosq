@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/utils/heading";
 import { Text } from "@/components/utils/text";
@@ -21,43 +22,87 @@ import {
 } from "@/components/ui/alert-dialog";
 import UpdateAddressForm from "@/components/form/update-address-form";
 import dynamic from "next/dynamic";
+import { fetchFromAPIWithCredentials } from "@/lib/helper";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
 });
 
-export default function AccountAddress({ data, locale }) {
+export default function AccountAddress({ data, locale, addressData }) {
+  const router = useRouter();
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingAddress, setEditingAddress] = useState(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isLoadingEdit, setIsLoadingEdit] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(null);
 
   // Sort addresses: default address first
-  const sortedAddresses = data?.shippingAddress
-    ? [...data.shippingAddress].sort((a, b) => {
+  const sortedAddresses = addressData
+    ? [...addressData].sort((a, b) => {
         if (a.is_default && !b.is_default) return -1;
         if (!a.is_default && b.is_default) return 1;
         return 0;
       })
     : [];
 
-  const handleEditClick = (address) => {
-    setEditingAddress(address);
+  const handleEditClick = async (address) => {
+    setIsLoadingEdit(true);
     setIsEditDialogOpen(true);
+
+    // Fetch full address data from GET /api/frontend/address/:id
+    const { data, error } = await fetchFromAPIWithCredentials(
+      `/api/frontend/address/${address.id}`,
+    );
+
+    if (!error && data) {
+      setEditingAddress(data);
+    } else {
+      setEditingAddress(address); // Fallback to list data
+    }
+    setIsLoadingEdit(false);
   };
 
-  const handleSetDefault = (addressId) => {
-    // Implement your set default logic here
-    console.log("Set as default:", addressId);
+  const handleEditSuccess = () => {
+    setIsEditDialogOpen(false);
+    setEditingAddress(null);
+    router.refresh();
   };
 
-  const handleDelete = (addressId) => {
-    // Implement your delete logic here
-    console.log("Delete address:", addressId);
+  const handleSetDefault = async (addressId) => {
+    const { data, error, message } = await fetchFromAPIWithCredentials(
+      `/api/frontend/address/${addressId}/default`,
+      {
+        method: "PUT",
+      },
+    );
+
+    if (!error) {
+      router.refresh();
+    }
+  };
+
+  const handleDelete = async (addressId) => {
+    setIsDeleting(addressId);
+    const {
+      data: responseData,
+      error,
+      message,
+    } = await fetchFromAPIWithCredentials(
+      `/api/frontend/address/${addressId}`,
+      {
+        method: "DELETE",
+      },
+    );
+
+    if (!error) {
+      router.refresh();
+    }
+    setIsDeleting(null);
   };
 
   return (
     <>
-      {!data?.shippingAddress || data?.shippingAddress?.length === 0 ? (
+      {!addressData || addressData?.length === 0 ? (
         // Show form when no addresses exist
         <div className="w-full border border-[#e9e9e9] sm:rounded-e-lg py-3 xl:py-6 3xl:py-9 px-3 xl:px-4 3xl:px-5">
           <Heading
@@ -67,7 +112,7 @@ export default function AccountAddress({ data, locale }) {
           >
             Add New Address
           </Heading>
-          <AddressForm locale={locale} />
+          <AddressForm setShowAddForm={setShowAddForm} locale={locale} />
         </div>
       ) : (
         <div className="w-full border border-[#e9e9e9] sm:rounded-e-lg py-3 xl:py-6 3xl:py-9 px-3 xl:px-4 3xl:px-5">
@@ -121,16 +166,14 @@ export default function AccountAddress({ data, locale }) {
                     size="heading5"
                     className="font-medium text-[#282828] mb-1 xl:mb-2"
                   >
-                    {item?.full_name}
+                    {item?.name}
                   </Heading>
                   <Text
                     as="div"
                     size="text3"
                     className="text-[#282828] mb-1 xl:mb-2"
                   >
-                    {item?.address_line_1 && parse(item?.address_line_1)}
-                    {item?.address_line_2 && ", "}
-                    {item?.address_line_2 && parse(item?.address_line_2)}
+                    {item?.address && parse(item?.address)}
                   </Text>
                   <Text
                     as="div"
@@ -145,6 +188,36 @@ export default function AccountAddress({ data, locale }) {
                       {item?.phone}
                     </a>
                   </Text>
+
+                  {
+                    // display shipping address if it is a shipping address
+                    item?.shipping_address && (
+                      <>
+
+                        <Heading
+                          as="div"
+                          size="heading4"
+                          className="font-medium text-[#282828] mb-1 xl:mb-2"
+                        >
+                        Shipping Address
+                        </Heading>
+                        <Heading
+                          as="div"
+                          size="heading5"
+                          className="font-medium text-[#282828] mb-1 xl:mb-2"
+                        >
+                          {item?.shipping_name}
+                        </Heading>
+                        <Text
+                          as="div"
+                          size="text3"
+                          className="text-[#282828] mb-1 xl:mb-2"
+                        >
+                          {item?.shipping_address && parse(item?.shipping_address)}
+                        </Text>
+                      </>
+                    )
+                  }
 
                   <div className="flex gap-0.5 xl:gap-1 flex-wrap">
                     <Button
@@ -165,7 +238,8 @@ export default function AccountAddress({ data, locale }) {
                     </Button>
                     <Button
                       variant={"white"}
-                      onClick={() => handleDelete(item.id)}
+                      onClick={() => handleDelete(item?.id)}
+                      disabled={isDeleting === item?.id}
                       className={
                         "min-w-[55px] xl:min-w-[60px] 2xl:min-w-[85px] h-[20px] lg:h-[22px] 2xl:h-[24px] 3xl:h-[26px] bg-white gap-1 border border-[#e9e9e9] hover:text-black hover:bg-white hover:border-[#f17423]"
                       }
@@ -177,7 +251,7 @@ export default function AccountAddress({ data, locale }) {
                         height={10}
                         className="w-2 xl:w-2.5"
                       />
-                      Delete
+                      {isDeleting === item?.id ? "Deleting..." : "Delete"}
                     </Button>
 
                     {item.is_default ? (
@@ -256,9 +330,20 @@ export default function AccountAddress({ data, locale }) {
               <X className="size-5 text-black" />
             </AlertDialogCancel>
           </AlertDialogHeader>
-
           <div className="max-h-[70vh] mask-[linear-gradient(to_bottom,transparent_0%,white_2%,white_98%,transparent_100%)] overflow-y-auto overflow-x-hidden">
-            <UpdateAddressForm locale={locale} />
+            {isLoadingEdit ? (
+              <div className="flex items-center justify-center py-10">
+                <span className="text-sm text-gray-500">
+                  Loading address...
+                </span>
+              </div>
+            ) : (
+              <UpdateAddressForm
+                locale={locale}
+                addressData={editingAddress}
+                onSuccess={handleEditSuccess}
+              />
+            )}
           </div>
         </AlertDialogContent>
       </AlertDialog>

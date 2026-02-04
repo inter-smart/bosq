@@ -17,14 +17,13 @@ import {
 import {
   InputOTP,
   InputOTPGroup,
-  InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { commonValidations } from "@/lib/validations";
-import { verifyOtp } from "@/lib/helper";
+import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 
 // Validation schema
@@ -52,39 +51,22 @@ export default function AuthOtpForm() {
     },
   });
 
-  const [loading, setLoading] = useState(false);
+  const { verifyOtp, pendingEmail, isLoading, clearAuthError } = useAuth();
   const [success, setSuccess] = useState("");
 
   const router = useRouter();
   const onSubmit = async (values) => {
-    setLoading(true);
+    clearAuthError();
     setSuccess("");
 
-    try {
-      const res = await verifyOtp(values);
+    const result = await verifyOtp(values.otp, pendingEmail);
 
-    const { data, error, message } = res
-
-    console.log("validaiton: ",res)
-
-      if (error) {
-        setSuccess(message);
-        return;
-      }
-
-
-      if (data || !error) {
-        localStorage.setItem("auth-token", data.tempToken);
-        localStorage.removeItem("email");
-        setSuccess("OTP verified successfully!");
-        router.push("/create-password");
-      }
-    } catch (err) {
-      console.error(err);
-      setSuccess("Invalid OTP. Please try again.");
+    if (result.success) {
+      setSuccess("OTP verified successfully!");
+      router.push("/create-password");
+    } else {
+      setSuccess(result.error || "Invalid OTP. Please try again.");
     }
-
-    setLoading(false);
   };
 
   return (
@@ -130,15 +112,15 @@ export default function AuthOtpForm() {
           <Button
             type="submit"
             variant="black"
-            disabled={loading}
+            disabled={isLoading}
             className="w-full"
           >
-            {loading ? "Verifying..." : "Verify OTP"}
+            {isLoading ? "Verifying..." : "Verify OTP"}
           </Button>
         </div>
 
         {/* Success/Error Message */}
-        {success && !loading && (
+        {success && !isLoading && (
           <p
             className={cn(
               "text-[10px] mt-1 w-full",

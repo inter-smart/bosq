@@ -2,10 +2,10 @@ import { Text } from "@/components/utils/text";
 import Link from "next/link";
 import AuthLoginForm from "@/components/form/auth-login-form";
 
-export default function AuthLogin({ locale }) {
+export default function AuthLogin({ locale, data }) {
   return (
     <>
-      <AuthLoginForm locale={locale} />
+      <AuthLoginForm locale={locale} data={data} />
       <Text
         as="div"
         size="text1"
@@ -18,7 +18,7 @@ export default function AuthLogin({ locale }) {
       </div>
       <Text as="div" size="text1" className="text-center text-black">
         New here?{" "}
-        <Link href="/en/signup" className="font-normal hover:underline">
+        <Link href="/signup" className="font-normal hover:underline">
           Create an Account
         </Link>
       </Text>
