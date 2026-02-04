@@ -7,8 +7,10 @@ import { Suspense, useState } from "react";
 import { motion } from "motion/react";
 import { Skeleton } from "../../ui/skeleton";
 import { Button } from "@/components/ui/button";
+const colorVariant = ["#bababa", "#333333", "#8db600", "#ff0000", "#000000"];
 
-export default function ProductCard({ product, isEn }) {
+export default function ProductCard({ product, isEn, locale = "en" }) {
+  const productUrl = `/${locale}/products/${product?.base_slug}${product?.query_params}`;
   const [wishlist, setWishlist] = useState(product?.isWishlisted || false);
 
   return (
@@ -65,46 +67,41 @@ export default function ProductCard({ product, isEn }) {
             size="none"
             className="text-[10px] xl:text-[8px] 2xl:text-[10px] 3xl:text-[12px] leading-normal font-light truncate text-[#bbbcbc] mb-0.5"
           >
-            <Link href={product?.slug}>{product?.category_name}</Link>
+            <Link href={productUrl}>{product?.category_name}</Link>
           </Heading>
           <Heading
             as="div"
             size="none"
             className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-normal truncate text-[#282828] mb-0.5"
           >
-            <Link href={product?.slug}>{isEn ? product?.title : product?.title_ar}</Link>
+            <Link href={productUrl}>{isEn ? product?.title : product?.title_ar}</Link>
           </Heading>
           <Text
             as="div"
             size="none"
             className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-normal truncate text-[#282828] mb-3 xl:mb-4 2xl:mb-6"
           >
-            <Link href={product?.slug}>
+            <Link href={productUrl}>
               AED {product?.price} <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc] ">Inc Tax</span>
             </Link>
           </Text>
           <div className="flex items-center gap-0.5 xl:gap-1">
-            {product?.colorVariant?.length > 0 ? (
+            {product?.hasMoreVariants ? (
               <>
-                {product?.colorVariant?.slice(0, 3).map((color, index) => (
+                {colorVariant?.slice(0, 3).map((color, index) => (
                   <Link
                     key={"color" + index}
-                    href={product?.slug}
+                    href={productUrl}
                     className="w-2.5 h-2.5 rounded-full hover:scale-110 transition-transform duration-300 block"
                     style={{ backgroundColor: color }}
                   ></Link>
                 ))}
-                {product?.colorVariant?.length > 3 && (
-                  <div className="text-[8px] 2xl:text-[10px] leading-normal font-light text-[#28288] pt-0.5">
-                    <Link href={product?.slug}>+ More</Link>
-                  </div>
-                )}
+                <div className="text-[8px] 2xl:text-[10px] leading-normal font-light text-[#28288] pt-0.5">
+                  <Link href={productUrl}>+ More</Link>
+                </div>
               </>
             ) : (
-              <Link
-                href={`/products/${product?.title}`}
-                className="text-[8px] 2xl:text-[10px] leading-normal font-light text-[#28288] hover:text-[#f17423]"
-              >
+              <Link href={productUrl} className="text-[8px] 2xl:text-[10px] leading-normal font-light text-[#28288] hover:text-[#f17423]">
                 View Product
               </Link>
             )}

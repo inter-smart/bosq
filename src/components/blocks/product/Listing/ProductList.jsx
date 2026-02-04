@@ -17,7 +17,7 @@ export default function ProductList({ filters, locale, products, pagination }) {
         <div className="flex flex-wrap -mx-3 sm:-mx-2 xl:-mx-5 2xl:-mx-8 [&>*]:p-3 sm:[&>*]:p-2 xl:[&>*]:p-5 2xl:[&>*]:p-8">
           {products?.map((item) => (
             <div key={item.id} className="w-full 2xs:w-1/2 sm:w-1/2 md:w-1/3">
-              <ProductCard isEn={isEn} product={item} />
+              <ProductCard isEn={isEn} product={item} locale={locale} />
             </div>
           ))}
         </div>

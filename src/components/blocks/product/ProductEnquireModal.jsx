@@ -4,6 +4,11 @@ import React, { useState } from "react";
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/utils/heading";
+import parse from "html-react-parser";
+import ProductEnquiryForm from "@/components/form/product-enquiry-form";
+import { cn } from "@/lib/utils";
+import { X } from "lucide-react";
+import { Text } from "@/components/utils/text";
 
 const ProductEnquireModal = ({ children, data, locale }) => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);

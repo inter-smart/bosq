@@ -60,7 +60,7 @@ export default async function ProductsPage({ params, searchParams }) {
     products = data;
   } else {
     // No filters, use initial listing
-    const { data } = await ProductData.getProductInitialListing();
+    const { data } = await ProductData.getProductList();
     products = data;
   }
 

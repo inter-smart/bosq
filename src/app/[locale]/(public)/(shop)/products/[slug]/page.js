@@ -4,6 +4,7 @@ import ProductHero from "@/components/blocks/product/product-hero";
 import ProductSimilar from "@/components/blocks/product/product-similar";
 import { getMetaData } from "@/lib/api/metaApi";
 import { ProductData } from "@/lib/api/products/ResourcesApi";
+import { notFound, redirect } from "next/navigation";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -417,22 +418,34 @@ const local_data = {
   },
 };
 
-export default async function ProductDetailPage({ params }) {
+export default async function ProductDetailPage({ params, searchParams }) {
   const resolvedParams = await params;
+  const resolvedSearchParams = await searchParams;
   const { locale, slug } = resolvedParams;
 
-  const { data, error } = await ProductData.getProductDetailsBySlug(slug);
+  const variantSku = resolvedSearchParams?.sku || null;
+  const model = resolvedSearchParams?.model || null;
 
-  if (error || !data) {
-    return <NotFound />;
+  // Extract all attr_* params from the URL (e.g., attr_pattern=striped, attr_color=blue)
+  const attributeFilters = {};
+  Object.entries(resolvedSearchParams || {}).forEach(([key, value]) => {
+    if (key.startsWith("attr_") && value) {
+      const attrSlug = key.replace("attr_", "");
+      attributeFilters[attrSlug] = value;
+    }
+  });
+
+  const { data, error } = await ProductData.getProductDetailsBySlug(slug, variantSku, model, attributeFilters);
+
+  if (!data?.initialVariant) {
+    notFound();
   }
 
   return (
     <>
       <ProductHero locale={locale} data={local_data?.heroData} slug={slug} />
-      {/* <ProductDetail locale={locale} data={local_data?.productData} /> */}
-      <ProductDetailCopy locale={locale} initialData={data?.initialModel} productData={data?.product} models={data?.models} />
-      <ProductSimilar locale={locale} data={local_data?.similarData} />
+      <ProductDetailCopy locale={locale} initialData={data?.initialVariant} productData={data?.product} models={data?.models} productSlug={slug} />
+      {/* <ProductSimilar locale={locale} data={local_data?.similarData} /> */}
     </>
   );
 }
