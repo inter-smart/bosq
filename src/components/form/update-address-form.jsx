@@ -32,6 +32,7 @@ import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 import { Heading } from "../utils/heading";
 import { commonValidations } from "@/lib/validations";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 // Validation schema
 const formSchema = z
@@ -104,6 +105,8 @@ const textareaStyle = cn(
 );
 
 export default function UpdateAddressForm({ locale, addressData, onSuccess }) {
+  const { executeRecaptcha } = useGoogleReCaptcha();
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -125,9 +128,6 @@ export default function UpdateAddressForm({ locale, addressData, onSuccess }) {
       shippingState: "",
     },
   });
-
-
-
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(null);
@@ -200,8 +200,6 @@ export default function UpdateAddressForm({ locale, addressData, onSuccess }) {
     fetchShippingStates();
   }, [selectedShippingCountry]);
 
-
-
   useEffect(() => {
     if (addressData) {
       const shippingAddr = addressData.shipping_address;
@@ -226,18 +224,21 @@ export default function UpdateAddressForm({ locale, addressData, onSuccess }) {
     }
   }, [addressData, countries, form]);
 
-
-
   const onSubmit = async (values) => {
     setLoading(true);
     setSuccess(null);
 
     try {
+      const recaptchaToken = await executeRecaptcha("update_address_form");
+
       const { data, error, message } = await fetchFromAPIWithCredentials(
         `/api/frontend/address/${addressData?.id}`,
         {
           method: "PUT",
-          body: JSON.stringify(values),
+          body: JSON.stringify({
+            recaptcha_token: recaptchaToken,
+            ...values,
+          }),
         },
       );
 
@@ -267,13 +268,14 @@ export default function UpdateAddressForm({ locale, addressData, onSuccess }) {
 
   // Set shipping state value after shipping states list loads
   useEffect(() => {
-    if (addressData?.shipping_address?.state?.slug && shippingStates.length > 0) {
+    if (
+      addressData?.shipping_address?.state?.slug &&
+      shippingStates.length > 0
+    ) {
       form.setValue("shippingState", addressData.shipping_address.state.slug);
     }
   }, [shippingStates, addressData, form]);
 
-
-  
   return (
     <Form {...form}>
       <form

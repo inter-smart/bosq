@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import UpdateAddressForm from "@/components/form/update-address-form";
 import MatchingProductDialog from "@/components/common/matching-product-dialog";
+import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
@@ -339,7 +340,7 @@ export default function CheckoutList({ locale, data }) {
                   <ChevronDown
                     className={cn(
                       "size-3 transition",
-                      checkoutList && "rotate-180"
+                      checkoutList && "rotate-180",
                     )}
                   />
                 </button>
@@ -348,7 +349,7 @@ export default function CheckoutList({ locale, data }) {
                 <div
                   className={cn(
                     "w-full bg-white rounded-[4px] border border-[#e0e0e0] p-1 xl:p-2 transition duration-300 ease-in-out",
-                    checkoutList ? "h-auto block" : "h-0 hidden"
+                    checkoutList ? "h-auto block" : "h-0 hidden",
                   )}
                 >
                   {data?.items?.map((item, index) => (
@@ -692,7 +693,7 @@ function AddressBlock({
                       : "pl-10 xl:pl-12 2xl:pl-18",
                     selectedAddressId === item.id
                       ? "bg-[#eaeaea]/60"
-                      : "bg-[#eaeaea]/40"
+                      : "bg-[#eaeaea]/40",
                   )}
                 >
                   {/* Selection Indicator */}
@@ -705,7 +706,7 @@ function AddressBlock({
                       selectedAddressId === item.id
                         ? "border-[#f17423]"
                         : "border-[#a1a1a1]",
-                      item.is_default && "border-black"
+                      item.is_default && "border-black",
                     )}
                   />
 
@@ -828,11 +829,13 @@ function AddressBlock({
           </AlertDialogHeader>
 
           <div className="max-h-[70vh] mask-[linear-gradient(to_bottom,transparent_0%,white_2%,white_98%,transparent_100%)] overflow-y-auto overflow-x-hidden">
-            <UpdateAddressForm
-              locale={locale}
-              addressData={editingAddress}
-              onSuccess={() => setIsEditDialogOpen(false)}
-            />
+            <RecaptchaProvider>
+              <UpdateAddressForm
+                locale={locale}
+                addressData={editingAddress}
+                onSuccess={() => setIsEditDialogOpen(false)}
+              />
+            </RecaptchaProvider>
           </div>
         </AlertDialogContent>
       </AlertDialog>
@@ -857,7 +860,9 @@ function AddAddressBlock({ locale, onCancel, onSuccess }) {
           </Button>
         )}
       </div>
-      <AddressForm locale={locale} onSuccess={onSuccess} />
+      <RecaptchaProvider>
+        <AddressForm locale={locale} onSuccess={onSuccess} />
+      </RecaptchaProvider>
     </div>
   );
 }

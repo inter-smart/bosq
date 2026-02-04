@@ -21,6 +21,7 @@ import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 import { fetchFromAPIWithCredentials } from "@/lib/helper";
 import { commonValidations } from "@/lib/validations";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 // Validation schema
 const formSchema = z.object({
@@ -43,6 +44,7 @@ const inputStyle = cn(
 const errorStyle = cn("text-[#f17423]");
 
 export default function PersonalInformationForm({ data }) {
+  const { executeRecaptcha } = useGoogleReCaptcha();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -80,18 +82,25 @@ export default function PersonalInformationForm({ data }) {
         mobile: mobile,
       };
 
+      const recaptchaToken = await executeRecaptcha(
+        "personal_information_form",
+      );
+
       const result = await fetchFromAPIWithCredentials(
         "/api/frontend/profile/edit-profile",
         {
           method: "PUT",
-          body: JSON.stringify(profileData),
+          body: JSON.stringify({
+            recaptcha_token: recaptchaToken,
+            ...profileData,
+          }),
         },
       );
 
       if (!result.error) {
         setSuccess("Information saved successfully!");
       } else {
-        throw new Error(result.message || "Failed to save information");
+        setSuccess(result.message || "Failed to save information");
       }
     } catch (err) {
       console.error(err);
@@ -101,7 +110,13 @@ export default function PersonalInformationForm({ data }) {
   };
 
   const handleReset = () => {
-    form.reset();
+    form.reset({
+      firstName: "",
+      lastName: "",
+      displayName: "",
+      email: "",
+      phone: "",
+    });
     setSuccess(null);
   };
 
@@ -208,7 +223,8 @@ export default function PersonalInformationForm({ data }) {
               <FormControl>
                 <PhoneInput
                   defaultCountry="ae"
-                  {...field}
+                  value={field.value || ""}
+                  onChange={(value) => field.onChange(value)}
                   className={cn(
                     inputStyle,
                     "w-full p-0 [&_input]:flex-1 [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px] [--react-international-phone-flag-width:20px] [--react-international-phone-flag-height:20px]",

@@ -23,6 +23,7 @@ import {
 import UpdateAddressForm from "@/components/form/update-address-form";
 import dynamic from "next/dynamic";
 import { fetchFromAPIWithCredentials } from "@/lib/helper";
+import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
@@ -35,7 +36,7 @@ export default function AccountAddress({ data, locale, addressData }) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isLoadingEdit, setIsLoadingEdit] = useState(false);
   const [isDeleting, setIsDeleting] = useState(null);
-
+  const [isDeleteItem, setisDeleteItem] = useState(false);
   // Sort addresses: default address first
   const sortedAddresses = addressData
     ? [...addressData].sort((a, b) => {
@@ -83,6 +84,7 @@ export default function AccountAddress({ data, locale, addressData }) {
 
   const handleDelete = async (addressId) => {
     setIsDeleting(addressId);
+    setisDeleteItem(true);
     const {
       data: responseData,
       error,
@@ -98,6 +100,7 @@ export default function AccountAddress({ data, locale, addressData }) {
       router.refresh();
     }
     setIsDeleting(null);
+    setisDeleteItem(false);
   };
 
   return (
@@ -112,7 +115,9 @@ export default function AccountAddress({ data, locale, addressData }) {
           >
             Add New Address
           </Heading>
-          <AddressForm setShowAddForm={setShowAddForm} locale={locale} />
+          <RecaptchaProvider>
+            <AddressForm setShowAddForm={setShowAddForm} locale={locale} />
+          </RecaptchaProvider>
         </div>
       ) : (
         <div className="w-full border border-[#e9e9e9] sm:rounded-e-lg py-3 xl:py-6 3xl:py-9 px-3 xl:px-4 3xl:px-5">
@@ -193,13 +198,12 @@ export default function AccountAddress({ data, locale, addressData }) {
                     // display shipping address if it is a shipping address
                     item?.shipping_address && (
                       <>
-
                         <Heading
                           as="div"
                           size="heading4"
                           className="font-medium text-[#282828] mb-1 xl:mb-2"
                         >
-                        Shipping Address
+                          Shipping Address
                         </Heading>
                         <Heading
                           as="div"
@@ -213,7 +217,8 @@ export default function AccountAddress({ data, locale, addressData }) {
                           size="text3"
                           className="text-[#282828] mb-1 xl:mb-2"
                         >
-                          {item?.shipping_address && parse(item?.shipping_address)}
+                          {item?.shipping_address &&
+                            parse(item?.shipping_address)}
                         </Text>
                       </>
                     )
@@ -304,7 +309,9 @@ export default function AccountAddress({ data, locale, addressData }) {
               >
                 Add New Address
               </Heading>
-              <AddressForm locale={locale} />
+              <RecaptchaProvider>
+                <AddressForm locale={locale} />
+              </RecaptchaProvider>
             </div>
           )}
         </div>
@@ -338,11 +345,14 @@ export default function AccountAddress({ data, locale, addressData }) {
                 </span>
               </div>
             ) : (
+
+              <RecaptchaProvider>
               <UpdateAddressForm
                 locale={locale}
                 addressData={editingAddress}
                 onSuccess={handleEditSuccess}
               />
+              </RecaptchaProvider>
             )}
           </div>
         </AlertDialogContent>

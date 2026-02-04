@@ -33,6 +33,7 @@ import { Heading } from "../utils/heading";
 import { commonValidations } from "@/lib/validations";
 import { fetchFromAPIWithCredentials } from "@/lib/helper";
 import { useRouter } from "next/navigation";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 // Validation schema
 const formSchema = z
@@ -105,6 +106,8 @@ const textareaStyle = cn(
 );
 
 export default function AddressForm({locale, setShowAddForm}) {
+    const { executeRecaptcha } = useGoogleReCaptcha();
+  
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -201,12 +204,16 @@ export default function AddressForm({locale, setShowAddForm}) {
     setSuccess(null);
 
     try {
-   
+         const recaptchaToken = await executeRecaptcha("address_form");
+
       const {data, error, message} = await fetchFromAPIWithCredentials(
         "/api/frontend/address",
         {
           method: "POST",
-          body: JSON.stringify(values),
+          body: JSON.stringify({
+            recaptcha_token: recaptchaToken,
+            ...values
+          }),
         },
       );
 

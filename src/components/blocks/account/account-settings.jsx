@@ -9,6 +9,7 @@ import { OrderEmpty } from "./order-empty";
 import AddressForm from "@/components/form/address-form";
 import PersonalInformationForm from "@/components/form/personal-information-form";
 import PasswordChangeForm from "@/components/form/password-change-form";
+import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
 
 export default function AccountSettings({ data, locale }) {
   return (
@@ -39,7 +40,9 @@ export default function AccountSettings({ data, locale }) {
             >
               Personal Information
             </Heading>
-            <PersonalInformationForm data={data}/>
+            <RecaptchaProvider>
+              <PersonalInformationForm data={data} />
+            </RecaptchaProvider>
             <Heading
               as="h4"
               size="heading5"
@@ -49,7 +52,9 @@ export default function AccountSettings({ data, locale }) {
             </Heading>
             <div className="flex">
               <div className="w-full lg:w-1/2">
+            <RecaptchaProvider>
                 <PasswordChangeForm locale={locale} />
+            </RecaptchaProvider>
               </div>
             </div>
           </div>
