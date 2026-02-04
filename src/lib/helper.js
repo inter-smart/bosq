@@ -31,8 +31,7 @@ export function parseOtherMeta(htmlString) {
   }
 
   // Extract script tags (for JSON-LD)
-  const scriptRegex =
-    /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
+  const scriptRegex = /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
   let scriptMatch;
 
   while ((scriptMatch = scriptRegex.exec(htmlString)) !== null) {
@@ -68,10 +67,7 @@ export async function fetchFromAPI(endpoint, options = {}) {
       return {
         data: null,
         error: true,
-        message:
-          data?.message ||
-          data?.error?.message ||
-          `Error: ${response.status} ${response.statusText}`,
+        message: data?.message || data?.error?.message || `Error: ${response.status} ${response.statusText}`,
       };
     }
 
@@ -89,11 +85,10 @@ export async function fetchFromAPI(endpoint, options = {}) {
   }
 }
 
-
 export async function fetchFromAPIWithCredentials(endpoint, options = {}) {
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
-
   const url = `${API_BASE_URL}${endpoint}`;
+
   const defaultOptions = {
     credentials: "include",
     headers: {
@@ -103,38 +98,38 @@ export async function fetchFromAPIWithCredentials(endpoint, options = {}) {
     ...options,
   };
 
-  try {
-    const response = await fetch(url, defaultOptions);
+  const response = await fetch(url, defaultOptions);
+  const data = await response.json();
 
-    const data = await response.json();
-
-    if (!response.ok) {
-
-      console.log(data)
-      return {
-        data: null,
-        error: true,
-        message:
-          data?.message ||
-          data?.error?.message ||
-          `Error: ${response.status} ${response.statusText}`,
-      };
-    }
-
-    return {
-      data: data?.success ? data?.data : null,
-      error: !data?.success,
-      message: data?.message || data?.error.message || "An error occurred",
-    };
-  } catch (error) {
-    return {
-      data: null,
-      error: true,
-      message: error?.message || "Network error. Please check your connection.",
-    };
+  if (!response.ok || data?.success === false) {
+    throw new Error(data?.message || data?.error?.message || `Error: ${response.status} ${response.statusText}`);
   }
+
+  return data?.data;
 }
 
+export async function fetchWithCredentials(endpoint, options = {}) {
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+  const url = `${API_BASE_URL}${endpoint}`;
+
+  const defaultOptions = {
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+    ...options,
+  };
+
+  const response = await fetch(url, defaultOptions);
+  const data = await response.json();
+
+  if (!response.ok || data?.success === false) {
+    throw new Error(data?.message || data?.error?.message || `Error: ${response.status} ${response.statusText}`);
+  }
+
+  return data?.data;
+}
 
 export async function register(credentials) {
   return fetchFromAPI("/api/frontend/auth/register", {
@@ -182,8 +177,7 @@ export async function forgotPassword(email) {
 // verifyResetPasswordOtp
 
 export async function verifyResetPasswordOtp({ otp, email }) {
-
-  console.log(otp, email)
+  console.log(otp, email);
   return fetchFromAPI("/api/frontend/auth/verify-reset-password-otp", {
     method: "POST",
     body: JSON.stringify({ otp, email }),
@@ -191,7 +185,7 @@ export async function verifyResetPasswordOtp({ otp, email }) {
 }
 
 // reset password
-export async function resetPassword({password}) {
+export async function resetPassword({ password }) {
   const resetToken = localStorage.getItem("reset_token");
   return fetchFromAPI("/api/frontend/auth/reset-password", {
     credentials: "include",
@@ -215,5 +209,71 @@ export async function logout() {
 export async function fetchUserProfileAPI() {
   return fetchFromAPIWithCredentials("/api/frontend/auth/profile", {
     method: "GET",
+  });
+}
+
+export function getOrCreateSessionId() {
+  if (typeof window === "undefined") return null;
+
+  let sessionId = localStorage.getItem("cart_session_id");
+  if (!sessionId) {
+    sessionId = `guest_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
+    localStorage.setItem("cart_session_id", sessionId);
+  }
+  return sessionId;
+}
+
+// Clear session ID (call after login when cart is merged)
+export function clearSessionId() {
+  if (typeof window !== "undefined") {
+    localStorage.removeItem("cart_session_id");
+  }
+}
+
+// Get cart
+export async function fetchCartAPI(sessionId = null) {
+  const queryParams = sessionId ? `?session_id=${sessionId}` : "";
+  return fetchWithCredentials(`/api/frontend/cart${queryParams}`, {
+    method: "GET",
+  });
+}
+
+// Add item to cart
+export async function addToCartAPI({ product_id, variant_id, quantity = 1, session_id }) {
+  return fetchWithCredentials("/api/frontend/cart/add", {
+    method: "POST",
+    body: JSON.stringify({ product_id, variant_id, quantity, session_id }),
+  });
+}
+
+// Update cart item quantity
+export async function updateCartItemAPI({ itemId, quantity, variant_id, session_id }) {
+  return fetchWithCredentials(`/api/frontend/cart/item/${itemId}`, {
+    method: "PUT",
+    body: JSON.stringify({ quantity, variant_id, session_id }),
+  });
+}
+
+// Remove item from cart
+export async function removeCartItemAPI({ itemId, session_id }) {
+  const queryParams = session_id ? `?session_id=${session_id}` : "";
+  return fetchWithCredentials(`/api/frontend/cart/item/${itemId}${queryParams}`, {
+    method: "DELETE",
+  });
+}
+
+// Clear cart
+export async function clearCartAPI(session_id = null) {
+  const queryParams = session_id ? `?session_id=${session_id}` : "";
+  return fetchWithCredentials(`/api/frontend/cart/clear${queryParams}`, {
+    method: "DELETE",
+  });
+}
+
+// Merge guest cart into user cart (call after login)
+export async function mergeCartAPI(session_id) {
+  return fetchFromAPIWithCredentials("/api/frontend/cart/merge", {
+    method: "POST",
+    body: JSON.stringify({ session_id }),
   });
 }

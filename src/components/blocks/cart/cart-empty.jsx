@@ -1,16 +1,18 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
-import {
-  Empty,
-  EmptyContent,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from "@/components/ui/empty";
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { Heading } from "@/components/utils/heading";
 import { Text } from "@/components/utils/text";
+import { useRouter } from "next/navigation";
 
-export default function CartEmpty() {
+export default function CartEmpty({ locale }) {
+  const router = useRouter();
+
+  const goProducts = () => {
+    router.push(`/${locale}/products`);
+  };
+
   return (
     <div className="py-[30px] sm:py-[40px] xl:py-[60px] 2xl:py-[100px]">
       <Empty>
@@ -28,9 +30,10 @@ export default function CartEmpty() {
         </EmptyHeader>
         <EmptyContent>
           <Button
-            variant={"black"}
+            onclick={goProducts}
+            variant={"button"}
             disabled={false}
-            className="min-w-[168px] xl:min-w-[190px] 2xl:min-w-[220px] mt-2"
+            className="min-w-[168px] xl:min-w-[190px] 2xl:min-w-[220px] bg-black text-white mt-2"
           >
             See All products Here
           </Button>

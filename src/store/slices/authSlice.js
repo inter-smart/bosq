@@ -10,6 +10,9 @@ import {
   logout as logoutAPI,
   fetchFromAPI,
   fetchUserProfileAPI,
+  getOrCreateSessionId,
+  mergeCartAPI,
+  clearSessionId,
 } from "@/lib/helper";
 
 // Async Thunks
@@ -23,6 +26,18 @@ export const loginUser = createAsyncThunk(
 
       if (error) {
         return rejectWithValue(message);
+      }
+
+      // After successful login, try to merge guest cart if exists
+      const sessionId = getOrCreateSessionId();
+      if (sessionId) {
+        try {
+          await mergeCartAPI(sessionId);
+          clearSessionId();
+        } catch (mergeError) {
+          // Don't fail login if cart merge fails
+          console.error("Cart merge failed:", mergeError);
+        }
       }
 
       return {
