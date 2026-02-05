@@ -52,4 +52,19 @@ export const ProfileData = {
       return sendError(error);
     }
   },
+
+
+
+  getCoupons: async()=>{
+    try {
+      const data = await fetchApi("/api/frontend/coupons", {
+        method: "GET",
+        credentials: "include"
+      })
+      return sendSuccess(data?.data);
+    } catch (error) {
+      return sendError(error)
+    }
+  }
+
 };

@@ -2,6 +2,8 @@ import AccountCoupons from "@/components/blocks/account/account-coupons";
 import AccountLayout from "@/components/blocks/account/account-layout";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getMetaData } from "@/lib/api/metaApi";
+import { ProfileData } from "@/lib/api/profile/profileApi";
+import NotFound from "../../not-found/page";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -127,6 +129,15 @@ const local_data = {
 export default async function CouponsPage({ params }) {
   const resolvedParams = await params;
   const { locale } = resolvedParams;
+
+  const { data, error } = await ProfileData.getCoupons();
+
+  console.log(data)
+
+  if (error) {
+    <NotFound />
+  }
+
   return (
     <>
       <ProductHero
@@ -136,7 +147,7 @@ export default async function CouponsPage({ params }) {
       />
 
       <AccountLayout locale={locale}>
-        <AccountCoupons locale={locale} data={local_data?.couponsData} />
+        <AccountCoupons locale={locale} data={local_data?.couponsData} couponData = {data?.coupons} />
       </AccountLayout>
     </>
   );
