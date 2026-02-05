@@ -14,8 +14,8 @@ export default function HomeEnquiry({ data, locale }) {
           <div className="w-full md:w-[268px] xl:w-[520px] 2xl:w-[640px] 3xl:w-[800px] max-md:mb-4">
             <div className="w-full aspect-4/2 md:aspect-4/3 overflow-hidden">
               <Image
-                src={data?.media?.media_path}
-                alt={data?.media?.media_alt}
+                src={data?.media?.path}
+                alt={data?.media?.alt}
                 width={810}
                 height={520}
                 className="w-full h-full object-cover hover:scale-110 transition duration-300"

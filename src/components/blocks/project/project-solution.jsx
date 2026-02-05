@@ -5,6 +5,7 @@ import React from "react";
 import parse from "html-react-parser";
 
 export default function ProjectSolution({ locale, data }) {
+  console.log(data)
   return (
     <section className="w-full block py-[30px] sm:py-[40px] xl:py-[60px] 2xl:py-[80px] bg-[#f4f4f4]">
       <div className="container">
@@ -16,8 +17,8 @@ export default function ProjectSolution({ locale, data }) {
             )}
           >
             <Image
-              src={data?.media?.media_path}
-              alt={data?.media?.media_alt}
+              src={data?.media?.path ?? "/images/placeholder.jpg"}
+              alt={data?.media?.alt}
               width={768}
               height={468}
               className="w-full h-full object-cover hover:scale-105 transition duration-300"

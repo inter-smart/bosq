@@ -6,6 +6,9 @@ import { Skeleton } from "../../ui/skeleton";
 import { Text } from "@/components/utils/text";
 
 export default function ProjectCard({ data }) {
+  
+  console.log("ccp",data)
+
   return (
     <Suspense fallback={<ProjectSkeleton />}>
       <div className="group w-full h-full flex flex-col justify-between">
@@ -14,8 +17,8 @@ export default function ProjectCard({ data }) {
           className="w-full block aspect-square overflow-hidden border border-gray-100 bg-black mb-1.5 sm:mb-3 xl:mb-4"
         >
           <Image
-            src={data?.thumbnail || "/images/placeholder.jpg"}
-            alt={data?.title}
+            src={data?.media?.media_path || "/images/placeholder.jpg"}
+            alt={data?.media_alt}
             width={600}
             height={600}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-80"
