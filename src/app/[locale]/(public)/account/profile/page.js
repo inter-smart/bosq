@@ -59,8 +59,7 @@ export default async function ProfilePage({ params }) {
 
   const { data, error } = await ProfileData.getMyProfile();
 
-  console.log(error)
-
+  
   if (error) {
     return notFound();
   }
@@ -71,7 +70,7 @@ export default async function ProfilePage({ params }) {
       <ProductHero
         locale={locale}
         data={local_data?.heroData}
-        slug={"My Profile"}
+        slug={locale === "en"? "My Profile": "ملفي الشخصي"}
       />
       <AccountLayout locale={locale}>
         <AccountProfile

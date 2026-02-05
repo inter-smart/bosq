@@ -55,3 +55,32 @@ export const getSiteData = async () => {
   }
 };
 
+
+
+// projects
+export const getProjectData = async () => {
+  try {
+    const data = await apiClient(`/api/frontend/projects`);
+    return sendSuccess(data?.data);
+  } catch (error) {
+    return sendError(error);
+  }
+};
+
+export const getProjectListBySlug = async ({slug}) => {
+  try {
+    const data = await apiClient(`/api/frontend/projects/project-list?slug=${slug}`);
+    return sendSuccess(data?.data);
+  } catch (error) {
+    return sendError(error);
+  }
+};
+
+export const getProjectDetails = async ({slug}) => {
+  try {
+    const data = await apiClient(`/api/frontend/projects/project-details?slug=${slug}`);
+    return sendSuccess(data?.data);
+  } catch (error) {
+    return sendError(error);
+  }
+};

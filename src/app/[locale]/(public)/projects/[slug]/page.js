@@ -5,6 +5,7 @@ import ProductSimilar from "@/components/blocks/product/product-similar";
 import ProjectDetail from "@/components/blocks/project/project-detail";
 import ProjectSolution from "@/components/blocks/project/project-solution";
 import ProjectSpecialized from "@/components/blocks/project/project-specialized";
+import { getProjectDetails } from "@/lib/api/CMS/basicGet";
 import { getMetaData } from "@/lib/api/metaApi";
 
 export async function generateMetadata({ params }) {
@@ -75,6 +76,14 @@ const local_data = {
       },
       {
         id: 2,
+        media: {
+          type: "image",
+          media_path: "/images/projects-gallery-2.jpg",
+          media_alt: "projects-gallery-2",
+        },
+      },
+        {
+        id: 4,
         media: {
           type: "image",
           media_path: "/images/projects-gallery-2.jpg",
@@ -180,6 +189,14 @@ const local_data = {
 export default async function ProjectDetailPage({ params }) {
   const resolvedParams = await params;
   const { locale, slug } = resolvedParams;
+
+
+
+
+  const {data, error} = await getProjectDetails({slug})
+
+
+
   return (
     <>
       <ProductHero

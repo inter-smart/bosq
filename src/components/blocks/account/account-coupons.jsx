@@ -9,11 +9,9 @@ import { cn } from "@/lib/utils";
 import { OrderEmpty } from "./order-empty";
 import { toast } from "sonner";
 
-export default function AccountCoupons({ data, locale, couponData }) {
-
+export default function AccountCoupons({ locale, couponData }) {
   const isEn = locale === "en";
   const COPY_TOAST_ID = "copy-toast";
-
 
   const handleCopy = (code) => {
     try {
@@ -50,7 +48,7 @@ export default function AccountCoupons({ data, locale, couponData }) {
             size={"heading5"}
             className="font-semibold text-[#282828] mb-2 xl:mb-4"
           >
-            Coupons & Offers
+            {isEn ? "Coupons & Offers" : "كوبونات وعروض"}
           </Heading>
 
           <div className="flex flex-wrap -mx-1 xl:-mx-1.5 2xl:-mx-2 [&>*]:p-1 xl:[&>*]:p-1.5 2xl:[&>*]:p-2">

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Text } from "@/components/utils/text";
 
 export default function ProjectHero({ locale, data }) {
+  console.log(data?.media?.desktop_path)
   return (
     <section className="w-full block">
       <div className="w-full aspect-6/4 sm:aspect-1920/740 overflow-hidden bg-black flex items-center mt-[10px] sm:mt-[15px] xl:mt-[20px] 2xl:mt-[30px] relative z-0">

@@ -143,11 +143,11 @@ export default async function CouponsPage({ params }) {
       <ProductHero
         locale={locale}
         data={local_data?.heroData}
-        slug={"My Profile"}
+        slug={locale === "en"? "My Profile": "ملفي الشخصي"}
       />
 
       <AccountLayout locale={locale}>
-        <AccountCoupons locale={locale} data={local_data?.couponsData} couponData = {data?.coupons} />
+        <AccountCoupons locale={locale} couponData = {data?.coupons} />
       </AccountLayout>
     </>
   );
