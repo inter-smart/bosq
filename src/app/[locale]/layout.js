@@ -75,14 +75,7 @@ export default async function RootLayout({ children, params }) {
   const dir = localeDirection[resolvedParams.locale];
 
   return (
-    <html
-      lang={locale}
-      dir={dir}
-      className={cn(
-        locale === "ar" ? cairo.className : heroNew.className,
-        "antialiased",
-      )}
-    >
+    <html lang={locale} dir={dir} className={cn(locale === "ar" ? cairo.className : heroNew.className, "antialiased")}>
       <body className={locale === "ar" ? "font-cairo" : "font-hero"}>
         <ReduxProvider>
           <NuqsAdapter>{children}</NuqsAdapter>

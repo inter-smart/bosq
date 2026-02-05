@@ -6,7 +6,6 @@ import Image from "next/image";
 import parse from "html-react-parser";
 import { Heading } from "@/components/utils/heading";
 import { Text } from "@/components/utils/text";
-import { ChevronDown, ChevronUp, Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -23,6 +22,7 @@ import "yet-another-react-lightbox/plugins/thumbnails.css";
 import ProductEnquireModal from "./ProductEnquireModal";
 import ProductDetails from "./ProductDetails";
 import ProductChooseDesign from "./ProductChooseDesign";
+import PriceAndCart from "./PriceAndCart";
 
 const enq = {
   title: "Enquire Now",
@@ -31,10 +31,7 @@ const enq = {
 };
 
 export default function ProductDetailCopy({ locale, initialData, productData, models, productSlug }) {
-  console.log("initialData", initialData?.title);
   const [isModelLoading, setIsModelLoading] = useState(false);
-
-  console.log("initialData", initialData);
 
   const productImages = initialData?.images || [];
   const currentModelId = initialData?.model_id;
@@ -78,24 +75,6 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
 
     emblaMainApi.on("select", onSelect).on("reInit", onSelect);
   }, [emblaMainApi, onSelect]);
-
-  const [quantity, setQuantity] = useState(1);
-
-  const handleIncrement = () => {
-    setQuantity((prev) => prev + 1);
-  };
-
-  const handleDecrement = () => {
-    if (quantity > 1) {
-      setQuantity((prev) => prev - 1);
-    }
-  };
-
-  const handleChange = (e) => {
-    const value = e.target.value.replace(/[^0-9]/, "");
-    const numValue = value === "" ? 1 : parseInt(value);
-    setQuantity(numValue);
-  };
 
   const [openProduct, setOpenProduct] = useState(false);
 
@@ -299,42 +278,8 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
               >
                 AED {initialData?.price} <span>Inc Tax</span>
               </Heading>
-              <div className="w-full flex flex-wrap gap-2.5 mb-3 xl:mb-3 2xl:mb-5">
-                <div className="w-[60px] xl:w-[60px] 2xl:w-[80px] h-[35px] lg:h-[40px] 2xl:h-[45px] 3xl:h-[55px] flex items-center rounded-[6px] overflow-hidden bg-white border border-[#dedede]">
-                  <input
-                    type="text"
-                    value={quantity}
-                    onChange={handleChange}
-                    className="text-[12px] xl:text-[14px] leading-none font-normal text-center text-black w-8/10 overflow-hidden focus:outline-none"
-                  />
-                  <div className="w-4/10 flex flex-col align-center justify-center">
-                    <button
-                      onClick={handleDecrement}
-                      className="transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                      disabled={quantity <= 1}
-                    >
-                      <ChevronUp className="size-3 text-black" />
-                    </button>
 
-                    <button onClick={handleIncrement} className="transition-colors" disabled={quantity == initialData?.stock}>
-                      <ChevronDown className="size-3 text-black" />
-                    </button>
-                  </div>
-                </div>
-                <Button variant={"black"} className="flex-1 max-w-[320px] xl:max-w-[768px]" asChild>
-                  <Link href={"/"}>
-                    <Image src={"/images/icon-cart.svg"} alt={"icon-cart"} width={15} height={15} className="w-[15px]" />
-                    Add to Cart
-                  </Link>
-                </Button>
-              </div>
-
-              <div className="w-full mb-1 xl:mb-2">
-                <Text as="div" size="text3" className="text-[#282828] max-w-[95%]">
-                  {"Total: $"}
-                  <span className="font-medium">{(quantity * initialData?.price).toFixed(2)}</span>
-                </Text>
-              </div>
+              <PriceAndCart stock={initialData?.stock} price={initialData?.price} item={initialData} />
 
               <div className="flex flex-wrap items-center justify-between gap-4 2xl:gap-6 mb-2 xl:mb-3 2xl:mb-5 max-lg:flex-wrap-reverse">
                 <div className="flex lg:flex-1">
