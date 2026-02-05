@@ -7,9 +7,31 @@ import parse from "html-react-parser";
 
 import { cn } from "@/lib/utils";
 import { OrderEmpty } from "./order-empty";
+import { toast } from "sonner";
 
 export default function AccountCoupons({ data, locale, couponData }) {
+
   const isEn = locale === "en";
+  const COPY_TOAST_ID = "copy-toast";
+
+
+  const handleCopy = (code) => {
+    try {
+      navigator.clipboard.writeText(code);
+      toast.success("Copied to clipboard", {
+        id: COPY_TOAST_ID,
+        description: `"${code}"`,
+        duration: 2000,
+        position: "bottom-right",
+      });
+    } catch (error) {
+      toast.error("Copy failed", {
+        id: COPY_TOAST_ID,
+        description: "Your browser does not support clipboard access",
+      });
+    }
+  };
+
   return (
     <>
       {couponData?.length === 0 ? (
@@ -43,12 +65,12 @@ export default function AccountCoupons({ data, locale, couponData }) {
                     item?.is_expired && "opacity-50 pointer-events-none",
                   )}
                 >
-                  <div className="w-full lg:w-1/12">
+                  <div className="w-full lg:w-2/12">
                     <div className="text-[10px] 2xl:text-[12px] leading-normal font-semibold text-white bg-black rounded-[4px] py-0.5 px-1.5 inline-block">
                       {item?.discount_value}
                     </div>
                   </div>
-                  <div className="w-full lg:w-7/12">
+                  <div className="w-full lg:w-6/12">
                     <Text
                       as="div"
                       size="none"
@@ -79,9 +101,7 @@ export default function AccountCoupons({ data, locale, couponData }) {
                       )}
                       {item?.code && (
                         <div
-                          onClick={() =>
-                            navigator.clipboard.writeText(item?.code)
-                          }
+                          onClick={() => handleCopy(item?.code)}
                           className="text-[10px] xl:text-[12px] leading-normal cursor-pointer font-medium text-[#282828] bg-[#f2f2f2] border border-[#ccc] rounded-[4px] py-0.5 px-2.5 flex gap-1 xl:gap-1.5 hover:bg-[#aaa] transition duration-300"
                         >
                           <Image
