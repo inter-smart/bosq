@@ -10,45 +10,34 @@ import {
   logout as logoutAPI,
   fetchFromAPI,
   fetchUserProfileAPI,
-  getOrCreateSessionId,
-  mergeCartAPI,
-  clearSessionId,
 } from "@/lib/helper";
+import { mergeCartAPI } from "@/lib/api/cart/cartApi";
 
 // Async Thunks
 
 // Login user
-export const loginUser = createAsyncThunk(
-  "auth/login",
-  async (credentials, { rejectWithValue }) => {
-    try {
-      const { data, error, message } = await loginAPI(credentials);
+export const loginUser = createAsyncThunk("auth/login", async (credentials, { rejectWithValue }) => {
+  try {
+    const { data, error, message } = await loginAPI(credentials);
 
-      if (error) {
-        return rejectWithValue(message);
-      }
-
-      // After successful login, try to merge guest cart if exists
-      const sessionId = getOrCreateSessionId();
-      if (sessionId) {
-        try {
-          await mergeCartAPI(sessionId);
-          clearSessionId();
-        } catch (mergeError) {
-          // Don't fail login if cart merge fails
-          console.error("Cart merge failed:", mergeError);
-        }
-      }
-
-      return {
-        accessToken: data.accessToken,
-        user: data.user || null,
-      };
-    } catch (error) {
-      return rejectWithValue(error.message || "Login failed");
+    if (error) {
+      return rejectWithValue(message);
     }
-  },
-);
+
+    try {
+      await mergeCartAPI();
+    } catch (mergeError) {
+      console.error("Cart merge failed:", mergeError);
+    }
+
+    return {
+      accessToken: data.accessToken,
+      user: data.user || null,
+    };
+  } catch (error) {
+    return rejectWithValue(error.message || "Login failed");
+  }
+});
 
 // Logout user
 export const logoutUser = createAsyncThunk("auth/logout", async () => {
@@ -58,179 +47,151 @@ export const logoutUser = createAsyncThunk("auth/logout", async () => {
 });
 
 // Register user
-export const registerUser = createAsyncThunk(
-  "auth/register",
-  async (credentials, { rejectWithValue }) => {
-    try {
-      const { data, error, message } = await registerAPI(credentials);
+export const registerUser = createAsyncThunk("auth/register", async (credentials, { rejectWithValue }) => {
+  try {
+    const { data, error, message } = await registerAPI(credentials);
 
-      localStorage.setItem("email", data.email);
-      if (error) {
-        return rejectWithValue(message);
-      }
-
-      return {
-        email: data.email || credentials.email,
-        ...data,
-      };
-    } catch (error) {
-      return rejectWithValue(error.message || "Registration failed");
+    localStorage.setItem("email", data.email);
+    if (error) {
+      return rejectWithValue(message);
     }
-  },
-);
+
+    return {
+      email: data.email || credentials.email,
+      ...data,
+    };
+  } catch (error) {
+    return rejectWithValue(error.message || "Registration failed");
+  }
+});
 
 // Verify OTP (registration flow)
-export const verifyOtpThunk = createAsyncThunk(
-  "auth/verifyOtp",
-  async ({ otp, email }, { rejectWithValue, getState }) => {
-    try {
-      const state = getState();
-      const verifyEmail =
-        email || state.auth.pendingEmail || localStorage.setItem("email");
+export const verifyOtpThunk = createAsyncThunk("auth/verifyOtp", async ({ otp, email }, { rejectWithValue, getState }) => {
+  try {
+    const state = getState();
+    const verifyEmail = email || state.auth.pendingEmail || localStorage.setItem("email");
 
-      const { data, error, message } = await verifyOtpAPI({
-        otp,
-        email: verifyEmail,
-      });
+    const { data, error, message } = await verifyOtpAPI({
+      otp,
+      email: verifyEmail,
+    });
 
-      if (error) {
-        return rejectWithValue(message);
-      }
-
-      if (data) {
-        localStorage.removeItem("email");
-      }
-
-      return {
-        tempToken: data.tempToken,
-      };
-    } catch (error) {
-      return rejectWithValue(error.message || "OTP verification failed");
+    if (error) {
+      return rejectWithValue(message);
     }
-  },
-);
+
+    if (data) {
+      localStorage.removeItem("email");
+    }
+
+    return {
+      tempToken: data.tempToken,
+    };
+  } catch (error) {
+    return rejectWithValue(error.message || "OTP verification failed");
+  }
+});
 
 // Create password (after OTP verification)
-export const createPasswordThunk = createAsyncThunk(
-  "auth/createPassword",
-  async (password, { rejectWithValue, getState }) => {
-    try {
-      const { auth } = getState();
+export const createPasswordThunk = createAsyncThunk("auth/createPassword", async (password, { rejectWithValue, getState }) => {
+  try {
+    const { auth } = getState();
 
-      const { data, error, message } = await fetchFromAPI(
-        "/api/frontend/auth/create-password",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.tempToken}`,
-          },
-          body: JSON.stringify({ password }),
-        },
-      );
+    const { data, error, message } = await fetchFromAPI("/api/frontend/auth/create-password", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${auth.tempToken}`,
+      },
+      body: JSON.stringify({ password }),
+    });
 
-      if (error) {
-        return rejectWithValue(message);
-      }
-
-      return data;
-    } catch (error) {
-      return rejectWithValue(error.message || "Password creation failed");
+    if (error) {
+      return rejectWithValue(message);
     }
-  },
-);
+
+    return data;
+  } catch (error) {
+    return rejectWithValue(error.message || "Password creation failed");
+  }
+});
 
 // Forgot password - send OTP
-export const forgotPasswordThunk = createAsyncThunk(
-  "auth/forgotPassword",
-  async (email, { rejectWithValue }) => {
-    try {
-      const { data, error, message } = await forgotPasswordAPI(email);
+export const forgotPasswordThunk = createAsyncThunk("auth/forgotPassword", async (email, { rejectWithValue }) => {
+  try {
+    const { data, error, message } = await forgotPasswordAPI(email);
 
-      if (error) {
-        return rejectWithValue(message);
-      }
-
-      return { email, ...data };
-    } catch (error) {
-      return rejectWithValue(error.message || "Failed to send reset email");
+    if (error) {
+      return rejectWithValue(message);
     }
-  },
-);
+
+    return { email, ...data };
+  } catch (error) {
+    return rejectWithValue(error.message || "Failed to send reset email");
+  }
+});
 
 // Verify reset password OTP
-export const verifyResetOtpThunk = createAsyncThunk(
-  "auth/verifyResetOtp",
-  async ({ otp, email }, { rejectWithValue, getState }) => {
-    try {
-      const state = getState();
-      const verifyEmail = email || state.auth.pendingEmail;
+export const verifyResetOtpThunk = createAsyncThunk("auth/verifyResetOtp", async ({ otp, email }, { rejectWithValue, getState }) => {
+  try {
+    const state = getState();
+    const verifyEmail = email || state.auth.pendingEmail;
 
-      const { data, error, message } = await verifyResetPasswordOtpAPI({
-        otp,
-        email: verifyEmail,
-      });
+    const { data, error, message } = await verifyResetPasswordOtpAPI({
+      otp,
+      email: verifyEmail,
+    });
 
-      if (error) {
-        return rejectWithValue(message);
-      }
-
-      return {
-        resetToken: data.resetToken,
-      };
-    } catch (error) {
-      return rejectWithValue(error.message || "Reset OTP verification failed");
+    if (error) {
+      return rejectWithValue(message);
     }
-  },
-);
+
+    return {
+      resetToken: data.resetToken,
+    };
+  } catch (error) {
+    return rejectWithValue(error.message || "Reset OTP verification failed");
+  }
+});
 
 // Reset password
-export const resetPasswordThunk = createAsyncThunk(
-  "auth/resetPassword",
-  async (password, { rejectWithValue, getState }) => {
-    try {
-      const { auth } = getState();
+export const resetPasswordThunk = createAsyncThunk("auth/resetPassword", async (password, { rejectWithValue, getState }) => {
+  try {
+    const { auth } = getState();
 
-      const { data, error, message } = await fetchFromAPI(
-        "/api/frontend/auth/reset-password",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.resetToken}`,
-          },
-          body: JSON.stringify({ password }),
-        },
-      );
+    const { data, error, message } = await fetchFromAPI("/api/frontend/auth/reset-password", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${auth.resetToken}`,
+      },
+      body: JSON.stringify({ password }),
+    });
 
-      if (error) {
-        return rejectWithValue(message);
-      }
-
-      return data;
-    } catch (error) {
-      return rejectWithValue(error.message || "Password reset failed");
+    if (error) {
+      return rejectWithValue(message);
     }
-  },
-);
+
+    return data;
+  } catch (error) {
+    return rejectWithValue(error.message || "Password reset failed");
+  }
+});
 
 // Fetch user profile
-export const fetchUserProfile = createAsyncThunk(
-  "frontend/profile/my-profile",
-  async (_, { rejectWithValue }) => {
-    try {
-      const { data, error, message } = await fetchUserProfileAPI();
+export const fetchUserProfile = createAsyncThunk("frontend/profile/my-profile", async (_, { rejectWithValue }) => {
+  try {
+    const { data, error, message } = await fetchUserProfileAPI();
 
-      if (error) {
-        return rejectWithValue(message);
-      }
-
-      return data;
-    } catch (error) {
-      return rejectWithValue(error.message || "Failed to fetch profile");
+    if (error) {
+      return rejectWithValue(message);
     }
-  },
-);
+
+    return data;
+  } catch (error) {
+    return rejectWithValue(error.message || "Failed to fetch profile");
+  }
+});
 
 // Initial state
 const initialState = {
@@ -410,13 +371,6 @@ const authSlice = createSlice({
   },
 });
 
-export const {
-  clearError,
-  clearAuth,
-  setTempToken,
-  setResetToken,
-  setPendingEmail,
-  setUser,
-} = authSlice.actions;
+export const { clearError, clearAuth, setTempToken, setResetToken, setPendingEmail, setUser } = authSlice.actions;
 
 export default authSlice.reducer;

@@ -1,34 +1,14 @@
 "use client";
 
+import { fetchCartAPI, addToCartAPI, updateCartItemAPI, removeCartItemAPI, clearCartAPI, mergeCartAPI } from "@/lib/api/cart/cartApi";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import {
-  fetchCartAPI,
-  addToCartAPI,
-  updateCartItemAPI,
-  removeCartItemAPI,
-  clearCartAPI,
-  mergeCartAPI,
-  getOrCreateSessionId,
-  clearSessionId,
-} from "@/lib/helper";
-
-// Helper to get session ID for guest users
-const getSessionId = (getState) => {
-  const { auth } = getState();
-  // If user is authenticated, don't use session_id
-  if (auth.isAuthenticated) {
-    return null;
-  }
-  return getOrCreateSessionId();
-};
 
 // Async Thunks
 
 // Fetch cart
 export const fetchCart = createAsyncThunk("cart/fetchCart", async (_, { getState, rejectWithValue }) => {
   try {
-    const sessionId = getSessionId(getState);
-    const res = await fetchCartAPI(sessionId);
+    const res = await fetchCartAPI();
 
     return res;
   } catch (error) {
@@ -39,12 +19,10 @@ export const fetchCart = createAsyncThunk("cart/fetchCart", async (_, { getState
 // Add item to cart
 export const addToCart = createAsyncThunk("cart/addToCart", async ({ product_id, variant_id, quantity = 1 }, { getState, rejectWithValue }) => {
   try {
-    const sessionId = getSessionId(getState);
     const data = await addToCartAPI({
       product_id,
       variant_id,
       quantity,
-      session_id: sessionId,
     });
 
     return data;
@@ -56,12 +34,10 @@ export const addToCart = createAsyncThunk("cart/addToCart", async ({ product_id,
 // Update cart item quantity
 export const updateCartItem = createAsyncThunk("cart/updateCartItem", async ({ itemId, quantity, variant_id }, { getState, rejectWithValue }) => {
   try {
-    const sessionId = getSessionId(getState);
     const res = await updateCartItemAPI({
       itemId,
       quantity,
       variant_id,
-      session_id: sessionId,
     });
 
     return res;
@@ -74,10 +50,8 @@ export const updateCartItem = createAsyncThunk("cart/updateCartItem", async ({ i
 // Remove item from cart
 export const removeFromCart = createAsyncThunk("cart/removeFromCart", async ({ itemId }, { getState, rejectWithValue }) => {
   try {
-    const sessionId = getSessionId(getState);
     const data = await removeCartItemAPI({
       itemId,
-      session_id: sessionId,
     });
 
     return data;
@@ -89,8 +63,7 @@ export const removeFromCart = createAsyncThunk("cart/removeFromCart", async ({ i
 // Clear cart
 export const clearCart = createAsyncThunk("cart/clearCart", async (_, { getState, rejectWithValue }) => {
   try {
-    const sessionId = getSessionId(getState);
-    const data = await clearCartAPI(sessionId);
+    const data = await clearCartAPI();
 
     return data;
   } catch (error) {
@@ -101,16 +74,7 @@ export const clearCart = createAsyncThunk("cart/clearCart", async (_, { getState
 // Merge guest cart into user cart (call after login)
 export const mergeGuestCart = createAsyncThunk("cart/mergeGuestCart", async (_, { rejectWithValue }) => {
   try {
-    const sessionId = getOrCreateSessionId();
-    if (!sessionId) {
-      // No guest cart to merge
-      return null;
-    }
-
-    const data = await mergeCartAPI(sessionId);
-
-    // Clear guest session ID after successful merge
-    clearSessionId();
+    const data = await mergeCartAPI();
 
     return data;
   } catch (error) {
