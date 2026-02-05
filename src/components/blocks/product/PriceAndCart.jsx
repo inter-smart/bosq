@@ -7,22 +7,29 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "@/store/slices/cartSlice";
 import { selectCartIsUpdating } from "@/store/selectors/cart/selectors";
+import { toast } from "sonner";
 
 const PriceAndCart = ({ stock, price, item }) => {
   const dispatch = useDispatch();
   const isUpdating = useSelector(selectCartIsUpdating);
   const [quantity, setQuantity] = useState(1);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     const { product_id, id: variant_id } = item;
 
-    dispatch(
-      addToCart({
-        product_id,
-        variant_id,
-        quantity,
-      }),
-    );
+    try {
+      await dispatch(
+        addToCart({
+          product_id,
+          variant_id,
+          quantity,
+        }),
+      ).unwrap();
+      toast.success("Item added to cart");
+    } catch (error) {
+      // error is already the message string (from rejectWithValue or throw)
+      toast.error(error || "Failed to add item to cart");
+    }
   };
 
   const handleIncrement = () => {
@@ -59,7 +66,11 @@ const PriceAndCart = ({ stock, price, item }) => {
               <ChevronUp className="size-3 text-black" />
             </button>
 
-            <button onClick={handleIncrement} className="transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled={quantity >= stock}>
+            <button
+              onClick={handleIncrement}
+              className="transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={quantity >= stock}
+            >
               <ChevronDown className="size-3 text-black" />
             </button>
           </div>

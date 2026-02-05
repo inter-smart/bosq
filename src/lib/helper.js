@@ -98,14 +98,31 @@ export async function fetchFromAPIWithCredentials(endpoint, options = {}) {
     ...options,
   };
 
-  const response = await fetch(url, defaultOptions);
-  const data = await response.json();
+  try {
+    const response = await fetch(url, defaultOptions);
 
-  if (!response.ok || data?.success === false) {
-    throw new Error(data?.message || data?.error?.message || `Error: ${response.status} ${response.statusText}`);
+    const data = await response.json();
+
+    if (!response.ok) {
+      return {
+        data: null,
+        error: true,
+        message: data?.message || data?.error?.message || `Error: ${response.status} ${response.statusText}`,
+      };
+    }
+
+    return {
+      data: data?.success ? data?.data : null,
+      error: !data?.success,
+      message: data?.message || data?.error?.message || "An error occurred",
+    };
+  } catch (error) {
+    return {
+      data: null,
+      error: true,
+      message: error?.message || "Network error. Please check your connection.",
+    };
   }
-
-  return data?.data;
 }
 
 export async function fetchWithCredentials(endpoint, options = {}) {
@@ -217,7 +234,7 @@ export function getOrCreateSessionId() {
 
   let sessionId = localStorage.getItem("cart_session_id");
   if (!sessionId) {
-    sessionId = `guest_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
+    sessionId = crypto.randomUUID(); // UUID v4
     localStorage.setItem("cart_session_id", sessionId);
   }
   return sessionId;

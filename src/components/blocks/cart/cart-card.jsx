@@ -35,6 +35,7 @@ export default function CartCard({ product }) {
               variant_id: product.variant_id,
             }),
           ).unwrap();
+          toast.success("Quantity updated");
         } catch (error) {
           // error is already the message string (from rejectWithValue or throw)
           toast.error(error || "Failed to update cart item");
@@ -44,9 +45,14 @@ export default function CartCard({ product }) {
     [dispatch, product?.id, product?.variant_id, product?.quantity],
   );
 
-  const handleRemove = () => {
+  const handleRemove = async () => {
     setIsRemoving(true);
-    dispatch(removeFromCart({ itemId: product.id }));
+    try {
+      await dispatch(removeFromCart({ itemId: product.id })).unwrap();
+      toast.success("Item removed from cart");
+    } catch (error) {
+      toast.error(error || "Failed to remove item from cart");
+    }
   };
 
   const handleIncrement = () => {
