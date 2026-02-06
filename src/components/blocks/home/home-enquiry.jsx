@@ -7,6 +7,8 @@ import { cn } from "@/lib/utils";
 import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
 
 export default function HomeEnquiry({ data, locale }) {
+  const isEN = locale === "en";
+
   return (
     <section className="w-full h-auto block py-[30px] sm:py-[40px] xl:py-[60px] 2xl:py-[80px] bg-[#ebebeb]">
       <div className="container">
@@ -15,7 +17,7 @@ export default function HomeEnquiry({ data, locale }) {
             <div className="w-full aspect-4/2 md:aspect-4/3 overflow-hidden">
               <Image
                 src={data?.media?.path}
-                alt={data?.media?.alt}
+                alt={isEN ? data?.media?.alt : data?.media?.alt_ar}
                 width={810}
                 height={520}
                 className="w-full h-full object-cover hover:scale-110 transition duration-300"
@@ -37,7 +39,7 @@ export default function HomeEnquiry({ data, locale }) {
                 size="heading1"
                 className="line-clamp-2 text-black mb-1"
               >
-                {parse(data?.title)}
+                {parse(isEN ? data?.title : data?.title_ar)}
 
                 <span
                   className={cn(
@@ -53,7 +55,7 @@ export default function HomeEnquiry({ data, locale }) {
                 size="text1"
                 className="line-clamp-4 font-light text-black mb-2 xl:mb-4 2xl:mb-6"
               >
-                {parse(data?.description)}
+                {parse(isEN ? data?.description : data?.description_ar)}
               </Text>
               <RecaptchaProvider>
                 <EnquiryForm />

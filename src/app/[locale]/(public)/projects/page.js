@@ -148,7 +148,7 @@ export default async function ProjectsPage({ params, searchParams }) {
   
   const { locale } = resolvedParams;
   const slug = resolvedSearchParams.slug ?? "all";
-
+  const limit = resolvedSearchParams.limit? parseInt(resolvedSearchParams.limit) : 6;
   const {data, error} = await getProjectData();
 
   if(error){
@@ -163,7 +163,7 @@ export default async function ProjectsPage({ params, searchParams }) {
         slug={"Our Projects"}
       />
       <ProjectHero locale={locale} data={data?.projectInfo} />
-      <ProjectList locale={locale} data={data?.projectCategories}  slug={slug}/>
+      <ProjectList locale={locale} data={data?.projectCategories}  slug={slug} limit={limit} />
     </>
   );
 }

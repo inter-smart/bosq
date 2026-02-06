@@ -67,9 +67,12 @@ export const getProjectData = async () => {
   }
 };
 
-export const getProjectListBySlug = async ({slug}) => {
+// lib/api/CMS/basicGet.js
+export const getProjectListBySlug = async ({ slug, limit = 6 }) => {
   try {
-    const data = await apiClient(`/api/frontend/projects/project-list?slug=${slug}`);
+    const data = await apiClient(
+      `/api/frontend/projects/project-list?slug=${slug}&limit=${limit}`
+    );
     return sendSuccess(data?.data);
   } catch (error) {
     return sendError(error);

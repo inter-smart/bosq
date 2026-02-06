@@ -5,9 +5,8 @@ import { Suspense } from "react";
 import { Skeleton } from "../../ui/skeleton";
 import { Text } from "@/components/utils/text";
 
-export default function ProjectCard({ data }) {
-  
-  console.log("ccp",data)
+export default function ProjectCard({ data, locale }) {
+  const isEN = locale === "en";
 
   return (
     <Suspense fallback={<ProjectSkeleton />}>
@@ -18,7 +17,7 @@ export default function ProjectCard({ data }) {
         >
           <Image
             src={data?.media?.media_path || "/images/placeholder.jpg"}
-            alt={data?.media_alt}
+            alt={isEN ? data?.media_alt : data?.media_alt_ar}
             width={600}
             height={600}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-80"
@@ -29,7 +28,9 @@ export default function ProjectCard({ data }) {
           size="text3"
           className="font-normal turncate text-[#282828] hover:underline"
         >
-          <Link href={`/projects/${data?.slug}`}>{data?.title}</Link>
+          <Link href={`/projects/${data?.slug}`}>
+            {isEN ? data?.title : data?.title_ar}
+          </Link>
         </Text>
       </div>
     </Suspense>

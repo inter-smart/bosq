@@ -197,9 +197,11 @@ export default async function ProjectDetailPage({ params }) {
   const {data, error} = await getProjectDetails({slug})
 
 
-  if(error){
-    return <NotFound />
-  }
+  // if(error){
+  //   return <NotFound />
+  // }
+
+  console.log(error)
 
   const {heroData, cmsData, projectData, solutionData, specializedAreasData, enquiryData} = data;
 

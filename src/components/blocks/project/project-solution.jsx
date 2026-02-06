@@ -5,7 +5,9 @@ import React from "react";
 import parse from "html-react-parser";
 
 export default function ProjectSolution({ locale, data }) {
-  console.log(data)
+
+  const isEN = locale === "en";
+
   return (
     <section className="w-full block py-[30px] sm:py-[40px] xl:py-[60px] 2xl:py-[80px] bg-[#f4f4f4]">
       <div className="container">
@@ -18,19 +20,18 @@ export default function ProjectSolution({ locale, data }) {
           >
             <Image
               src={data?.media?.path ?? "/images/placeholder.jpg"}
-              alt={data?.media?.alt}
+              alt={isEN? data?.media?.alt : data?.media?.alt_ar}
               width={768}
               height={468}
               className="w-full h-full object-cover hover:scale-105 transition duration-300"
             />
           </div>
-          {data?.title && (
             <Heading
               as="h2"
               size="heading1"
               className="text-[#282828] pt-1 xl:pt-2 2xl:pt-4 mb-2 xl:mb-3 2xl:mb-5"
             >
-              {parse(data?.title)}
+              {parse(isEN?data?.title:data?.title_ar)}
               <span
                 className={cn(
                   "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
@@ -41,15 +42,12 @@ export default function ProjectSolution({ locale, data }) {
               />
               &nbsp;
             </Heading>
-          )}
-          {data?.description && (
             <div
               dir={locale === "ar" ? "rtl" : "ltr"}
               className={cn("typography", "[--text-color:#282828]")}
             >
-              {parse(data?.description)}
+              {parse(isEN?data?.description:data?.description_ar)}
             </div>
-          )}
           <div className="clear-both" />
         </div>
       </div>
