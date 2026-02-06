@@ -2,7 +2,7 @@
 import { NextResponse } from "next/server";
 import { locales, defaultLocale } from "./il8n/config";
 
-const PROTECTED_PATHS = ["/account", "/checkout"];
+const PROTECTED_PATHS = ["/account"];
 
 export function middleware(request) {
   const { pathname } = request.nextUrl;
@@ -10,9 +10,7 @@ export function middleware(request) {
   /* --------------------------------------------------
      1️⃣ LOCALE DETECTION & EXTRACTION
   -------------------------------------------------- */
-  const pathnameHasLocale = locales.some(
-    (locale) => pathname === `/${locale}` || pathname.startsWith(`/${locale}/`),
-  );
+  const pathnameHasLocale = locales.some((locale) => pathname === `/${locale}` || pathname.startsWith(`/${locale}/`));
 
   let locale;
   let pathnameWithoutLocale;
@@ -32,9 +30,7 @@ export function middleware(request) {
      2️⃣ AUTH PROTECTION
   -------------------------------------------------- */
   const isProtected = PROTECTED_PATHS.some(
-    (protectedPath) =>
-      pathnameWithoutLocale === protectedPath ||
-      pathnameWithoutLocale.startsWith(`${protectedPath}/`),
+    (protectedPath) => pathnameWithoutLocale === protectedPath || pathnameWithoutLocale.startsWith(`${protectedPath}/`),
   );
 
   const token = request.cookies.get("access_token")?.value;
@@ -80,7 +76,5 @@ function getLocale(request) {
    MATCHER
 -------------------------------------------------- */
 export const config = {
-  matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|.*\\..*|manifest.json).*)",
-  ],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\..*|manifest.json).*)"],
 };

@@ -10,12 +10,10 @@ import { useSelector, useDispatch } from "react-redux";
 const CartIcon = ({ showDarkHeader, locale }) => {
   const dispatch = useDispatch();
   const cartCount = useSelector(selectCartCount);
-  const isLoading = useSelector(selectCartIsLoading);
 
-  // Fetch cart on mount to sync count with API
-  // useEffect(() => {
-  //   dispatch(fetchCart());
-  // }, [dispatch]);
+  useEffect(() => {
+    dispatch(fetchCart());
+  }, [dispatch]);
 
   return (
     <Button variant="none" size="none" asChild>
