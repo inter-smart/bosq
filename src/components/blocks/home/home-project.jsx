@@ -16,7 +16,7 @@ import {
   useDotButton,
 } from "@/components/utils/embla-carousel-dot-button";
 
-export default function HomeProject({ data, locale }) {
+export default function HomeProject({ data, locale, isEN }) {
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { loop: false, align: "start", direction: locale === "ar" ? "rtl" : "ltr" },
     [ClassNames(), Autoplay({ delay: 4000, stopOnInteraction: true })]
@@ -34,7 +34,7 @@ export default function HomeProject({ data, locale }) {
       <div className="container">
         <div className="flex flex-wrap items-end justify-between mb-3 xl:mb-4 2xl:mb-6">
           <Heading as="h2" size="heading1" className="text-black">
-            {parse(data?.title)}
+            {parse(isEN ? data?.title : data?.title_ar)}
             <span
               className={cn(
                 "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
@@ -69,7 +69,7 @@ export default function HomeProject({ data, locale }) {
         <div className="w-full max-w-full">
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex touch-pan-y touch-pinch-zoom -mx-0.5 sm:-mx-1">
-              {data?.project?.map((item, index) => {
+              {data?.list?.map((item, index) => {
                 const isActive = activeIndex === index;
                 return (
                   <div
@@ -88,7 +88,7 @@ export default function HomeProject({ data, locale }) {
                       )} />
                       <Image
                         src={item?.media?.path}
-                        alt={item?.media?.alt}
+                        alt={isEN? item?.media?.alt : item?.media?.alt_ar}
                         width={308}
                         height={517}
                         className="w-full h-full object-cover hover:scale-110 opacity-80 transition duration-300"
@@ -104,15 +104,15 @@ export default function HomeProject({ data, locale }) {
                           size="heading1"
                           className="font-light capitalize text-white mb-5"
                         >
-                          {parse(item?.title)}
+                          {parse(isEN? item?.title: item?.title_ar)}
                         </Heading>
                         <Button
                           variant={"white"}
                           className="min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-40"
                           asChild
                         >
-                          <Link href={`/project/${item?.slug}` || "/projects/slug"}>
-                            View Projects
+                          <Link href={`/projects/${item?.slug}` || "/projects/slug"}>
+                            {isEN? "View Projects": "عرض المشاريع"}
                           </Link>
                         </Button>
                       </div>

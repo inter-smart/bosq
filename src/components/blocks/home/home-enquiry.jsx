@@ -6,8 +6,7 @@ import EnquiryForm from "@/components/form/enquiry-form";
 import { cn } from "@/lib/utils";
 import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
 
-export default function HomeEnquiry({ data, locale }) {
-  const isEN = locale === "en";
+export default function HomeEnquiry({ data, locale, isEN }) {
 
   return (
     <section className="w-full h-auto block py-[30px] sm:py-[40px] xl:py-[60px] 2xl:py-[80px] bg-[#ebebeb]">
@@ -29,7 +28,7 @@ export default function HomeEnquiry({ data, locale }) {
             <div
               className={cn(
                 "w-full",
-                locale === "ar"
+                !isEN
                   ? "md:pr-5 xl:px-[60px] 2xl:px-[80px]"
                   : "md:pl-5 xl:px-[60px] 2xl:px-[80px]",
               )}
@@ -44,7 +43,7 @@ export default function HomeEnquiry({ data, locale }) {
                 <span
                   className={cn(
                     "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
-                    locale === "ar"
+                    !isEN
                       ? "-translate-x-1 xl:-translate-x-2 "
                       : "translate-x-1 xl:translate-x-2 ",
                   )}

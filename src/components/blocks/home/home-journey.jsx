@@ -14,7 +14,7 @@ const localData = {
   },  
 }
 
-export default function HomeJourney({ data, locale }) {
+export default function HomeJourney({ data, locale, isEN }) {
   return (
     <section className="w-full h-auto block py-[30px] sm:py-[100px] xl:py-[160px] 2xl:py-[240px] bg-black overflow-hidden relative z-0">
       <div
@@ -52,7 +52,7 @@ export default function HomeJourney({ data, locale }) {
           />
           <Image
             src={data?.media?.desktop?.path}
-            alt={data?.media?.desktop?.alt}
+            alt={isEN? data?.media?.desktop?.alt:data?.media?.desktop?.alt_ar}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 80vw"
             className="-z-2 object-cover opacity-80"
@@ -69,7 +69,7 @@ export default function HomeJourney({ data, locale }) {
             size="heading1"
             className="line-clamp-2 text-black mb-2 xl:mb-4 2xl:mb-6"
           >
-            {parse(data?.title)}
+            {parse(isEN?data?.title:data?.title_ar)}
             <span
               className={cn(
                 "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
@@ -84,14 +84,14 @@ export default function HomeJourney({ data, locale }) {
             size="text1"
             className="line-clamp-4 font-light text-black mb-4 xl:mb-8 2xl:mb-10"
           >
-            {parse(data?.description)}
+            {parse(isEN?data?.description:data?.description_ar)}
           </Text>
           <Button
             variant={"black"}
             className="min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-40"
             asChild
           >
-            <Link href={`${locale}${localData.button.link}`}>View Details</Link>
+            <Link href={`${locale}${localData.button.link}`}>{isEN? "View Details": "عرض التفاصيل"}</Link>
           </Button>
         </div>
       </div>

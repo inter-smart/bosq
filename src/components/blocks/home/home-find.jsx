@@ -12,9 +12,9 @@ import { Suspense, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function HomeFind({ data, locale }) {
+export default function HomeFind({ data, locale, isEN }) {
   const [emblaRef] = useEmblaCarousel(
-    { loop: false, align: "start", direction: locale === "ar" ? "rtl" : "ltr" },
+    { loop: false, align: "start", direction: !isEN? "rtl" : "ltr" },
     [Autoplay({ delay: 6000, stopOnInteraction: true })]
   );
 
@@ -31,11 +31,11 @@ export default function HomeFind({ data, locale }) {
                   size="heading1"
                   className="line-clamp-2 text-black mb-2 xl:mb-3 2xl:mb-5"
                 >
-                  {parse(locale === "ar" ? data?.title_ar : data?.title)}
+                  {parse(!isEN? data?.title_ar : data?.title)}
                   <span
                     className={cn(
                       "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
-                      locale === "ar"
+                      !isEN
                         ? "-translate-x-1 xl:-translate-x-2 "
                         : "translate-x-1 xl:translate-x-2 "
                     )}
@@ -46,14 +46,14 @@ export default function HomeFind({ data, locale }) {
                   size="text1"
                   className="line-clamp-6 font-light text-black mb-4 xl:mb-6 2xl:mb-6"
                 >
-                  {parse(locale === "ar" ? data?.description_ar : data?.description)}
+                  {parse(!isEN? data?.description_ar : data?.description)}
                 </Text>
                 <Button
                   variant={"white"}
                   className="bg-white min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-[160px]"
                   asChild
                 >
-                  <Link href={`${locale}/projects`}>{locale === "ar"? data?.button?.label_ar: data?.button?.label}</Link>
+                  <Link href={`${locale}/projects`}>{!isEN? data?.button?.label_ar: data?.button?.label}</Link>
                 </Button>
               </div>
             </div>
@@ -61,7 +61,7 @@ export default function HomeFind({ data, locale }) {
             <div
               className={cn(
                 "w-full sm:w-[calc(100%-220px)] xl:w-[calc(100%-280px)] 2xl:w-[calc(100%-420px)] 3xl:w-[calc(100%-468px)] ",
-                locale === "ar"
+                !isEN
                   ? "max-sm:[mask-image:linear-gradient(to_left,white_0%,white_98%,transparent_100%)] max-sm:pr-4"
                   : "max-sm:[mask-image:linear-gradient(to_right,white_0%,white_98%,transparent_100%)] max-sm:pl-4"
               )}
@@ -92,11 +92,11 @@ export default function HomeFind({ data, locale }) {
                                   size="heading2"
                                   className="font-light capitalize text-[#282828] mb-2 xl:mb-3"
                                 >
-                                  {parse(locale === "ar" ? item?.title_ar : item?.title )}
+                                  {parse(!isEN? item?.title_ar : item?.title )}
                                   <span
                                     className={cn(
                                       "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
-                                      locale === "ar"
+                                      !isEN
                                         ? "-translate-x-1 xl:-translate-x-2 "
                                         : "translate-x-1 xl:translate-x-2 "
                                     )}
@@ -107,7 +107,7 @@ export default function HomeFind({ data, locale }) {
                                   size="text1"
                                   className="line-clamp-6 leading-normal font-light text-black mb-3 xl:mb-5 2xl:mb-6"
                                 >
-                                  {parse(locale === "ar" ? item?.description_ar : item?.description)}
+                                  {parse(!isEN? item?.description_ar : item?.description)}
                                 </Text>
                                 <Button
                                   variant={
@@ -120,14 +120,14 @@ export default function HomeFind({ data, locale }) {
                                   asChild
                                 >
                                   <Link href={`${locale}/${item?.button?.link}`}>
-                                    {locale === "ar" ? item?.button?.label_ar : item?.button?.label}
+                                    {!isEN? item?.button?.label_ar : item?.button?.label}
                                   </Link>
                                 </Button>
                               </div>
                               <div className="w-full aspect-[3/4] xl:aspect-[22/30] overflow-hidden">
                                 <Image
                                   src={item?.media?.path}
-                                  alt={locale === "ar" ? item?.media?.alt_ar : item?.media?.alt}
+                                  alt={!isEN? item?.media?.alt_ar : item?.media?.alt}
                                   width={350}
                                   height={440}
                                   className="w-full h-full object-cover hover:scale-110 transition duration-300"

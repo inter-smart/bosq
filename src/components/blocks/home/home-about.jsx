@@ -8,6 +8,9 @@ import { cn } from "@/lib/utils";
 import EnquiryDialog from "@/components/common/enquiry-dialog";
 
 export default function HomeAbout({ data, locale }) {
+
+  const isEN = locale === "en";
+
   return (
     <section className="w-full h-auto block py-[30px] sm:py-[40px] xl:py-[100px] 2xl:py-[120px] bg-[#f4f4f4] overflow-hidden relative z-0">
       <Image
@@ -25,7 +28,7 @@ export default function HomeAbout({ data, locale }) {
               <div className="group w-[140px] sm:w-[168px] xl:w-[200px] 2xl:w-[268px] 3xl:w-[320px] aspect-[20/34] mx-auto hover:scale-110  transition duration-300 relative z-0">
                 <Image
                   src={data?.media?.path}
-                  alt={locale == "ar" ? data?.media?.alt_ar : data?.media?.alt}
+                  alt={!isEN? data?.media?.alt_ar : data?.media?.alt}
                   width={308}
                   height={517}
                   className="w-full h-full object-contain group-hover:-translate-y-2 transition duration-300"
@@ -41,7 +44,7 @@ export default function HomeAbout({ data, locale }) {
                   size="heading1"
                   className="line-clamp-2 text-black mb-2 xl:mb-4 2xl:mb-6"
                 >
-                  {parse(locale == "ar" ? data?.title_ar : data?.title)}
+                  {parse(!isEN? data?.title_ar : data?.title)}
                   <span
                     className={cn(
                       "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
@@ -57,7 +60,7 @@ export default function HomeAbout({ data, locale }) {
                   className="line-clamp-4 font-light text-black mb-4 xl:mb-8 2xl:mb-10"
                 >
                   {parse(
-                    locale == "ar" ? data?.description_ar : data?.description
+                    !isEN? data?.description_ar : data?.description
                   )}
                 </Text>
                 <Button
@@ -66,7 +69,7 @@ export default function HomeAbout({ data, locale }) {
                   asChild
                 >
                   <Link href={`${locale}/about`}>
-                    {locale == "ar" ? "قراءة المزيد" : "Read More"}
+                    {!isEN? "قراءة المزيد" : "Read More"}
                   </Link>
                 </Button>
 
@@ -76,7 +79,7 @@ export default function HomeAbout({ data, locale }) {
                     disabled={false}
                     className="min-w-[90px] xl:min-w-[100px] 2xl:min-w-[120px] mx-1 cursor-pointer"
                   >
-                    Enquiry Dialog
+                    {isEN ? "Enquiry Dialog": "حوار الاستفسار"}
                   </Button>
                 </EnquiryDialog>
               </div>
