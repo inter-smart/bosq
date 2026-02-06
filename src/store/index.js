@@ -5,6 +5,7 @@ import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, 
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 import authReducer from "./slices/authSlice";
 import cartReducer from "./slices/cartSlice";
+import checkoutReducer from "./slices/checkoutSlice";
 import { addressApi } from "./services/addressApi";
 
 // Create a noop storage for SSR
@@ -35,6 +36,7 @@ const authPersistConfig = {
 const rootReducer = combineReducers({
   auth: persistReducer(authPersistConfig, authReducer),
   cart: cartReducer,
+  checkout: checkoutReducer,
   [addressApi.reducerPath]: addressApi.reducer,
 });
 

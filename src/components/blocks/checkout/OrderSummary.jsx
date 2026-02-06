@@ -4,6 +4,7 @@ import { Text } from "@/components/utils/text";
 import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,7 @@ import Image from "next/image";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from "sonner";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
@@ -30,6 +32,11 @@ const paymentMethods = [
 ];
 
 const OrderSummary = ({ products, cartId, subTotal, itemsCount, totalItems, locale }) => {
+  // Get selected addresses from Redux
+  const { selectedShippingAddressId, selectedBillingAddressId, useSameAddressForBilling, useSameAddressForShipping } = useSelector(
+    (state) => state.checkout,
+  );
+
   const [couponStatus, setCouponStatus] = useState(false);
   const [couponCode, setCouponCode] = useState("");
   const [checkoutList, setCheckoutList] = useState(false);
@@ -60,9 +67,65 @@ const OrderSummary = ({ products, cartId, subTotal, itemsCount, totalItems, loca
     }
   };
 
-  const handlePlaceOrder = () => {
-    console.log("placed");
+  // Determine final address IDs based on checkbox states
+  const getFinalAddressIds = () => {
+    let shippingId = selectedShippingAddressId;
+    let billingId = selectedBillingAddressId;
+
+    // If "use same for billing" is checked, billing = shipping
+    if (useSameAddressForBilling && selectedShippingAddressId) {
+      billingId = selectedShippingAddressId;
+    }
+    // If "use same for shipping" is checked, shipping = billing
+    if (useSameAddressForShipping && selectedBillingAddressId) {
+      shippingId = selectedBillingAddressId;
+    }
+
+    return { shippingId, billingId };
   };
+
+  const handlePlaceOrder = () => {
+    const { shippingId, billingId } = getFinalAddressIds();
+
+    console.log(shippingId);
+    console.log(billingId);
+
+    // Validate shipping address is selected
+    if (!shippingId) {
+      // If billing is selected but "use same for shipping" is not checked
+      if (selectedBillingAddressId && !useSameAddressForShipping) {
+        toast.error("Please select a shipping address or check 'Use Same Address For Shipping' in billing section");
+      } else {
+        toast.error("Please select a shipping address");
+      }
+      return;
+    }
+
+    // Validate billing address is selected
+    if (!billingId) {
+      // If shipping is selected but "use same for billing" is not checked
+      if (selectedShippingAddressId && !useSameAddressForBilling) {
+        toast.error("Please select a billing address or check 'Use Same Address For Billing' in shipping section");
+      } else {
+        toast.error("Please select a billing address");
+      }
+      return;
+    }
+
+    console.log("Placing order with:", {
+      cartId,
+      shippingAddressId: shippingId,
+      billingAddressId: billingId,
+      paymentMethod: selectedPaymentMethod,
+    });
+
+    toast.success("Order placed successfully!");
+    // TODO: Call place order API with these values
+  };
+
+  // Check if order can be placed
+  const { shippingId, billingId } = getFinalAddressIds();
+  const canPlaceOrder = termsAccepted && shippingId && billingId;
 
   return (
     <>
@@ -168,7 +231,6 @@ const OrderSummary = ({ products, cartId, subTotal, itemsCount, totalItems, loca
                 <button
                   className="text-[10px] 2xl:text-[12px] leading-normal font-normal text-black hover:underline cursor-pointer hover:text-red-600"
                   onClick={handleRemoveCoupon}
-                  disabled={loading}
                 >
                   Remove
                 </button>
@@ -236,7 +298,7 @@ const OrderSummary = ({ products, cartId, subTotal, itemsCount, totalItems, loca
 
         {/* Place Order Button - Desktop */}
         <MediaQuery minWidth={640}>
-          <Button variant={"black"} disabled={!termsAccepted} onClick={handlePlaceOrder} className="min-w-full mt-2">
+          <Button variant={"black"} disabled={!canPlaceOrder} onClick={handlePlaceOrder} className="min-w-full mt-2">
             {"Place Order"}
           </Button>
         </MediaQuery>

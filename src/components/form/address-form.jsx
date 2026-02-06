@@ -87,7 +87,7 @@ const errorStyle = cn("text-[#f17423]");
 
 const textareaStyle = cn(inputStyle, "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none");
 
-export default function AddressForm({ locale, onSuccess }) {
+export default function AddressForm({ locale, variant = "shipping", onSuccess }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -110,7 +110,7 @@ export default function AddressForm({ locale, onSuccess }) {
     },
   });
 
-  const [addAddress, { isLoading, isSuccess }] = useAddAddressMutation();
+  const [addAddress, { isLoading }] = useAddAddressMutation();
 
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
@@ -174,17 +174,23 @@ export default function AddressForm({ locale, onSuccess }) {
   }, [selectedShippingCountry]);
 
   const onSubmit = async (values) => {
+    console.log(values);
+
     try {
       await addAddress({
-        values,
+        values: {
+          ...values,
+          addressType: variant,
+        },
       }).unwrap();
 
-      isSuccess && toast.success("Address added successfully");
+      toast.success("Address added successfully");
       form.reset();
 
       onSuccess?.();
     } catch (err) {
       console.error(err);
+      toast.error("Failed to add address");
     }
   };
 

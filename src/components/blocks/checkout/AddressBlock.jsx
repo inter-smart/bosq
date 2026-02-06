@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Heading } from "@/components/utils/heading";
 import parse from "html-react-parser";
 import { Label } from "@/components/ui/label";
@@ -22,16 +23,23 @@ import { Text } from "@/components/utils/text";
 import { cn } from "@/lib/utils";
 import { useDeleteAddressMutation, useUpdateDefaultAddressMutation } from "@/store/services/addressApi";
 import { toast } from "sonner";
+import { setSelectedShippingAddress, setSelectedBillingAddress } from "@/store/slices/checkoutSlice";
 
 const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress }) => {
+  const dispatch = useDispatch();
+  const selectedShippingAddressId = useSelector((state) => state.checkout.selectedShippingAddressId);
+  const selectedBillingAddressId = useSelector((state) => state.checkout.selectedBillingAddressId);
+
   const [deleteAddress, { isLoading: isDeletingAddress }] = useDeleteAddressMutation();
   const [updateDefaultAddress, { isLoading: isUpdatingDefault }] = useUpdateDefaultAddressMutation();
 
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingAddress, setEditingAddress] = useState(null);
-  const [selectedAddressId, setSelectedAddressId] = useState(null);
 
   const [pendingAction, setPendingAction] = useState(null);
+
+  // Get the selected address ID based on variant
+  const selectedAddressId = variant === "shipping" ? selectedShippingAddressId : selectedBillingAddressId;
 
   // Sort addresses: default address first
   const sortedAddresses = data
@@ -44,13 +52,22 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
 
   const isProcessing = (pendingAction?.kind === "delete" && isDeletingAddress) || (pendingAction?.kind === "setDefault" && isUpdatingDefault);
 
-  // Set initial selected address to default
+  // Set initial selected address to default or first available
   useEffect(() => {
-    const defaultAddress = sortedAddresses.find((addr) => addr.is_default);
-    if (defaultAddress && !selectedAddressId) {
-      setSelectedAddressId(defaultAddress.id);
+    if (sortedAddresses.length > 0 && !selectedAddressId) {
+      // Try to find default address, otherwise use the first one
+      const defaultAddress = sortedAddresses.find((addr) => addr.is_default);
+      const addressToSelect = defaultAddress || sortedAddresses[0];
+
+      if (addressToSelect) {
+        if (variant === "shipping") {
+          dispatch(setSelectedShippingAddress(addressToSelect.id));
+        } else {
+          dispatch(setSelectedBillingAddress(addressToSelect.id));
+        }
+      }
     }
-  }, [sortedAddresses, selectedAddressId]);
+  }, [sortedAddresses, selectedAddressId, variant, dispatch]);
 
   const handleEditClick = (address) => {
     setEditingAddress(address);
@@ -78,8 +95,6 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
   const confirmAction = async () => {
     if (!pendingAction) return;
 
-    console.log(pendingAction);
-
     try {
       if (pendingAction.kind === "delete") {
         await deleteAddress({ id: pendingAction.id, addressType: pendingAction.addressType }).unwrap();
@@ -96,7 +111,11 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
   };
 
   const handleAddressSelect = (addressId) => {
-    setSelectedAddressId(addressId);
+    if (variant === "shipping") {
+      dispatch(setSelectedShippingAddress(addressId));
+    } else {
+      dispatch(setSelectedBillingAddress(addressId));
+    }
   };
 
   return (
@@ -104,21 +123,21 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
       <div className="w-full h-auto block rounded-[4px] border border-[#e0e0e0] overflow-hidden mb-1 xl:mb-2.5 2xl:mb-4">
         <div className="w-full h-auto bg-black px-3 lg:px-4 xl:px-4 2xl:px-7 py-2.5 lg:py-2 xl:py-4 2xl:py-5 flex justify-between items-center gap-2">
           <Heading as="h4" size="heading4" className="text-white">
-            {data?.title || "Shipping Address"}
+            {variant == "billing" ? "Billing Address" : "Shipping Address"}
           </Heading>
 
-          {/* Same Address Checkbox - Only for Shipping */}
-          {variant === "shipping" && setUseSameAddress && (
+          {/* Same Address Checkbox */}
+          {setUseSameAddress && (
             <div className="flex items-center gap-2">
               <Checkbox
-                id="billingAddress"
+                id={variant === "shipping" ? "sameForBilling" : "sameForShipping"}
                 checked={useSameAddress}
                 onCheckedChange={setUseSameAddress}
                 className={"border-white data-[state=checked]:bg-white data-[state=checked]:text-black"}
               />
-              <Label htmlFor="billingAddress">
+              <Label htmlFor={variant === "shipping" ? "sameForBilling" : "sameForShipping"}>
                 <Text as="span" size="text3" className="text-white">
-                  Use Same Address For Billing
+                  {variant === "shipping" ? "Use Same Address For Billing" : "Use Same Address For Shipping"}
                 </Text>
               </Label>
             </div>
