@@ -7,37 +7,29 @@ import { Plus, X } from "lucide-react";
 import AddAddressBlock from "./AddAddressBlock";
 import AddressBlock from "./AddressBlock";
 import { toast } from "sonner";
+import { useGetAddressesQuery } from "@/store/services/addressApi";
+import { AddressListSkeletonCompact } from "@/components/skeletons/AddressBoxSkeleton";
 
 const AddressSection = ({ locale }) => {
   const [useSameAddress, setUseSameAddress] = React.useState(true);
   const [showShippingAddressForm, setShowShippingAddressForm] = React.useState(false);
   const [showBillingAddressForm, setShowBillingAddressForm] = React.useState(false);
-  const [address, setAddress] = React.useState([]);
 
-  const fetchAddress = async () => {
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend/address`, {
-        credentials: "include",
-      });
+  const { data, isLoading, isError } = useGetAddressesQuery();
 
-      const data = await response.json();
+  if (isError) return <div>Failed to load addresses</div>;
 
-      console.log(data);
-      console.log(data?.data?.address);
-
-      setAddress(data?.data?.address);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchAddress();
-  }, []);
+  const address = data?.data;
 
   return (
     <>
-      <AddressBlock locale={locale} variant={"shipping"} data={address} useSameAddress={useSameAddress} setUseSameAddress={setUseSameAddress} />
+      {isLoading ? (
+        <AddressListSkeletonCompact />
+      ) : (
+        address.length > 0 && (
+          <AddressBlock locale={locale} variant={"shipping"} data={address} useSameAddress={useSameAddress} setUseSameAddress={setUseSameAddress} />
+        )
+      )}
 
       {/* Add New Shipping Address Button */}
       {!showShippingAddressForm && (

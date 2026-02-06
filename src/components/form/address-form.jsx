@@ -5,26 +5,13 @@ import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import { z } from "zod";
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
 import { PhoneInput } from "react-international-phone";
@@ -32,7 +19,8 @@ import "react-international-phone/style.css";
 import { Heading } from "../utils/heading";
 import { commonValidations } from "@/lib/validations";
 import { fetchFromAPIWithCredentials } from "@/lib/helper";
-import { useRouter } from "next/navigation";
+import { useAddAddressMutation } from "@/store/services/addressApi";
+import { toast } from "sonner";
 
 // Validation schema
 const formSchema = z
@@ -89,22 +77,17 @@ const formSchema = z
   });
 
 // Shared styles
-const labelStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-[#282828]"
-);
+const labelStyle = cn("text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-[#282828]");
 
 const inputStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] data-[size=default]:h-[35px] 2xl:data-[size=default]:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1"
+  "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] data-[size=default]:h-[35px] 2xl:data-[size=default]:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1",
 );
 
 const errorStyle = cn("text-[#f17423]");
 
-const textareaStyle = cn(
-  inputStyle,
-  "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none"
-);
+const textareaStyle = cn(inputStyle, "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none");
 
-export default function AddressForm({locale, setShowAddForm}) {
+export default function AddressForm({ locale, onSuccess }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -127,13 +110,11 @@ export default function AddressForm({locale, setShowAddForm}) {
     },
   });
 
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(null);
+  const [addAddress, { isLoading, isSuccess }] = useAddAddressMutation();
+
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [shippingStates, setShippingStates] = useState([]);
-
-  const router = useRouter();
 
   const shipToDifferent = form.watch("shipToDifferentAddress");
   const selectedCountry = form.watch("country");
@@ -162,9 +143,7 @@ export default function AddressForm({locale, setShowAddForm}) {
         return;
       }
       try {
-        const { data } = await fetchFromAPIWithCredentials(
-          `/api/frontend/state?slug=${selectedCountry}`
-        );
+        const { data } = await fetchFromAPIWithCredentials(`/api/frontend/state?slug=${selectedCountry}`);
         if (data) {
           setStates(data);
         }
@@ -183,9 +162,7 @@ export default function AddressForm({locale, setShowAddForm}) {
         return;
       }
       try {
-        const { data } = await fetchFromAPIWithCredentials(
-          `/api/frontend/state?slug=${selectedShippingCountry}`
-        );
+        const { data } = await fetchFromAPIWithCredentials(`/api/frontend/state?slug=${selectedShippingCountry}`);
         if (data) {
           setShippingStates(data);
         }
@@ -197,41 +174,23 @@ export default function AddressForm({locale, setShowAddForm}) {
   }, [selectedShippingCountry]);
 
   const onSubmit = async (values) => {
-    setLoading(true);
-    setSuccess(null);
-
     try {
-   
-      const {data, error, message} = await fetchFromAPIWithCredentials(
-        "/api/frontend/address",
-        {
-          method: "POST",
-          body: JSON.stringify(values),
-        },
-      );
+      await addAddress({
+        values,
+      }).unwrap();
 
-      if (!error || data) {
-        form.reset()
-        router.refresh();
-        setShowAddForm?.(false);
-        setSuccess(message);
-      } else {
-        throw new Error(message || "Failed to save information");
-      }
+      isSuccess && toast.success("Address added successfully");
+      form.reset();
+
+      onSuccess?.();
     } catch (err) {
       console.error(err);
-      setSuccess(err.message);
     }
-
-    setLoading(false);
   };
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-wrap items-start -mx-4 [&>*]:px-4 [&>*]:py-2"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-wrap items-start -mx-4 [&>*]:px-4 [&>*]:py-2">
         {/* Full Name */}
         <FormField
           control={form.control}
@@ -242,11 +201,7 @@ export default function AddressForm({locale, setShowAddForm}) {
                 Name<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  className={inputStyle}
-                  placeholder="Enter your name"
-                />
+                <Input {...field} className={inputStyle} placeholder="Enter your name" />
               </FormControl>
               <FormMessage className={errorStyle} />
             </FormItem>
@@ -261,11 +216,7 @@ export default function AddressForm({locale, setShowAddForm}) {
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>Company Name (Optional)</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  className={inputStyle}
-                  placeholder="Enter your company name"
-                />
+                <Input {...field} className={inputStyle} placeholder="Enter your company name" />
               </FormControl>
               <FormMessage className={errorStyle} />
             </FormItem>
@@ -282,12 +233,7 @@ export default function AddressForm({locale, setShowAddForm}) {
                 Email Address<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  type="email"
-                  className={inputStyle}
-                  placeholder="Enter email address"
-                />
+                <Input {...field} type="email" className={inputStyle} placeholder="Enter email address" />
               </FormControl>
               <FormMessage className={errorStyle} />
             </FormItem>
@@ -307,7 +253,10 @@ export default function AddressForm({locale, setShowAddForm}) {
                 <PhoneInput
                   defaultCountry="ae"
                   {...field}
-                  className={cn(inputStyle, "w-full p-0 [&_input]:flex-1 [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px] [--react-international-phone-flag-width:20px] [--react-international-phone-flag-height:20px]")}
+                  className={cn(
+                    inputStyle,
+                    "w-full p-0 [&_input]:flex-1 [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px] [--react-international-phone-flag-width:20px] [--react-international-phone-flag-height:20px]",
+                  )}
                   placeholder="Enter your mobile number"
                 />
               </FormControl>
@@ -361,11 +310,7 @@ export default function AddressForm({locale, setShowAddForm}) {
                 Street Address<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  className={inputStyle}
-                  placeholder="Enter street address"
-                />
+                <Input {...field} className={inputStyle} placeholder="Enter street address" />
               </FormControl>
               <FormMessage className={errorStyle} />
             </FormItem>
@@ -380,11 +325,7 @@ export default function AddressForm({locale, setShowAddForm}) {
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>Apartment</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  className={inputStyle}
-                  placeholder="Apartment, Suite, Unit, etc (optional)"
-                />
+                <Input {...field} className={inputStyle} placeholder="Apartment, Suite, Unit, etc (optional)" />
               </FormControl>
               <FormMessage className={errorStyle} />
             </FormItem>
@@ -432,11 +373,7 @@ export default function AddressForm({locale, setShowAddForm}) {
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>Order Notes</FormLabel>
               <FormControl>
-                <Textarea
-                  {...field}
-                  className={textareaStyle}
-                  placeholder="Notes about your order, e.g. special notes for delivery"
-                />
+                <Textarea {...field} className={textareaStyle} placeholder="Notes about your order, e.g. special notes for delivery" />
               </FormControl>
               <FormMessage className={errorStyle} />
             </FormItem>
@@ -451,11 +388,7 @@ export default function AddressForm({locale, setShowAddForm}) {
             <FormItem className="w-full">
               <FormControl>
                 <div className="flex items-center gap-3">
-                  <Checkbox
-                    id="shipToDifferent"
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
+                  <Checkbox id="shipToDifferent" checked={field.value} onCheckedChange={field.onChange} />
                   <Label htmlFor="shipToDifferent" className={labelStyle}>
                     Ship to a Different Address?
                   </Label>
@@ -470,11 +403,7 @@ export default function AddressForm({locale, setShowAddForm}) {
         {shipToDifferent && (
           <>
             <div className="w-full my-1.5 xl:my-2">
-              <Heading
-                as="h4"
-                size="heading4"
-                className="font-normal text-[#282828] mb-2"
-              >
+              <Heading as="h4" size="heading4" className="font-normal text-[#282828] mb-2">
                 Shipping Address
               </Heading>
               <hr />
@@ -488,11 +417,7 @@ export default function AddressForm({locale, setShowAddForm}) {
                     Name<span className={errorStyle}>*</span>
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      className={inputStyle}
-                      placeholder="Enter recipient name"
-                    />
+                    <Input {...field} className={inputStyle} placeholder="Enter recipient name" />
                   </FormControl>
                   <FormMessage className={errorStyle} />
                 </FormItem>
@@ -506,11 +431,7 @@ export default function AddressForm({locale, setShowAddForm}) {
                 <FormItem className="w-full sm:w-1/2">
                   <FormLabel className={labelStyle}>Company Name</FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      className={inputStyle}
-                      placeholder="Enter company name"
-                    />
+                    <Input {...field} className={inputStyle} placeholder="Enter company name" />
                   </FormControl>
                   <FormMessage className={errorStyle} />
                 </FormItem>
@@ -540,11 +461,7 @@ export default function AddressForm({locale, setShowAddForm}) {
                     </FormControl>
                     <SelectContent>
                       {countries.map((item) => (
-                        <SelectItem
-                          key={item.slug}
-                          value={item.slug}
-                          className={labelStyle}
-                        >
+                        <SelectItem key={item.slug} value={item.slug} className={labelStyle}>
                           {item.name}
                         </SelectItem>
                       ))}
@@ -564,11 +481,7 @@ export default function AddressForm({locale, setShowAddForm}) {
                     Street Address<span className={errorStyle}>*</span>
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      className={inputStyle}
-                      placeholder="Enter street address"
-                    />
+                    <Input {...field} className={inputStyle} placeholder="Enter street address" />
                   </FormControl>
                   <FormMessage className={errorStyle} />
                 </FormItem>
@@ -582,11 +495,7 @@ export default function AddressForm({locale, setShowAddForm}) {
                 <FormItem className="w-full sm:w-1/2">
                   <FormLabel className={labelStyle}>Apartment</FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      className={inputStyle}
-                      placeholder="Apartment, Suite, Unit, etc (optional)"
-                    />
+                    <Input {...field} className={inputStyle} placeholder="Apartment, Suite, Unit, etc (optional)" />
                   </FormControl>
                   <FormMessage className={errorStyle} />
                 </FormItem>
@@ -614,11 +523,7 @@ export default function AddressForm({locale, setShowAddForm}) {
                     </FormControl>
                     <SelectContent>
                       {shippingStates.map((item) => (
-                        <SelectItem
-                          key={item.slug}
-                          value={item.slug}
-                          className={labelStyle}
-                        >
+                        <SelectItem key={item.slug} value={item.slug} className={labelStyle}>
                           {item.name}
                         </SelectItem>
                       ))}
@@ -633,27 +538,10 @@ export default function AddressForm({locale, setShowAddForm}) {
 
         {/* Submit Button */}
         <div className="w-full mt-2 flex">
-          <Button
-            type="submit"
-            variant="black"
-            disabled={loading}
-            className="min-w-[120px] 2xl:min-w-40"
-          >
-            {loading ? "Submitting..." : "Add Address"}
+          <Button type="submit" variant="black" disabled={isLoading} className="min-w-[120px] 2xl:min-w-40">
+            {isLoading ? "Submitting..." : "Add Address"}
           </Button>
         </div>
-
-        {/* Success/Error Message */}
-        {success && !loading && (
-          <p
-            className={cn(
-              "mt-1 w-full",
-              success.includes("success") ? "text-green-600" : "text-red-600"
-            )}
-          >
-            {success}
-          </p>
-        )}
       </form>
     </Form>
   );

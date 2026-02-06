@@ -5,6 +5,7 @@ import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, 
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 import authReducer from "./slices/authSlice";
 import cartReducer from "./slices/cartSlice";
+import { addressApi } from "./services/addressApi";
 
 // Create a noop storage for SSR
 const createNoopStorage = () => {
@@ -34,6 +35,7 @@ const authPersistConfig = {
 const rootReducer = combineReducers({
   auth: persistReducer(authPersistConfig, authReducer),
   cart: cartReducer,
+  [addressApi.reducerPath]: addressApi.reducer,
 });
 
 export const makeStore = () => {
@@ -44,7 +46,7 @@ export const makeStore = () => {
         serializableCheck: {
           ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
         },
-      }),
+      }).concat(addressApi.middleware),
     devTools: process.env.NODE_ENV !== "production",
   });
 

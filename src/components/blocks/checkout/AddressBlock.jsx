@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Heading } from "@/components/utils/heading";
 import parse from "html-react-parser";
 import { Label } from "@/components/ui/label";
@@ -10,6 +10,8 @@ import {
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogAction,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import UpdateAddressForm from "@/components/form/update-address-form";
@@ -18,13 +20,18 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/utils/text";
 import { cn } from "@/lib/utils";
+import { useDeleteAddressMutation, useUpdateDefaultAddressMutation } from "@/store/services/addressApi";
+import { toast } from "sonner";
 
 const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress }) => {
-  console.log(data);
+  const [deleteAddress, { isLoading: isDeletingAddress }] = useDeleteAddressMutation();
+  const [updateDefaultAddress, { isLoading: isUpdatingDefault }] = useUpdateDefaultAddressMutation();
 
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingAddress, setEditingAddress] = useState(null);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
+
+  const [pendingAction, setPendingAction] = useState(null);
 
   // Sort addresses: default address first
   const sortedAddresses = data
@@ -35,44 +42,56 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
       })
     : [];
 
+  const isProcessing = (pendingAction?.kind === "delete" && isDeletingAddress) || (pendingAction?.kind === "setDefault" && isUpdatingDefault);
+
   // Set initial selected address to default
-  useState(() => {
+  useEffect(() => {
     const defaultAddress = sortedAddresses.find((addr) => addr.is_default);
     if (defaultAddress && !selectedAddressId) {
       setSelectedAddressId(defaultAddress.id);
     }
-  });
+  }, [sortedAddresses, selectedAddressId]);
 
   const handleEditClick = (address) => {
     setEditingAddress(address);
     setIsEditDialogOpen(true);
   };
 
-  const handleSetDefault = async (addressId) => {
-    try {
-      // API call to set default address
-      // await setDefaultAddressAPI(addressId, variant);
-      console.log("Set as default:", addressId);
-
-      // Update local state or refetch data
-    } catch (error) {
-      console.error("Failed to set default address:", error);
-    }
+  const handleDelete = (id, type) => {
+    setPendingAction({
+      id,
+      kind: "delete",
+      message: "Are you sure you want to delete this address?",
+      addressType: type,
+    });
   };
 
-  const handleDelete = async (addressId) => {
-    if (!window.confirm("Are you sure you want to delete this address?")) {
-      return;
-    }
+  const handleUpdateDefault = (id, type) => {
+    setPendingAction({
+      id,
+      kind: "setDefault",
+      message: "Set this address as default?",
+      addressType: type,
+    });
+  };
+
+  const confirmAction = async () => {
+    if (!pendingAction) return;
+
+    console.log(pendingAction);
 
     try {
-      // API call to delete address
-      // await deleteAddressAPI(addressId);
-      console.log("Delete address:", addressId);
-
-      // Update local state or refetch data
-    } catch (error) {
-      console.error("Failed to delete address:", error);
+      if (pendingAction.kind === "delete") {
+        await deleteAddress({ id: pendingAction.id, addressType: pendingAction.addressType }).unwrap();
+        toast.success("Address deleted successfully");
+      } else {
+        await updateDefaultAddress({ id: pendingAction.id, addressType: pendingAction.addressType }).unwrap();
+        toast.success("Default address updated");
+      }
+    } catch {
+      toast.error("Something went wrong");
+    } finally {
+      setPendingAction(null);
     }
   };
 
@@ -85,7 +104,7 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
       <div className="w-full h-auto block rounded-[4px] border border-[#e0e0e0] overflow-hidden mb-1 xl:mb-2.5 2xl:mb-4">
         <div className="w-full h-auto bg-black px-3 lg:px-4 xl:px-4 2xl:px-7 py-2.5 lg:py-2 xl:py-4 2xl:py-5 flex justify-between items-center gap-2">
           <Heading as="h4" size="heading4" className="text-white">
-            {data?.title}
+            {data?.title || "Shipping Address"}
           </Heading>
 
           {/* Same Address Checkbox - Only for Shipping */}
@@ -136,12 +155,13 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
                   />
 
                   <Heading as="div" size="heading5" className="font-medium text-[#282828] mb-1 xl:mb-2">
-                    {item?.full_name}
+                    {item?.full_name || item?.name}
                   </Heading>
                   <Text as="div" size="text3" className="text-[#282828] mb-1 xl:mb-2">
                     {item?.address_line_1 && parse(item?.address_line_1)}
                     {item?.address_line_2 && ", "}
                     {item?.address_line_2 && parse(item?.address_line_2)}
+                    {item?.address && parse(item?.address)}
                   </Text>
                   <Text as="div" size="text3" className="font-medium text-[#282828] mb-2 xl:mb-2.5">
                     <a href={`tel:${item?.phone}`} target="_blank" rel="noopener noreferrer" className="hover:underline">
@@ -169,7 +189,7 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
                         variant={"white"}
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleSetDefault(item.id);
+                          handleUpdateDefault(item.id, item?.address_type);
                         }}
                         className={
                           "min-w-[70px] xl:min-w-[80px] 2xl:min-w-[100px] h-[20px] lg:h-[22px] 2xl:h-[24px] 3xl:h-[26px] bg-white gap-1 border border-[#e9e9e9] hover:text-black hover:bg-white hover:border-[#f17423]"
@@ -182,7 +202,7 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
                       variant={"white"}
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDelete(item.id);
+                        handleDelete(item.id, item?.address_type);
                       }}
                       className={
                         "min-w-[55px] xl:min-w-[60px] 2xl:min-w-[85px] h-[20px] lg:h-[22px] 2xl:h-[24px] 3xl:h-[26px] bg-white gap-1 border border-[#e9e9e9] hover:text-red-600 hover:bg-white hover:border-red-600"
@@ -215,6 +235,39 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
           <div className="max-h-[70vh] mask-[linear-gradient(to_bottom,transparent_0%,white_2%,white_98%,transparent_100%)] overflow-y-auto overflow-x-hidden">
             <UpdateAddressForm locale={locale} addressData={editingAddress} onSuccess={() => setIsEditDialogOpen(false)} />
           </div>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog
+        dir={locale === "ar" ? "rtl" : "ltr"}
+        open={!!pendingAction}
+        onOpenChange={(open) => {
+          if (!open) setPendingAction(null);
+        }}
+      >
+        <AlertDialogContent size="none" className=" gap-4 p-6">
+          <AlertDialogHeader className="space-y-2">
+            <AlertDialogTitle className="text-base font-semibold text-gray-900">
+              {pendingAction?.kind === "delete" ? "Delete Address" : "Set Default Address"}
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-sm text-gray-600">{pendingAction?.message}</AlertDialogDescription>
+          </AlertDialogHeader>
+
+          <AlertDialogFooter className="flex-row justify-end gap-3 sm:space-x-0">
+            <AlertDialogCancel
+              className="mt-0 px-4 py-2 h-auto text-sm font-medium border border-gray-300 hover:bg-gray-50"
+              onClick={() => setPendingAction(null)}
+            >
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className="mt-0 px-4 py-2 h-auto text-sm font-medium bg-red-600 hover:bg-red-700 text-white border-0"
+              onClick={confirmAction}
+              disabled={isProcessing}
+            >
+              {pendingAction?.kind === "delete" ? (isDeletingAddress ? "Deleting..." : "Delete") : isUpdatingDefault ? "Updating..." : "Set Default"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </>
