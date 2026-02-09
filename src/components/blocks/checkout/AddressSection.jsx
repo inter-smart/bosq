@@ -10,6 +10,7 @@ import AddressBlock from "./AddressBlock";
 import { useGetAddressesQuery } from "@/store/services/addressApi";
 import { AddressListSkeletonCompact } from "@/components/skeletons/AddressBoxSkeleton";
 import { setUseSameAddressForBilling, setUseSameAddressForShipping } from "@/store/slices/checkoutSlice";
+import { cn } from "@/lib/utils";
 
 const AddressSection = ({ locale }) => {
   const dispatch = useDispatch();
@@ -53,46 +54,50 @@ const AddressSection = ({ locale }) => {
 
   return (
     <>
-      {/* Shipping Address Block - Always shown */}
-      {isLoading ? (
-        <AddressListSkeletonCompact />
-      ) : (
-        shippingAddresses.length > 0 && (
-          <AddressBlock
+      {/* Shipping Address Block - disabled when "Use Same For Shipping" is checked on billing */}
+      <div className={cn(useSameAddressForShipping && "opacity-50 pointer-events-none")}>
+        {isLoading ? (
+          <AddressListSkeletonCompact />
+        ) : (
+          shippingAddresses.length > 0 && (
+            <AddressBlock
+              locale={locale}
+              variant={"shipping"}
+              data={shippingAddresses}
+              useSameAddress={useSameAddressForBilling}
+              setUseSameAddress={handleUseSameForBillingChange}
+              disabled={useSameAddressForShipping}
+            />
+          )
+        )}
+
+        {/* Add New Shipping Address Button */}
+        {!showShippingAddressForm && !useSameAddressForShipping && (
+          <div className="w-full mb-1 xl:mb-2.5 2xl:mb-4">
+            <Button
+              variant={"white"}
+              onClick={() => setShowShippingAddressForm(true)}
+              className="xl:text-[12px] 2xl:text-[14px] font-medium min-w-[120px] xl:min-w-[150px] 2xl:min-w-[190px] bg-white"
+            >
+              Add New Address
+              <Plus className="size-3" />
+            </Button>
+          </div>
+        )}
+
+        {/* Shipping Address Form */}
+        {showShippingAddressForm && !useSameAddressForShipping && (
+          <AddAddressBlock
             locale={locale}
-            variant={"shipping"}
-            data={shippingAddresses}
-            useSameAddress={useSameAddressForBilling}
-            setUseSameAddress={handleUseSameForBillingChange}
+            variant="shipping"
+            onCancel={() => setShowShippingAddressForm(false)}
+            onSuccess={() => setShowShippingAddressForm(false)}
           />
-        )
-      )}
+        )}
+      </div>
 
-      {/* Add New Shipping Address Button */}
-      {!showShippingAddressForm && (
-        <div className="w-full mb-1 xl:mb-2.5 2xl:mb-4">
-          <Button
-            variant={"white"}
-            onClick={() => setShowShippingAddressForm(true)}
-            className="xl:text-[12px] 2xl:text-[14px] font-medium min-w-[120px] xl:min-w-[150px] 2xl:min-w-[190px] bg-white"
-          >
-            Add New Address
-            <Plus className="size-3" />
-          </Button>
-        </div>
-      )}
-
-      {/* Shipping Address Form */}
-      {showShippingAddressForm && (
-        <AddAddressBlock
-          locale={locale}
-          variant="shipping"
-          onCancel={() => setShowShippingAddressForm(false)}
-          onSuccess={() => setShowShippingAddressForm(false)}
-        />
-      )}
-
-      <>
+      {/* Billing Address Block - disabled when "Use Same For Billing" is checked on shipping */}
+      <div className={cn(useSameAddressForBilling && "opacity-50 pointer-events-none")}>
         {billingAddresses.length > 0 && (
           <AddressBlock
             locale={locale}
@@ -100,11 +105,12 @@ const AddressSection = ({ locale }) => {
             data={billingAddresses}
             useSameAddress={useSameAddressForShipping}
             setUseSameAddress={handleUseSameForShippingChange}
+            disabled={useSameAddressForBilling}
           />
         )}
 
         {/* Add New Billing Address Button */}
-        {!showBillingAddressForm && (
+        {!showBillingAddressForm && !useSameAddressForBilling && (
           <div className="w-full mb-1 xl:mb-2.5 2xl:mb-4">
             <Button
               variant={"white"}
@@ -118,7 +124,7 @@ const AddressSection = ({ locale }) => {
         )}
 
         {/* Billing Address Form */}
-        {showBillingAddressForm && (
+        {showBillingAddressForm && !useSameAddressForBilling && (
           <AddAddressBlock
             locale={locale}
             variant="billing"
@@ -126,7 +132,7 @@ const AddressSection = ({ locale }) => {
             onSuccess={() => setShowBillingAddressForm(false)}
           />
         )}
-      </>
+      </div>
     </>
   );
 };

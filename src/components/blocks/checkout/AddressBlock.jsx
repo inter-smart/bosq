@@ -25,7 +25,7 @@ import { useDeleteAddressMutation, useUpdateDefaultAddressMutation } from "@/sto
 import { toast } from "sonner";
 import { setSelectedShippingAddress, setSelectedBillingAddress } from "@/store/slices/checkoutSlice";
 
-const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress }) => {
+const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress, disabled = false }) => {
   const dispatch = useDispatch();
   const selectedShippingAddressId = useSelector((state) => state.checkout.selectedShippingAddressId);
   const selectedBillingAddressId = useSelector((state) => state.checkout.selectedBillingAddressId);

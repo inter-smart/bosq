@@ -13,6 +13,19 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
+import { useGetAddressesQuery } from "@/store/services/addressApi";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
+import { Heading } from "@/components/utils/heading";
+import { usePlaceOrderMutation } from "@/store/services/orderApi";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
@@ -21,11 +34,13 @@ const MediaQuery = dynamic(() => import("react-responsive"), {
 const paymentMethods = [
   {
     id: 1,
+    slug: "cod",
     name: "Cash On Delivery (COD)",
     description: "Pay by card or another accepted payment method",
   },
   {
     id: 2,
+    slug: "online",
     name: "Pay Online",
     description: "You will be redirected to payment gateway.",
   },
@@ -37,11 +52,19 @@ const OrderSummary = ({ products, cartId, subTotal, itemsCount, totalItems, loca
     (state) => state.checkout,
   );
 
+  const [placeOrder, { isLoading, error }] = usePlaceOrderMutation();
+
   const [couponStatus, setCouponStatus] = useState(false);
   const [couponCode, setCouponCode] = useState("");
   const [checkoutList, setCheckoutList] = useState(false);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("1");
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("cod");
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+
+  // Fetch addresses to display in confirmation dialog
+  const { data: addressData } = useGetAddressesQuery();
+  const allShippingAddresses = addressData?.data?.shipping || [];
+  const allBillingAddresses = addressData?.data?.billing || [];
 
   // Handle coupon application
   const handleApplyCoupon = async () => {
@@ -84,15 +107,22 @@ const OrderSummary = ({ products, cartId, subTotal, itemsCount, totalItems, loca
     return { shippingId, billingId };
   };
 
+  // Find address details by ID from both lists
+  const findAddress = (id) => {
+    return [...allShippingAddresses, ...allBillingAddresses].find((addr) => addr.id === id) || null;
+  };
+
+  // Get the selected payment method label
+  const getSelectedPaymentLabel = () => {
+    const method = paymentMethods.find((m) => m.slug === selectedPaymentMethod);
+    return method?.name || "Unknown";
+  };
+
   const handlePlaceOrder = () => {
     const { shippingId, billingId } = getFinalAddressIds();
 
-    console.log(shippingId);
-    console.log(billingId);
-
     // Validate shipping address is selected
     if (!shippingId) {
-      // If billing is selected but "use same for shipping" is not checked
       if (selectedBillingAddressId && !useSameAddressForShipping) {
         toast.error("Please select a shipping address or check 'Use Same Address For Shipping' in billing section");
       } else {
@@ -103,7 +133,6 @@ const OrderSummary = ({ products, cartId, subTotal, itemsCount, totalItems, loca
 
     // Validate billing address is selected
     if (!billingId) {
-      // If shipping is selected but "use same for billing" is not checked
       if (selectedShippingAddressId && !useSameAddressForBilling) {
         toast.error("Please select a billing address or check 'Use Same Address For Billing' in shipping section");
       } else {
@@ -112,6 +141,18 @@ const OrderSummary = ({ products, cartId, subTotal, itemsCount, totalItems, loca
       return;
     }
 
+    // Show confirmation dialog
+    setShowConfirmDialog(true);
+  };
+
+  const confirmPlaceOrder = async () => {
+    const { shippingId, billingId } = getFinalAddressIds();
+
+    const address = {
+      billing: billingId,
+      shipping: shippingId,
+    };
+
     console.log("Placing order with:", {
       cartId,
       shippingAddressId: shippingId,
@@ -119,8 +160,18 @@ const OrderSummary = ({ products, cartId, subTotal, itemsCount, totalItems, loca
       paymentMethod: selectedPaymentMethod,
     });
 
-    toast.success("Order placed successfully!");
-    // TODO: Call place order API with these values
+    try {
+      await placeOrder({
+        address,
+        payment_type: selectedPaymentMethod,
+      }).unwrap();
+
+      setShowConfirmDialog(false);
+      toast.success("Order placed successfully!");
+    } catch (error) {
+      console.log("error", error);
+      toast.error(error || "Failed to place order");
+    }
   };
 
   // Check if order can be placed
@@ -175,7 +226,7 @@ const OrderSummary = ({ products, cartId, subTotal, itemsCount, totalItems, loca
                   </div>
                   <div className="w-[50px]">
                     <Text as="div" size="text3" className="font-normal text-[#282828]">
-                      {item?.price}
+                      AED {item?.line_total}
                     </Text>
                   </div>
                 </div>
@@ -260,9 +311,9 @@ const OrderSummary = ({ products, cartId, subTotal, itemsCount, totalItems, loca
             {paymentMethods?.map((method, idx) => (
               <div key={"paymentMethods" + idx} className="w-full">
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value={"payment" + method?.id} id={"payment" + method?.id} />
+                  <RadioGroupItem value={method?.slug} id={method?.slug} />
                   <Label
-                    htmlFor={"payment" + method?.id}
+                    htmlFor={method?.slug}
                     className={"text-[11px] lg:text-[10px] 2xl:text-[14px] 3xl:text-[16px] leading-tight font-light text-[#282828] cursor-pointer"}
                   >
                     {method?.name}
@@ -303,6 +354,118 @@ const OrderSummary = ({ products, cartId, subTotal, itemsCount, totalItems, loca
           </Button>
         </MediaQuery>
       </div>
+
+      {/* Order Confirmation Dialog */}
+      <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <AlertDialogContent className="xl:max-w-[520px] 2xl:max-w-[600px] gap-0 p-5 xl:p-6 2xl:p-8">
+          <AlertDialogHeader className="mb-3 xl:mb-4">
+            <AlertDialogTitle className="text-[14px] xl:text-[16px] 2xl:text-[18px] font-semibold text-[#282828]">
+              Confirm Your Order
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-[11px] xl:text-[12px] 2xl:text-[14px] text-[#808080]">
+              Please review your order details before confirming.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          <div className="space-y-3 xl:space-y-4 mb-4 xl:mb-5">
+            {/* Payment Method */}
+            <div className="bg-[#f4f4f4] rounded-[4px] p-3 xl:p-4">
+              <Heading as="div" size="heading5" className="font-medium text-[#282828] mb-1">
+                Payment Method
+              </Heading>
+              <Text as="div" size="text3" className="text-[#282828]">
+                {getSelectedPaymentLabel()}
+              </Text>
+            </div>
+
+            {/* Shipping Address */}
+            {(() => {
+              const { shippingId, billingId } = getFinalAddressIds();
+              const shippingAddr = findAddress(shippingId);
+              const billingAddr = findAddress(billingId);
+              const isSameAddress = shippingId === billingId;
+
+              return (
+                <>
+                  <div className="bg-[#f4f4f4] rounded-[4px] p-3 xl:p-4">
+                    <Heading as="div" size="heading5" className="font-medium text-[#282828] mb-1">
+                      Shipping Address
+                      {isSameAddress && <span className="text-[10px] xl:text-[11px] font-light text-[#808080] ml-2">(Same as Billing)</span>}
+                    </Heading>
+                    {shippingAddr ? (
+                      <div>
+                        <Text as="div" size="text3" className="font-medium text-[#282828]">
+                          {shippingAddr.full_name || shippingAddr.name}
+                        </Text>
+                        <Text as="div" size="text3" className="text-[#606060]">
+                          {shippingAddr.street_address || shippingAddr.address_line_1}
+                          {(shippingAddr.apartment || shippingAddr.address_line_2) && `, ${shippingAddr.apartment || shippingAddr.address_line_2}`}
+                        </Text>
+                        <Text as="div" size="text3" className="text-[#606060]">
+                          {shippingAddr.phone}
+                        </Text>
+                      </div>
+                    ) : (
+                      <Text as="div" size="text3" className="text-[#808080]">
+                        No address selected
+                      </Text>
+                    )}
+                  </div>
+
+                  {/* Billing Address - only show separately if different */}
+                  {!isSameAddress && (
+                    <div className="bg-[#f4f4f4] rounded-[4px] p-3 xl:p-4">
+                      <Heading as="div" size="heading5" className="font-medium text-[#282828] mb-1">
+                        Billing Address
+                      </Heading>
+                      {billingAddr ? (
+                        <div>
+                          <Text as="div" size="text3" className="font-medium text-[#282828]">
+                            {billingAddr.full_name || billingAddr.name}
+                          </Text>
+                          <Text as="div" size="text3" className="text-[#606060]">
+                            {billingAddr.street_address || billingAddr.address_line_1}
+                            {(billingAddr.apartment || billingAddr.address_line_2) && `, ${billingAddr.apartment || billingAddr.address_line_2}`}
+                          </Text>
+                          <Text as="div" size="text3" className="text-[#606060]">
+                            {billingAddr.phone}
+                          </Text>
+                        </div>
+                      ) : (
+                        <Text as="div" size="text3" className="text-[#808080]">
+                          No address selected
+                        </Text>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Order Total */}
+                  <div className="flex justify-between items-center pt-2 border-t border-[#e0e0e0]">
+                    <Text as="div" size="text3" className="font-medium text-[#282828]">
+                      Total Amount
+                    </Text>
+                    <Text as="div" size="text3" className="font-semibold text-[#282828]">
+                      {subTotal}
+                    </Text>
+                  </div>
+                </>
+              );
+            })()}
+          </div>
+
+          <AlertDialogFooter className="flex-row justify-end gap-2 sm:space-x-0">
+            <AlertDialogCancel className="mt-0 px-4 py-2 h-auto text-sm font-medium border border-gray-300 hover:bg-gray-50">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmPlaceOrder}
+              className="mt-0 px-6 py-2 h-auto text-sm font-medium bg-black hover:bg-black/90 text-white border-0"
+            >
+              Confirm Order
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 };

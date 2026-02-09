@@ -1,4 +1,4 @@
-import { fetchWithCredentials } from "@/lib/helper";
+import { fetchFromAPIWithCredentials, fetchWithCredentials } from "@/lib/helper";
 
 // Get cart
 export async function fetchCartAPI() {

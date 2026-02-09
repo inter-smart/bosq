@@ -1,27 +1,48 @@
 import { fetchApi, sendError, sendSuccess } from "../client";
 
-
 export const ProfileData = {
   getMyProfile: async () => {
     try {
-      const data = await fetchApi(`/api/frontend/profile/my-profile`,{
-        credentials: "include", // ✅ this is enough
-      });
+      const data = await fetchApi(
+        `/api/frontend/profile/my-profile`,
+        {
+          credentials: "include", // ✅ this is enough
+        },
+        true,
+      );
 
-      console.log("inside data: ",data)
       return sendSuccess(data?.data);
     } catch (error) {
       return sendError(error);
     }
   },
 
-   fetchProfileById: async () => {
+  getOrders: async () => {
     try {
-      const data = await fetchApi(`/api/frontend/profile/fetch-profile-by-id`,{
-        credentials: "include", // ✅ this is enough
-      });
+      const data = await fetchApi(
+        `/api/frontend/orders`,
+        {
+          credentials: "include", // ✅ this is enough
+        },
+        true,
+      );
 
-      console.log("inside data: ",data)
+      return sendSuccess(data?.data);
+    } catch (error) {
+      return sendError(error);
+    }
+  },
+
+  fetchProfileById: async () => {
+    try {
+      const data = await fetchApi(
+        `/api/frontend/profile/fetch-profile-by-id`,
+        {
+          credentials: "include", // ✅ this is enough
+        },
+        true,
+      );
+
       return sendSuccess(data?.data);
     } catch (error) {
       return sendError(error);
@@ -30,41 +51,50 @@ export const ProfileData = {
 
   editProfile: async (profileData) => {
     try {
-      const data = await fetchApi(`/api/frontend/profile/edit-profile`, {
-        method: "PUT",
-        credentials: "include",
-        body: JSON.stringify(profileData),
-      });
+      const data = await fetchApi(
+        `/api/frontend/profile/edit-profile`,
+        {
+          method: "PUT",
+          credentials: "include",
+          body: JSON.stringify(profileData),
+        },
+        true,
+      );
       return sendSuccess(data?.data);
     } catch (error) {
       return sendError(error);
     }
   },
 
-   getAddress: async () => {
+  getAddress: async () => {
     try {
-      const data = await fetchApi(`/api/frontend/address`, {
-        method: "GET",
-        credentials: "include",
-      });
+      const data = await fetchApi(
+        `/api/frontend/address`,
+        {
+          method: "GET",
+          credentials: "include",
+        },
+        true,
+      );
       return sendSuccess(data?.data);
     } catch (error) {
       return sendError(error);
     }
   },
 
-
-
-  getCoupons: async()=>{
+  getCoupons: async () => {
     try {
-      const data = await fetchApi("/api/frontend/coupons", {
-        method: "GET",
-        credentials: "include"
-      })
+      const data = await fetchApi(
+        "/api/frontend/coupons",
+        {
+          method: "GET",
+          credentials: "include",
+        },
+        true,
+      );
       return sendSuccess(data?.data);
     } catch (error) {
-      return sendError(error)
+      return sendError(error);
     }
-  }
-
+  },
 };
