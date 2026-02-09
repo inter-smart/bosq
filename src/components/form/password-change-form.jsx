@@ -1,5 +1,6 @@
 "use client";
 
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
@@ -29,7 +30,7 @@ const formSchema = z
       .max(100, "Password cannot exceed 100 characters")
       .regex(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-        "Password must contain at least one uppercase letter, one lowercase letter, and one number"
+        "Password must contain at least one uppercase letter, one lowercase letter, and one number",
       ),
     confirmPassword: z.string(),
   })
@@ -39,6 +40,8 @@ const formSchema = z
   });
 
 export default function PasswordChangeForm({ locale }) {
+  const { executeRecaptcha } = useGoogleReCaptcha();
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -58,20 +61,24 @@ export default function PasswordChangeForm({ locale }) {
     setLoading(true);
     setSuccess(null);
 
+    const recaptchaToken = await executeRecaptcha("change_password_form");
     try {
-      const {error, message} = await fetchFromAPIWithCredentials("/api/frontend/profile/change-password", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          currentPassword: values.currentPassword,
-          newPassword: values.newPassword,
-        }),
-      });
+      const { error, message } = await fetchFromAPIWithCredentials(
+        "/api/frontend/profile/change-password",
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            recaptcha_token: recaptchaToken,
+            currentPassword: values.currentPassword,
+            newPassword: values.newPassword,
+          }),
+        },
+      );
 
-
-     if(error){
-      setSuccess(message);
-     }
+      if (error) {
+        setSuccess(message);
+      }
 
       form.reset();
       setSuccess(message);
@@ -85,16 +92,16 @@ export default function PasswordChangeForm({ locale }) {
 
   // Shared styles
   const labelStyle = cn(
-    "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-[#282828]"
+    "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-[#282828]",
   );
 
   const inputStyle = cn(
     "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1",
-    locale === "ar" ? "pl-10" : "pr-10"
+    locale === "ar" ? "pl-10" : "pr-10",
   );
   const toggleStyle = cn(
     "absolute top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700",
-    locale === "ar" ? "left-3" : "right-3"
+    locale === "ar" ? "left-3" : "right-3",
   );
 
   const errorStyle = cn("text-[#f17423]");
@@ -229,7 +236,7 @@ export default function PasswordChangeForm({ locale }) {
               "text-[10px] mt-1 w-full",
               success.includes("successfully")
                 ? "text-green-600"
-                : "text-red-600"
+                : "text-red-600",
             )}
           >
             {success}

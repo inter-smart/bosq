@@ -21,6 +21,7 @@ import { commonValidations } from "@/lib/validations";
 import { fetchFromAPIWithCredentials } from "@/lib/helper";
 import { useAddAddressMutation } from "@/store/services/addressApi";
 import { toast } from "sonner";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 // Validation schema
 const formSchema = z
@@ -88,6 +89,8 @@ const errorStyle = cn("text-[#f17423]");
 const textareaStyle = cn(inputStyle, "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none");
 
 export default function AddressForm({ locale, variant = "shipping", onSuccess }) {
+  const { executeRecaptcha } = useGoogleReCaptcha();
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {

@@ -5,7 +5,9 @@ import ProductSimilar from "@/components/blocks/product/product-similar";
 import ProjectDetail from "@/components/blocks/project/project-detail";
 import ProjectSolution from "@/components/blocks/project/project-solution";
 import ProjectSpecialized from "@/components/blocks/project/project-specialized";
+import { getProjectDetails } from "@/lib/api/CMS/basicGet";
 import { getMetaData } from "@/lib/api/metaApi";
+import NotFound from "../../not-found/page";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -75,6 +77,14 @@ const local_data = {
       },
       {
         id: 2,
+        media: {
+          type: "image",
+          media_path: "/images/projects-gallery-2.jpg",
+          media_alt: "projects-gallery-2",
+        },
+      },
+        {
+        id: 4,
         media: {
           type: "image",
           media_path: "/images/projects-gallery-2.jpg",
@@ -180,21 +190,39 @@ const local_data = {
 export default async function ProjectDetailPage({ params }) {
   const resolvedParams = await params;
   const { locale, slug } = resolvedParams;
+
+
+
+
+  const {data, error} = await getProjectDetails({slug})
+
+
+  // if(error){
+  //   return <NotFound />
+  // }
+
+  console.log(error)
+
+  const {heroData, cmsData, projectData, solutionData, specializedAreasData, enquiryData} = data;
+
+  const slugData = locale === "en" ? "Project" : "تفاصيل المشروع";
+
   return (
     <>
       <ProductHero
         locale={locale}
-        data={local_data?.heroData}
-        slug={`Projects / ${slug}`}
+        data={heroData}
+        slug={slugData}
+        link={"/projects"}
       />
-      <ProjectDetail locale={locale} data={local_data?.projectData} />
-      <ProjectSolution locale={locale} data={local_data?.solutionData} />
+      <ProjectDetail locale={locale} data={local_data?.projectData} projectData={projectData}  />
+      <ProjectSolution locale={locale} data={solutionData} />
       <ProjectSpecialized
         locale={locale}
-        data={local_data?.specializedAreasData}
+        data={specializedAreasData}
       />
 
-      <HomeEnquiry locale={locale} data={local_data?.enquiryData} />
+      <HomeEnquiry locale={locale} data={enquiryData} />
     </>
   );
 }

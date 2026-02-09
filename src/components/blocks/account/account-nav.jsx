@@ -23,7 +23,7 @@ const ASIDE_ITEMS = [
       alt: "account-nav",
     },
     title: "My Profile",
-    href: "/en/account/profile",
+    href: "/account/profile",
   },
   {
     id: 2,
@@ -33,7 +33,7 @@ const ASIDE_ITEMS = [
       alt: "account-nav",
     },
     title: "My Orders",
-    href: "/en/account/orders",
+    href: "/account/orders",
   },
   {
     id: 3,
@@ -43,7 +43,7 @@ const ASIDE_ITEMS = [
       alt: "account-nav",
     },
     title: "Cancelled Orders",
-    href: "/en/account/cancelled-orders",
+    href: "/account/cancelled-orders",
   },
   {
     id: 4,
@@ -53,7 +53,7 @@ const ASIDE_ITEMS = [
       alt: "account-nav",
     },
     title: "Manage Address",
-    href: "/en/account/manage-address",
+    href: "/account/manage-address",
   },
   {
     id: 5,
@@ -63,7 +63,7 @@ const ASIDE_ITEMS = [
       alt: "account-nav",
     },
     title: "Wishlist",
-    href: "/en/account/wishlist",
+    href: "/account/wishlist",
   },
   {
     id: 6,
@@ -73,7 +73,7 @@ const ASIDE_ITEMS = [
       alt: "account-nav",
     },
     title: "Coupons",
-    href: "/en/account/coupons",
+    href: "/account/coupons",
   },
   {
     id: 7,
@@ -83,7 +83,7 @@ const ASIDE_ITEMS = [
       alt: "account-nav",
     },
     title: "Account Settings",
-    href: "/en/account/settings",
+    href: "/account/settings",
   },
   {
     id: 8,
@@ -104,13 +104,10 @@ export default function AccountNav({locale}) {
   const [open, setOpen] = useState(false);
 
   const handleLogout = async () => {
-
-    
-    const res = await logout();
-
-    console.log(res)
+    await logout();
     router.push(`/${locale}/login`);
   };
+
   return (
     <>
       <div className="relative z-2 sm:sticky sm:top-(--header-y)">

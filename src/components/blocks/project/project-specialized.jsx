@@ -13,6 +13,9 @@ export default function ProjectSpecialized({ locale, data }) {
     { loop: false, align: "start", direction: locale === "ar" ? "rtl" : "ltr" },
     [Autoplay({ delay: 3000, stopOnInteraction: true })]
   );
+  
+  const isEN = locale === "en";
+
 
   return (
     <section className="w-full block py-8 sm:py-15 xl:py-20 2xl:py-32">
@@ -29,7 +32,7 @@ export default function ProjectSpecialized({ locale, data }) {
           size="heading1"
           className="line-clamp-2 text-black mb-2 xl:mb-6 2xl:mb-10"
         >
-          {parse(data?.title)}
+          {parse(isEN? data?.title : data?.title_ar)}
           <span
             className={cn(
               "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
@@ -47,7 +50,7 @@ export default function ProjectSpecialized({ locale, data }) {
                   key={"items" + index}
                   className="flex-[0_0_176px] sm:flex-[0_0_33.333%] min-w-0 select-none"
                 >
-                  <ProjectCard data={item} />
+                  <ProjectCard data={item} locale={locale} />
                 </div>
               ))}
             </div>

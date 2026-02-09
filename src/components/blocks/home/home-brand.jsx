@@ -8,12 +8,12 @@ import Autoplay from "embla-carousel-autoplay";
 import ClassNames from "embla-carousel-class-names";
 import { cn } from "@/lib/utils";
 
-export default function HomeBrand({ data, locale }) {
+export default function HomeBrand({ data, locale, isEN }) {
   const [emblaRef] = useEmblaCarousel(
     {
       loop: true,
       align: "start",
-      direction: locale === "ar" ? "rtl" : "ltr",
+      direction: !isEN ? "rtl" : "ltr",
     },
     [ClassNames(), Autoplay({ delay: 1500, stopOnInteraction: true })]
   );
@@ -26,11 +26,11 @@ export default function HomeBrand({ data, locale }) {
           size="heading1"
           className="line-clamp-2 text-black mb-4 xl:mb-8 2xl:mb-10"
         >
-          {parse(data?.title)}
+          {parse(!isEN ? data?.title_ar : data?.title)}
           <span
             className={cn(
               "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
-              locale === "ar"
+              !isEN
                 ? "-translate-x-1 xl:-translate-x-2 "
                 : "translate-x-1 xl:translate-x-2 "
             )}
@@ -40,7 +40,7 @@ export default function HomeBrand({ data, locale }) {
       <div
         className={cn(
           "container",
-          locale === "ar"
+          !isEN
             ? "max-sm:mask-[linear-gradient(to_left,white_0%,white_90%,transparent_100%)] max-sm:pl-0"
             : "max-sm:mask-[linear-gradient(to_right,white_0%,white_90%,transparent_100%)] max-sm:pr-0"
         )}
@@ -59,7 +59,7 @@ export default function HomeBrand({ data, locale }) {
                   <div className="w-full aspect-160/55">
                     <Image
                       src={item?.media?.path}
-                      alt={item?.media?.alt}
+                      alt={!isEN ? item?.media?.alt_ar : item?.media?.alt}
                       width={160}
                       height={65}
                       className="w-full h-full object-contain block"

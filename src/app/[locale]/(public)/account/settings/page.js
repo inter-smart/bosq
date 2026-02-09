@@ -3,6 +3,7 @@ import AccountSettings from "@/components/blocks/account/account-settings";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getMetaData } from "@/lib/api/metaApi";
 import { ProfileData } from "@/lib/api/profile/profileApi";
+import NotFound from "../../not-found/page";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -133,7 +134,7 @@ export default async function SettingsPage({ params }) {
   const { data, error } = await ProfileData.fetchProfileById();
   
     if (error) {
-      return notFound();
+      return <NotFound />
     }
   
   

@@ -30,6 +30,7 @@ export default async function ContactPage({ params }) {
 
   const { data, error } = await getContactData.getCmsData();
 
+  console.log(error)
   if (error) {
     NotFound();
   }

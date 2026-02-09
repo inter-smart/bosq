@@ -59,19 +59,18 @@ export default async function ProfilePage({ params }) {
 
   const { data, error } = await ProfileData.getMyProfile();
 
-  console.log("error:", error)
+  
   if (error) {
     return notFound();
   }
 
-  console.log(data)
 
   return (
     <>
       <ProductHero
         locale={locale}
         data={local_data?.heroData}
-        slug={"My Profile"}
+        slug={locale === "en"? "My Profile": "ملفي الشخصي"}
       />
       <AccountLayout locale={locale}>
         <AccountProfile
