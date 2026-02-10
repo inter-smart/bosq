@@ -30,11 +30,16 @@ export default async function CustomizationPage({ params }) {
 
   const {data, error} = await getCustomizationCms.getCmsData();
 
+
+
+
     if (error) {
       notFound();
     }
 
-  const { heroData, customizationData, FeaturesSection, processSection, optionsSection,requestCustomQuote  } = data;
+
+
+  const { heroData, customizationData, FeaturesSection, processSection, optionsSection,requestCustomQuote, states, options  } = data;
 
 
   return (
@@ -50,6 +55,8 @@ export default async function CustomizationPage({ params }) {
         customizationFeatures={FeaturesSection}
         customizationProcess={processSection}
         customizationOptions={optionsSection}
+        states={states}
+        options={options}
         requestCustomQuote={requestCustomQuote}
       />
     </>
