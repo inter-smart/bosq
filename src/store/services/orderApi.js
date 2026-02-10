@@ -5,6 +5,7 @@ export const orderApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
     credentials: "include",
+    prepareHeaders: (headers) => headers,
   }),
   endpoints: (builder) => ({
     placeOrder: builder.mutation({
@@ -16,6 +17,9 @@ export const orderApi = createApi({
           address,
         },
       }),
+      transformErrorResponse: (response) => {
+        return response?.data?.message || "Failed to place order";
+      },
     }),
   }),
 });
