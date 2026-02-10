@@ -111,7 +111,7 @@ export default function HeaderNavigation({
                             setHoveredSubSubmenu(null);
                           }}
                         >
-                          {item?.items?.map((subItem) => {
+                          {item?.items?.slice(0, 5).map((subItem) => {
                             const isSubActive = pathname === subItem.slug;
                             const hasSubSubItems =
                               subItem?.items && subItem.items.length > 0;
@@ -217,6 +217,19 @@ export default function HeaderNavigation({
                               </li>
                             );
                           })}
+                          {item?.items?.length > 5 && (
+                            <li>
+                              <NavigationMenuLink asChild>
+                                <Link
+                                  href={`/${locale}${item.slug}`}
+                                  onClick={onNavigationClick}
+                                  className="inline-block mt-3 text-[14px] 2xl:text-[17px] 3xl:text-[22px] font-medium text-[#f17423] hover:underline transition-colors duration-200"
+                                >
+                                  View All
+                                </Link>
+                              </NavigationMenuLink>
+                            </li>
+                          )}
                         </ul>
 
                         {/* Image container */}

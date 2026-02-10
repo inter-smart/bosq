@@ -70,7 +70,7 @@ export default function MobileHeaderNavigation({
             {/* SUB MENU */}
             {item.hasSubmenu && isOpen && (
               <div className="pl-1 space-y-4">
-                {item.items?.map((subItem) => {
+                {item.items?.slice(0, 5).map((subItem) => {
                   const isSubOpen = openSubMenu === subItem.id;
                   const hasSubSub = subItem.items?.length > 0;
 
@@ -125,6 +125,15 @@ export default function MobileHeaderNavigation({
                     </div>
                   );
                 })}
+                {item.items?.length > 5 && (
+                  <Link
+                    href={`/${locale}${item.slug}`}
+                    onClick={onNavigationClick}
+                    className="inline-block mt-2 text-[16px] font-medium text-[#f17423] hover:underline"
+                  >
+                    View All
+                  </Link>
+                )}
               </div>
             )}
           </motion.div>
