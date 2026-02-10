@@ -84,7 +84,7 @@ export default function HeaderNavigation({
       className="w-full max-w-full justify-start lg:justify-center max-lg:[&>div]:w-full static"
     >
       <NavigationMenuList className="xl:gap-x-3 2xl:gap-x-4 max-lg:flex-col max-lg:[&>div]:w-full">
-        {menuItems.map((item, i) => {
+        {menuItems?.map((item, i) => {
           const isActive = pathname === item.slug;
           return (
             <motion.div key={i} variants={itemVariants}>

@@ -402,14 +402,14 @@ export default async function PublicLayout({ children, params }) {
 
   const { data } = await getSiteData();
 
-  const { headerData, footerData, socialMedia, cards } = data;
+  const { headerData, footerData, socialMedia, cards, navigationData } = data;
 
   return (
     <>
       <Header
         locale={locale}
         headerData={local_data.header_data}
-        navigationData={local_data.navigation_data}
+        navigationData={navigationData}
         data={headerData}
       />
 
