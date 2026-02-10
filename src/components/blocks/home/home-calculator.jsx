@@ -45,12 +45,15 @@ export default function HomeCalculator({ smartSpaceSection, locale, isEN }) {
                       />
                     </div>
                     <div className="w-full sm:w-1/2">
+                    {
+                      rightItem && 
                       <CardComp
-                        locale={locale}
-                        data={rightItem}
-                        isEN={isEN}
-                        variant={"reverse"}
+                      locale={locale}
+                      data={rightItem}
+                      isEN={isEN}
+                      variant={"reverse"}
                       />
+                    }
                     </div>
                   </div>
                 </div>

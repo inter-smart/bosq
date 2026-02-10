@@ -155,13 +155,12 @@ export default function ContactInfo({ locale, data }) {
                     size="heading3"
                     className="font-normal capitalize text-[#282828] mb-2 xl:mb-3 2xl:mb-5"
                   >
-                    social media
+                    {isEn ? data?.socialMedia?.title : data?.socialMedia?.title_ar}
                   </Heading>
                   <div className="flex flex-wrap gap-x-2 xl:gap-x-3 2xl:gap-x-4">
-                    {data?.socialMedia?.map((item, idx) => {
+                    {data?.socialMedia?.list?.map((item, idx) => {
                       const media = item?.media;
 
-                      // 🚫 DO NOT render Image if src is missing
                       if (!media?.icon) return null;
 
                       return (

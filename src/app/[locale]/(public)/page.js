@@ -87,7 +87,9 @@ export default async function HomePage({ params }) {
         isEN={isEN}
       />
       <HomeFind locale={locale} data={fitsSection} isEN={isEN} />
-      <HomeBrand locale={locale} data={brandsSection} isEN={isEN} />
+      {brandsSection?.list.length > 0 && (
+        <HomeBrand locale={locale} data={brandsSection} isEN={isEN} />
+      )}
       <HomeEnquiry locale={locale} data={formSection} isEN={isEN} />
     </>
   );

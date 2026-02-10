@@ -136,6 +136,8 @@ export default async function MaterialGuidePage({ params }) {
 
   const slug = locale === "en"? "Material Guide" : "سياسة الخصوصية";
 
+  const isEn = locale === "en";
+
   if(!data){
     <NotFound />
   }
@@ -152,6 +154,7 @@ export default async function MaterialGuidePage({ params }) {
         locale={locale}
         data={materialsInfo}
         extraMaterialsInfo={extraMaterialsInfo}
+        isEn={isEn}
       />
     </>
   );

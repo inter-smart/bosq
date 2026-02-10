@@ -17,7 +17,7 @@ const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
 });
 
-export default function Footer({ footerData, socialLinkData, locale, data }) {
+export default function Footer({ footerData, socialLinkData, locale, data, paymentCards }) {
   const isEn = locale === "en";
 
   const placeholders = [
@@ -236,7 +236,13 @@ export default function Footer({ footerData, socialLinkData, locale, data }) {
                 size="text3"
                 className="text-white [&_span]:text-normal mb-1 [&_a]:hover:text-[#f47123]"
               >
-                <span>{data?.sale_enquiry.title} :</span>&nbsp;
+                <span>
+                  {isEn
+                    ? data?.sale_enquiry.title
+                    : data?.sale_enquiry.title_ar}{" "}
+                  :
+                </span>
+                &nbsp;
                 {data?.sale_enquiry.phone && (
                   <>
                     Ph:{" "}
@@ -271,7 +277,13 @@ export default function Footer({ footerData, socialLinkData, locale, data }) {
                 size="text3"
                 className="text-white [&_span]:text-normal [&_a]:hover:text-[#f47123]"
               >
-                <span>{data?.support_enquiry.title} :</span>&nbsp;
+                <span>
+                  {isEn
+                    ? data?.support_enquiry.title
+                    : data?.support_enquiry.title_ar}{" "}
+                  :
+                </span>
+                &nbsp;
                 {/* {data?.support_enquiry.phone && (
                   <>
                     Ph:{" "}
@@ -308,7 +320,9 @@ export default function Footer({ footerData, socialLinkData, locale, data }) {
                 size="text3"
                 className="text-white w-full sm:w-[40%] pr-[15px] xl:pr-[30px] max-sm:mb-4"
               >
-                {parse(data?.newsletter?.main_title)}
+                {parse(
+                  isEn ? data?.newsletter?.title : data?.newsletter?.title_ar,
+                )}
               </Text>
               <div className="w-full sm:w-[60%]">
                 <RecaptchaProvider>
@@ -324,14 +338,16 @@ export default function Footer({ footerData, socialLinkData, locale, data }) {
           </div>
 
           <div className="w-full lg:w-[20%] flex flex-wrap">
-            {footerData?.card?.map((item, index) => (
+            {paymentCards?.map((item, index) => (
               <div
                 key={"card" + index}
                 className={cn(locale === "ar" ? "mr-auto" : "ml-auto")}
               >
                 <Image
-                  src={item?.media?.media_path}
-                  alt={item?.media?.media_alt}
+                  src={item?.media?.path}
+                  alt={
+                    isEn ? item?.media?.alt : item?.media?.alt_ar
+                  }
                   width={120}
                   height={16}
                   className="w-[160px] lg:w-[100px] xl:w-[120px] 2xl:w-[150px] block"
