@@ -29,26 +29,18 @@ import { cn } from "@/lib/utils";
 
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
+import { commonValidations } from "@/lib/validations";
 
 // Validation schema
 const formSchema = z.object({
-  firstName: z
-    .string()
-    .min(2, "First name must be at least 2 characters")
-    .max(50, "First name cannot exceed 50 characters"),
-  lastName: z
-    .string()
-    .min(2, "Last name must be at least 2 characters")
-    .max(50, "Last name cannot exceed 50 characters"),
-  companyName: z.string().optional(),
-  email: z.string().email("Invalid email address"),
-  phone: z
-    .string()
-    .min(10, "Phone number is required")
-    .max(20, "Phone number is too long"),
-  region: z.string().min(1, "Please select a region"),
-  helpWith: z.string().optional(),
-  message: z.string().optional(),
+  firstName: commonValidations.name("First name"),
+  lastName: commonValidations.name("Last name"),
+  companyName: commonValidations.optionalString(),
+  email: commonValidations.email(),
+  phone: commonValidations.phone,
+  region: commonValidations.region,
+  helpWith: commonValidations.optionalString(),
+  message: commonValidations.optionalString(),
 });
 
 // Shared styles

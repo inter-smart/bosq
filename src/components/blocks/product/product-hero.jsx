@@ -39,11 +39,11 @@ export default function ProductHero({ data, locale, slug, link }) {
           </Heading>
         )}
 
-        {data?.description && (
+        {/* {data?.description && (
           <div dir={locale === "ar" ? "rtl" : "ltr"} className={cn("typography", "[--text-color:#282828]")}>
             {parse(isEn ? data?.description : data?.description_ar)}
           </div>
-        )}
+        )} */}
       </div>
     </section>
   );

@@ -107,4 +107,6 @@ export const commonValidations = {
   optionalBoolean: () => z.boolean().optional(),
 
   optionalString: () => z.string().optional(),
+
+  region: ()=> z.string().min(1, "Please select a region"),
 };
