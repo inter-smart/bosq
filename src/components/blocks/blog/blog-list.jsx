@@ -80,7 +80,7 @@ export default function BlogList({ locale, data }) {
               Showing {startItem}-{endItem} of{" "}
               {totalCount} blogs
             </div>
-            {totalPages > 1 && (
+            {totalPages > 0 && (
               <div>
                 <Pagination>
                   <PaginationContent>
