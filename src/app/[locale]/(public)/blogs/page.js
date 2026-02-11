@@ -24,25 +24,28 @@ export async function generateMetadata({ params }) {
 }
 
 
-export default async function BlogsPage({params}) {
+export default async function BlogsPage({params, searchParams}) {
   const resolvedParams = await params;
+  const resolvedSearchParams = await searchParams;
   const {locale} = resolvedParams;
+  const page = Number(resolvedSearchParams?.page) || 1;
 
-  let page = 1;
-  let limit = 6;
+  const [cmsResult, blogListResult] = await Promise.all([
+    getBlogsData.getCmsData(),
+    getBlogsData.getBlogList(page, 6),
+  ]);
 
-  const { data, error } = await getBlogsData.getCmsData({ page, limit });
-
-  if(error){
+  if(cmsResult.error){
     NotFound()
   }
 
-  const { heroData, blogData } = data;
+  const { heroData } = cmsResult.data;
+  const blogListData = blogListResult.data || { blog: [], pagination: {} };
 
   return (
     <>
       <BlogHero locale={locale} data={heroData} slug={"Blogs"} />
-      <BlogList locale={locale} initialData={blogData} limit={limit} />
+      <BlogList locale={locale} data={blogListData} />
     </>
   );
 }
