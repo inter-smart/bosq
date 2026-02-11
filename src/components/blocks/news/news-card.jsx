@@ -6,18 +6,17 @@ import { Suspense } from "react";
 
 import { Skeleton } from "../../ui/skeleton";
 
-export default function BlogCard({ locale, data, isEn }) {
-  
+export default function NewsCard({ locale, data, isEn }) {
   return (
     <Suspense fallback={<CartCardSkeleton />}>
       <div className="group w-full h-full flex flex-col justify-between">
         <Link
-          href={`/${locale}/blogs/${data?.slug}`}
+          href={`/${locale}/news/${data?.slug}`}
           className="w-full block aspect-580/290 overflow-hidden border border-gray-100 mb-1.5 sm:mb-3 xl:mb-5"
         >
           <Image
             src={data?.media?.path || "/images/placeholder.jpg"}
-            alt={isEn? data?.media?.alt: data?.media?.alt_ar}
+            alt={isEn ? data?.media?.alt : data?.media?.alt_ar}
             width={583}
             height={290}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -29,7 +28,9 @@ export default function BlogCard({ locale, data, isEn }) {
             size="heading4"
             className="tracking-tight line-clamp-2 text-[#282828] mb-1 xl:mb-2 hover:underline"
           >
-            <Link href={`/${locale}/blogs/${data?.slug}`}>{isEn? data?.title: data?.title_ar}</Link>
+            <Link href={`/${locale}/news/${data?.slug}`}>
+              {isEn ? data?.title : data?.title_ar}
+            </Link>
           </Heading>
           <Text
             as="div"

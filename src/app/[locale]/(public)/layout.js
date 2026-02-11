@@ -284,6 +284,16 @@ const local_data = {
         label: "Projects",
         link: "/projects",
       },
+       {
+        id: "05",
+        label: "News",
+        link: "/news",
+      },
+       {
+        id: "06",
+        label: "Blog",
+        link: "/blogs",
+      },
     ],
     other_link_navigation: [
       {
