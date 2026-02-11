@@ -1,4 +1,7 @@
 {
+  "TestPage": {
+    "test": "test"
+  },
   "header": {
     "models": "Models",
     "about": "About Us",

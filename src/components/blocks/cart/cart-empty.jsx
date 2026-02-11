@@ -12,9 +12,9 @@ export default function CartEmpty({ locale }) {
 
   const t = useTranslations("cart");
 
-  const goProducts = () => {
-    router.push(`/${locale}/products`);
-  };
+  // const goProducts = () => {
+  //   router.push(`/${locale}/products`);
+  // };
 
   return (
     <div className="py-[30px] sm:py-[40px] xl:py-[60px] 2xl:py-[100px]">
@@ -22,23 +22,23 @@ export default function CartEmpty({ locale }) {
         <EmptyHeader>
           <EmptyTitle>
             <Heading as="h1" size="heading1" className="text-[#121212]">
-              {t("empty_cta")}
+              {t("empty_title")}
             </Heading>
           </EmptyTitle>
           <EmptyDescription>
             <Text as="p" size="text3" className="text-[#282828]">
-              Please add products to your cart
+              {t("empty_description")}
             </Text>
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
           <Button
-            onclick={goProducts}
+            // onclick={goProducts}
             variant={"button"}
             disabled={false}
             className="min-w-[168px] xl:min-w-[190px] 2xl:min-w-[220px] bg-black text-white mt-2"
           >
-            See All products Here
+            {t("empty_cta")}
           </Button>
         </EmptyContent>
       </Empty>

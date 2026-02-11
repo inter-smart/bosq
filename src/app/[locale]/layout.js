@@ -75,12 +75,12 @@ export default async function RootLayout({ children, params }) {
 
   const locale = resolvedParams.locale;
   const dir = localeDirection[resolvedParams.locale];
-  const messages = await getMessages();
+  const messages = await getMessages({ locale });
 
   return (
     <html lang={locale} dir={dir} className={cn(locale === "ar" ? cairo.className : heroNew.className, "antialiased")}>
       <body className={locale === "ar" ? "font-cairo" : "font-hero"}>
-        <NextIntlClientProvider messages={messages}>
+        <NextIntlClientProvider locale={locale} messages={messages}>
           <ReduxProvider>
             <NuqsAdapter>{children}</NuqsAdapter>
           </ReduxProvider>
