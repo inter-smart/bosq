@@ -45,7 +45,7 @@ export default async function NewsPage({params, searchParams}) {
   return (
     <>
       <NewsHero locale={locale} data={heroData} slug={"News"} type={"news"} />
-      <NewsList locale={locale} data={blogListData} type={"news"} />
+      <NewsList locale={locale} data={blogListData}  />
     </>
   );
 }

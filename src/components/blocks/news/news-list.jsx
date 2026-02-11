@@ -65,12 +65,12 @@ export default function NewsList({ locale, data }) {
   };
 
   return (
-    <section className="w-full block py-[30px] sm:py-[40px] xl:py-[60px] 2xl:py-[80px] relative z-0">
+    <section id="news-list" className="w-full block py-[30px] sm:py-[40px] xl:py-[60px] 2xl:py-[80px] relative z-0">
       <div className="container">
         <div className="flex flex-wrap -mx-2 sm:-mx-2 xl:-mx-2 2xl:-mx-3 [&>*]:p-2 sm:[&>*]:p-2 xl:[&>*]:p-2 2xl:[&>*]:p-3">
           {news.map((item) => (
             <div key={item?.id} className="w-full 2xs:w-1/2 sm:w-1/2 md:w-1/3">
-              <NewsCard type={"news"} locale={locale} data={item} isEn={isEn} />
+              <NewsCard locale={locale} data={item} isEn={isEn} />
             </div>
           ))}
         </div>

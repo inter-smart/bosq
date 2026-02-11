@@ -4,7 +4,6 @@ import { getNewsData } from "@/lib/api/news";
 import NotFound from "../../not-found/page";
 import { parseOtherMeta } from "@/lib/helper";
 import { DefaultOgImage } from "@/lib/api/constants";
-import { apiClient } from "@/lib/api/client";
 
 export async function generateMetadata({ params }) {
   const { slug, locale } = await params;

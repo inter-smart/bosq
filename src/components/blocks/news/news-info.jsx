@@ -341,7 +341,7 @@ export default function NewsInfo({
                       asChild
                     >
                       <Link
-                        href={`/${locale}/news`}
+                        href={`/${locale}/news#news-list`}
                       >
                         {isEn ? "See all" : "شاهد الكل"}
                         <ChevronRight
