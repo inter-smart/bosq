@@ -4,6 +4,7 @@ import AuthBoard from "./AuthBoard";
 import MatchingProduct from "./MatchingProduct";
 import OrderSummaryPage from "./OrderSummaryPage";
 import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
+import CheckoutResponse from "./checkout-response";
 
 export default function CheckoutList({ locale }) {
   return (
@@ -19,9 +20,6 @@ export default function CheckoutList({ locale }) {
 
               {/* Shipping Address Block */}
               <AddressSection locale={locale} />
-
-              {/* Order Status Response */}
-              {/* {orderStatus !== null && <CheckoutResponse orderStatus={orderStatus} />} */}
             </div>
 
             {/* Order Summary Sidebar */}

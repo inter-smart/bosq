@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Heading } from "@/components/utils/heading";
 import { usePlaceOrderMutation } from "@/store/services/orderApi";
+import { useRouter } from "next/navigation";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
@@ -52,7 +53,9 @@ const OrderSummary = ({ products, cartId, subTotal, itemsCount, totalItems, loca
     (state) => state.checkout,
   );
 
-  const [placeOrder, { isLoading, error }] = usePlaceOrderMutation();
+  const [placeOrder] = usePlaceOrderMutation();
+
+  const router = useRouter();
 
   const [couponStatus, setCouponStatus] = useState(false);
   const [couponCode, setCouponCode] = useState("");
@@ -161,13 +164,17 @@ const OrderSummary = ({ products, cartId, subTotal, itemsCount, totalItems, loca
     });
 
     try {
-      await placeOrder({
+      const orderData = await placeOrder({
         address,
         payment_type: selectedPaymentMethod,
       }).unwrap();
 
+      const orderId = orderData.data?.orderId;
+
+      console.log("Placed order with ID:", orderData);
+
       setShowConfirmDialog(false);
-      toast.success("Order placed successfully!");
+      router.push(`/order/success?orderId=${orderId}`);
     } catch (error) {
       console.log("error", error);
       toast.error(error || "Failed to place order");
