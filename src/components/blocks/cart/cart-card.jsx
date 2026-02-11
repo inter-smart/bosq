@@ -87,11 +87,23 @@ export default function CartCard({ product }) {
   const productTitle = product?.product?.title || product?.title;
   const productSlug = product?.product?.slug || product?.slug;
   const productPrice = product?.price;
+  const isProductOutOfStock = product?.is_sold_out;
 
   return (
     <Suspense fallback={<CartCardSkeleton />}>
       <div className="group w-full flex flex-wrap items-center border border-[#e9e9e9] rounded-[4px] p-3 sm:p-3 xl:p-5 2xl:p-6 hover:shadow-sm transition-shadow ">
-        <div className="w-[60px] sm:w-[100px] xl:w-[150px] 2xl:w-[200px] aspect-[168/186] rounded-lg bg-white border border-gray-100 sm:border-white max-sm:mb-3">
+        <div className="w-[60px] sm:w-[100px] xl:w-[150px] 2xl:w-[200px] aspect-[168/186] rounded-lg bg-white border border-gray-100 sm:border-white max-sm:mb-3 relative z-0">
+          {isProductOutOfStock && (
+            <div className="w-full h-full bg-[#f4f4f4]/90 flex items-center justify-center absolute z-2 inset-0">
+              <Button
+                variant={"black"}
+                disabled={true}
+                className="min-w-[100px] xl:min-w-[120px] 2xl:min-w-[200px] disabled:opacity-100 rounded-[2px] m-auto"
+              >
+                Out of Stock
+              </Button>
+            </div>
+          )}
           {productImage && (
             <Image
               src={productImage}
@@ -126,11 +138,15 @@ export default function CartCard({ product }) {
                 <button
                   onClick={handleDecrement}
                   className="transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={quantity <= 1 || isUpdating}
+                  disabled={quantity <= 1 || isUpdating || isProductOutOfStock}
                 >
                   <ChevronUp className="size-2.5 text-black" />
                 </button>
-                <button onClick={handleIncrement} className="transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled={isUpdating}>
+                <button
+                  onClick={handleIncrement}
+                  className="transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={isUpdating || isProductOutOfStock}
+                >
                   <ChevronDown className="size-2.5 text-black" />
                 </button>
               </div>

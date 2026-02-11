@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/utils/heading";
 import { Text } from "@/components/utils/text";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import CartCard from "./cart-card";
 import dynamic from "next/dynamic";
 import { useSelector, useDispatch } from "react-redux";
@@ -13,11 +13,17 @@ import {
   selectCartGrandTotal,
   selectCartIsLoading,
   selectCartIsUpdating,
+  selectCartDiscountTotal,
+  selectAppliedCoupon,
 } from "@/store/selectors/cart/selectors";
 import { fetchCart } from "@/store/slices/cartSlice";
 import CartEmpty from "./cart-empty";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useValidateCartMutation } from "@/store/services/commonApi";
+import { toast } from "sonner";
+import { setIsCheckoutAllowed } from "@/store/slices/checkoutSlice";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
@@ -25,9 +31,14 @@ const MediaQuery = dynamic(() => import("react-responsive"), {
 
 export default function CartList({ locale, data }) {
   const dispatch = useDispatch();
+  const router = useRouter();
+  const [validateCart, { isLoading: isValidating }] = useValidateCartMutation();
+
   const cartItems = useSelector(selectCartItems);
   const itemCount = useSelector(selectCartCount);
   const subtotal = useSelector(selectCartSubtotal);
+  const couponApplied = useSelector(selectAppliedCoupon);
+  const discountTotal = useSelector(selectCartDiscountTotal);
   const grandTotal = useSelector(selectCartGrandTotal);
   const isLoading = useSelector(selectCartIsLoading);
   const isUpdating = useSelector(selectCartIsUpdating);
@@ -46,6 +57,20 @@ export default function CartList({ locale, data }) {
   if (!isLoading && cartItems.length === 0) {
     return <CartEmpty />;
   }
+
+  const validateCheckout = async () => {
+    try {
+      await validateCart().unwrap();
+
+      dispatch(setIsCheckoutAllowed(true));
+
+      const encoded = btoa("allowed");
+
+      router.push(`/en/checkout?flow=${encoded}`);
+    } catch (error) {
+      toast.error(error || "Failed to validate cart");
+    }
+  };
 
   return (
     <section className="w-full block py-[15px_30px] xl:py-[20px_60px] 2xl:py-[30px_100px] relative z-0">
@@ -86,6 +111,17 @@ export default function CartList({ locale, data }) {
                 <span>Subtotal ({itemCount} items)</span>
                 AED {subtotal}
               </Text>
+
+              {couponApplied && (
+                <Text
+                  as="div"
+                  size="text3"
+                  className="font-normal text-[#282828] my-2 xl:my-3 2xl:my-4 [&_span]:font-light [&_span]:text-[#808080] flex justify-between"
+                >
+                  <span>Coupon Discount</span>
+                  AED {discountTotal}
+                </Text>
+              )}
               <Text
                 as="div"
                 size="text3"
@@ -104,8 +140,8 @@ export default function CartList({ locale, data }) {
                 AED {grandTotal}
               </Text>
               <MediaQuery minWidth={640}>
-                <Button variant={"black"} disabled={isUpdating || cartItems.length === 0} className="min-w-full mt-2" asChild>
-                  <Link href="/checkout">{isUpdating ? "Updating..." : "Checkout"}</Link>
+                <Button variant={"black"} disabled={isUpdating || isValidating || cartItems.length === 0} className="min-w-full mt-2" asChild>
+                  <div onClick={validateCheckout}>{isValidating ? "Validating..." : isUpdating ? "Updating..." : "Checkout"}</div>
                 </Button>
               </MediaQuery>
             </div>
@@ -115,8 +151,8 @@ export default function CartList({ locale, data }) {
       <MediaQuery maxWidth={639}>
         <hr />
         <div className="w-full py-1 px-4 pb-2 bg-white sticky z-1 bottom-0 left-0 right-0 shadow-[0px_-5px_10px_rgba(0,0,0,0.1)]">
-          <Button variant={"black"} disabled={isUpdating || cartItems.length === 0} className="min-w-full" asChild>
-            <Link href="/checkout">{isUpdating ? "Updating..." : "Checkout"}</Link>
+          <Button variant={"black"} disabled={isUpdating || isValidating || cartItems.length === 0} className="min-w-full" asChild>
+            <div onClick={validateCheckout}>{isValidating ? "Validating..." : isUpdating ? "Updating..." : "Checkout"}</div>
           </Button>
         </div>
       </MediaQuery>

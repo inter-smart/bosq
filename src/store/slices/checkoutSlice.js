@@ -7,12 +7,17 @@ const initialState = {
   selectedBillingAddressId: null,
   useSameAddressForBilling: false,
   useSameAddressForShipping: false,
+  isCheckOutAllowed: false,
 };
 
 const checkoutSlice = createSlice({
   name: "checkout",
   initialState,
   reducers: {
+    setIsCheckoutAllowed: (state, action) => {
+      state.isCheckOutAllowed = action.payload;
+    },
+
     setSelectedShippingAddress: (state, action) => {
       state.selectedShippingAddressId = action.payload;
       // If using same address for billing, sync billing with shipping
@@ -64,6 +69,7 @@ export const {
   setUseSameAddressForBilling,
   setUseSameAddressForShipping,
   resetCheckout,
+  setIsCheckoutAllowed,
 } = checkoutSlice.actions;
 
 export default checkoutSlice.reducer;
