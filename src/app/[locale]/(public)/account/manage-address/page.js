@@ -87,7 +87,6 @@ export default async function ManageAddressPage({ params }) {
   }
 
 
-  console.log(data)
 
 
   return (

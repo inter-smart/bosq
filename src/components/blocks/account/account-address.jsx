@@ -30,6 +30,7 @@ const MediaQuery = dynamic(() => import("react-responsive"), {
 });
 
 export default function AccountAddress({ data, locale, addressData }) {
+
   const router = useRouter();
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingAddress, setEditingAddress] = useState(null);
@@ -70,7 +71,7 @@ export default function AccountAddress({ data, locale, addressData }) {
   };
 
   const handleSetDefault = async (addressId) => {
-    const { data, error, message } = await fetchFromAPIWithCredentials(
+    const { error } = await fetchFromAPIWithCredentials(
       `/api/frontend/address/${addressId}/default`,
       {
         method: "PUT",

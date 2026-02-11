@@ -68,7 +68,7 @@ export const ProfileData = {
 
   getAddress: async () => {
     try {
-      const data = await fetchApi(
+      const {data} = await fetchApi(
         `/api/frontend/address`,
         {
           method: "GET",
