@@ -1,5 +1,5 @@
 import { getRequestConfig } from "next-intl/server";
-import { locales, defaultLocale } from "./src/il8n/config";
+import { locales, defaultLocale } from "./config";
 
 export default getRequestConfig(async ({ requestLocale }) => {
   let locale = await requestLocale;
@@ -10,6 +10,6 @@ export default getRequestConfig(async ({ requestLocale }) => {
 
   return {
     locale,
-    messages: (await import(`./messages/${locale}.json`)).default,
+    messages: (await import(`../../messages/${locale}.json`)).default,
   };
 });

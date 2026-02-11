@@ -75,5 +75,22 @@
     "enquire_now": "استفسر الآن",
     "book_a_test_drive": "احجز تجربة القيادة",
     "service_enquiry": "استعلام عن الخدمة"
+  },
+  "cart": {
+    "title": "سلة التسوق",
+    "empty_title": "سلة التسوق فارغة",
+    "empty_description": "يرجى إضافة منتجات إلى سلة التسوق",
+    "empty_cta": "عرض جميع المنتجات هنا",
+    "continue_shopping": "متابعة التسوق",
+    "order_summary": "ملخص الطلب",
+    "subtotal": "المجموع الفرعي ({count} عناصر)",
+    "coupon_discount": "خصم القسيمة",
+    "shipping_charge": "رسوم الشحن",
+    "total_price": "السعر الإجمالي",
+    "checkout": "إتمام الشراء",
+    "validating": "جارٍ التحقق...",
+    "updating": "جارٍ التحديث...",
+    "removing": "جارٍ الإزالة...",
+    "line_total": "إجمالي السطر"
   }
 }

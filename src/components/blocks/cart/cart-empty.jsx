@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { Heading } from "@/components/utils/heading";
 import { Text } from "@/components/utils/text";
@@ -8,6 +9,8 @@ import { useRouter } from "next/navigation";
 
 export default function CartEmpty({ locale }) {
   const router = useRouter();
+
+  const t = useTranslations("cart");
 
   const goProducts = () => {
     router.push(`/${locale}/products`);
@@ -19,7 +22,7 @@ export default function CartEmpty({ locale }) {
         <EmptyHeader>
           <EmptyTitle>
             <Heading as="h1" size="heading1" className="text-[#121212]">
-              Your Cart is Empty
+              {t("empty_cta")}
             </Heading>
           </EmptyTitle>
           <EmptyDescription>

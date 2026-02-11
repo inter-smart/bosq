@@ -1,6 +1,8 @@
 import localFont from "next/font/local";
 import { Cairo } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages } from "next-intl/server";
 import "./../globals.css";
 import { cn } from "@/lib/utils";
 import { locales, localeDirection } from "../../il8n/config";
@@ -73,13 +75,16 @@ export default async function RootLayout({ children, params }) {
 
   const locale = resolvedParams.locale;
   const dir = localeDirection[resolvedParams.locale];
+  const messages = await getMessages();
 
   return (
     <html lang={locale} dir={dir} className={cn(locale === "ar" ? cairo.className : heroNew.className, "antialiased")}>
       <body className={locale === "ar" ? "font-cairo" : "font-hero"}>
-        <ReduxProvider>
-          <NuqsAdapter>{children}</NuqsAdapter>
-        </ReduxProvider>
+        <NextIntlClientProvider messages={messages}>
+          <ReduxProvider>
+            <NuqsAdapter>{children}</NuqsAdapter>
+          </ReduxProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );
