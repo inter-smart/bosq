@@ -28,7 +28,7 @@ const MediaQuery = dynamic(() => import("react-responsive"), {
 });
 
 const navBtnStyle = cn(
-  "text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-white flex items-center gap-0.5 disabled:opacity-50 not-disabled:hover:scale-110 transition",
+  "text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-white flex items-center gap-0.5 disabled:opacity-50 not-disabled:hover:scale-110 transition cursor-pointer",
 );
 
 export default function BlogInfo({ data, popularData, relatedData, locale }) {
@@ -42,12 +42,11 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
     }
   }
 
-   const isEn = locale === "en";
+  const isEn = locale === "en";
 
   const pathname = usePathname();
 
   const blogUrl = `${window.location.origin}${pathname}`;
-
 
   const [emblaRef, emblaApi] = useEmblaCarousel(
     {
@@ -104,31 +103,30 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
         <div className="w-full absolute -z-1 inset-0">
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex touch-pan-y touch-pinch-zoom">
-              {data?.blogGallery?.map((item, index) => (
-                <div
-                  key={"brand" + index}
-                  className={cn(
-                    "flex-[0_0_100%] min-w-0 select-none transition aspect-6/4 sm:aspect-1920/740 bg-black"
-                  )}
-                >
-                  <picture className="absolute -z-2 inset-0 opacity-95">
-                    <source
-                      media="(max-width: 640px)"
-                      srcSet={item?.mobile?.path}
-                    />
-                    <Image
-                      src={item?.desktop?.path}
-                      alt={item?.desktop?.alt}
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 80vw"
-                      className="-z-2 object-cover"
-                      placeholder="blur"
-                      blurDataURL="/images/placeholder.jpg"
-                      priority
-                    />
-                  </picture>
-                </div>
-              ))}
+              {/* {data?.map((item, index) => ( */}
+              <div
+                className={cn(
+                  "flex-[0_0_100%] min-w-0 select-none transition aspect-6/4 sm:aspect-1920/740 bg-black",
+                )}
+              >
+                <picture className="absolute -z-2 inset-0 opacity-95">
+                  <source
+                    media="(max-width: 640px)"
+                    srcSet={data?.media?.mobile?.path}
+                  />
+                  <Image
+                    src={data?.media?.desktop?.path}
+                    alt={data?.media?.desktop?.alt}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 80vw"
+                    className="-z-2 object-cover"
+                    placeholder="blur"
+                    blurDataURL="/images/placeholder.jpg"
+                    priority
+                  />
+                </picture>
+              </div>
+              {/* ))} */}
             </div>
           </div>
           {/* <div className="flex gap-4 xl:gap-8 absolute z-0 bottom-5 sm:bottom-10 sm:right-[calc((100%-var(--container-sm))/2)] md:right-[calc((100%-var(--container-md))/2)] lg:right-[calc((100%-var(--container-lg))/2)] xl:right-[calc((100%-var(--container-xl))/2)] 2xl:right-[calc((100%-var(--container-2xl))/2)] 3xl:right-[calc((100%-var(--container-3xl))/2)] px-4">
@@ -173,7 +171,7 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
                   "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
                   locale === "ar"
                     ? "-translate-x-1 xl:-translate-x-2 "
-                    : "translate-x-1 xl:translate-x-2 "
+                    : "translate-x-1 xl:translate-x-2 ",
                 )}
               />
             </Heading>
@@ -221,32 +219,40 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
                 </div>
                 <div>
                   <div className="flex gap-4 xl:gap-8">
-                    <PrevButton
-                      onClick={onPrevButtonClick}
-                      disabled={prevBtnDisabled}
-                      className={cn(navBtnStyle, "text-black")}
-                    >
-                      <ChevronLeft
-                        className={cn(
-                          "size-3.5",
-                          locale === "ar" && "rotate-180"
-                        )}
-                      />
-                      <span className="hidded sm:block">Previous </span>
-                    </PrevButton>
-                    <NextButton
-                      onClick={onNextButtonClick}
-                      disabled={nextBtnDisabled}
-                      className={cn(navBtnStyle, "text-black")}
-                    >
-                      <span className="hidded sm:block">Next </span>
-                      <ChevronRight
-                        className={cn(
-                          "size-3.5",
-                          locale === "ar" && "rotate-180"
-                        )}
-                      />
-                    </NextButton>
+                    {data?.prevBlog && (
+                      <Link href={`/${locale}/blogs/${data?.prevBlog}`}>
+                        <PrevButton
+                          onClick={onPrevButtonClick}
+                          disabled={!data?.prevBlog}
+                          className={cn(navBtnStyle, "text-black")}
+                        >
+                          <ChevronLeft
+                            className={cn(
+                              "size-3.5",
+                              locale === "ar" && "rotate-180",
+                            )}
+                          />
+                          <span className="hidded sm:block">Previous </span>
+                        </PrevButton>
+                      </Link>
+                    )}
+                    {data?.nextBlog && (
+                      <Link href={`/${locale}/blogs/${data?.nextBlog}`}>
+                        <NextButton
+                          onClick={onNextButtonClick}
+                          disabled={!data?.nextBlog}
+                          className={cn(navBtnStyle, "text-black")}
+                        >
+                          <span className="hidded sm:block">Next </span>
+                          <ChevronRight
+                            className={cn(
+                              "size-3.5",
+                              locale === "ar" && "rotate-180",
+                            )}
+                          />
+                        </NextButton>
+                      </Link>
+                    )}
                   </div>
                 </div>
               </div>
@@ -269,7 +275,7 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
                         "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
                         locale === "ar"
                           ? "-translate-x-1 xl:-translate-x-2 "
-                          : "translate-x-1 xl:translate-x-2 "
+                          : "translate-x-1 xl:translate-x-2 ",
                       )}
                     />
                   </Heading>
@@ -340,7 +346,7 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
                         <ChevronRight
                           className={cn(
                             "size-3.5",
-                            locale === "ar" && "rotate-180"
+                            locale === "ar" && "rotate-180",
                           )}
                         />
                       </Link>

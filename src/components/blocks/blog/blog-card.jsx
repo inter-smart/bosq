@@ -5,18 +5,10 @@ import Link from "next/link";
 import { Suspense } from "react";
 
 import { Skeleton } from "../../ui/skeleton";
+import { format } from "date-fns";
 
 export default function BlogCard({ locale, data, isEn }) {
-  let formattedDate = "";
-
-  if (data?.publishedAt) {
-    const date = new Date(data.publishedAt);
-
-    if (!isNaN(date)) {
-      formattedDate = format(date, "MMMM dd, yyyy");
-    }
-  }
-
+  
   return (
     <Suspense fallback={<CartCardSkeleton />}>
       <div className="group w-full h-full flex flex-col justify-between">
