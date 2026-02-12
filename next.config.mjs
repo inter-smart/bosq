@@ -3,14 +3,17 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin("./src/il8n/request.js");
 
 /** @type {import('next').NextConfig} */
-const API_URL = process.env.API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000";
-
 const nextConfig = {
   async rewrites() {
+    // Use environment variable or fallback to localhost for development
+    const apiUrl = process.env.API_URL || "http://localhost:4000";
+
+    console.log("🔄 API Rewrite configured:", apiUrl); // Helpful for debugging
+
     return [
       {
         source: "/api/:path*",
-        destination: `${API_URL}/api/:path*`,
+        destination: `${apiUrl}/api/:path*`,
       },
     ];
   },
@@ -18,10 +21,10 @@ const nextConfig = {
     dangerouslyAllowLocalIP: true,
     remotePatterns: [
       {
-        protocol: "http", // Use 'http' for localhost during development
+        protocol: "http",
         hostname: "localhost",
-        port: "4000", // Specify the exact port your local image server is running on
-        pathname: "/**", // Use '/**' to allow any path
+        port: "4000",
+        pathname: "/**",
       },
       {
         protocol: "https",

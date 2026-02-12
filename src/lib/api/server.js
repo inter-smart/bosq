@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 
-const API_URL = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL;
+// ✅ CHANGE: Remove fallback to NEXT_PUBLIC_API_BASE_URL
+const API_URL = process.env.API_URL || "";
 
 export async function fetchApi(endpoint, options = {}, passCookie = false) {
   const url = `${API_URL}${endpoint}`;
@@ -9,14 +10,15 @@ export async function fetchApi(endpoint, options = {}, passCookie = false) {
 
   if (passCookie) {
     const cookieStore = await cookies();
-    cookieHeader = cookieStore
-      .getAll()
-      .map((c) => `${c.name}=${c.value}`)
-      .join("; ");
+    const allCookies = cookieStore.getAll();
+
+    if (allCookies.length > 0) {
+      cookieHeader = allCookies.map((c) => `${c.name}=${c.value}`).join("; ");
+    }
   }
 
   const config = {
-    credentials: "include",
+    // ✅ REMOVE: credentials: "include" (not needed for server-to-server)
     headers: {
       "Content-Type": "application/json",
       ...(cookieHeader && { Cookie: cookieHeader }),
