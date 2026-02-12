@@ -332,6 +332,6 @@ export const defaultMeta = {
 
 export const DefaultOgImage = "/images/brand-logo-primary.svg";
 
-export const API_BASE_URL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend` || "http://localhost:3001";
+export const API_BASE_URL = `/api/frontend`;
 
 
