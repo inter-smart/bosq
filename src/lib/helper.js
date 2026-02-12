@@ -47,7 +47,9 @@ export function parseOtherMeta(htmlString) {
 }
 
 export async function fetchFromAPI(endpoint, options = {}) {
-  const url = endpoint;
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+
+  const url = `${API_BASE_URL}${endpoint}`;
   const defaultOptions = {
     headers: {
       "Content-Type": "application/json",
@@ -84,7 +86,8 @@ export async function fetchFromAPI(endpoint, options = {}) {
 }
 
 export async function fetchFromAPIWithCredentials(endpoint, options = {}) {
-  const url = endpoint;
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+  const url = `${API_BASE_URL}${endpoint}`;
 
   const defaultOptions = {
     credentials: "include",
@@ -123,7 +126,8 @@ export async function fetchFromAPIWithCredentials(endpoint, options = {}) {
 }
 
 export async function fetchWithCredentials(endpoint, options = {}) {
-  const url = endpoint;
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+  const url = `${API_BASE_URL}${endpoint}`;
 
   const defaultOptions = {
     credentials: "include",
