@@ -15,5 +15,12 @@
 [context.branch-deploy.environment]
   API_URL = "https://crm.intersmarthosting.in/bosq"
 
+# Proxy all /api/frontend/* requests to the backend API
+[[redirects]]
+  from = "/api/frontend/*"
+  to = "https://crm.intersmarthosting.in/bosq/api/frontend/:splat"
+  status = 200
+  force = true
+
 [[plugins]]
   package = "@netlify/plugin-nextjs"
