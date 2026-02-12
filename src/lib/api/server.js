@@ -1,6 +1,5 @@
 import { cookies } from "next/headers";
 
-// ✅ CHANGE: Remove fallback to NEXT_PUBLIC_API_BASE_URL
 const API_URL = process.env.API_URL || "";
 
 export async function fetchApi(endpoint, options = {}, passCookie = false) {
@@ -18,7 +17,6 @@ export async function fetchApi(endpoint, options = {}, passCookie = false) {
   }
 
   const config = {
-    // ✅ REMOVE: credentials: "include" (not needed for server-to-server)
     headers: {
       "Content-Type": "application/json",
       ...(cookieHeader && { Cookie: cookieHeader }),
