@@ -220,7 +220,7 @@ export default function HomeHero({ data, locale }) {
           </div>
         </div>
 
-        {data.length > 1 && (
+        { (data && data?.length > 1) && (
           <div>
             <PrevButton
               onClick={onPrevButtonClick}

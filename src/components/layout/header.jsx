@@ -35,7 +35,7 @@ const itemVariants = {
   exit: { opacity: 0, x: -20, transition: { duration: 0.2 } },
 };
 
-export default function Header({ headerData, navigationData, locale, data }) {
+export default function Header({ navigationData, locale, data }) {
   const { scrollYProgress } = useScroll();
   const [visible, setVisible] = useState(true);
   const [bg, setBg] = useState(false);
@@ -60,7 +60,6 @@ export default function Header({ headerData, navigationData, locale, data }) {
   const handleNavigationLinkClick = () => setSheetOpen(false);
 
   const switchLocale = (newLocale) => {
-    console.log("locale: ", locale);
     if (newLocale === locale) return;
 
     // Remove current locale from pathname and add new one
@@ -154,10 +153,10 @@ export default function Header({ headerData, navigationData, locale, data }) {
 
             {/* Brand Logo */}
             <div className="w-[80px] 2xs:w-[90px] sm:w-[100px] xl:w-[120px] 2xl:w-[140px] 3xl:w-[176px]">
-              <Link href={`/${locale}${headerData?.slug}`}>
+              <Link href={"/"}>
                 <Image
-                  src={showDarkHeader ? headerData?.logoUrl : headerData?.logoWhiteUrl}
-                  alt={headerData?.name}
+                  src={showDarkHeader ? data?.primary_media?.path : data?.secondary_media?.path}
+                  alt={data?.primary_media?.alt}
                   width={176}
                   height={57}
                   unoptimized

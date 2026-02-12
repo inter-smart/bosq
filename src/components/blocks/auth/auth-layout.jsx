@@ -8,7 +8,7 @@ export default function AuthLayout({
   locale,
   data,
   children,
-  isApiData = false,
+  isApiData = true,
 }) {
   const isEn = locale === "en";
 

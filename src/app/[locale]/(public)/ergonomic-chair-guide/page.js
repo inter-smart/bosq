@@ -25,6 +25,8 @@ export default async function ErgonomicChairPage({ params }) {
 
   const { data, error } = await getErgonomicChairData();
 
+  console.log(error)
+
   if (error) {
     notFound();
   }

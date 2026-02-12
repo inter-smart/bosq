@@ -203,6 +203,7 @@ export default function PersonalInformationForm({ data }) {
                   {...field}
                   type="email"
                   className={inputStyle}
+                  disabled={true}
                   placeholder="Enter email address"
                 />
               </FormControl>

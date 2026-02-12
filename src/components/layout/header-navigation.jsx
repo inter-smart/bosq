@@ -84,7 +84,7 @@ export default function HeaderNavigation({
       className="w-full max-w-full justify-start lg:justify-center max-lg:[&>div]:w-full static"
     >
       <NavigationMenuList className="xl:gap-x-3 2xl:gap-x-4 max-lg:flex-col max-lg:[&>div]:w-full">
-        {menuItems.map((item, i) => {
+        {menuItems?.map((item, i) => {
           const isActive = pathname === item.slug;
           return (
             <motion.div key={i} variants={itemVariants}>
@@ -111,7 +111,7 @@ export default function HeaderNavigation({
                             setHoveredSubSubmenu(null);
                           }}
                         >
-                          {item?.items?.map((subItem) => {
+                          {item?.items?.slice(0, 5).map((subItem) => {
                             const isSubActive = pathname === subItem.slug;
                             const hasSubSubItems =
                               subItem?.items && subItem.items.length > 0;
@@ -217,6 +217,19 @@ export default function HeaderNavigation({
                               </li>
                             );
                           })}
+                          {item?.items?.length > 5 && (
+                            <li>
+                              <NavigationMenuLink asChild>
+                                <Link
+                                  href={`/${locale}${item.slug}`}
+                                  onClick={onNavigationClick}
+                                  className="inline-block mt-3 text-[14px] 2xl:text-[17px] 3xl:text-[22px] font-medium text-[#f17423] hover:underline transition-colors duration-200"
+                                >
+                                  View All
+                                </Link>
+                              </NavigationMenuLink>
+                            </li>
+                          )}
                         </ul>
 
                         {/* Image container */}

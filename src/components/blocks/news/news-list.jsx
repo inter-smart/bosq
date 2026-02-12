@@ -1,5 +1,4 @@
 import React from "react";
-import BlogCard from "./blog-card";
 
 import {
   Pagination,
@@ -11,20 +10,23 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { cn } from "@/lib/utils";
+import NewsCard from "./news-card";
 
 const ITEMS_PER_PAGE = 6;
 
-export default function BlogList({ locale, data }) {
-  const blogs = data?.blog || [];
+export default function NewsList({ locale, data }) {
+  const news = data?.news || [];
   const pagination = data?.pagination || {};
   const isEn = locale === "en";
+
+  console.log("pagination:", data?.pagination)
 
   const { totalCount = 0, totalPages = 1, currentPage = 1 } = pagination;
 
   const startItem = (currentPage - 1) * ITEMS_PER_PAGE + 1;
   const endItem = Math.min(currentPage * ITEMS_PER_PAGE, totalCount);
 
-  const getPageHref = (page) => `/${locale}/blogs?page=${page}`;
+  const getPageHref = (page) => `/${locale}/news?page=${page}`;
 
   // Generate pagination items
   const getPaginationItems = () => {
@@ -63,12 +65,12 @@ export default function BlogList({ locale, data }) {
   };
 
   return (
-    <section className="w-full block py-[30px] sm:py-[40px] xl:py-[60px] 2xl:py-[80px] relative z-0">
+    <section id="news-list" className="w-full block py-[30px] sm:py-[40px] xl:py-[60px] 2xl:py-[80px] relative z-0">
       <div className="container">
         <div className="flex flex-wrap -mx-2 sm:-mx-2 xl:-mx-2 2xl:-mx-3 [&>*]:p-2 sm:[&>*]:p-2 xl:[&>*]:p-2 2xl:[&>*]:p-3">
-          {blogs.map((item) => (
+          {news.map((item) => (
             <div key={item?.id} className="w-full 2xs:w-1/2 sm:w-1/2 md:w-1/3">
-              <BlogCard locale={locale} data={item} isEn={isEn} />
+              <NewsCard locale={locale} data={item} isEn={isEn} />
             </div>
           ))}
         </div>
@@ -78,7 +80,7 @@ export default function BlogList({ locale, data }) {
           <div className="w-full flex flex-col sm:flex-row sm:justify-between items-center gap-4 mt-5 xl:mt-10 2xl:mt-16">
             <div className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-normal text-[#bbb]">
               Showing {startItem}-{endItem} of{" "}
-              {totalCount} blogs
+              {totalCount} news
             </div>
             {totalPages > 0 && (
               <div>

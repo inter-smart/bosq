@@ -19,7 +19,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Suspense } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import BlogRelated from "./blog-related";
+import NewsRelated from "./news-related";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 
@@ -31,7 +31,7 @@ const navBtnStyle = cn(
   "text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-white flex items-center gap-0.5 disabled:opacity-50 not-disabled:hover:scale-110 transition cursor-pointer",
 );
 
-export default function BlogInfo({
+export default function NewsInfo({
   data,
   popularData,
   relatedData,
@@ -41,7 +41,7 @@ export default function BlogInfo({
 
   const pathname = usePathname();
 
-  const blogUrl = `${window.location.origin}${pathname}`;
+  const newsUrl = `${window.location.origin}${pathname}`;
 
   const [emblaRef, emblaApi] = useEmblaCarousel(
     {
@@ -56,7 +56,7 @@ export default function BlogInfo({
     {
       id: 1,
       name: "facebook",
-      link: `https://www.facebook.com/sharer/sharer.php?u=${blogUrl}`,
+      link: `https://www.facebook.com/sharer/sharer.php?u=${newsUrl}`,
       media: {
         type: "image",
         path: "/images/share-fb.svg",
@@ -76,7 +76,7 @@ export default function BlogInfo({
     {
       id: 3,
       name: "linkedin",
-      link: `https://www.linkedin.com/sharing/share-offsite/?url=${blogUrl}`,
+      link: `https://www.linkedin.com/sharing/share-offsite/?url=${newsUrl}`,
       media: {
         type: "image",
         path: "/images/share-linkedin.svg",
@@ -216,7 +216,7 @@ export default function BlogInfo({
                   <div className="flex gap-4 xl:gap-8">
                     {data?.prevData && (
                       <Link
-                        href={`/${locale}/blogs/${data?.prevData}`}
+                        href={`/${locale}/news/${data?.prevData}`}
                       >
                         <PrevButton
                           onClick={onPrevButtonClick}
@@ -235,7 +235,7 @@ export default function BlogInfo({
                     )}
                     {data?.nextData && (
                       <Link
-                        href={`/${locale}/blogs/${data?.nextData}`}
+                        href={`/${locale}/news/${data?.nextData}`}
                       >
                         <NextButton
                           onClick={onNextButtonClick}
@@ -257,7 +257,7 @@ export default function BlogInfo({
               </div>
 
               {relatedData?.list?.length > 0 && (
-                <BlogRelated locale={locale} data={relatedData} />
+                <NewsRelated locale={locale} data={relatedData} />
               )}
             </div>
             <MediaQuery minWidth={1024}>
@@ -341,7 +341,7 @@ export default function BlogInfo({
                       asChild
                     >
                       <Link
-                        href={`/${locale}/blogs`}
+                        href={`/${locale}/news#news-list`}
                       >
                         {isEn ? "See all" : "شاهد الكل"}
                         <ChevronRight
@@ -358,7 +358,7 @@ export default function BlogInfo({
             </MediaQuery>
 
             <MediaQuery maxWidth={1023}>
-              <BlogRelated locale={locale} data={popularData} />
+              <NewsRelated locale={locale} data={popularData} />
             </MediaQuery>
           </div>
         </div>

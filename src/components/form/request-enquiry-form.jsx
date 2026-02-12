@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,45 +27,41 @@ import { cn } from "@/lib/utils";
 
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
+import { commonValidations } from "@/lib/validations";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { toast } from "sonner";
 
 // Validation schema
 const formSchema = z.object({
-  firstName: z
-    .string()
-    .min(2, "First name must be at least 2 characters")
-    .max(50, "First name cannot exceed 50 characters"),
-  lastName: z
-    .string()
-    .min(2, "Last name must be at least 2 characters")
-    .max(50, "Last name cannot exceed 50 characters"),
-  companyName: z.string().optional(),
-  email: z.string().email("Invalid email address"),
-  phone: z
-    .string()
-    .min(10, "Phone number is required")
-    .max(20, "Phone number is too long"),
-  region: z.string().min(1, "Please select a region"),
-  helpWith: z.string().optional(),
-  message: z.string().optional(),
+  firstName: commonValidations.name("First name"),
+  lastName: commonValidations.name("Last name"),
+  companyName: commonValidations.optionalString(),
+  email: commonValidations.email(),
+  phone: commonValidations.phone,
+  state: commonValidations.region(),
+  options_id: commonValidations.optionalString(),
+  message: commonValidations.optionalString(),
 });
 
 // Shared styles
 const labelStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-[#282828]"
+  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-[#282828]",
 );
 
 const inputStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] data-[size=default]:h-[35px] 2xl:data-[size=default]:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1"
+  "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] data-[size=default]:h-[35px] 2xl:data-[size=default]:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1",
 );
 
 const errorStyle = cn("text-[#f17423]");
 
 const textareaStyle = cn(
   inputStyle,
-  "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none"
+  "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none",
 );
 
-export default function RequestEnquiryForm({ locale = "en" }) {
+export default function RequestEnquiryForm({ locale = "en", states, options }) {
+  const { executeRecaptcha } = useGoogleReCaptcha();
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -76,8 +70,8 @@ export default function RequestEnquiryForm({ locale = "en" }) {
       companyName: "",
       email: "",
       phone: "",
-      region: "",
-      helpWith: "",
+      state: "",
+      options_id: "",
       message: "",
     },
   });
@@ -85,49 +79,47 @@ export default function RequestEnquiryForm({ locale = "en" }) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(null);
 
-  const regions = [
-    "Dubai",
-    "Sharjah",
-    "Jiddah",
-    "Abu Dhabi",
-    "Ras Al Khaimah",
-    "Umm Al Quwain",
-  ];
-
-  const helpWithOptions = [
-    "Discuss a current project",
-    "Request a quote",
-    "Technical support",
-    "General inquiry",
-  ];
-
   const onSubmit = async (values) => {
     setLoading(true);
-    setSuccess(null);
+    setSuccess("");
 
-    // Simulate API call for local testing
-    setTimeout(() => {
-      console.log("Request Enquiry:", values);
+    console.log(values);
+    try {
+      const recaptchaToken = await executeRecaptcha(
+        "customization_enquiry_form",
+      );
+      const API_URL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend/enquiries/customization`;
+
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          recaptcha_token: recaptchaToken,
+          type: "contact",
+          first_name: values.firstName,
+          last_name: values.lastName,
+          state_id: values.state,
+          company_name: values.companyName,
+          options_id: values.options_id ? Number(values.options_id) : undefined,
+          ...values,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Failed to send enquiry");
+
+      const data = await res.json();
       form.reset();
-      setSuccess("Enquiry submitted successfully!");
       setLoading(false);
-    }, 1000);
+      setSuccess(data?.message);
+      toast.success(data?.message);
+    } catch (err) {
+      console.error(err);
+      setLoading(false);
+      setSuccess("Something went wrong. Please try again.");
+      toast.error("Something went wrong. Please try again.");
+    }
 
-    // TODO: Connect to API when ready
-    // try {
-    //   const res = await fetch("http://localhost:1337/api/enquiry", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({ data: values }),
-    //   });
-    //   if (!res.ok) throw new Error("Failed to send enquiry");
-    //   form.reset();
-    //   setSuccess("Enquiry submitted successfully!");
-    // } catch (err) {
-    //   console.error(err);
-    //   setSuccess("Something went wrong. Please try again.");
-    // }
-    // setLoading(false);
+    setLoading(false);
   };
 
   return (
@@ -236,7 +228,7 @@ export default function RequestEnquiryForm({ locale = "en" }) {
                   {...field}
                   className={cn(
                     inputStyle,
-                    "w-full p-0 [&_input]:flex-1 [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px] [--react-international-phone-flag-width:20px] [--react-international-phone-flag-height:20px]"
+                    "w-full p-0 [&_input]:flex-1 [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px] [--react-international-phone-flag-width:20px] [--react-international-phone-flag-height:20px]",
                   )}
                   placeholder="Enter your mobile number"
                 />
@@ -249,11 +241,11 @@ export default function RequestEnquiryForm({ locale = "en" }) {
         {/* Region */}
         <FormField
           control={form.control}
-          name="region"
+          name="state"
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                State / Region<span className={errorStyle}>*</span>
+                State<span className={errorStyle}>*</span>
               </FormLabel>
               <Select
                 dir={locale === "ar" ? "rtl" : "ltr"}
@@ -262,13 +254,17 @@ export default function RequestEnquiryForm({ locale = "en" }) {
               >
                 <FormControl>
                   <SelectTrigger className={cn(inputStyle, "w-full")}>
-                    <SelectValue placeholder="Select region" />
+                    <SelectValue placeholder="Select state" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {regions.map((item, index) => (
-                    <SelectItem key={index} value={item} className={labelStyle}>
-                      {item}
+                  {states.map((item, index) => (
+                    <SelectItem
+                      key={index}
+                      value={item.id.toString()}
+                      className={labelStyle}
+                    >
+                      {item?.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -281,7 +277,7 @@ export default function RequestEnquiryForm({ locale = "en" }) {
         {/* What can we help with */}
         <FormField
           control={form.control}
-          name="helpWith"
+          name="options_id"
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
@@ -298,9 +294,13 @@ export default function RequestEnquiryForm({ locale = "en" }) {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {helpWithOptions.map((item, index) => (
-                    <SelectItem key={index} value={item} className={labelStyle}>
-                      {item}
+                  {options?.items?.map((item, index) => (
+                    <SelectItem
+                      key={index}
+                      value={item.id.toString()}
+                      className={labelStyle}
+                    >
+                      {item?.title}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -348,7 +348,7 @@ export default function RequestEnquiryForm({ locale = "en" }) {
               "text-[10px] mt-1 w-full",
               success.includes("successfully")
                 ? "text-green-600"
-                : "text-red-600"
+                : "text-red-600",
             )}
           >
             {success}

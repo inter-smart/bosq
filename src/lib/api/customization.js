@@ -8,5 +8,14 @@ export const getCustomizationCms = {
         } catch (error) {
             return sendError(error)
         }
+    },
+
+     getStates: async()=>{
+        try {
+            const data = await apiClient(`/api/frontend/enquiries/customization/states`);
+            return sendSuccess(data?.data);
+        } catch (error) {
+            return sendError(error)
+        }
     }
 }

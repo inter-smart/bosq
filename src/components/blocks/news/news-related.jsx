@@ -6,9 +6,9 @@ import Autoplay from "embla-carousel-autoplay";
 
 import { cn } from "@/lib/utils";
 import parse from "html-react-parser";
-import BlogCard from "./blog-card";
+import NewsCard from "./news-card";
 
-export default function BlogRelated({ locale, data }) {
+export default function NewsRelated({ locale, data,  }) {
   const isEn = locale === "en";
   const [emblaRef] = useEmblaCarousel(
     { loop: false, align: "start", direction: locale === "ar" ? "rtl" : "ltr" },
@@ -37,10 +37,10 @@ export default function BlogRelated({ locale, data }) {
           <div className="flex touch-pan-y touch-pinch-zoom -mx-1 sm:-mx-2 xl:-mx-3 2xl:-mx-5 *:p-1 sm:*:p-2 xl:*:p-3 2xl:*:p-5">
             {data?.list?.map((item, index) => (
               <div
-                key={"blog" + index}
+                key={"news" + index}
                 className="flex-[0_0_50%] min-w-0 select-none"
               >
-                <BlogCard locale={locale} data={item} isEn={isEn} />
+                <NewsCard locale={locale} data={item} isEn={isEn} />
               </div>
             ))}
           </div>
