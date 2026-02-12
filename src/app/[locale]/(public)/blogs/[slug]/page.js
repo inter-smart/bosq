@@ -4,29 +4,24 @@ import { getBlogsData } from "@/lib/api/blog";
 import NotFound from "../../not-found/page";
 import { parseOtherMeta } from "@/lib/helper";
 import { DefaultOgImage } from "@/lib/api/constants";
-import { apiClient } from "@/lib/api/client";
 
 export async function generateMetadata({ params }) {
   const { slug, locale } = await params;
-  
+
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend/blog-details?slug=${slug}`,
-    );
-    
-     // Check if response is ok
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend/blog-details?slug=${slug}`);
+
+    // Check if response is ok
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
 
     // Parse JSON response
     const data = await response.json();
-    
-    
+
     const isEN = locale === "en";
     const metadata = data?.data?.metaData;
     console.log("data:", metadata);
-    
 
     if (!metadata) {
       return {
@@ -35,16 +30,7 @@ export async function generateMetadata({ params }) {
       };
     }
 
-    const {
-      meta_title,
-      meta_description,
-      meta_keywords,
-      other_meta,
-      meta_title_ar,
-      meta_description_ar,
-      meta_keywords_ar,
-      other_meta_ar,
-    } = metadata;
+    const { meta_title, meta_description, meta_keywords, other_meta, meta_title_ar, meta_description_ar, meta_keywords_ar, other_meta_ar } = metadata;
 
     // Select language-specific metadata
     const title = isEN ? meta_title : meta_title_ar;
@@ -53,7 +39,7 @@ export async function generateMetadata({ params }) {
 
     // Use blog's own image or fallback
     const ogImage = DefaultOgImage;
-    const { other } = isEN?  parseOtherMeta(other_meta): parseOtherMeta(other_meta_ar);
+    const { other } = isEN ? parseOtherMeta(other_meta) : parseOtherMeta(other_meta_ar);
 
     return {
       title: title || "Blog Post",
@@ -106,7 +92,6 @@ export async function generateMetadata({ params }) {
   }
 }
 
-
 export default async function BlogDetailPage({ params }) {
   const resolvedParams = await params;
   const { slug } = resolvedParams;
@@ -124,18 +109,8 @@ export default async function BlogDetailPage({ params }) {
 
   return (
     <>
-      <ProductHero
-        locale={locale}
-        data={heroData}
-        slug={slugData}
-        link={"/blogs"}
-      />
-      <BlogInfo
-        locale={locale}
-        data={blogData}
-        popularData={popularBlogData}
-        relatedData={relatedBlogData}
-      />
+      <ProductHero locale={locale} data={heroData} slug={slugData} link={"/blogs"} />
+      <BlogInfo locale={locale} data={blogData} popularData={popularBlogData} relatedData={relatedBlogData} />
     </>
   );
 }

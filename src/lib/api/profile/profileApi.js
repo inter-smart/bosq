@@ -1,4 +1,5 @@
-import { fetchApi, sendError, sendSuccess } from "../server-client";
+import { sendError, sendSuccess } from "../api";
+import { fetchApi } from "../server";
 
 export const ProfileData = {
   getMyProfile: async () => {
@@ -68,7 +69,7 @@ export const ProfileData = {
 
   getAddress: async () => {
     try {
-      const {data} = await fetchApi(
+      const { data } = await fetchApi(
         `/api/frontend/address`,
         {
           method: "GET",

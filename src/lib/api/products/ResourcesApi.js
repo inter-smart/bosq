@@ -1,4 +1,5 @@
-import { apiClient, sendError, sendSuccess } from "../client";
+import { apiClient } from "../client";
+import { sendError, sendSuccess } from "../api";
 
 export const ProductData = {
   getFilterData: async () => {
@@ -24,29 +25,10 @@ export const ProductData = {
     const endpoint = `/api/frontend/products/product-listing?${params}`;
 
     try {
-      console.info("[ProductService:getProductList] Request", {
-        endpoint,
-        params,
-        time: new Date().toISOString(),
-      });
-
       const data = await apiClient(endpoint);
-
-      console.info("[ProductService:getProductList] Success", {
-        endpoint,
-        count: data?.data?.length ?? 0,
-      });
 
       return sendSuccess(data?.data);
     } catch (error) {
-      console.error("[ProductService:getProductList] Error", {
-        endpoint,
-        params,
-        message: error?.message,
-        status: error?.response?.status,
-        response: error?.response?.data,
-      });
-
       return sendError(error);
     }
   },
@@ -64,8 +46,6 @@ export const ProductData = {
       Object.entries(attributeFilters).forEach(([attrSlug, valueSlug]) => {
         params.append(`attr[${attrSlug}]`, valueSlug);
       });
-
-      console.log(params);
 
       const data = await apiClient(`/api/frontend/products/product?${params.toString()}`);
 

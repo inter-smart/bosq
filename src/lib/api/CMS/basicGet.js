@@ -1,4 +1,5 @@
-import { apiClient, sendError, sendSuccess } from "../client";
+import { apiClient } from "../client";
+import { sendError, sendSuccess } from "../api";
 
 export const getSustainabilityData = async () => {
   try {
@@ -45,7 +46,6 @@ export const getMaterialData = async () => {
   }
 };
 
-
 export const getSiteData = async () => {
   try {
     const data = await apiClient(`/api/frontend/site-settings`);
@@ -54,8 +54,6 @@ export const getSiteData = async () => {
     return sendError(error);
   }
 };
-
-
 
 // projects
 export const getProjectData = async () => {
@@ -70,16 +68,14 @@ export const getProjectData = async () => {
 // lib/api/CMS/basicGet.js
 export const getProjectListBySlug = async ({ slug, limit = 6 }) => {
   try {
-    const data = await apiClient(
-      `/api/frontend/projects/project-list?slug=${slug}&limit=${limit}`
-    );
+    const data = await apiClient(`/api/frontend/projects/project-list?slug=${slug}&limit=${limit}`);
     return sendSuccess(data?.data);
   } catch (error) {
     return sendError(error);
   }
 };
 
-export const getProjectDetails = async ({slug}) => {
+export const getProjectDetails = async ({ slug }) => {
   try {
     const data = await apiClient(`/api/frontend/projects/project-details?slug=${slug}`);
     return sendSuccess(data?.data);

@@ -1,13 +1,11 @@
-import { apiClient, sendError, sendSuccess } from "./client";
+import { sendError, sendSuccess } from "./api";
+import { apiClient } from "./client";
 
 export const getNewsData = {
-  
-
-
   getCmsData: async () => {
     try {
-      const {data} = await apiClient(`/api/frontend/news`);
-      
+      const { data } = await apiClient(`/api/frontend/news`);
+
       return sendSuccess(data);
     } catch (error) {
       return sendError(error);
@@ -25,12 +23,10 @@ export const getNewsData = {
 
   getNewsDetailsData: async (slug) => {
     try {
-      const {data} = await apiClient(`/api/frontend/news-details?slug=${slug}`);
+      const { data } = await apiClient(`/api/frontend/news-details?slug=${slug}`);
       return sendSuccess(data);
     } catch (error) {
       return sendError(error);
     }
   },
 };
-
-

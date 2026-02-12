@@ -1,4 +1,5 @@
-import { apiClient, sendError, sendSuccess } from "./client";
+import { sendError, sendSuccess } from "./api";
+import { apiClient } from "./client";
 
 export const getContactData = {
   getCmsData: async () => {
