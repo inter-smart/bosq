@@ -319,14 +319,14 @@ const OrderSummary = ({
                     placeholder="Have a coupon code?"
                     value={couponCode}
                     onChange={(e) => setCouponCode(e.target.value)}
-                    disabled={!!appliedCoupon}
+                    // disabled={!!appliedCoupon}
                     className={
                       "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1 flex-1"
                     }
                   />
                   <Button
                     variant={"black"}
-                    disabled={!couponCode.trim() || !!appliedCoupon}
+                    disabled={!couponCode.trim()}
                     onClick={handleApplyCoupon}
                     className="min-w-[60px] sm:min-w-[60px] xl:min-w-[80px] 2xl:min-w-[100px] h-[35px] lg:h-[35px] 2xl:h-[45px] 3xl:h-[45px] "
                   >
