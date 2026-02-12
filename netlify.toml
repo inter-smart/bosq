@@ -1,0 +1,19 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+# Environment variables for all contexts
+[context.production.environment]
+  API_URL = "https://crm.intersmarthosting.in/bosq"
+
+[context.deploy-preview.environment]
+  API_URL = "https://crm.intersmarthosting.in/bosq"
+
+[context.branch-deploy.environment]
+  API_URL = "https://crm.intersmarthosting.in/bosq"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
