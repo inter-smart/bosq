@@ -4,6 +4,10 @@ export const selectCartItems = (state) => state.cart.items;
 // Cart item count (total quantity)
 export const selectCartCount = (state) => state.cart.item_count;
 
+// Checkout page permission
+
+export const selectCheckoutPermission = (state) => state.checkout.isCheckOutAllowed;
+
 // Cart totals
 export const selectCartSubtotal = (state) => state.cart.subtotal;
 export const selectCartDiscountTotal = (state) => state.cart.discount_total;

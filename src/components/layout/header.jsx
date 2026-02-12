@@ -1,12 +1,12 @@
 "use client";
 
-import { useTransition, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "../ui/button";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 import dynamic from "next/dynamic";
@@ -40,12 +40,9 @@ export default function Header({ navigationData, locale, data }) {
   const [visible, setVisible] = useState(true);
   const [bg, setBg] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(true);
-  const [isPending, startTransition] = useTransition();
   const [headerHover, setHeaderHover] = useState(true);
 
   const pathname = usePathname();
-
-  const router = useRouter();
 
   // Close mobile menu on route change
   useEffect(() => setSheetOpen(false), [pathname]);
@@ -73,11 +70,8 @@ export default function Header({ navigationData, locale, data }) {
     // Set cookie for persistence
     document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000`;
 
-    // Use transition for smooth loading state
-    startTransition(() => {
-      router.push(newPath);
-      setIsOpen(false);
-    });
+    // Hard navigation to ensure server re-renders with new locale messages
+    window.location.href = newPath;
   };
 
   const showDarkHeader = headerHover === true || pathname !== `/${locale}`;
