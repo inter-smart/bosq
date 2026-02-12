@@ -4,19 +4,6 @@ const withNextIntl = createNextIntlPlugin("./src/il8n/request.js");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  async rewrites() {
-    // Use environment variable or fallback to localhost for development
-    const apiUrl = process.env.API_URL || "http://localhost:4000";
-
-    console.log("🔄 API Rewrite configured:", apiUrl); // Helpful for debugging
-
-    return [
-      {
-        source: "/api/:path*",
-        destination: `${apiUrl}/api/:path*`,
-      },
-    ];
-  },
   images: {
     dangerouslyAllowLocalIP: true,
     remotePatterns: [
