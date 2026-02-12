@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Heading } from "@/components/utils/heading";
 import { OrderEmpty } from "./order-empty";
 import ProductCard from "../product/product-card";
@@ -18,9 +18,18 @@ const ITEMS_PER_PAGE = 6;
 
 export default function AccountWishlist({ data, locale }) {
   const [currentPage, setCurrentPage] = useState(1);
+  const [wishlistItems, setWishlistItems] = useState(data?.items || []);
 
-  // Access the items array from data structure
-  const wishlistItems = data?.items || [];
+  const handleRemoveItem = useCallback((variantId) => {
+    setWishlistItems((prev) => {
+      const updated = prev.filter((item) => item.variant_id !== variantId);
+      const newTotalPages = Math.ceil(updated.length / ITEMS_PER_PAGE);
+      if (currentPage > newTotalPages && newTotalPages > 0) {
+        setCurrentPage(newTotalPages);
+      }
+      return updated;
+    });
+  }, [currentPage]);
 
   // Pagination calculations
   const totalPages = Math.ceil(wishlistItems.length / ITEMS_PER_PAGE);
@@ -99,13 +108,13 @@ export default function AccountWishlist({ data, locale }) {
             size={"heading5"}
             className="font-semibold text-[#282828] mb-1 xl:mb-1.5"
           >
-            Wishlist ( {data?.no_of_items || wishlistItems.length} Items )
+            Wishlist ( {wishlistItems.length} Items )
           </Heading>
 
           <div className="flex flex-wrap -mx-3 sm:-mx-2 xl:-mx-5 2xl:-mx-8 [&>*]:p-3 sm:[&>*]:p-2 xl:[&>*]:p-5 2xl:[&>*]:p-8">
             {currentItems.map((item) => (
               <div key={item.id} className="w-full 2xs:w-1/2 sm:w-1/2 md:w-1/3">
-                <ProductCard product={item} />
+                <ProductCard product={item} onRemove={handleRemoveItem} />
               </div>
             ))}
           </div>

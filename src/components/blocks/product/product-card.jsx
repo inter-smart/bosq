@@ -7,12 +7,25 @@ import { Suspense, useState } from "react";
 import { motion } from "motion/react";
 import { Skeleton } from "../../ui/skeleton";
 import { Button } from "@/components/ui/button";
+import { ProductData } from "@/lib/api/products/ResourcesApi";
+import { fetchWithCredentials } from "@/lib/helper";
+import { useRemoveFromWishlistMutation } from "@/store/services/wishListApi";
 const colorVariant = ["#bababa", "#333333", "#8db600", "#ff0000", "#000000"];
 
-export default function ProductCard({ product, isEn, locale = "en" }) {
+export default function ProductCard({ product, isEn, locale = "en", onRemove }) {
   const productUrl = `/${locale}/products/${product?.base_slug}${product?.query_params}`;
-  const [wishlist, setWishlist] = useState(product?.isWishlisted || false);
 
+  const [removeFromWishlist, { isLoading }] =
+    useRemoveFromWishlistMutation();
+
+  const handleRemoveFromWishlist = async (id) => {
+    try {
+      await removeFromWishlist(id).unwrap();
+      onRemove?.(id);
+    } catch (error) {
+      console.error("Remove wishlist failed:", error);
+    }
+  };
   return (
     <Suspense fallback={<ProductCardSkelton />}>
       <div className="group w-full block">
@@ -20,13 +33,13 @@ export default function ProductCard({ product, isEn, locale = "en" }) {
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            onClick={() => setWishlist(!wishlist)}
+            onClick={() => handleRemoveFromWishlist(product?.variant_id)}
             className="absolute z-2 top-2 xl:top-4 right-2 xl:right-4"
           >
             <svg width="15" height="13" viewBox="0 0 15 13" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M7.39062 2.03027C8.85818 0.419111 10.5094 0.0894194 11.749 0.544922C12.9908 1.00129 13.9263 2.28275 13.8955 4.12402C13.8676 5.78912 12.7686 7.51198 11.3096 9.04004C9.9379 10.4766 8.3011 11.6826 7.12598 12.4326C5.95106 11.6827 4.3155 10.4769 2.94434 9.04102C1.48523 7.51297 0.385558 5.78917 0.357422 4.12402C0.326449 2.28301 1.26218 1.00146 2.50391 0.544922C3.74349 0.0891915 5.39453 0.418918 6.8623 2.03027L7.12695 2.32031L7.39062 2.03027Z"
-                fill={wishlist ? "black" : "none"}
+                fill={product?.isWishlisted ? "black" : "none"}
                 stroke="#282828"
                 strokeWidth="1"
               />
@@ -86,9 +99,9 @@ export default function ProductCard({ product, isEn, locale = "en" }) {
             </Link>
           </Text>
           <div className="flex items-center gap-0.5 xl:gap-1">
-            {product?.hasMoreVariants ? (
+            {product?.colorVariant ? (
               <>
-                {colorVariant?.slice(0, 3).map((color, index) => (
+                {product?.colorVariant?.slice(0, 3).map((color, index) => (
                   <Link
                     key={"color" + index}
                     href={productUrl}

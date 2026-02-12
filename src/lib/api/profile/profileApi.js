@@ -98,4 +98,27 @@ export const ProfileData = {
       return sendError(error);
     }
   },
+
+
+
+
+  getWishList: async () => {
+    try {
+      const {data} = await fetchApi(
+        "/api/frontend/wish-list",
+        {
+          method: "GET",
+          credentials: "include",
+        },
+        true,
+      );
+      return sendSuccess(data?.data);
+    } catch (error) {
+      return sendError(error);
+    }
+  },
+
+
+
+  
 };

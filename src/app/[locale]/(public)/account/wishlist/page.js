@@ -2,6 +2,7 @@ import ProductHero from "@/components/blocks/product/product-hero";
 import AccountWishlist from "@/components/blocks/account/account-wishlist";
 import AccountLayout from "@/components/blocks/account/account-layout";
 import { getMetaData } from "@/lib/api/metaApi";
+import { ProfileData } from "@/lib/api/profile/profileApi";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -180,6 +181,14 @@ const local_data = {
 export default async function Wishlist({ params }) {
   const resolvedParams = await params;
   const { locale } = resolvedParams;
+
+
+  const {data, error} = await ProfileData.getWishList();
+  const local_data = data;
+
+  console.log("data",error)
+
+
   return (
     <>
       <ProductHero
@@ -189,7 +198,7 @@ export default async function Wishlist({ params }) {
       />
 
       <AccountLayout locale={locale}>
-        <AccountWishlist locale={locale} data={local_data?.wishlistData} />
+        <AccountWishlist locale={locale} data={local_data?.wishlistData} wishList={data} />
       </AccountLayout>
     </>
   );
