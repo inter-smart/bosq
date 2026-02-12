@@ -6,17 +6,22 @@ const API_URL = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || proces
 export async function fetchApi(endpoint, options = {}, passCookie = false) {
   const url = `${API_URL}${endpoint}`;
 
-  let cookieStore = null;
+  let cookieHeader = "";
 
   if (passCookie) {
-    cookieStore = await cookies();
+    const cookieStore = await cookies();
+
+    cookieHeader = cookieStore
+      .getAll()
+      .map((c) => `${c.name}=${c.value}`)
+      .join("; ");
   }
 
   const config = {
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
-      ...(cookieStore && { Cookie: cookieStore }),
+      ...(passCookie && cookieHeader && { Cookie: cookieHeader }),
       ...options.headers,
     },
     ...options,
@@ -24,6 +29,8 @@ export async function fetchApi(endpoint, options = {}, passCookie = false) {
 
   try {
     const res = await fetch(url, config);
+
+    console.log(res);
 
     if (!res.ok) {
       const error = await res.json().catch(() => ({ message: "Request failed" }));
