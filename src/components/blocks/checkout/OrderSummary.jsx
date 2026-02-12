@@ -27,6 +27,7 @@ import {
 import { Heading } from "@/components/utils/heading";
 import { useApplyCouponMutation, useRemoveCouponMutation, usePlaceOrderMutation } from "@/store/services/orderApi";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
@@ -62,7 +63,8 @@ const OrderSummary = ({
     (state) => state.checkout,
   );
 
-  const dispatch = useDispatch();
+  const { user } = useAuth();
+
   const [placeOrder] = usePlaceOrderMutation();
   const [applyCoupon] = useApplyCouponMutation();
   const [removeCoupon] = useRemoveCouponMutation();
@@ -309,41 +311,43 @@ const OrderSummary = ({
             </Text>
 
             {/* Coupon Code Section */}
-            <div className="w-full mb-2 xl:mb-3 2xl:mb-4">
-              <div className="w-full bg-[#eee] p-1 xl:p-2 rounded-[4px] flex gap-1.5">
-                <Input
-                  type="text"
-                  placeholder="Have a coupon code?"
-                  value={couponCode}
-                  onChange={(e) => setCouponCode(e.target.value)}
-                  disabled={!!appliedCoupon}
-                  className={
-                    "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1 flex-1"
-                  }
-                />
-                <Button
-                  variant={"black"}
-                  disabled={!couponCode.trim() || !!appliedCoupon}
-                  onClick={handleApplyCoupon}
-                  className="min-w-[60px] sm:min-w-[60px] xl:min-w-[80px] 2xl:min-w-[100px] h-[35px] lg:h-[35px] 2xl:h-[45px] 3xl:h-[45px] "
-                >
-                  {"Add"}
-                </Button>
-              </div>
-              {appliedCoupon && (
-                <div className="flex justify-between gap-2 my-1">
-                  <Text as="div" size="none" className="text-[10px] 2xl:text-[12px] leading-normal font-normal text-[#8e8e8e]">
-                    '{appliedCoupon}' Coupon Applied
-                  </Text>
-                  <button
-                    className="text-[10px] 2xl:text-[12px] leading-normal font-normal text-black hover:underline cursor-pointer hover:text-red-600"
-                    onClick={handleRemoveCoupon}
+            {user && (
+              <div className="w-full mb-2 xl:mb-3 2xl:mb-4">
+                <div className="w-full bg-[#eee] p-1 xl:p-2 rounded-[4px] flex gap-1.5">
+                  <Input
+                    type="text"
+                    placeholder="Have a coupon code?"
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value)}
+                    disabled={!!appliedCoupon}
+                    className={
+                      "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1 flex-1"
+                    }
+                  />
+                  <Button
+                    variant={"black"}
+                    disabled={!couponCode.trim() || !!appliedCoupon}
+                    onClick={handleApplyCoupon}
+                    className="min-w-[60px] sm:min-w-[60px] xl:min-w-[80px] 2xl:min-w-[100px] h-[35px] lg:h-[35px] 2xl:h-[45px] 3xl:h-[45px] "
                   >
-                    Remove
-                  </button>
+                    {"Add"}
+                  </Button>
                 </div>
-              )}
-            </div>
+                {appliedCoupon && (
+                  <div className="flex justify-between gap-2 my-1">
+                    <Text as="div" size="none" className="text-[10px] 2xl:text-[12px] leading-normal font-normal text-[#8e8e8e]">
+                      '{appliedCoupon}' Coupon Applied
+                    </Text>
+                    <button
+                      className="text-[10px] 2xl:text-[12px] leading-normal font-normal text-black hover:underline cursor-pointer hover:text-red-600"
+                      onClick={handleRemoveCoupon}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Total Price */}
             <Text as="div" size="text3" className="font-normal text-[#282828] my-2 xl:my-3 2xl:my-4 flex justify-between max-sm:font-semibold">
