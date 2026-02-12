@@ -9,6 +9,8 @@ const OrderSummaryPage = async ({ locale }) => {
     return notFound();
   }
 
+  console.log("SERVER COMPONENT");
+
   const products = data?.items || [];
   const cartId = data?.id || null;
   const subTotal = data?.sub_total || 0;

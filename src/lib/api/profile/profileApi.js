@@ -1,4 +1,4 @@
-import { fetchApi, sendError, sendSuccess } from "../client";
+import { fetchApi, sendError, sendSuccess } from "../server-client";
 
 export const ProfileData = {
   getMyProfile: async () => {
