@@ -1,15 +1,12 @@
 import { checkoutData } from "@/lib/api/checkOut/checkOutApi";
-import { notFound } from "next/navigation";
 import OrderSummary from "./OrderSummary";
 
 const OrderSummaryPage = async ({ locale }) => {
   const { data, error } = await checkoutData.getCartSummary();
 
   if (error) {
-    return notFound();
+    console.error("Cart summary fetch failed:", error);
   }
-
-  console.log("SERVER COMPONENT");
 
   const products = data?.items || [];
   const cartId = data?.id || null;
