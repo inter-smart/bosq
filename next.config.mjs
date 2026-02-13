@@ -34,7 +34,7 @@ const nextConfig = {
     return [
       {
         source: "/api/proxy/:path*",
-        destination: "https://crm.intersmarthosting.in/bosq/api/:path*",
+        destination: "https://crm.intersmarthosting.in/bosq/:path*",
       },
     ];
   },
