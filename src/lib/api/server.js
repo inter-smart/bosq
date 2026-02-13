@@ -1,21 +1,25 @@
 import { cookies } from "next/headers";
 
-const API_URL = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL;
+const API_URL = process.env.API_URL || "";
 
 export async function fetchApi(endpoint, options = {}, passCookie = false) {
   const url = `${API_URL}${endpoint}`;
 
-  let cookieStore = null;
+  let cookieHeader = null;
 
   if (passCookie) {
-    cookieStore = await cookies();
+    const cookieStore = await cookies();
+    const allCookies = cookieStore.getAll();
+
+    if (allCookies.length > 0) {
+      cookieHeader = allCookies.map((c) => `${c.name}=${c.value}`).join("; ");
+    }
   }
 
   const config = {
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
-      ...(cookieStore && { Cookie: cookieStore }),
+      ...(cookieHeader && { Cookie: cookieHeader }),
       ...options.headers,
     },
     ...options,

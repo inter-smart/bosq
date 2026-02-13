@@ -4,7 +4,7 @@ import { locales, defaultLocale } from "./il8n/config";
 
 const PROTECTED_PATHS = ["/account"];
 
-export function proxy(request) {
+export function middleware(request) {
   const { pathname } = request.nextUrl;
 
   /* --------------------------------------------------

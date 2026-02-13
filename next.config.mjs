@@ -8,10 +8,10 @@ const nextConfig = {
     dangerouslyAllowLocalIP: true,
     remotePatterns: [
       {
-        protocol: "http", // Use 'http' for localhost during development
+        protocol: "http",
         hostname: "localhost",
-        port: "4000", // Specify the exact port your local image server is running on
-        pathname: "/**", // Use '/**' to allow any path
+        port: "4000",
+        pathname: "/**",
       },
       {
         protocol: "https",
@@ -29,6 +29,14 @@ const nextConfig = {
         pathname: "/**",
       },
     ],
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/api/proxy/:path*",
+        destination: "https://crm.intersmarthosting.in/bosq/:path*",
+      },
+    ];
   },
 };
 

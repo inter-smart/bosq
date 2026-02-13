@@ -57,7 +57,7 @@ const ProductChooseDesign = ({
       try {
         setIsModelLoading(true);
 
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend/common-actions/product/choose-design?slug=${productSlug}`);
+        const res = await fetch(`/api/frontend/common-actions/product/choose-design?slug=${productSlug}`);
         const json = await res.json();
 
         setModels(json?.data?.models || []);

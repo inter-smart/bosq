@@ -68,7 +68,7 @@ export default function EnquiryForm() {
   const [success, setSuccess] = useState(null);
 
   const { executeRecaptcha } = useGoogleReCaptcha();
-  const API_URL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend/enquiries/contact`;
+  const API_URL = `/api/frontend/enquiries/contact`;
 
   const onSubmit = async (values) => {
     setLoading(true);

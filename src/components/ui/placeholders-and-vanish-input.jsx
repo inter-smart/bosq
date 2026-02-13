@@ -186,7 +186,7 @@ export function PlaceholdersAndVanishInput({
     }
 
     setIsSubmitting(true);
-    const API_URL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend/enquiries/news-letter`;
+    const API_URL = `/api/frontend/enquiries/news-letter`;
     try {
       const recaptchaToken = await executeRecaptcha("contact_enquiry_form");
 

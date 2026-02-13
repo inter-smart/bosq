@@ -66,7 +66,7 @@ export default function ContactEnquiryForm({ locale }) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
 
-  const API_URL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend/enquiries/contact`;
+  const API_URL = `/api/frontend/enquiries/contact`;
 
   const onSubmit = async (values) => {
     setLoading(true);

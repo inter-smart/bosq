@@ -88,7 +88,7 @@ export default function RequestEnquiryForm({ locale = "en", states, options }) {
       const recaptchaToken = await executeRecaptcha(
         "customization_enquiry_form",
       );
-      const API_URL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend/enquiries/customization`;
+      const API_URL = `/api/frontend/enquiries/customization`;
 
       const res = await fetch(API_URL, {
         method: "POST",
