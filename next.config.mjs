@@ -30,6 +30,14 @@ const nextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: "/api/proxy/:path*",
+        destination: "https://crm.intersmarthosting.in/bosq/api/:path*",
+      },
+    ];
+  },
 };
 
 export default withNextIntl(nextConfig);
