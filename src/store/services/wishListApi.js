@@ -19,31 +19,19 @@ export const wishlistApi = createApi({
     // ===============================
     // ADD TO WISHLIST
     // ===============================
-    addToWishlist: builder.mutation({
-      query: (productId) => ({
+    toggleWishlist: builder.mutation({
+      query: (variantId) => ({
         url: "/api/frontend/wish-list",
         method: "POST",
-        body: { product_id: productId },
+        body: { variantId },
       }),
       invalidatesTags: ["Wishlist"],
     }),
-
-    // ===============================
-    // REMOVE FROM WISHLIST
-    // ===============================
-    removeFromWishlist: builder.mutation({
-      query: (id) => ({
-        url: `/api/frontend/wish-list/${id}`,
-        method: "DELETE",
-      }),
-      invalidatesTags: ["Wishlist"],
-    })
   }),
 });
 
 
 export const {
   useGetWishlistQuery,
-  useAddToWishlistMutation,
-  useRemoveFromWishlistMutation,
+  useToggleWishlistMutation,
 } = wishlistApi;

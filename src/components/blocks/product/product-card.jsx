@@ -9,23 +9,49 @@ import { Skeleton } from "../../ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { ProductData } from "@/lib/api/products/ResourcesApi";
 import { fetchWithCredentials } from "@/lib/helper";
-import { useRemoveFromWishlistMutation } from "@/store/services/wishListApi";
+import { useToggleWishlistMutation, useGetWishlistQuery } from "@/store/services/wishListApi";
+import { useAppSelector } from "@/store/hooks";
+import { toast } from "sonner";
 const colorVariant = ["#bababa", "#333333", "#8db600", "#ff0000", "#000000"];
 
 export default function ProductCard({ product, isEn, locale = "en", onRemove }) {
   const productUrl = `/${locale}/products/${product?.base_slug}${product?.query_params}`;
 
-  const [removeFromWishlist, { isLoading }] =
-    useRemoveFromWishlistMutation();
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const { data: wishlistData } = useGetWishlistQuery(undefined, {
+    skip: !isAuthenticated,
+  });
 
-  const handleRemoveFromWishlist = async (id) => {
+  const variantId = product?.variant_id || product?.id;
+  const wishlistItems = wishlistData?.data?.wishlistData?.items || [];
+  const isInWishlist = wishlistItems.some((item) => item.variant_id === variantId);
+
+  const [isWishlisted, setIsWishlisted] = useState(!!product?.isWishlisted || isInWishlist);
+
+  const [toggleWishlist, { isLoading }] =
+    useToggleWishlistMutation();
+
+  const handleToggleWishlist = async (id) => {
     try {
-      await removeFromWishlist(id).unwrap();
-      onRemove?.(id);
+
+      if(!isAuthenticated){
+        toast.error("Please login to add to wishlist");
+        return;
+      }
+      const result = await toggleWishlist(id).unwrap();
+      const added = result?.data?.action === "added";
+      setIsWishlisted(added);
+      if (!added) {
+        onRemove?.(id);
+      }
     } catch (error) {
-      console.error("Remove wishlist failed:", error);
+      console.error("Wishlist toggle failed:", error);
     }
   };
+
+
+  
+
   return (
     <Suspense fallback={<ProductCardSkelton />}>
       <div className="group w-full block">
@@ -33,13 +59,13 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            onClick={() => handleRemoveFromWishlist(product?.variant_id)}
+            onClick={() => handleToggleWishlist(product?.variant_id || product?.id)}
             className="absolute z-2 top-2 xl:top-4 right-2 xl:right-4"
           >
             <svg width="15" height="13" viewBox="0 0 15 13" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M7.39062 2.03027C8.85818 0.419111 10.5094 0.0894194 11.749 0.544922C12.9908 1.00129 13.9263 2.28275 13.8955 4.12402C13.8676 5.78912 12.7686 7.51198 11.3096 9.04004C9.9379 10.4766 8.3011 11.6826 7.12598 12.4326C5.95106 11.6827 4.3155 10.4769 2.94434 9.04102C1.48523 7.51297 0.385558 5.78917 0.357422 4.12402C0.326449 2.28301 1.26218 1.00146 2.50391 0.544922C3.74349 0.0891915 5.39453 0.418918 6.8623 2.03027L7.12695 2.32031L7.39062 2.03027Z"
-                fill={product?.isWishlisted ? "black" : "none"}
+                fill={isWishlisted ? "black" : "none"}
                 stroke="#282828"
                 strokeWidth="1"
               />
