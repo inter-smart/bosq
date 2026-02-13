@@ -32,7 +32,6 @@ import {
 import { useState } from "react";
 import { useDebouncedValue } from "@/hooks/use-debounce";
 
-
 const placeholders = [
   "Search by Category",
   "Ergonomic Chairs",
@@ -44,14 +43,11 @@ export default function SearchDialog({ children, locale }) {
   const [showAllSuggestions, setShowAllSuggestions] = useState(false);
   const debouncedQuery = useDebouncedValue(searchQuery, 500);
 
-  const [
-    triggerSearch,
-  ] = useLazyGetSearchQuery();
+  const [triggerSearch] = useLazyGetSearchQuery();
 
-  const {
-    data: initialData,
-    isLoading,
-  } = useGetSearchQuery({ keywords: debouncedQuery });
+  const { data: initialData, isLoading } = useGetSearchQuery({
+    keywords: debouncedQuery,
+  });
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -179,13 +175,15 @@ export default function SearchDialog({ children, locale }) {
                       className="w-full mt-4 sm:mt-3 xl:mt-4 2xl:mt-8"
                       key={index}
                     >
-                      <Heading
-                        as="div"
-                        size="heading4"
-                        className="text-[#282828] mb-2 xl:mb-3 2xl:mb-4"
-                      >
-                        {item?.title}
-                      </Heading>
+                      {item?.items.length > 0 && (
+                        <Heading
+                          as="div"
+                          size="heading4"
+                          className="text-[#282828] mb-2 xl:mb-3 2xl:mb-4"
+                        >
+                          {item?.title}
+                        </Heading>
+                      )}
                       {item?.items?.map((item, idx) => (
                         <Text
                           key={"suggesions-item-" + idx}
@@ -291,13 +289,20 @@ export default function SearchDialog({ children, locale }) {
                                 size="none"
                                 className="text-[10px] xl:text-[8px] 2xl:text-[10px] 3xl:text-[12px] leading-normal font-light truncate text-[#bbbcbc] mb-0.5"
                               >
-                                <DialogClose asChild>
-                                  <Link
-                                    href={`/${locale}/products?${item?.category?.parent_id ? `category=${item?.category?.slug}` : `sub_category=${item?.category?.slug}`}`}
-                                  >
+                                {" "}
+                                {item?.stock > 0 ? (
+                                  <DialogClose asChild>
+                                    <Link
+                                      href={`/${locale}/products?${item?.category?.parent_id ? `category=${item?.category?.slug}` : `sub_category=${item?.category?.slug}`}`}
+                                    >
+                                      {item?.category?.name}
+                                    </Link>
+                                  </DialogClose>
+                                ) : (
+                                  <span className="opacity-50">
                                     {item?.category?.name}
-                                  </Link>
-                                </DialogClose>
+                                  </span>
+                                )}
                               </Heading>
                               <Heading
                                 as="div"
