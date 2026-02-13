@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { locales, defaultLocale } from "./il8n/config";
 
 const PROTECTED_PATHS = ["/account"];
+const AUTH_PAGES = ["/login", "/signup", "/forgot-password", "/create-password", "/otp-submission"];
 
 export function middleware(request) {
   const { pathname } = request.nextUrl;
@@ -27,18 +28,29 @@ export function middleware(request) {
   }
 
   /* --------------------------------------------------
-     2️⃣ AUTH PROTECTION
+     2️⃣ AUTH PROTECTION & REDIRECTS
   -------------------------------------------------- */
   const isProtected = PROTECTED_PATHS.some(
     (protectedPath) => pathnameWithoutLocale === protectedPath || pathnameWithoutLocale.startsWith(`${protectedPath}/`),
   );
 
+  const isAuthPage = AUTH_PAGES.some(
+    (authPath) => pathnameWithoutLocale === authPath || pathnameWithoutLocale.startsWith(`${authPath}/`),
+  );
+
   const token = request.cookies.get("access_token")?.value;
 
+  // 1. Redirect unauthenticated users away from protected pages
   if (isProtected && !token) {
     const loginUrl = new URL(`/${locale}/login`, request.url);
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
+  }
+
+  // 2. Redirect authenticated users away from auth pages (Login, Signup, etc.)
+  if (isAuthPage && token) {
+    const homeUrl = new URL(`/${locale}`, request.url);
+    return NextResponse.redirect(homeUrl);
   }
 
   /* --------------------------------------------------
@@ -46,6 +58,7 @@ export function middleware(request) {
   -------------------------------------------------- */
   if (!pathnameHasLocale) {
     const localeUrl = new URL(`/${locale}${pathname}`, request.url);
+    localeUrl.search = request.nextUrl.search;
     return NextResponse.redirect(localeUrl);
   }
 
