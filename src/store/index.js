@@ -10,6 +10,7 @@ import { addressApi } from "./services/addressApi";
 import { orderApi } from "./services/orderApi";
 import { commonApi } from "./services/commonApi";
 import { wishlistApi } from "./services/wishListApi";
+import { searchApi } from "./services/searchApi";
 
 // Create a noop storage for SSR
 const createNoopStorage = () => {
@@ -40,6 +41,7 @@ const rootReducer = combineReducers({
   auth: persistReducer(authPersistConfig, authReducer),
   cart: cartReducer,
   checkout: checkoutReducer,
+  [searchApi.reducerPath]: searchApi.reducer,
   [wishlistApi.reducerPath]: wishlistApi.reducer,
   [addressApi.reducerPath]: addressApi.reducer,
   [orderApi.reducerPath]: orderApi.reducer,
@@ -54,7 +56,7 @@ export const makeStore = () => {
         serializableCheck: {
           ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
         },
-      }).concat(addressApi.middleware, orderApi.middleware, commonApi.middleware, wishlistApi.middleware),
+      }).concat(addressApi.middleware, orderApi.middleware, commonApi.middleware, wishlistApi.middleware, searchApi.middleware),
     devTools: process.env.NODE_ENV !== "production",
   });
 

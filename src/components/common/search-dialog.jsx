@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "../ui/button";
-import { cn } from "@/lib/utils";
+import { cn, saveVariantToStorage, getStoredVariants } from "@/lib/utils";
 import { Plus, X } from "lucide-react";
 import { PlaceholdersAndVanishInput } from "../ui/placeholders-and-vanish-input";
 import { Heading } from "../utils/heading";
@@ -25,235 +25,96 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  useGetSearchQuery,
+  useLazyGetSearchQuery,
+} from "@/store/services/searchApi";
+import { useState } from "react";
+import { useDebouncedValue } from "@/hooks/use-debounce";
 
-const suggestionData = [
-  {
-    title: "Suggestions",
-    items: [
-      {
-        label: "Task Chairs",
-        url: "#",
-      },
-      {
-        label: "Leather Chairs",
-        url: "#",
-      },
-      {
-        label: "Meeting Chairs",
-        url: "#",
-      },
-      {
-        label: "Visitor Chairs",
-        url: "#",
-      },
-      {
-        label: "Ergonomic Chairs",
-        url: "#",
-      },
-      {
-        label: "Task Chairs",
-        url: "#",
-      },
-      {
-        label: "Leather Chairs",
-        url: "#",
-      },
-      {
-        label: "Meeting Chairs",
-        url: "#",
-      },
-      {
-        label: "Visitor Chairs",
-        url: "#",
-      },
-      {
-        label: "Ergonomic Chairs",
-        url: "#",
-      },
-    ],
-  },
-  {
-    title: "Category",
-    items: [
-      {
-        label: "Work From Home Chairs & Table",
-        url: "#",
-      },
-      {
-        label: "Hospital Chairs",
-        url: "#",
-      },
-      {
-        label: "Office Chairs",
-        url: "#",
-      },
-    ],
-  },
+
+const placeholders = [
+  "Search by Category",
+  "Ergonomic Chairs",
+  "Office Chairs",
 ];
 
-const defaultSuggestionData = {
-  no_of_items: 7,
-  items: [
-    {
-      id: 1,
-      isWishlisted: true,
-      isStock: true,
-      media: {
-        type: "image",
-        path: "/images/search-pro-list-1.jpg",
-        alt: "pro-1",
-      },
-      hoverMedia: {
-        type: "image",
-        path: "/images/pro-list1-1.jpg",
-        alt: "pro-1",
-      },
-      name: "Orca Mid Back Ergonomic Office Chair",
-      slug: "/products/continue-table",
-      price: 458,
-      category: "Office Chair",
-      colorVariant: ["#bababa", "#333333", "#8db600", "#ff0000", "#000000"],
-      shortDescription: "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
-      description:
-        "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
-      productType: ["Office Chairs", "Ergonomic Chairs"],
-    },
-    {
-      id: 2,
-      isWishlisted: true,
-      isStock: false,
-      media: {
-        type: "image",
-        path: "/images/search-pro-list-2.jpg",
-        alt: "pro-1",
-      },
-      name: "Kyro Mid Back Leather Executive Chair",
-      slug: "/products/okidoki-too-stool",
-      price: 458,
-      category: "Office Chair",
-      colorVariant: ["#bababa", "#333333", "#8db600", "#ff0000", "#000000"],
-      shortDescription: "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
-      description:
-        "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
-      productType: ["Office Chairs", "Ergonomic Chairs"],
-    },
-    {
-      id: 3,
-      isWishlisted: true,
-      isStock: true,
-      media: {
-        type: "image",
-        path: "/images/search-pro-list-3.jpg",
-        alt: "pro-1",
-      },
-      name: "Demos High Back Ergonomic Office Chair",
-      slug: "/products/360-chair",
-      price: 458,
-      category: "Office Chair",
-      colorVariant: null,
-      shortDescription: "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
-      description:
-        "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
-      productType: ["Office Chairs", "Ergonomic Chairs"],
-    },
-    {
-      id: 4,
-      isWishlisted: true,
-      isStock: true,
-      media: {
-        type: "image",
-        path: "/images/search-pro-list-4.jpg",
-        alt: "pro-1",
-      },
-      name: "Demos High Back Ergonomic Office Chair",
-      slug: "/products/ergonomic-chair",
-      price: 458,
-      category: "Office Chair",
-      colorVariant: ["#bababa", "#333333", "#8db600", "#ff0000", "#000000"],
-      shortDescription: "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
-      description:
-        "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
-      productType: ["Office Chairs", "Ergonomic Chairs"],
-    },
-    {
-      id: 5,
-      isWishlisted: true,
-      isStock: true,
-      media: {
-        type: "image",
-        path: "/images/search-pro-list-5.jpg",
-        alt: "pro-1",
-      },
-      name: "Demos High Back Ergonomic Office Chair",
-      slug: "/products/ergonomic-chair",
-      price: 458,
-      category: "Office Chair",
-      colorVariant: ["#bababa", "#333333", "#8db600", "#ff0000", "#000000"],
-      shortDescription: "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
-      description:
-        "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
-      productType: ["Office Chairs", "Ergonomic Chairs"],
-    },
-    {
-      id: 6,
-      isWishlisted: true,
-      isStock: true,
-      media: {
-        type: "image",
-        path: "/images/pro-list-5.jpg",
-        alt: "pro-1",
-      },
-      name: "Demos High Back Ergonomic Office Chair",
-      slug: "/products/ergonomic-chair",
-      price: 458,
-      category: "Office Chair",
-      colorVariant: ["#bababa", "#333333", "#8db600", "#ff0000", "#000000"],
-      shortDescription: "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
-      description:
-        "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
-      productType: ["Office Chairs", "Ergonomic Chairs"],
-    },
-    {
-      id: 7,
-      isWishlisted: true,
-      isStock: true,
-      media: {
-        type: "image",
-        path: "/images/pro-list-5.jpg",
-        alt: "pro-1",
-      },
-      name: "Demos High Back Ergonomic Office Chair",
-      slug: "/products/ergonomic-chair",
-      price: 458,
-      category: "Office Chair",
-      colorVariant: ["#bababa", "#333333", "#8db600", "#ff0000", "#000000"],
-      shortDescription: "<p>Introducing the new OPTRON Hash Frame Ergonomic Mesh Office Chair.</p>",
-      description:
-        "<p>Optron hash High-Back Task Chair | Latice Series| Product Details</p><p>Upgrade your workspace with the innovative OPTRON Hash Frame Ergonomic Mesh Office Chair, designed to deliver unmatched comfort and support for professionals in Dubai, UAE. Featuring a sleek and futuristic design, this chair combines style with cutting-edge ergonomic functionality.The independent height-adjustable backrest and sliding seat with depth adjustment ensure a customized fit for your body, providing superior comfort during long working hours. The dynamic variable lumbar support adapts perfectly to the natural curve of your back, promoting a healthy posture. Its breathable mesh backrest enhances air circulation, keeping you cool and focused throughout the day.</p>",
-      productType: ["Office Chairs", "Ergonomic Chairs"],
-    },
-  ],
-};
-
-const placeholders = ["Search by Category", "Ergonomic Chairs", "Office Chairs"];
-
 export default function SearchDialog({ children, locale }) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showAllSuggestions, setShowAllSuggestions] = useState(false);
+  const debouncedQuery = useDebouncedValue(searchQuery, 500);
+
+  const [
+    triggerSearch,
+  ] = useLazyGetSearchQuery();
+
+  const {
+    data: initialData,
+    isLoading,
+  } = useGetSearchQuery({ keywords: debouncedQuery });
+
+  if (isLoading) return <div>Loading...</div>;
+
   const handleChange = (e) => {
-    console.log(e.target.value);
+    const value = e.target.value;
+    setSearchQuery(value);
   };
 
   const onSubmit = (e) => {
-    e.preventDefault();
-    console.log("submitted");
+    if (searchQuery.trim()) {
+      triggerSearch({ keywords: searchQuery });
+    }
+  };
+
+  const suggestedData = getStoredVariants("recently_viewed");
+  const categories = getStoredVariants("categories");
+
+  const visibleSuggestions = showAllSuggestions
+    ? suggestedData
+    : suggestedData?.slice(0, 5);
+
+  const suggestedItems = [
+    {
+      title: "Suggessions",
+      items: visibleSuggestions,
+    },
+    {
+      title: "Categories",
+      items: categories,
+    },
+  ];
+
+  const products = initialData?.data || [];
+  const hasResults = products.length > 0;
+
+  console.log(categories);
+  const handleAddToLocalStorage = (item) => {
+    saveVariantToStorage({
+      label: item?.title,
+      url: `/${locale}/products/${item?.baseSlug}?sku=${item?.slug}`,
+      STORAGE_KEY: "recently_viewed",
+    });
+
+    console.log(item?.category);
+    saveVariantToStorage({
+      label: item?.category?.name,
+      url: `/${locale}/products?${item?.category?.parent_id ? `category=${item?.category?.slug}` : `sub_category=${item?.category?.slug}`}`,
+      STORAGE_KEY: "categories",
+    });
   };
 
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent showCloseButton={false} className="inset-0 translate-none rounded-none p-0 max-w-full sm:max-w-full mt-(--header-y) mt-0">
+      <DialogContent
+        showCloseButton={false}
+        className="inset-0 translate-none rounded-none p-0 max-w-full sm:max-w-full mt-(--header-y) mt-0"
+      >
         <DialogHeader className={"sr-only"}>
           <DialogTitle>Search products</DialogTitle>
-          <DialogDescription>Make changes to your profile here. Click save when you&apos;re done.</DialogDescription>
+          <DialogDescription>
+            Make changes to your profile here. Click save when you&apos;re done.
+          </DialogDescription>
         </DialogHeader>
 
         <DialogClose asChild>
@@ -288,12 +149,18 @@ export default function SearchDialog({ children, locale }) {
             <div className="container">
               <div className="flex flex-wrap -mx-4 xl:-mx-10 2xl:-mx-16 [&>div]:px-4 xl:[&>div]:px-10 2xl:[&>div]:px-16">
                 <div className="w-full sm:w-[200px] lg:w-[220px] xl:w-[420px] 2xl:w-[468px] 3xl:w-[576px]">
-                  <Heading as="div" size="heading6" className="text-[#282828] mb-2 xl:mb-3 2xl:mb-6">
+                  <Heading
+                    as="div"
+                    size="heading6"
+                    className="text-[#282828] mb-2 xl:mb-3 2xl:mb-6"
+                  >
                     Search Now
                     <span
                       className={cn(
                         "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
-                        locale === "ar" ? "-translate-x-1 xl:-translate-x-2 " : "translate-x-1 xl:translate-x-2 ",
+                        locale === "ar"
+                          ? "-translate-x-1 xl:-translate-x-2 "
+                          : "translate-x-1 xl:translate-x-2 ",
                       )}
                     />
                   </Heading>
@@ -307,28 +174,52 @@ export default function SearchDialog({ children, locale }) {
                     variant="search"
                   />
 
-                  {suggestionData.map((item, i) => (
-                    <div key={"suggesions-" + i} className="w-full mt-4 sm:mt-3 xl:mt-4 2xl:mt-8">
-                      <Heading as="div" size="heading4" className="text-[#282828] mb-2 xl:mb-3 2xl:mb-4">
+                  {suggestedItems?.map((item, index) => (
+                    <div
+                      className="w-full mt-4 sm:mt-3 xl:mt-4 2xl:mt-8"
+                      key={index}
+                    >
+                      <Heading
+                        as="div"
+                        size="heading4"
+                        className="text-[#282828] mb-2 xl:mb-3 2xl:mb-4"
+                      >
                         {item?.title}
                       </Heading>
-                      {item?.items?.slice(0, 5).map((item, idx) => (
-                        <Text key={"suggesions-item-" + idx} as="div" size="text3" className="text-black flex items-center gap-1 my-1 xl:my-1.5">
+                      {item?.items?.map((item, idx) => (
+                        <Text
+                          key={"suggesions-item-" + idx}
+                          as="div"
+                          size="text3"
+                          className="text-black flex items-center gap-1 my-1 xl:my-1.5"
+                        >
                           <Image
                             src={"/images/search-right.svg"}
                             alt={"search-right"}
                             width={6}
                             height={4}
-                            className={cn("w-1 xl:w-1.5", locale === "ar" && "rotate-180")}
+                            className={cn(
+                              "w-1 xl:w-1.5",
+                              locale === "ar" && "rotate-180",
+                            )}
                           />
-                          <Link href={item.url}>{item.label}</Link>
+
+                          <DialogClose asChild>
+                            <Link href={item.url}>{item.label}</Link>
+                          </DialogClose>
                         </Text>
                       ))}
 
-                      {defaultSuggestionData?.items?.length > 5 && (
-                        <Text as="div" size="text3" className="text-black hover:underline flex items-center gap-1 my-1 xl:my-1.5">
-                          <Link href={"#"}>
-                            <Plus className="size-2 xl:size-2 inline-block" /> See More
+                      {item?.items?.length > 5 && !showAllSuggestions && (
+                        <Text
+                          as="div"
+                          size="text3"
+                          className="text-black hover:underline flex items-center gap-1 my-1 xl:my-1.5"
+                          onClick={() => setShowAllSuggestions(true)}
+                        >
+                          <Link href={"/products"}>
+                            <Plus className="size-2 xl:size-2 inline-block" />{" "}
+                            See More
                           </Link>
                         </Text>
                       )}
@@ -338,16 +229,29 @@ export default function SearchDialog({ children, locale }) {
 
                 <MediaQuery minWidth={639}>
                   <div className="w-full sm:w-[calc(100%-200px)] lg:w-[calc(100%-220px)] xl:w-[calc(100%-420px)] 2xl:w-[calc(100%-468px)] 3xl:w-[calc(100%-576px)]">
-                    <Heading as="div" size="heading4" className="text-[#282828] my-2 xl:my-3 2xl:my-4">
-                      Found {defaultSuggestionData?.no_of_items} results for "Ergonomic"
+                    <Heading
+                      as="div"
+                      size="heading4"
+                      className="text-[#282828] my-2 xl:my-3 2xl:my-4"
+                    >
+                      {isLoading
+                        ? "Loading..."
+                        : searchQuery
+                          ? hasResults
+                            ? `Found ${products.length} results for "${searchQuery}"`
+                            : "No results found"
+                          : `Showing ${products.length} products`}
                     </Heading>
 
                     <div className="flex flex-wrap -mx-1 sm:-mx-1.5 xl:-mx-2 2xl:-mx-2.5 [&>*]:p-1 sm:[&>*]:p-1.5 xl:[&>*]:p-2 2xl:[&>*]:p-2.5">
-                      {defaultSuggestionData?.items?.slice(0, 5).map((item) => (
-                        <div key={item.id} className="w-full 2xs:w-1/2 sm:w-1/3 md:w-1/3">
+                      {products.slice(0, 5).map((item) => (
+                        <div
+                          key={item.id}
+                          className="w-full 2xs:w-1/2 sm:w-1/3 md:w-1/3"
+                        >
                           <div className="group w-full block">
                             <div className="w-full aspect-[550/440] overflow-hidden rounded-[4px] border border-white mb-2 2xl:mb-3 bg-white relative z-0">
-                              {!item?.isStock && (
+                              {!item?.stock > 0 && (
                                 <div className="w-full h-full bg-[#f4f4f4]/90 flex items-center justify-center absolute z-2 inset-0">
                                   <Button
                                     variant={"black"}
@@ -359,7 +263,9 @@ export default function SearchDialog({ children, locale }) {
                                 </div>
                               )}
                               <Image
-                                src={item?.media?.path}
+                                src={
+                                  item?.media?.path ?? "images/placeholder.jpg"
+                                }
                                 alt={item?.media?.alt}
                                 width={550}
                                 height={440}
@@ -367,7 +273,10 @@ export default function SearchDialog({ children, locale }) {
                               />
                               {item?.hoverMedia && (
                                 <Image
-                                  src={item?.hoverMedia?.path}
+                                  src={
+                                    item?.hoverMedia?.path ??
+                                    "images/placeholder.jpg"
+                                  }
                                   alt={item?.hoverMedia?.alt}
                                   width={550}
                                   height={440}
@@ -382,25 +291,48 @@ export default function SearchDialog({ children, locale }) {
                                 size="none"
                                 className="text-[10px] xl:text-[8px] 2xl:text-[10px] 3xl:text-[12px] leading-normal font-light truncate text-[#bbbcbc] mb-0.5"
                               >
-                                <Link href={item?.slug}>{item?.category}</Link>
+                                <DialogClose asChild>
+                                  <Link
+                                    href={`/${locale}/products?${item?.category?.parent_id ? `category=${item?.category?.slug}` : `sub_category=${item?.category?.slug}`}`}
+                                  >
+                                    {item?.category?.name}
+                                  </Link>
+                                </DialogClose>
                               </Heading>
                               <Heading
                                 as="div"
                                 size="none"
                                 className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-normal truncate text-[#282828] mb-0.5"
                               >
-                                <Link href={item?.slug}>{item?.name}</Link>
+                                <DialogClose asChild>
+                                  <Link
+                                    href={`/${locale}/products/${item?.baseSlug}?sku=${item?.slug}`}
+                                    onClick={() =>
+                                      handleAddToLocalStorage(item)
+                                    }
+                                  >
+                                    {item?.title}
+                                  </Link>
+                                </DialogClose>
                               </Heading>
                             </div>
                           </div>
                         </div>
                       ))}
-                      {defaultSuggestionData?.items?.length > 5 && (
+                      {products.length > 5 && (
                         <div className="w-full 2xs:w-1/2 sm:w-1/3 md:w-1/3">
                           <div className="group w-full block">
                             <div className="w-full aspect-[550/440] overflow-hidden rounded-[4px] border border-[#e9e9e9] bg-[#f4f4f4] flex items-center justify-center">
-                              <Text as="div" size="text3" className="font-normal text-black hover:underline">
-                                <Link href={`${locale}/search-results`}>See All Results ({defaultSuggestionData?.no_of_items})</Link>
+                              <Text
+                                as="div"
+                                size="text3"
+                                className="font-normal text-black hover:underline"
+                              >
+                                <DialogClose asChild>
+                                  <Link href={`/${locale}/products`}>
+                                    See All Results ({products.length})
+                                  </Link>
+                                </DialogClose>
                               </Text>
                             </div>
                           </div>

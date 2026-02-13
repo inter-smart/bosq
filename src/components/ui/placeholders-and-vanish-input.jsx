@@ -223,7 +223,7 @@ export function PlaceholdersAndVanishInput({
 
     const emailInput = e.target.querySelector('input[type="text"]');
     const email = emailInput?.value?.trim();
-    handleNewsletterSubmit(email);
+    if (variant !== "search") handleNewsletterSubmit(email);
   };
 
   return (
@@ -265,7 +265,7 @@ export function PlaceholdersAndVanishInput({
         )}
       />
       <button
-        disabled={!value}
+        disabled={!value || variant === "search"}
         type="submit"
         aria-label="submit"
         className={cn(
