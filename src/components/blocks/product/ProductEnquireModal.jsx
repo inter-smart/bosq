@@ -9,8 +9,9 @@ import ProductEnquiryForm from "@/components/form/product-enquiry-form";
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
 import { Text } from "@/components/utils/text";
+import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
 
-const ProductEnquireModal = ({ children, data, locale }) => {
+const ProductEnquireModal = ({ children, data, locale, productId }) => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   return (
     <Sheet dir={locale === "ar" ? "rtl" : "ltr"} open={isSheetOpen} onOpenChange={setIsSheetOpen}>
@@ -32,7 +33,9 @@ const ProductEnquireModal = ({ children, data, locale }) => {
           <Text as="div" size="text3" className="text-[#282828] mb-2 2xl:mb-4">
             {parse(data?.description)}
           </Text>
-          <ProductEnquiryForm />
+          <RecaptchaProvider>
+            <ProductEnquiryForm productId={productId} />
+          </RecaptchaProvider>
         </div>
 
         <SheetClose

@@ -437,6 +437,8 @@ export default async function ProductDetailPage({ params, searchParams }) {
 
   const { data, error } = await ProductData.getProductDetailsBySlug(slug, variantSku, model, attributeFilters);
 
+  console.log(data)
+
   if (!data?.initialVariant) {
     notFound();
   }

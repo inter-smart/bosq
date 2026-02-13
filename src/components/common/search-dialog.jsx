@@ -99,6 +99,8 @@ export default function SearchDialog({ children, locale }) {
     });
   };
 
+
+  const slicedProducts = products.length< 5 ? products : products.slice(0, 5)
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
@@ -238,11 +240,11 @@ export default function SearchDialog({ children, locale }) {
                           ? hasResults
                             ? `Found ${products.length} results for "${searchQuery}"`
                             : "No results found"
-                          : `Showing ${products.length} products`}
+                          : `Showing ${slicedProducts.length} products`}
                     </Heading>
 
                     <div className="flex flex-wrap -mx-1 sm:-mx-1.5 xl:-mx-2 2xl:-mx-2.5 [&>*]:p-1 sm:[&>*]:p-1.5 xl:[&>*]:p-2 2xl:[&>*]:p-2.5">
-                      {products.slice(0, 5).map((item) => (
+                      {products?.slice(0,5)?.map((item) => (
                         <div
                           key={item.id}
                           className="w-full 2xs:w-1/2 sm:w-1/3 md:w-1/3"

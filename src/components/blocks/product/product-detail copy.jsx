@@ -158,21 +158,21 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                       slides={productImages?.map((item) =>
                         item.media_type === "video"
                           ? {
-                              type: "video",
-                              width: 1280,
-                              height: 720,
-                              poster: item.thumbnail_path,
-                              autoPlay: true,
-                              sources: [
-                                {
-                                  src: item.path,
-                                  type: "video/mp4",
-                                },
-                              ],
-                            }
+                            type: "video",
+                            width: 1280,
+                            height: 720,
+                            poster: item.thumbnail_path,
+                            autoPlay: true,
+                            sources: [
+                              {
+                                src: item.path,
+                                type: "video/mp4",
+                              },
+                            ],
+                          }
                           : {
-                              src: item.path,
-                            },
+                            src: item.path,
+                          },
                       )}
                       animation={{ fade: 10 }}
                       controller={{
@@ -290,7 +290,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                 <Button variant={"link"} className={"font-normal underline h-auto "} asChild>
                   <Link href={"/"}>Buy Now</Link>
                 </Button>
-                <ProductEnquireModal data={enq} locale={locale}>
+                <ProductEnquireModal data={enq} productId={productData?.id} locale={locale}>
                   <Button variant={"link"} className={"font-normal underline h-auto"}>
                     Enquire Now
                   </Button>
