@@ -67,7 +67,7 @@ const ProductChooseDesign = ({
    * Sync selected model when external changes
    * -------------------------------------- */
   useEffect(() => {
-    if (currentModelId) {
+    if (currentModelId !== undefined && currentModelId !== null) {
       setSelectedModelId(currentModelId);
     }
   }, [currentModelId]);
@@ -119,18 +119,6 @@ const ProductChooseDesign = ({
 
   const handleApplyFilters = useCallback(() => {
     const params = new URLSearchParams();
-
-    // 1. Find matching SKU from variant_lookups
-    const matchingVariant = selectedModel?.variant_lookups?.find((variant) => {
-      // Check if all selected filters match this variant's attributes
-      return Object.entries(selectedFilters).every(([attrSlug, valueSlug]) => {
-        return variant.attributes[attrSlug] === valueSlug;
-      });
-    });
-
-    if (matchingVariant?.sku) {
-      params.set("sku", matchingVariant.sku);
-    }
 
     if (selectedModel?.slug) {
       params.set("model", selectedModel.slug);
