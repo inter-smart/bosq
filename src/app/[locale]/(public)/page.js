@@ -4,7 +4,6 @@ import HomeHero from "@/components/blocks/home/home-hero"; // keep SSR for SEO
 import { notFound } from "next/navigation";
 import { getHomeData } from "@/lib/api/home";
 import { getMetaData } from "@/lib/api/metaApi";
-import NotFound from "./not-found/page";
 
 const HomeAbout = dynamic(() => import("@/components/blocks/home/home-about"));
 const HomeFeatured = dynamic(
@@ -57,7 +56,7 @@ export default async function HomePage({ params }) {
   const { data, error } = await getHomeData.getCmsData();
 
   if (error) {
-    NotFound();
+    notFound();
   }
 
   const {

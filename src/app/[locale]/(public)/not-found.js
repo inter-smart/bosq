@@ -12,9 +12,8 @@ const local_data = {
   ctaText: "View Product",
 };
 
-export default async function NotFound({ params, data = local_data }) {
-  const resolvedParams = await params;
-  const { locale } = resolvedParams;
+export default function NotFound({ params, data = local_data }) {
+  const locale = params?.locale || "en";
   return (
     <div className="w-full mt-(--header-y) py-12 sm:py-20 xl:py-40 2xl:py-60">
       <div className="container">

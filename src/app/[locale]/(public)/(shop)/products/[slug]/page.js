@@ -441,6 +441,8 @@ export default async function ProductDetailPage({ params, searchParams }) {
     notFound();
   }
 
+  console.log(data);
+
   return (
     <>
       <ProductHero locale={locale} data={local_data?.heroData} slug={slug} />
