@@ -12,9 +12,9 @@ export default function CartEmpty({ locale }) {
 
   const t = useTranslations("cart");
 
-  // const goProducts = () => {
-  //   router.push(`/${locale}/products`);
-  // };
+  const goProducts = () => {
+    router.push(`/${locale}/products`);
+  };
 
   return (
     <div className="py-[30px] sm:py-[40px] xl:py-[60px] 2xl:py-[100px]">
@@ -33,7 +33,7 @@ export default function CartEmpty({ locale }) {
         </EmptyHeader>
         <EmptyContent>
           <Button
-            // onclick={goProducts}
+            onClick={goProducts}
             variant={"button"}
             disabled={false}
             className="min-w-[168px] xl:min-w-[190px] 2xl:min-w-[220px] bg-black text-white mt-2"

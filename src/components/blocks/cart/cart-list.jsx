@@ -55,7 +55,7 @@ export default function CartList({ locale, data }) {
 
   // Show empty state if cart is empty
   if (!isLoading && cartItems.length === 0) {
-    return <CartEmpty />;
+    return <CartEmpty locale={locale} />;
   }
 
   const validateCheckout = async () => {
@@ -66,7 +66,7 @@ export default function CartList({ locale, data }) {
 
       const encoded = btoa("allowed");
 
-      router.push(`/en/checkout?flow=${encoded}`);
+      router.push(`/${locale}/checkout?flow=${encoded}`);
     } catch (error) {
       toast.error(error || "Failed to validate cart");
     }
