@@ -13,6 +13,8 @@ export default async function OrderStatus({ params, searchParams }) {
   }
 
   const orderId = resolvedSearchParams.orderId || null;
+  console.log("Order Status Page - SearchParams:", resolvedSearchParams);
+  console.log("Order Status Page - OrderID extracted:", orderId);
 
   return <CheckoutResponse orderStatus={status} locale={locale} orderId={orderId} />;
 }

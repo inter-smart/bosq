@@ -448,7 +448,7 @@ export default async function ProductDetailPage({ params, searchParams }) {
     <>
       <ProductHero locale={locale} data={local_data?.heroData} slug={slug} />
       <ProductDetailCopy locale={locale} initialData={data?.initialVariant} productData={data?.product} models={data?.models} productSlug={slug} />
-      {/* <ProductSimilar locale={locale} data={local_data?.similarData} /> */}
+      {data?.similarProducts?.product?.length > 0 && <ProductSimilar locale={locale} data={data?.similarProducts} slug={slug} variantSku={variantSku} />}
     </>
   );
 }

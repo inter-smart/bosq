@@ -28,6 +28,7 @@ import { Heading } from "@/components/utils/heading";
 import { useApplyCouponMutation, useRemoveCouponMutation, usePlaceOrderMutation } from "@/store/services/orderApi";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
+import { resetCart } from "@/store/slices/cartSlice";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
@@ -58,6 +59,7 @@ const OrderSummary = ({
   couponStatus: initialCouponStatus,
   locale,
 }) => {
+  const dispatch = useDispatch();
   // Get selected addresses and checkout permission from Redux
   const { selectedShippingAddressId, selectedBillingAddressId, useSameAddressForBilling, useSameAddressForShipping } = useSelector(
     (state) => state.checkout,
@@ -218,12 +220,12 @@ const OrderSummary = ({
         payment_type: selectedPaymentMethod,
       }).unwrap();
 
-      const orderId = orderData.data?.orderId;
+      const orderId = orderData.data?.order_id;
 
-      console.log("Placed order with ID:", orderData);
 
+      dispatch(resetCart());
       setShowConfirmDialog(false);
-      router.push(`/order/success?orderId=${orderId}`);
+      router.push(`/${locale}/order/success?orderId=${orderId}`);
     } catch (error) {
       console.log("error", error);
       toast.error(error || "Failed to place order");

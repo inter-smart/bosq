@@ -22,7 +22,7 @@ const STATUS_CONFIG = {
       orderLabel: "رقم الطلب",
     },
     icon: "/images/icon-checkout-success.svg",
-    href: "/shop",
+    href: "/products",
   },
 
   failed: {
@@ -46,6 +46,8 @@ const STATUS_CONFIG = {
 };
 
 export default function CheckoutResponse({ orderStatus, orderId, locale = "en" }) {
+
+
   const config = STATUS_CONFIG[orderStatus];
   if (!config) return null;
 

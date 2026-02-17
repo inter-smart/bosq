@@ -32,20 +32,6 @@ const ProductChooseDesign = ({
 
   const isModelChanged = selectedModelId !== currentModelId;
 
-  // Track if any filters have changed from initial values
-  const isFiltersChanged = useMemo(() => {
-    const initialKeys = Object.keys(initialFilters);
-    const selectedKeys = Object.keys(selectedFilters);
-
-    // If different number of keys, filters have changed
-    if (initialKeys.length !== selectedKeys.length) return true;
-
-    // Check if any value differs from initial
-    return initialKeys.some((key) => selectedFilters[key] !== initialFilters[key]);
-  }, [selectedFilters, initialFilters]);
-
-  // Combined check: either model or filters have changed
-  const hasAnyChanges = isModelChanged || isFiltersChanged;
 
   /* ----------------------------------------
    * Fetch models from API
@@ -56,10 +42,8 @@ const ProductChooseDesign = ({
     const fetchModels = async () => {
       try {
         setIsModelLoading(true);
-
-        const res = await fetch(`/api/frontend/common-actions/product/choose-design?slug=${productSlug}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend/common-actions/product/choose-design?slug=${productSlug}`);
         const json = await res.json();
-
         setModels(json?.data?.models || []);
       } catch (error) {
         console.error("Failed to load design models", error);
@@ -71,10 +55,11 @@ const ProductChooseDesign = ({
     fetchModels();
   }, [productSlug]);
 
+
   /* ----------------------------------------
    * Selected model
    * -------------------------------------- */
-  const selectedModel = useMemo(() => models?.find((m) => m.id === selectedModelId), [models, selectedModelId]);
+  const selectedModel = useMemo(() => models?.find((m) => String(m.id) === String(selectedModelId)), [models, selectedModelId]);
 
   const designOptions = selectedModel?.attributes || [];
 
@@ -82,24 +67,40 @@ const ProductChooseDesign = ({
    * Sync selected model when external changes
    * -------------------------------------- */
   useEffect(() => {
-    setSelectedModelId(currentModelId);
+    if (currentModelId !== undefined && currentModelId !== null) {
+      setSelectedModelId(currentModelId);
+    }
   }, [currentModelId]);
 
   /* ----------------------------------------
    * Auto-fill filters from initial data
    * -------------------------------------- */
   useEffect(() => {
-    if (!data?.attributes) return;
+    if (!data) return;
 
     const filters = {};
-    data.attributes.forEach((attr) => {
-      if (attr.values?.length) {
-        filters[attr.slug] = attr.values[0].slug;
-      }
-    });
+    // Try both attributes and attribute_values (API returns attribute_values in initialVariant)
+    const sourceAttributes = data.attributes || [];
+    const attributeValues = data.attribute_values || [];
 
-    setSelectedFilters(filters);
-    setInitialFilters(filters); // Store initial state for comparison
+    if (sourceAttributes.length > 0) {
+      sourceAttributes.forEach((attr) => {
+        if (attr.values?.length) {
+          filters[attr.slug] = attr.values[0].slug;
+        }
+      });
+    } else if (attributeValues.length > 0) {
+      attributeValues.forEach((val) => {
+        if (val.attribute?.slug) {
+          filters[val.attribute.slug] = val.slug;
+        }
+      });
+    }
+
+    if (Object.keys(filters).length > 0) {
+      setSelectedFilters(filters);
+      setInitialFilters(filters);
+    }
   }, [data]);
 
   /* ----------------------------------------
@@ -119,29 +120,23 @@ const ProductChooseDesign = ({
   const handleApplyFilters = useCallback(() => {
     const params = new URLSearchParams();
 
-    isModelChanged && params.set("model", selectedModel?.slug);
+    if (selectedModel?.slug) {
+      params.set("model", selectedModel.slug);
+    }
 
-    isFiltersChanged &&
-      Object.entries(selectedFilters).forEach(([attributeSlug, valueSlug]) => {
-        if (valueSlug) {
-          params.set(`attr_${attributeSlug}`, valueSlug);
-        }
-      });
+    Object.entries(selectedFilters).forEach(([attributeSlug, valueSlug]) => {
+      if (valueSlug) {
+        params.set(`attr_${attributeSlug}`, valueSlug);
+      }
+    });
 
     const newUrl = `${pathname}?${params.toString()}`;
 
-    console.log("Selected Filters:", selectedFilters);
-    console.log("Initial Filters:", initialFilters);
-    console.log("Is Model Changed:", isModelChanged);
-    console.log("Is Filters Changed:", isFiltersChanged);
-    console.log("Has Any Changes:", hasAnyChanges);
-    console.log("New URL:", newUrl);
-
-    router.push(newUrl);
+    router.push(newUrl, { scroll: false });
 
     setIsSheetOpen(false);
     onOpenChange?.(false);
-  }, [pathname, router, selectedFilters, initialFilters, selectedModel, isModelChanged, isFiltersChanged, hasAnyChanges, onOpenChange]);
+  }, [pathname, router, selectedFilters, selectedModel, onOpenChange]);
 
   const handleClearFilters = useCallback(() => {
     if (selectedModel?.attributes) {
@@ -208,7 +203,7 @@ const ProductChooseDesign = ({
                         <div
                           className={cn(
                             "w-full h-full border rounded-[6px] p-1 2xl:p-2 cursor-pointer select-none",
-                            selectedModelId === item.id ? "border-[#282828]" : "border-white",
+                            String(selectedModelId) === String(item.id) ? "border-[#282828]" : "border-white",
                           )}
                           onClick={() => handleModelClick(item)}
                         >
