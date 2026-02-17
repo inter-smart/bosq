@@ -1,31 +1,31 @@
 import NewsInfo from "@/components/blocks/news/news-info";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getNewsData } from "@/lib/api/news";
-import NotFound from "../../not-found/page";
 import { parseOtherMeta } from "@/lib/helper";
 import { DefaultOgImage } from "@/lib/api/constants";
+import NotFound from "../../not-found";
 
 export async function generateMetadata({ params }) {
   const { slug, locale } = await params;
-  
+
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend/news-details?slug=${slug}`,
     );
-    
-     // Check if response is ok
+
+    // Check if response is ok
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
 
     // Parse JSON response
     const data = await response.json();
-    
-    
+
+
     const isEN = locale === "en";
     const metadata = data?.data?.metaData;
     console.log("data:", metadata);
-    
+
 
     if (!metadata) {
       return {
@@ -52,7 +52,7 @@ export async function generateMetadata({ params }) {
 
     // Use news's own image or fallback
     const ogImage = DefaultOgImage;
-    const { other } = isEN?  parseOtherMeta(other_meta): parseOtherMeta(other_meta_ar);
+    const { other } = isEN ? parseOtherMeta(other_meta) : parseOtherMeta(other_meta_ar);
 
     return {
       title: title || "News Post",

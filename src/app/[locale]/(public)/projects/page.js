@@ -3,7 +3,7 @@ import ProjectHero from "@/components/blocks/project/project-hero";
 import ProjectList from "@/components/blocks/project/project-list";
 import { getProjectData, getProjectListBySlug } from "@/lib/api/CMS/basicGet";
 import { getMetaData } from "@/lib/api/metaApi";
-import NotFound from "../not-found/page";
+import NotFound from "../not-found";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -145,16 +145,16 @@ const local_data = {
 export default async function ProjectsPage({ params, searchParams }) {
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
-  
+
   const { locale } = resolvedParams;
   const slug = resolvedSearchParams.slug ?? "all";
-  const limit = resolvedSearchParams.limit? parseInt(resolvedSearchParams.limit) : 6;
-  const {data, error} = await getProjectData();
+  const limit = resolvedSearchParams.limit ? parseInt(resolvedSearchParams.limit) : 6;
+  const { data, error } = await getProjectData();
 
-  if(error){
+  if (error) {
     <NotFound />
   }
-  
+
   return (
     <>
       <ProductHero
@@ -163,7 +163,7 @@ export default async function ProjectsPage({ params, searchParams }) {
         slug={"Our Projects"}
       />
       <ProjectHero locale={locale} data={data?.projectInfo} />
-      <ProjectList locale={locale} data={data?.projectCategories}  slug={slug} limit={limit} />
+      <ProjectList locale={locale} data={data?.projectCategories} slug={slug} limit={limit} />
     </>
   );
 }

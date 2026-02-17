@@ -1,7 +1,7 @@
 import AuthLayout from "@/components/blocks/auth/auth-layout";
 import AuthOtpForm from "@/components/form/auth-otp-form";
 import { getAuthData } from "@/lib/api/CMS/basicGet";
-import NotFound from "../../(public)/not-found/page";
+import NotFound from "../../(public)/not-found";
 
 const local_data = {
   media: {

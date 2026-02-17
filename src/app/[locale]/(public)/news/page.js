@@ -3,7 +3,7 @@ import NewsList from "@/components/blocks/news/news-list";
 import { getNewsData } from "@/lib/api/news";
 import { getMetaData } from "@/lib/api/metaApi";
 import { notFound } from "next/navigation";
-import NotFound from "../not-found/page";
+import NotFound from "../not-found";
 
 
 
@@ -24,10 +24,10 @@ export async function generateMetadata({ params }) {
 }
 
 
-export default async function NewsPage({params, searchParams}) {
+export default async function NewsPage({ params, searchParams }) {
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
-  const {locale} = resolvedParams;
+  const { locale } = resolvedParams;
   const page = Number(resolvedSearchParams?.page) || 1;
 
   const [cmsResult, blogListResult] = await Promise.all([
@@ -35,7 +35,7 @@ export default async function NewsPage({params, searchParams}) {
     getNewsData.getNewsList(page, 6),
   ]);
 
-  if(cmsResult.error){
+  if (cmsResult.error) {
     NotFound()
   }
 
@@ -45,7 +45,7 @@ export default async function NewsPage({params, searchParams}) {
   return (
     <>
       <NewsHero locale={locale} data={heroData} slug={"News"} type={"news"} />
-      <NewsList locale={locale} data={blogListData}  />
+      <NewsList locale={locale} data={blogListData} />
     </>
   );
 }

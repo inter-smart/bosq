@@ -7,7 +7,7 @@ import ProjectSolution from "@/components/blocks/project/project-solution";
 import ProjectSpecialized from "@/components/blocks/project/project-specialized";
 import { getProjectDetails } from "@/lib/api/CMS/basicGet";
 import { getMetaData } from "@/lib/api/metaApi";
-import NotFound from "../../not-found/page";
+import NotFound from "../../not-found";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -83,7 +83,7 @@ const local_data = {
           media_alt: "projects-gallery-2",
         },
       },
-        {
+      {
         id: 4,
         media: {
           type: "image",
@@ -194,16 +194,16 @@ export default async function ProjectDetailPage({ params }) {
 
 
 
-  const {data, error} = await getProjectDetails({slug})
+  const { data, error } = await getProjectDetails({ slug })
 
 
-  // if(error){
-  //   return <NotFound />
-  // }
+  if (error) {
+    return <NotFound />
+  }
 
   console.log(error)
 
-  const {heroData, cmsData, projectData, solutionData, specializedAreasData, enquiryData} = data;
+  const { heroData, cmsData, projectData, solutionData, specializedAreasData, enquiryData } = data;
 
   const slugData = locale === "en" ? "Project" : "تفاصيل المشروع";
 
@@ -215,7 +215,7 @@ export default async function ProjectDetailPage({ params }) {
         slug={slugData}
         link={"/projects"}
       />
-      <ProjectDetail locale={locale} data={local_data?.projectData} projectData={projectData}  />
+      <ProjectDetail locale={locale} data={local_data?.projectData} projectData={projectData} />
       <ProjectSolution locale={locale} data={solutionData} />
       <ProjectSpecialized
         locale={locale}

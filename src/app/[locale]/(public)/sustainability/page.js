@@ -2,8 +2,7 @@ import ProductHero from "@/components/blocks/product/product-hero";
 import SustainabilityInfo from "@/components/blocks/sustainability/sustainability-info";
 import { getSustainabilityData, sustainabilityData } from "@/lib/api/CMS/basicGet";
 import { getMetaData } from "@/lib/api/metaApi";
-import { notFound } from "next/navigation";
-import NotFound from "../not-found/page";
+import NotFound from "../not-found";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -28,7 +27,7 @@ export default async function SustainabilityPage({ params }) {
   const { data, error } = await getSustainabilityData();
 
 
-  if(!data || error){
+  if (!data || error) {
     return <NotFound />
   }
 

@@ -3,7 +3,7 @@ import AccountLayout from "@/components/blocks/account/account-layout";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getMetaData } from "@/lib/api/metaApi";
 import { ProfileData } from "@/lib/api/profile/profileApi";
-import NotFound from "../../not-found/page";
+import NotFound from "../../not-found";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -82,7 +82,7 @@ export default async function ManageAddressPage({ params }) {
 
   const { data, error } = await ProfileData.getAddress();
 
-  if(error){
+  if (error) {
     return <NotFound />
   }
 

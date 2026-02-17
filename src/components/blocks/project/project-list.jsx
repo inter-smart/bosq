@@ -1,11 +1,11 @@
 import { getProjectListBySlug } from "@/lib/api/CMS/basicGet";
 import ProjectClient from "./project-client";
-import NotFound from "@/app/[locale]/(public)/not-found/page";
+import NotFound from "@/app/[locale]/(public)/not-found";
 
 export default async function ProjectList({ locale, data, slug, limit }) {
   const { data: projects, error } = await getProjectListBySlug({ slug, limit });
 
-  const {totalItems} = projects
+  const { totalItems } = projects
 
   if (error) {
     <NotFound />;

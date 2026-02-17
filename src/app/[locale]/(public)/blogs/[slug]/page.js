@@ -1,9 +1,9 @@
 import BlogInfo from "@/components/blocks/blog/blog-info";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getBlogsData } from "@/lib/api/blog";
-import NotFound from "../../not-found/page";
 import { parseOtherMeta } from "@/lib/helper";
 import { DefaultOgImage } from "@/lib/api/constants";
+import NotFound from "../../not-found";
 
 export async function generateMetadata({ params }) {
   const { slug, locale } = await params;

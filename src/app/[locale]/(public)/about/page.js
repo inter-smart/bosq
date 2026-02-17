@@ -6,8 +6,8 @@ import TestimonialSection from "@/components/blocks/about/TestimonialSection";
 import ClinetSection from "@/components/blocks/about/ClinetSection";
 import NewsSection from "@/components/blocks/about/NewsSection";
 import { getAboutData } from "@/lib/api/about";
-import NotFound from "../not-found/page";
 import { getMetaData } from "@/lib/api/metaApi";
+import NotFound from "../not-found";
 
 
 
