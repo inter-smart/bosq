@@ -40,7 +40,7 @@ const formSchema = z.object({
   email: commonValidations.email(),
   phone: commonValidations.phone,
   state: commonValidations.region(),
-  options_id: commonValidations.optionalString(),
+  dropdown_id: commonValidations.optionalString(),
   message: commonValidations.optionalString(),
 });
 
@@ -60,8 +60,23 @@ const textareaStyle = cn(
   "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none",
 );
 
-export default function RequestEnquiryForm({ locale = "en", states, options }) {
+const DEFAULT_OPTIONS = [
+  {
+    id: 0,
+    title: "General Enquiry",
+    title_ar: "استفسار عام",
+  },
+];
+
+export default function RequestEnquiryForm({
+  locale = "en",
+  states,
+  dropdownData,
+}) {
   const { executeRecaptcha } = useGoogleReCaptcha();
+
+  console.log(dropdownData)
+  const isEN = locale === "en";
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -72,7 +87,7 @@ export default function RequestEnquiryForm({ locale = "en", states, options }) {
       email: "",
       phone: "",
       state: "",
-      options_id: "",
+      dropdown_id: "",
       message: "",
     },
   });
@@ -101,13 +116,15 @@ export default function RequestEnquiryForm({ locale = "en", states, options }) {
           last_name: values.lastName,
           state_id: values.state,
           company_name: values.companyName,
-          options_id: values.options_id ? Number(values.options_id) : undefined,
+          dropdown_id: values.dropdown_id
+            ? Number(values.dropdown_id)
+            : undefined,
           ...values,
         }),
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data?.message ||"Failed to send enquiry");
+      if (!res.ok) throw new Error(data?.message || "Failed to send enquiry");
 
       form.reset();
       setLoading(false);
@@ -122,6 +139,8 @@ export default function RequestEnquiryForm({ locale = "en", states, options }) {
 
     setLoading(false);
   };
+
+  const hasData = Array.isArray(dropdownData) && dropdownData.length > 0;
 
   return (
     <Form {...form}>
@@ -259,7 +278,7 @@ export default function RequestEnquiryForm({ locale = "en", states, options }) {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {states.map((item, index) => (
+                  {states?.map((item, index) => (
                     <SelectItem
                       key={index}
                       value={item.id.toString()}
@@ -278,7 +297,7 @@ export default function RequestEnquiryForm({ locale = "en", states, options }) {
         {/* What can we help with */}
         <FormField
           control={form.control}
-          name="options_id"
+          name="dropdown_id"
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
@@ -295,15 +314,21 @@ export default function RequestEnquiryForm({ locale = "en", states, options }) {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {options?.items?.map((item, index) => (
-                    <SelectItem
-                      key={index}
-                      value={item.id.toString()}
-                      className={labelStyle}
-                    >
-                      {item?.title}
-                    </SelectItem>
-                  ))}
+                  {hasData ? (
+                    dropdownData.map((item) => (
+                      <SelectItem
+                        key={item.id}
+                        value={item.id.toString()}
+                        className={labelStyle}
+                      >
+                        {isEN ? item.title : item.title_ar}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <div className="px-3 py-2 text-sm text-muted-foreground text-center">
+                      No data found
+                    </div>
+                  )}
                 </SelectContent>
               </Select>
               <FormMessage className={errorStyle} />

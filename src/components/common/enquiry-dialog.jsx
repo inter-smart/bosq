@@ -16,8 +16,14 @@ import {
 } from "@/components/ui/dialog";
 import RequestEnquiryForm from "../form/request-enquiry-form";
 import { Heading } from "../utils/heading";
+import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
 
-export default function EnquiryDialog({ children, locale }) {
+export default function EnquiryDialog({
+  children,
+  locale,
+  state,
+  dropdownData,
+}) {
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
@@ -44,7 +50,7 @@ export default function EnquiryDialog({ children, locale }) {
                 "block fixed z-1 top-4 xl:top-5",
                 locale === "ar"
                   ? "mr-auto left-4 xl:left-5"
-                  : "ml-auto right-4 xl:right-5"
+                  : "ml-auto right-4 xl:right-5",
               )}
             >
               <X className="size-5 sm:size-4 2xl:size-5 text-black" />
@@ -58,12 +64,18 @@ export default function EnquiryDialog({ children, locale }) {
                 "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
                 locale === "ar"
                   ? "-translate-x-1 xl:-translate-x-2 "
-                  : "translate-x-1 xl:translate-x-2 "
+                  : "translate-x-1 xl:translate-x-2 ",
               )}
             />
           </Heading>
           <div className="w-full max-h-[80vh] mask-[linear-gradient(to_bottom,transparent_0%,white_2%,white_98%,transparent_100%)] overflow-x-hidden overflow-y-auto">
-            <RequestEnquiryForm locale={locale} />
+            <RecaptchaProvider>
+              <RequestEnquiryForm
+                locale={locale}
+                states={state}
+                dropdownData={dropdownData}
+              />
+            </RecaptchaProvider>
           </div>
         </div>
       </DialogContent>

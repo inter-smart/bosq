@@ -69,6 +69,8 @@ export default async function HomePage({ params }) {
     fitsSection,
     brandsSection,
     formSection,
+    enquiryDropdowns,
+    state
   } = data;
 
   const isEN = locale === "en";
@@ -76,7 +78,7 @@ export default async function HomePage({ params }) {
   return (
     <>
       <HomeHero locale={locale} data={sliders} />
-      <HomeAbout locale={locale} data={aboutSection} />
+      <HomeAbout locale={locale} data={aboutSection} state={state} dropdownData={enquiryDropdowns} />
       <HomeFeatured locale={locale} data={featuredSection} />
       <HomeJourney locale={locale} data={journeySection} isEN={isEN} />
       <HomeProject locale={locale} data={projectSection} isEN={isEN} />

@@ -39,7 +39,7 @@ export default async function CustomizationPage({ params }) {
 
 
 
-  const { heroData, customizationData, FeaturesSection, processSection, optionsSection,requestCustomQuote, states, options  } = data;
+  const { heroData, customizationData, FeaturesSection, processSection, optionsSection,requestCustomQuote, states, enquiryDropdowns  } = data;
 
 
   return (
@@ -56,7 +56,7 @@ export default async function CustomizationPage({ params }) {
         customizationProcess={processSection}
         customizationOptions={optionsSection}
         states={states}
-        options={options}
+        dropdownData={enquiryDropdowns}
         requestCustomQuote={requestCustomQuote}
       />
     </>

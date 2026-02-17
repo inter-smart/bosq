@@ -7,7 +7,7 @@ import parse from "html-react-parser";
 import { cn } from "@/lib/utils";
 import EnquiryDialog from "@/components/common/enquiry-dialog";
 
-export default function HomeAbout({ data, locale }) {
+export default function HomeAbout({ data, locale, dropdownData, state }) {
 
   const isEN = locale === "en";
 
@@ -73,7 +73,7 @@ export default function HomeAbout({ data, locale }) {
                   </Link>
                 </Button>
 
-                <EnquiryDialog locale={locale}>
+                <EnquiryDialog dropdownData={dropdownData} state={state} locale={locale}>
                   <Button
                     variant={"black"}
                     disabled={false}

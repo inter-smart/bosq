@@ -14,7 +14,7 @@ export default function CustomizationInfo({
   requestCustomQuote,
   states,
   locale,
-  options
+  dropdownData
 }) {
   const isEn = locale === "en";
 
@@ -349,7 +349,7 @@ export default function CustomizationInfo({
           <div className="w-full h-auto flex flex-wrap gap-6 sm:gap-12 xl:gap-18 2xl:gap-30">
             <div className="flex-1">
               <RecaptchaProvider>
-              <RequestEnquiryForm states={states} locale={locale} options={options} />
+              <RequestEnquiryForm states={states} locale={locale} dropdownData={dropdownData} />
               </RecaptchaProvider>
             </div>
             <div className="w-full lg:max-w-[46%]">
