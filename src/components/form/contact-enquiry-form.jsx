@@ -22,6 +22,7 @@ import { cn } from "@/lib/utils";
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 import { toast } from "sonner";
+import { API_URL } from "@/lib/api/client";
 
 // Validation schema
 const formSchema = z.object({
@@ -66,7 +67,7 @@ export default function ContactEnquiryForm({ locale }) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
 
-  const API_URL = `/api/frontend/enquiries/contact`;
+  const URL = `${API_URL}/api/frontend/enquiries/contact`;
 
   const onSubmit = async (values) => {
     setLoading(true);
@@ -75,7 +76,7 @@ export default function ContactEnquiryForm({ locale }) {
     try {
       const recaptchaToken = await executeRecaptcha("contact_enquiry_form");
 
-      const res = await fetch(API_URL, {
+      const res = await fetch(URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -84,10 +85,11 @@ export default function ContactEnquiryForm({ locale }) {
           ...values,
         }),
       });
-
-      if (!res.ok) throw new Error("Failed to send enquiry");
-
       const data = await res.json();
+
+      if (!res.ok) {
+      throw new Error(data?.message || "Request failed");
+    }
       form.reset();
 
       console.log(data);
@@ -95,8 +97,9 @@ export default function ContactEnquiryForm({ locale }) {
       toast.success(data?.message);
     } catch (err) {
       console.error(err);
-      setSuccess("Something went wrong. Please try again.");
-      toast.error("Something went wrong. Please try again.");
+      setSuccess(err.message || "Something went wrong. Please try again.");
+      toast.error(err.message || "Something went wrong. Please try again.");
+      console.log(err)
     }
 
     setLoading(false);

@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { toast } from "sonner";
+import { API_URL } from "@/lib/api/client";
 
 // ✅ Validation schema
 const formSchema = z.object({
@@ -68,7 +69,7 @@ export default function EnquiryForm() {
   const [success, setSuccess] = useState(null);
 
   const { executeRecaptcha } = useGoogleReCaptcha();
-  const API_URL = `/api/frontend/enquiries/contact`;
+  const URL = `${API_URL}/api/frontend/enquiries/contact`;
 
   const onSubmit = async (values) => {
     setLoading(true);
@@ -77,7 +78,7 @@ export default function EnquiryForm() {
     try {
       const recaptchaToken = await executeRecaptcha("lead_generation_form");
 
-      const res = await fetch(API_URL, {
+      const res = await fetch(URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -88,17 +89,17 @@ export default function EnquiryForm() {
         }),
       });
 
-      if (!res.ok) throw new Error("Failed to send enquiry");
-
       const data = await res.json();
-
+      if (!res.ok) {
+        throw new Error(data?.message || "Request failed");
+      }
       toast.success(data?.message || "Enquiry sent successfully");
       form.reset();
       setSuccess(data?.message || "Enquiry sent successfully");
     } catch (err) {
       console.error(err);
-      setSuccess("Something went wrong. Please try again.");
-      toast.error("Something went wrong. Please try again.");
+      setSuccess(err.message || "Something went wrong. Please try again.");
+      toast.error(err.message || "Something went wrong. Please try again.");
     }
 
     setLoading(false);

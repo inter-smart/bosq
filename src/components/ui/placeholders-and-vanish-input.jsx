@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { Search } from "lucide-react";
 import { toast } from "sonner";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { API_URL } from "@/lib/api/client";
 export function PlaceholdersAndVanishInput({
   placeholders,
   onChange,
@@ -185,12 +186,17 @@ export function PlaceholdersAndVanishInput({
       return;
     }
 
-    setIsSubmitting(true);
-    const API_URL = `/api/frontend/enquiries/news-letter`;
-    try {
-      const recaptchaToken = await executeRecaptcha("contact_enquiry_form");
+    if (!executeRecaptcha) {
+      toast.error("reCAPTCHA not ready. Please try again.");
+      return;
+    }
 
-      const res = await fetch(API_URL, {
+    setIsSubmitting(true);
+    const URL = `${API_URL}/api/frontend/enquiries/news-letter`;
+    try {
+      const recaptchaToken = await executeRecaptcha("newsletter_subsription");
+
+      const res = await fetch(URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -199,11 +205,8 @@ export function PlaceholdersAndVanishInput({
         }),
       });
 
-      if (!res.ok) throw new Error("Failed to send enquiry");
-
       const data = await res.json();
-
-      console.log("data:", data);
+      if (!res.ok) throw new Error(data?.message || "Failed to send enquiry");
 
       toast.success(data?.message);
     } catch (error) {

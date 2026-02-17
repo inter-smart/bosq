@@ -30,6 +30,7 @@ import "react-international-phone/style.css";
 import { commonValidations } from "@/lib/validations";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { toast } from "sonner";
+import { API_URL } from "@/lib/api/client";
 
 // Validation schema
 const formSchema = z.object({
@@ -88,9 +89,9 @@ export default function RequestEnquiryForm({ locale = "en", states, options }) {
       const recaptchaToken = await executeRecaptcha(
         "customization_enquiry_form",
       );
-      const API_URL = `/api/frontend/enquiries/customization`;
+      const URL = `${API_URL}/api/frontend/enquiries/customization`;
 
-      const res = await fetch(API_URL, {
+      const res = await fetch(URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -105,9 +106,9 @@ export default function RequestEnquiryForm({ locale = "en", states, options }) {
         }),
       });
 
-      if (!res.ok) throw new Error("Failed to send enquiry");
-
       const data = await res.json();
+      if (!res.ok) throw new Error(data?.message ||"Failed to send enquiry");
+
       form.reset();
       setLoading(false);
       setSuccess(data?.message);

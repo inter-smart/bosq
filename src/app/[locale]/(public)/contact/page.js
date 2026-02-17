@@ -2,7 +2,7 @@ import CartHero from "@/components/blocks/cart/cart-hero";
 import ContactInfo from "@/components/blocks/contact/contact-info";
 import { getContactData } from "@/lib/api/contact";
 import { getMetaData } from "@/lib/api/metaApi";
-import NotFound from "../not-found/page";
+import NotFound from "../not-found";
 
 
 
