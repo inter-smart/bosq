@@ -2,8 +2,7 @@ import BlogHero from "@/components/blocks/blog/blog-hero";
 import BlogList from "@/components/blocks/blog/blog-list";
 import { getBlogsData } from "@/lib/api/blog";
 import { getMetaData } from "@/lib/api/metaApi";
-import { notFound } from "next/navigation";
-import NotFound from "../not-found/page";
+import NotFound from "../not-found";
 
 
 
@@ -24,10 +23,10 @@ export async function generateMetadata({ params }) {
 }
 
 
-export default async function BlogsPage({params, searchParams}) {
+export default async function BlogsPage({ params, searchParams }) {
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
-  const {locale} = resolvedParams;
+  const { locale } = resolvedParams;
   const page = Number(resolvedSearchParams?.page) || 1;
 
   const [cmsResult, blogListResult] = await Promise.all([
@@ -35,7 +34,7 @@ export default async function BlogsPage({params, searchParams}) {
     getBlogsData.getBlogList(page, 6),
   ]);
 
-  if(cmsResult.error){
+  if (cmsResult.error) {
     NotFound()
   }
 

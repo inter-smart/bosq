@@ -1,7 +1,7 @@
 import ProductHero from "@/components/blocks/product/product-hero";
-import NotFound from "../not-found/page";
 import MaterialInfoSection from "@/components/blocks/material-guide/Material-info-section";
 import { getMaterialData } from "@/lib/api/CMS/basicGet";
+import NotFound from "../not-found";
 
 const local_data = {
   heroData: {
@@ -130,15 +130,15 @@ const local_data = {
 export default async function MaterialGuidePage({ params }) {
   const resolvedParams = await params;
   const { locale } = resolvedParams;
-  
-  const {data} = await getMaterialData();
+
+  const { data } = await getMaterialData();
   const { heroData, materialsInfo, extraMaterialsInfo } = data;
 
-  const slug = locale === "en"? "Material Guide" : "سياسة الخصوصية";
+  const slug = locale === "en" ? "Material Guide" : "سياسة الخصوصية";
 
   const isEn = locale === "en";
 
-  if(!data){
+  if (!data) {
     <NotFound />
   }
 

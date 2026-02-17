@@ -3,7 +3,6 @@ import AccountProfile from "@/components/blocks/account/account-profile";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getMetaData } from "@/lib/api/metaApi";
 import { ProfileData } from "@/lib/api/profile/profileApi";
-import NotFound from "../../not-found/page";
 import { notFound, redirect } from "next/navigation";
 
 export async function generateMetadata({ params }) {
@@ -59,7 +58,7 @@ export default async function ProfilePage({ params }) {
 
   const { data, error } = await ProfileData.getMyProfile();
 
-  
+
   if (error) {
     return notFound();
   }
@@ -70,12 +69,12 @@ export default async function ProfilePage({ params }) {
       <ProductHero
         locale={locale}
         data={local_data?.heroData}
-        slug={locale === "en"? "My Profile": "ملفي الشخصي"}
+        slug={locale === "en" ? "My Profile" : "ملفي الشخصي"}
       />
       <AccountLayout locale={locale}>
         <AccountProfile
           locale={locale}
-          data={data? data: local_data?.userData}
+          data={data ? data : local_data?.userData}
         />
       </AccountLayout>
     </>
