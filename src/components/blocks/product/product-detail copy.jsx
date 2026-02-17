@@ -290,7 +290,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                 <Button variant={"link"} className={"font-normal underline h-auto "} asChild>
                   <Link href={"/"}>Buy Now</Link>
                 </Button>
-                <ProductEnquireModal data={enq} productId={productData?.id} locale={locale}>
+                <ProductEnquireModal data={enq} productId={initialData?.id} locale={locale}>
                   <Button variant={"link"} className={"font-normal underline h-auto"}>
                     Enquire Now
                   </Button>

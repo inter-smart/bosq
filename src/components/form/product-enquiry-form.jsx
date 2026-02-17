@@ -58,25 +58,6 @@ export default function ProductEnquiryForm({ productId }) {
 
   const { executeRecaptcha } = useGoogleReCaptcha();
   const [submitProductEnquiry, { isLoading }] = useSubmitProductEnquiryMutation();
-  const { slug } = useParams(); // Using slug to identify product? Or should it be passed as prop?
-  // The modal is used in ProductDetail page, but `data` prop was passed to `ProductEnquireModal`.
-  // `ProductEnquiryForm` doesn't receive props in the user's code. 
-  // I need to check how to get product ID.
-  // The user's code for ProductEnquireModal has `data` prop which is `productsData`.
-  /*
-    <ProductEnquiryForm />
-  */
-  // It seems `ProductEnquiryForm` needs to accept `productId` as a prop.
-  // But I can't change the usage in `ProductEnquireModal` easily without knowing `productsData` structure.
-  // Wait, `ProductEnquireModal` wrapper code:
-  /*
-    const ProductEnquireModal = ({ children, data, locale }) => {
-       ...
-       <ProductEnquiryForm />
-    }
-  */
-  // I should update `ProductEnquireModal` to pass `productId={data?.id}` to `ProductEnquiryForm`.
-  // But let's assume I can modify `ProductEnquiryForm` signature.
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -108,33 +89,19 @@ export default function ProductEnquiryForm({ productId }) {
     try {
       const token = await executeRecaptcha("product_enquiry");
 
-      const formData = {
-        product_id: productId,
-        name: values.fullName,
-        email: values.email,
-        phone: values.phone,
-        city: values.city,
-        message: values.message,
-        recaptcha_token: token,
-        // Attachment handling? The backend service expects `media_path` but current implementation doesn't look like it handles file upload yet unless I verify it.
-        // The backend model has `media_path`.
-        // The user code uses `JSON.stringify` in the previous version. File upload needs FormData.
-        // But the backend `ProductEnquiryService` expects `data` object. 
-        // If `media_path` is passed, it assumes file is already uploaded?
-        // I'll stick to JSON for now as user code did, but attachment might fail.
-        // I'll check if I can get productId from context or props.
-      };
 
-      // We need to pass product_id. I will assume it comes from props.
 
-      const payload = {
-        ...formData,
-        // If I need to send file, I probably need to upload it first or send as FormData.
-        // For now, I will omit attachment in the API call if backend doesn't support multipart yet (Controller uses `req.body`).
-        // To support file upload, the backend controller needs to handle multipart/form-data.
-      };
+      const formData = new FormData();
+      formData.append("product_id", productId);
+      formData.append("name", values.fullName);
+      formData.append("email", values.email);
+      formData.append("phone", values.phone);
+      formData.append("city", values.city);
+      formData.append("message", values.message);
+      formData.append("recaptcha_token", token);
+      formData.append("media_path", uploadedFile);
 
-      await submitProductEnquiry(payload).unwrap();
+      await submitProductEnquiry(formData).unwrap();
 
       form.reset();
       setUploadedFile(null);

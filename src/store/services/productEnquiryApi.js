@@ -11,6 +11,9 @@ export const productEnquiryApi = createApi({
                 url: "/api/frontend/enquiries/product",
                 method: "POST",
                 body: data,
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
             }),
         }),
     }),
