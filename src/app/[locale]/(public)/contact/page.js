@@ -30,17 +30,16 @@ export default async function ContactPage({ params }) {
 
   const { data, error } = await getContactData.getCmsData();
 
-  console.log(error)
+  const slug = locale === "en" ? "Contact" : "اتصل بنا";
   if (error) {
     NotFound();
   }
 
   const { heroData, contactData } = data;
 
-  // const locale = "en";
   return (
     <>
-      <CartHero locale={locale} data={heroData} slug={"contact"} />
+      <CartHero locale={locale} data={heroData} slug={slug} />
       <ContactInfo locale={locale} data={contactData} />
     </>
   );

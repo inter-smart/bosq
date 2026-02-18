@@ -17,6 +17,7 @@ import {
 import RequestEnquiryForm from "../form/request-enquiry-form";
 import { Heading } from "../utils/heading";
 import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
+import { useTranslations } from "next-intl";
 
 export default function EnquiryDialog({
   children,
@@ -24,6 +25,7 @@ export default function EnquiryDialog({
   state,
   dropdownData,
 }) {
+  const t = useTranslations("form");
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
@@ -35,10 +37,9 @@ export default function EnquiryDialog({
       >
         <div className="w-full relative z-0">
           <DialogHeader className={"sr-only"}>
-            <DialogTitle>Search products</DialogTitle>
+            <DialogTitle>{t("enquire_now")}</DialogTitle>
             <DialogDescription>
-              Make changes to your profile here. Click save when you&apos;re
-              done.
+              Enquiry Form
             </DialogDescription>
           </DialogHeader>
 
@@ -58,7 +59,7 @@ export default function EnquiryDialog({
           </DialogClose>
 
           <Heading as="h2" size="heading1" className="text-black mb-2 xl:mb-3">
-            Enquire Now
+            {t("enquire_now")}
             <span
               className={cn(
                 "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",

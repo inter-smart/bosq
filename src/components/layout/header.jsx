@@ -15,6 +15,7 @@ import SearchDialog from "../common/search-dialog";
 import HeaderNavigation from "./header-navigation";
 import MobileHeaderNavigation from "./mobile-header-navigation";
 import CartIcon from "./Header/CartIcon";
+import { useTranslations } from "next-intl";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
@@ -36,6 +37,7 @@ const itemVariants = {
 };
 
 export default function Header({ navigationData, locale, data }) {
+  const t = useTranslations("header");
   const { scrollYProgress } = useScroll();
   const [visible, setVisible] = useState(true);
   const [bg, setBg] = useState(false);
@@ -112,15 +114,15 @@ export default function Header({ navigationData, locale, data }) {
                 </SheetTrigger>
                 <SheetContent className="max-w-[320px] sm:max-w-[320px] bg-white" side={locale === "ar" ? "right" : "left"}>
                   <SheetHeader className="sr-only">
-                    <SheetTitle>Navigation</SheetTitle>
-                    <SheetDescription>Navigation</SheetDescription>
+                    <SheetTitle>{t("navigation")}</SheetTitle>
+                    <SheetDescription>{t("navigation")}</SheetDescription>
                   </SheetHeader>
                   <Link
                     href={`/${locale}/login`}
                     className="text-[14px] leading-none font-light text-white min-h-(--header-y) h-(--header-y) bg-black flex items-center gap-x-2 px-4"
                   >
-                    <Image src="/images/icon-user.svg" alt="user" width={12} height={12} unoptimized className="w-[15px]" />
-                    Login/Sign Up
+                    <Image src="/images/icon-user.svg" alt={t("user_alt")} width={12} height={12} unoptimized className="w-[15px]" />
+                    {t("login_signup")}
                   </Link>
                   <div className="w-full h-[calc(100%_-_var(--header-y)} overflow-y-auto">
                     <AnimatePresence mode="wait">
@@ -184,7 +186,7 @@ export default function Header({ navigationData, locale, data }) {
                 <Button variant="none" size="none">
                   <Image
                     src={showDarkHeader ? "/images/icon-search-dark.svg" : "/images/icon-search.svg"}
-                    alt="search"
+                    alt={t("search_alt")}
                     width={12}
                     height={12}
                     unoptimized
@@ -197,7 +199,7 @@ export default function Header({ navigationData, locale, data }) {
                 <Link href={`/${locale}/account/profile`}>
                   <Image
                     src={showDarkHeader ? "/images/icon-user-dark.svg" : "/images/icon-user.svg"}
-                    alt="user"
+                    alt={t("user_alt")}
                     width={12}
                     height={12}
                     unoptimized
@@ -221,7 +223,7 @@ export default function Header({ navigationData, locale, data }) {
                     height={12}
                     className="w-[15px] 2xl:w-[18px] aspect-square rounded-full block border-black border-1"
                   />
-                  English
+                  {t("english")}
                 </Button>
               ) : (
                 <Button
@@ -239,7 +241,7 @@ export default function Header({ navigationData, locale, data }) {
                     height={12}
                     className="w-[15px] 2xl:w-[18px] aspect-square rounded-full block border-black border-1"
                   />
-                  العربية
+                  {t("arabic")}
                 </Button>
               )}
             </div>

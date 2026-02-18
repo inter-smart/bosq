@@ -38,6 +38,7 @@ export default function HeaderNavigation({
   const [hoveredSubmenu, setHoveredSubmenu] = useState(null);
   const [hoveredSubSubmenu, setHoveredSubSubmenu] = useState(null);
 
+  const isEN = locale === "en";
   const getNavigationMenuTriggerStyle = (isActive) => {
     const baseStyle =
       "text-[20px] lg:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-normal font-medium lg:font-normal text-start lg:text-center w-full h-auto p-[8px_15px] lg:p-[6px_12px] 2xl:p-[10px_15px] 3xl:p-[15px_25px] bg-transparent border border-transparent hover:bg-black/0 focus:bg-black/0 ring-0 hover:border-white/10 data-[state=open]:border-white/10 data-[state=open]:hover:bg-black/0 data-[state=open]:focus:bg-black/0 data-[state=open]:bg-black/0 transition-all duration-200 max-lg:justify-between";
@@ -93,7 +94,7 @@ export default function HeaderNavigation({
                   <NavigationMenuTrigger
                     className={cn(getNavigationMenuTriggerStyle(isActive))}
                   >
-                    {item.name}
+                    {isEN ? item?.name : item?.name_ar}
                   </NavigationMenuTrigger>
                   <NavigationMenuContent
                     data-motion="from-end"
@@ -140,7 +141,7 @@ export default function HeaderNavigation({
                                       href={`/${locale}${subItem.slug}`}
                                       onClick={onNavigationClick}
                                     >
-                                      {subItem.name}
+                                      {isEN? subItem.name : subItem.name_ar}
                                     </Link>
                                   </NavigationMenuLink>
                                 ) : (
@@ -150,7 +151,7 @@ export default function HeaderNavigation({
                                       isSubHovered
                                     )}
                                   >
-                                    {subItem.name}
+                                    {isEN? subItem.name : subItem.name_ar}
                                   </div>
                                 )}
 
@@ -195,7 +196,7 @@ export default function HeaderNavigation({
                                                     onNavigationClick();
                                                   }}
                                                 >
-                                                  {subSubItem.name}
+                                                  {isEN ? subSubItem.name : subSubItem.name_ar}
                                                 </Link>
                                               </NavigationMenuLink>
                                             ) : (
@@ -205,7 +206,7 @@ export default function HeaderNavigation({
                                                   isSubSubHovered
                                                 )}
                                               >
-                                                {subSubItem.name}
+                                                {isEN ? subSubItem.name : subSubItem.name_ar}
                                               </div>
                                             )}
                                           </li>
@@ -283,7 +284,7 @@ export default function HeaderNavigation({
                       href={`/${locale}${item.slug}`}
                       onClick={onNavigationClick}
                     >
-                      {item.name}
+                      {isEN ? item?.name : item?.name_ar}
                     </Link>
                   </NavigationMenuLink>
                 </NavigationMenuItem>

@@ -4,6 +4,7 @@ import { Heading } from "@/components/utils/heading";
 import Image from "next/image";
 import Link from "next/link";
 import parse from "html-react-parser";
+import { useTranslations } from "next-intl";
 
 import useEmblaCarousel from "embla-carousel-react";
 import ClassNames from "embla-carousel-class-names";
@@ -17,6 +18,7 @@ import {
 } from "@/components/utils/embla-carousel-dot-button";
 
 export default function HomeProject({ data, locale, isEN }) {
+  const t = useTranslations("home");
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { loop: false, align: "start", direction: locale === "ar" ? "rtl" : "ltr" },
     [ClassNames(), Autoplay({ delay: 4000, stopOnInteraction: true })]
@@ -88,7 +90,7 @@ export default function HomeProject({ data, locale, isEN }) {
                       )} />
                       <Image
                         src={item?.media?.path}
-                        alt={isEN? item?.media?.alt : item?.media?.alt_ar}
+                        alt={isEN ? item?.media?.alt : item?.media?.alt_ar}
                         width={308}
                         height={517}
                         className="w-full h-full object-cover hover:scale-110 opacity-80 transition duration-300"
@@ -104,7 +106,7 @@ export default function HomeProject({ data, locale, isEN }) {
                           size="heading1"
                           className="font-light capitalize text-white mb-5"
                         >
-                          {parse(isEN? item?.title: item?.title_ar)}
+                          {parse(isEN ? item?.title : item?.title_ar)}
                         </Heading>
                         <Button
                           variant={"white"}
@@ -112,7 +114,7 @@ export default function HomeProject({ data, locale, isEN }) {
                           asChild
                         >
                           <Link href={`/projects/${item?.slug}` || "/projects/slug"}>
-                            {isEN? "View Projects": "عرض المشاريع"}
+                            {t("view_projects")}
                           </Link>
                         </Button>
                       </div>

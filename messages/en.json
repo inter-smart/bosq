@@ -14,7 +14,13 @@
     "u8_description": "Premium electric vehicle with advanced technology.",
     "u9": "U9",
     "u9_description": "High-performance electric supercar.",
-    "book_test_drive": "Book test drive"
+    "book_test_drive": "Book test drive",
+    "login_signup": "Login/Sign Up",
+    "navigation": "Navigation",
+    "english": "English",
+    "arabic": "العربية",
+    "user_alt": "user",
+    "search_alt": "search"
   },
   "footer": {
     "menu": "Menu",
@@ -28,6 +34,8 @@
     "u9": "U9",
     "service_centers": "Service Centers",
     "showroom": "Showroom",
+    "ph": "Ph",
+    "email": "Email",
     "subscribe_newsletter": "Subscribe Newsletter",
     "subscribe_placeholder_1": "Enter Your email address",
     "subscribe_placeholder_2": "Subscribe for latest updates",
@@ -36,7 +44,17 @@
     "terms_conditions": "Terms & Conditions",
     "privacy_policy": "Privacy Policy",
     "crafted_by": "Crafted By",
-    "news": "News"
+    "news": "News",
+    "designedBy": "Designed By",
+    "shop": "Shop",
+    "quickLinks": "Quick Links",
+    "other_links": "Other Links"
+  },
+  "home": {
+    "read_more": "Read More",
+    "view_details": "View Details",
+    "view_projects": "View Projects",
+    "enquiry_dialog_btn": "Enquiry Dialog"
   },
   "form": {
     "fName_placeholder": "First Name",
@@ -77,7 +95,32 @@
     "submit_error": "An error occurred. Please try again later.",
     "enquire_now": "Enquire Now",
     "book_a_test_drive": "Book a Test Drive",
-    "service_enquiry": "Service Enquiry"
+    "service_enquiry": "Service Enquiry",
+    "full_name": "Name",
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "company_name": "Company Name (Optional)",
+    "phone_number": "Phone Number",
+    "email_id": "Email ID",
+    "tell_us_more": "Tell Us More",
+    "message": "Message",
+    "enter_name": "Enter your name",
+    "enter_first_name": "Enter your first name",
+    "enter_last_name": "Enter your last name",
+    "enter_company_name": "Enter your company name",
+    "enter_email_id": "Enter email id",
+    "enter_phone": "Enter phone number",
+    "enter_mobile": "Enter your mobile number",
+    "select_state": "Select state",
+    "help_with": "What Can We Help With?",
+    "select_option": "Select an option",
+    "form_placeholder_project": "Please provide a brief overview of your project, including any specific requirements or ideas you have in mind.",
+    "form_placeholder_inquiry": "Tell us more about your inquiry",
+    "no_data": "No data found",
+    "submit_enquiry": "Submit Enquiry",
+    "submit_now": "Submit Now",
+    "submitting": "Submitting...",
+    "success_message": "Enquiry sent successfully"
   },
   "common": {
     "home": "Home",

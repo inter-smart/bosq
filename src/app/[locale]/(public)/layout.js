@@ -232,8 +232,7 @@ const local_data = {
   //     slug: "/contact",
   //   },
   // ],
-  
-  
+
   footer_data: {
     // id: "uuid PRIMARY KEY",
     // name: "Bosq Ergonomics",
@@ -241,104 +240,125 @@ const local_data = {
     // logoUrl: "/images/brand-logo-primary.svg",
     // logoWhiteUrl: "/images/brand-logo.svg",
     // address:
-      // "<p>AYN MUSK FOR FURNITURE CO.L.L.C<br /> Office No 133, KML Business Tower,Meydan Road,<br /> Al Qouz, Dubai P.O Box: 294568</p>",
+    // "<p>AYN MUSK FOR FURNITURE CO.L.L.C<br /> Office No 133, KML Business Tower,Meydan Road,<br /> Al Qouz, Dubai P.O Box: 294568</p>",
     // websiteUrl: "https://bosq.ae/",
     shop_navigation: [
       {
         id: "01",
         label: "Office Chairs",
+        label_ar: "كراسي المكتب",
         link: "/products/office-chair-1",
       },
       {
         id: "02",
         label: "Workstations",
+        label_ar: "محطات العمل",
         link: "/products",
       },
       {
         id: "03",
         label: "Storage",
+        label_ar: "التخزين",
         link: "/products",
       },
       {
         id: "04",
         label: "Shop All",
+        label_ar: "تسوق الكل",
         link: "/products",
       },
     ],
+
     quick_link_navigation: [
       {
         id: "01",
         label: "Home",
+        label_ar: "الرئيسية",
         link: "/",
       },
       {
         id: "02",
         label: "About",
+        label_ar: "من نحن",
         link: "/about",
       },
       {
         id: "03",
         label: "Contact",
+        label_ar: "اتصل بنا",
         link: "/contact",
       },
       {
         id: "04",
         label: "Projects",
+        label_ar: "المشاريع",
         link: "/projects",
       },
-       {
+      {
         id: "05",
         label: "News",
+        label_ar: "الأخبار",
         link: "/news",
       },
-       {
+      {
         id: "06",
         label: "Blog",
+        label_ar: "المدونة",
         link: "/blogs",
       },
     ],
+
     other_link_navigation: [
       {
         id: "01",
         label: "Ergonomic Chair Guide",
+        label_ar: "دليل الكراسي المريحة",
         link: "/ergonomic-chair-guide",
       },
       {
         id: "02",
         label: "Delivery",
+        label_ar: "التوصيل",
         link: "/delivery-policy",
       },
       {
         id: "03",
         label: "Material Guide",
+        label_ar: "دليل المواد",
         link: "/material-guide",
       },
       {
         id: "04",
         label: "Warranty",
+        label_ar: "الضمان",
         link: "/warranty-policy",
       },
       {
         id: "05",
         label: "F&Q",
+        label_ar: "الأسئلة الشائعة",
         link: "/faqs",
       },
       {
         id: "06",
         label: "Privacy Policy",
+        label_ar: "سياسة الخصوصية",
         link: "/privacy-policy",
       },
       {
         id: "07",
         label: "Terms & Conditions",
+        label_ar: "الشروط والأحكام",
         link: "/terms-and-conditions",
       },
       {
         id: "08",
         label: "Return & Refund Policy",
+        label_ar: "سياسة الإرجاع والاسترداد",
         link: "/return-policy",
       },
     ],
+
     // sale_enquiry: {
     //   title: "For Sale Enquiry",
     //   phone: "+971 56 503 6378",

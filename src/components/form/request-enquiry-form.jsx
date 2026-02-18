@@ -31,6 +31,7 @@ import { commonValidations } from "@/lib/validations";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { toast } from "sonner";
 import { API_URL } from "@/lib/api/client";
+import { useTranslations } from "next-intl";
 
 // Validation schema
 const formSchema = z.object({
@@ -133,14 +134,15 @@ export default function RequestEnquiryForm({
     } catch (err) {
       console.error(err);
       setLoading(false);
-      setSuccess("Something went wrong. Please try again.");
-      toast.error("Something went wrong. Please try again.");
+      setSuccess(t("submit_error"));
+      toast.error(t("submit_error"));
     }
 
     setLoading(false);
   };
 
   const hasData = Array.isArray(dropdownData) && dropdownData.length > 0;
+  const t = useTranslations("form");
 
   return (
     <Form {...form}>
@@ -155,13 +157,13 @@ export default function RequestEnquiryForm({
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                First Name<span className={errorStyle}>*</span>
+                {t("first_name")}<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   className={inputStyle}
-                  placeholder="Enter your first name"
+                  placeholder={t("enter_first_name")}
                 />
               </FormControl>
               <FormMessage className={errorStyle} />
@@ -176,13 +178,13 @@ export default function RequestEnquiryForm({
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                Last Name<span className={errorStyle}>*</span>
+                {t("last_name")}<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   className={inputStyle}
-                  placeholder="Enter your last name"
+                  placeholder={t("enter_last_name")}
                 />
               </FormControl>
               <FormMessage className={errorStyle} />
@@ -197,13 +199,13 @@ export default function RequestEnquiryForm({
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                Company Name (Optional)
+                {t("company_name")}
               </FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   className={inputStyle}
-                  placeholder="Enter your company name"
+                  placeholder={t("enter_company_name")}
                 />
               </FormControl>
               <FormMessage className={errorStyle} />
@@ -218,14 +220,14 @@ export default function RequestEnquiryForm({
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                Email Address<span className={errorStyle}>*</span>
+                {t("email_id")}<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   type="email"
                   className={inputStyle}
-                  placeholder="Enter email address"
+                  placeholder={t("enter_email_id")}
                 />
               </FormControl>
               <FormMessage className={errorStyle} />
@@ -240,7 +242,7 @@ export default function RequestEnquiryForm({
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                Phone<span className={errorStyle}>*</span>
+                {t("phone_number")}<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <PhoneInput
@@ -250,7 +252,7 @@ export default function RequestEnquiryForm({
                     inputStyle,
                     "w-full p-0 [&_input]:flex-1 [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px] [--react-international-phone-flag-width:20px] [--react-international-phone-flag-height:20px]",
                   )}
-                  placeholder="Enter your mobile number"
+                  placeholder={t("enter_mobile")}
                 />
               </FormControl>
               <FormMessage className={errorStyle} />
@@ -265,7 +267,7 @@ export default function RequestEnquiryForm({
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                State<span className={errorStyle}>*</span>
+                {t("location_placeholder")}<span className={errorStyle}>*</span>
               </FormLabel>
               <Select
                 dir={locale === "ar" ? "rtl" : "ltr"}
@@ -274,7 +276,7 @@ export default function RequestEnquiryForm({
               >
                 <FormControl>
                   <SelectTrigger className={cn(inputStyle, "w-full")}>
-                    <SelectValue placeholder="Select state" />
+                    <SelectValue placeholder={t("select_state")} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -301,7 +303,7 @@ export default function RequestEnquiryForm({
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                What Can We Help With?
+                {t("help_with")}
               </FormLabel>
               <Select
                 dir={locale === "ar" ? "rtl" : "ltr"}
@@ -310,7 +312,7 @@ export default function RequestEnquiryForm({
               >
                 <FormControl>
                   <SelectTrigger className={cn(inputStyle, "w-full")}>
-                    <SelectValue placeholder="Select an option" />
+                    <SelectValue placeholder={t("select_option")} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -326,7 +328,7 @@ export default function RequestEnquiryForm({
                     ))
                   ) : (
                     <div className="px-3 py-2 text-sm text-muted-foreground text-center">
-                      No data found
+                      {t("no_data")}
                     </div>
                   )}
                 </SelectContent>
@@ -342,12 +344,12 @@ export default function RequestEnquiryForm({
           name="message"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel className={labelStyle}>Message</FormLabel>
+              <FormLabel className={labelStyle}>{t("message")}</FormLabel>
               <FormControl>
                 <Textarea
                   {...field}
                   className={textareaStyle}
-                  placeholder="Tell us more about your inquiry"
+                  placeholder={t("form_placeholder_inquiry")}
                 />
               </FormControl>
               <FormMessage className={errorStyle} />
@@ -363,7 +365,7 @@ export default function RequestEnquiryForm({
             disabled={loading}
             className="min-w-[120px] 2xl:min-w-40"
           >
-            {loading ? "Submitting..." : "Enquire Now"}
+            {loading ? t("submitting") : t("enquire_now")}
           </Button>
         </div>
 

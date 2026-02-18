@@ -20,6 +20,7 @@ import { cn } from "@/lib/utils";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { toast } from "sonner";
 import { API_URL } from "@/lib/api/client";
+import { useTranslations } from "next-intl";
 
 // ✅ Validation schema
 const formSchema = z.object({
@@ -55,6 +56,7 @@ const textareaStyle = cn(
 );
 
 export default function EnquiryForm() {
+  const t = useTranslations("form");
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -91,15 +93,15 @@ export default function EnquiryForm() {
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data?.message || "Request failed");
+        throw new Error(data?.message || t("submit_error"));
       }
-      toast.success(data?.message || "Enquiry sent successfully");
+      toast.success(data?.message || t("success_message"));
       form.reset();
-      setSuccess(data?.message || "Enquiry sent successfully");
+      setSuccess(data?.message || t("success_message"));
     } catch (err) {
       console.error(err);
-      setSuccess(err.message || "Something went wrong. Please try again.");
-      toast.error(err.message || "Something went wrong. Please try again.");
+      setSuccess(err.message || t("submit_error"));
+      toast.error(err.message || t("submit_error"));
     }
 
     setLoading(false);
@@ -118,13 +120,13 @@ export default function EnquiryForm() {
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                Name<span className={errorStyle}>*</span>
+                {t("full_name")}<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   className={inputStyle}
-                  placeholder="Enter your name"
+                  placeholder={t("enter_name")}
                 />
               </FormControl>
               <FormMessage />
@@ -139,14 +141,14 @@ export default function EnquiryForm() {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                Phone Number<span className={errorStyle}>*</span>
+                {t("phone_number")}<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   type="tel"
                   className={inputStyle}
-                  placeholder="Enter phone number"
+                  placeholder={t("enter_phone")}
                 />
               </FormControl>
               <FormMessage />
@@ -161,14 +163,14 @@ export default function EnquiryForm() {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                Email ID<span className={errorStyle}>*</span>
+                {t("email_id")}<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   type="email"
                   className={inputStyle}
-                  placeholder="Enter email id"
+                  placeholder={t("enter_email_id")}
                 />
               </FormControl>
               <FormMessage />
@@ -182,12 +184,12 @@ export default function EnquiryForm() {
           name="additionalDetails"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel className={labelStyle}>Tell Us More</FormLabel>
+              <FormLabel className={labelStyle}>{t("tell_us_more")}</FormLabel>
               <FormControl>
                 <Textarea
                   {...field}
                   className={textareaStyle}
-                  placeholder="Please provide a brief overview of your project, including any specific requirements or ideas you have in mind."
+                  placeholder={t("form_placeholder_project")}
                 />
               </FormControl>
               <FormMessage />
@@ -203,7 +205,7 @@ export default function EnquiryForm() {
             disabled={loading}
             className="min-w-[120px] 2xl:min-w-40 ml-auto cursor-pointer"
           >
-            {loading ? "Sending..." : "Submit Enquiry"}
+            {loading ? t("submitting") : t("submit_enquiry")}
           </Button>
         </div>
 

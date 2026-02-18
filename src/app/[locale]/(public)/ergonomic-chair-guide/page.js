@@ -25,8 +25,7 @@ export default async function ErgonomicChairPage({ params }) {
 
   const { data, error } = await getErgonomicChairData();
 
-  console.log(error)
-
+const slug = locale === "en" ? "Ergonomic Chair Guide" : "دليل الكراسي المريحة";
   if (error) {
     notFound();
   }
@@ -35,7 +34,7 @@ export default async function ErgonomicChairPage({ params }) {
 
   return (
     <>
-      <ProductHero locale={locale} data={heroData} slug={"Material Guide"} />
+      <ProductHero locale={locale} data={heroData} slug={slug} />
       <ErgonomicChairSection locale={locale} data={ergonomicChairData} />
     </>
   );
