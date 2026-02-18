@@ -33,6 +33,8 @@ export default async function ProjectsPage({ params, searchParams }) {
   const slug = resolvedSearchParams.slug ?? "all";
   const limit = resolvedSearchParams.limit ? parseInt(resolvedSearchParams.limit) : 6;
   const { data, error } = await getProjectData();
+// make arabic 
+  const breadCrumpData = locale==="en"? "projects" : "المشاريع"
 
   if (error) {
     <NotFound />
@@ -43,7 +45,7 @@ export default async function ProjectsPage({ params, searchParams }) {
       <ProductHero
         locale={locale}
         data={data?.heroData}
-        slug={"Our Projects"}
+        slug={breadCrumpData}
       />
       <ProjectHero locale={locale} data={data?.projectInfo} />
       <ProjectList locale={locale} data={data?.projectCategories} slug={slug} limit={limit} />

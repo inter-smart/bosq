@@ -178,14 +178,14 @@ export default async function Wishlist({ params }) {
   const { data, error } = await ProfileData.getWishList();
   const local_data = data;
 
-  console.log("Wishlist Data", data);
+  const slug = locale === "en" ? "My Profile" : "ملفي الشخصي";
 
   return (
     <>
-      <ProductHero locale={locale} data={local_data?.heroData} slug={"My Profile"} />
+      <ProductHero locale={locale} data={local_data?.heroData} slug={slug} />
 
       <AccountLayout locale={locale}>
-        <AccountWishlist locale={locale} data={local_data?.wishlistData} wishList={data} />
+        <AccountWishlist locale={locale} data={local_data?.wishlistData} />
       </AccountLayout>
     </>
   );

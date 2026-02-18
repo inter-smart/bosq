@@ -4,28 +4,30 @@ import { Heading } from "@/components/utils/heading";
 import { Text } from "@/components/utils/text";
 import Image from "next/image";
 import parse from "html-react-parser";
+import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 import { OrderEmpty } from "./order-empty";
 import { toast } from "sonner";
 
 export default function AccountCoupons({ locale, couponData }) {
+  const t = useTranslations("account");
   const isEn = locale === "en";
   const COPY_TOAST_ID = "copy-toast";
 
   const handleCopy = (code) => {
     try {
       navigator.clipboard.writeText(code);
-      toast.success("Copied to clipboard", {
+      toast.success(t("copied"), {
         id: COPY_TOAST_ID,
         description: `"${code}"`,
         duration: 2000,
         position: "bottom-right",
       });
     } catch (error) {
-      toast.error("Copy failed", {
+      toast.error(t("copy_failed"), {
         id: COPY_TOAST_ID,
-        description: "Your browser does not support clipboard access",
+        description: t("clipboard_unsupported"),
       });
     }
   };
@@ -35,10 +37,8 @@ export default function AccountCoupons({ locale, couponData }) {
       {couponData?.length === 0 ? (
         <div className="w-full border border-[#e9e9e9] sm:rounded-e-lg py-3 xl:py-6 3xl:py-9 px-3 xl:px-4 3xl:px-5">
           <OrderEmpty
-            title={"No Coupons Available"}
-            description={
-              "Once you place your first order, you'll be able to track your deliveries and manage returns from here."
-            }
+            title={t("no_coupons_title")}
+            description={t("no_coupons_description")}
           />
         </div>
       ) : (
@@ -48,7 +48,7 @@ export default function AccountCoupons({ locale, couponData }) {
             size={"heading5"}
             className="font-semibold text-[#282828] mb-2 xl:mb-4"
           >
-            {isEn ? "Coupons & Offers" : "كوبونات وعروض"}
+            {t("coupons_offers")}
           </Heading>
 
           <div className="flex flex-wrap -mx-1 xl:-mx-1.5 2xl:-mx-2 [&>*]:p-1 xl:[&>*]:p-1.5 2xl:[&>*]:p-2">
@@ -81,7 +81,7 @@ export default function AccountCoupons({ locale, couponData }) {
                       size="text3"
                       className="font-normal truncate text-[#282828]"
                     >
-                      {isEn ? "Expired on " : " انتهت صلاحيته في"}{" "}
+                      {t("expired_on")}{" "}
                       {parse(item?.expired_on)}
                       {/* {item?.status === "used" && (
                         <span className="text-[10px] xl:text-[12px] leading-normal font-normal text-center text-white bg-[#f17423] rounded-lg horizontal-center origin-top-left px-2 xl:px-4 mx-2">
@@ -109,7 +109,7 @@ export default function AccountCoupons({ locale, couponData }) {
                             height={10}
                             className="w-2 xl:w-2.5 hover:scale-105 transition duration-300"
                           />
-                          COPY
+                          {t("copy")}
                         </div>
                       )}
                     </div>

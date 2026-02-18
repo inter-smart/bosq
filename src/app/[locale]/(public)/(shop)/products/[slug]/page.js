@@ -443,7 +443,7 @@ export default async function ProductDetailPage({ params, searchParams }) {
 
   return (
     <>
-      <ProductHero locale={locale} data={local_data?.heroData} slug={slug} />
+      <ProductHero locale={locale} data={data?.heroData} slug={slug} />
       <ProductDetailCopy locale={locale} initialData={data?.initialVariant} productData={data?.product} models={data?.models} productSlug={slug} />
       {data?.similarVariants?.length > 0 && <ProductSimilar locale={locale} data={data?.similarVariants} />}
     </>
