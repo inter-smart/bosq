@@ -21,22 +21,14 @@ import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { toast } from "sonner";
 import { API_URL } from "@/lib/api/client";
 import { useTranslations } from "next-intl";
+import { commonValidations } from "@/lib/validations";
 
 // ✅ Validation schema
 const formSchema = z.object({
-  name: z
-    .string()
-    .min(2, "Full name must be at least 2 characters")
-    .max(50, "Full name cannot exceed 50 characters"),
-  email: z.string().email("Invalid email address"),
-  phone: z
-    .string()
-    .min(10, "Phone number is required")
-    .max(20, "Phone number is too long"),
-  additionalDetails: z
-    .string()
-    .optional()
-    .refine((val) => !val || val.trim().length >= 2, "Message is too short"),
+  name: commonValidations.name("Name"),
+  email: commonValidations.email(),
+  phone: commonValidations.phone,
+  additionalDetails: commonValidations.optionalString(),
 });
 
 // ✅ Shared styles
