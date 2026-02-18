@@ -9,6 +9,10 @@ import { Text } from "@/components/utils/text";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
+import { addToCart } from "@/store/slices/cartSlice";
+import { toast } from "sonner";
 
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
@@ -31,7 +35,10 @@ const enq = {
 };
 
 export default function ProductDetailCopy({ locale, initialData, productData, models, productSlug }) {
+  const router = useRouter();
+  const dispatch = useDispatch();
   const [isModelLoading, setIsModelLoading] = useState(false);
+  const [quantity, setQuantity] = useState(1);
 
   const productImages = initialData?.images || [];
   const currentModelId = initialData?.model_id;
@@ -84,6 +91,26 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
 
   const [wishlist, setWishlist] = useState(false);
 
+  const handleBuyNow = async () => {
+    // Note: Since quantity is managed inside PriceAndCart,
+    // and this button is outside, we default to 1 or we'd need to lift state.
+    // For now, implementing with quantity 1 as requested.
+    const { product_id, id: variant_id } = initialData;
+
+    try {
+      await dispatch(
+        addToCart({
+          product_id,
+          variant_id,
+          quantity,
+        }),
+      ).unwrap();
+      router.push("/cart");
+    } catch (error) {
+      toast.error(error || "Failed to add item to cart");
+    }
+  };
+
   return (
     <section className="w-full block py-[10px_30px] xl:py-[0_60px] 2xl:py-[5px_100px]">
       <div className="container">
@@ -133,7 +160,18 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                           setOpenProduct(true);
                         }}
                       >
-                        <div className={cn("w-full h-full rounded-[4px] overflow-hidden border transition-all duration-300 bg-white select-none")}>
+                        <div className={cn("w-full h-full rounded-[4px] overflow-hidden border transition-all duration-300 bg-white select-none relative")}>
+                          {initialData?.stock == 0 && (
+                            <div className="w-full h-full bg-[#f4f4f4]/90 flex items-center justify-center absolute z-2 inset-0">
+                              <Button
+                                variant={"black"}
+                                disabled={true}
+                                className="min-w-[100px] xl:min-w-[120px] 2xl:min-w-[200px] disabled:opacity-100 rounded-[2px] m-auto"
+                              >
+                                Out of Stock
+                              </Button>
+                            </div>
+                          )}
                           {item?.media_type === "video" ? (
                             <video autoPlay loop muted playsInline className="w-full h-full object-cover">
                               <source src={item?.media_path} type="video/mp4" />
@@ -278,8 +316,18 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
               >
                 AED {initialData?.price} <span>Inc Tax</span>
               </Heading>
+              {
+                initialData?.stock > 0 && (
+                  <PriceAndCart
+                    stock={initialData?.stock}
+                    price={initialData?.price}
+                    item={initialData}
+                    quantity={quantity}
+                    setQuantity={setQuantity}
+                  />
+                )
+              }
 
-              <PriceAndCart stock={initialData?.stock} price={initialData?.price} item={initialData} />
 
               <div className="flex flex-wrap items-center justify-between gap-4 2xl:gap-6 mb-2 xl:mb-3 2xl:mb-5 max-lg:flex-wrap-reverse">
                 <div className="flex lg:flex-1">
@@ -287,8 +335,8 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                     {"Enhance Your Productivity by Upgrading Your Workspace Comfort Today"}
                   </Text>
                 </div>
-                <Button variant={"link"} className={"font-normal underline h-auto "} asChild>
-                  <Link href={"/"}>Buy Now</Link>
+                <Button variant={"link"} className={"font-normal underline h-auto "} disabled={initialData?.stock == 0} onClick={handleBuyNow}>
+                  Buy Now
                 </Button>
                 <ProductEnquireModal data={enq} productId={initialData?.id} locale={locale}>
                   <Button variant={"link"} className={"font-normal underline h-auto"}>
@@ -364,8 +412,8 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
               </div> */}
 
               {/* <hr className="my-2 sm:my-2 2xl:my-3 mx-[-5px]" /> */}
-              <div className="flex justify-between items-center gap-2">
-                {/* <div>
+              {/* <div className="flex justify-between items-center gap-2">
+                <div>
                   <Heading
                     as="div"
                     size="none"
@@ -380,16 +428,18 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                   >
                     AED 667
                   </Text>
-                </div> */}
-                {/* <div>
-                  <Button variant={"black"} className="min-w-[100px] xl:min-w-[120px] 2xl:min-w-[160px] mx-auto" asChild>
+                </div>
+                <div>
+                  <Button variant={"black"} className="min-w-[100px] xl:min-w-[120px] 2xl:min-w-[160px] mx-auto" disabled={initialData?.stock == 0} asChild>
+
                     <Link href={"/"}>
                       <Image src={"/images/icon-cart.svg"} alt={"icon-cart"} width={15} height={15} className="w-[15px]" />
                       Add to Cart
                     </Link>
+
                   </Button>
-                </div> */}
-              </div>
+                </div>
+              </div> */}
               {/* <hr className="my-2 sm:my-2 2xl:my-3 mx-[-5px]" /> */}
             </div>
           </div>

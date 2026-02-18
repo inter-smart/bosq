@@ -242,7 +242,18 @@ export default function ProductDetail({ locale, data = local_data }) {
                           setOpenProduct(true);
                         }}
                       >
-                        <div className={cn("w-full h-full rounded-[4px] overflow-hidden border transition-all duration-300 bg-white select-none")}>
+                        <div className={cn("w-full h-full rounded-[4px] overflow-hidden border transition-all duration-300 bg-white select-none relative")}>
+                          {data?.stock == 0 && (
+                            <div className="w-full h-full bg-[#f4f4f4]/90 flex items-center justify-center absolute z-2 inset-0">
+                              <Button
+                                variant={"black"}
+                                disabled={true}
+                                className="min-w-[100px] xl:min-w-[120px] 2xl:min-w-[200px] disabled:opacity-100 rounded-[2px] m-auto"
+                              >
+                                Out of Stock
+                              </Button>
+                            </div>
+                          )}
                           {item?.type === "video" ? (
                             <video autoPlay loop muted playsInline className="w-full h-full object-cover">
                               <source src={item?.path} type="video/mp4" />
@@ -267,21 +278,21 @@ export default function ProductDetail({ locale, data = local_data }) {
                       slides={data?.productMedia?.map((item) =>
                         item.type === "video"
                           ? {
-                              type: "video",
-                              width: 1280,
-                              height: 720,
-                              poster: item.thumbnail,
-                              autoPlay: true,
-                              sources: [
-                                {
-                                  src: item.path,
-                                  type: "video/mp4",
-                                },
-                              ],
-                            }
+                            type: "video",
+                            width: 1280,
+                            height: 720,
+                            poster: item.thumbnail,
+                            autoPlay: true,
+                            sources: [
+                              {
+                                src: item.path,
+                                type: "video/mp4",
+                              },
+                            ],
+                          }
                           : {
-                              src: item.path,
-                            },
+                            src: item.path,
+                          },
                       )}
                       animation={{ fade: 10 }}
                       controller={{
@@ -402,11 +413,15 @@ export default function ProductDetail({ locale, data = local_data }) {
                     </button>
                   </div>
                 </div>
-                <Button variant={"black"} className="flex-1 max-w-[320px] xl:max-w-[768px]" asChild>
-                  <Link href={"/"}>
-                    <Image src={"/images/icon-cart.svg"} alt={"icon-cart"} width={15} height={15} className="w-[15px]" />
-                    Add to Cart
-                  </Link>
+                <Button variant={"black"} className="flex-1 max-w-[320px] xl:max-w-[768px]" disabled={data?.stock == 0} asChild>
+                  {data?.stock == 0 ? (
+                    <span>Out of Stock</span>
+                  ) : (
+                    <Link href={"/"}>
+                      <Image src={"/images/icon-cart.svg"} alt={"icon-cart"} width={15} height={15} className="w-[15px]" />
+                      Add to Cart
+                    </Link>
+                  )}
                 </Button>
               </div>
 
@@ -513,11 +528,15 @@ export default function ProductDetail({ locale, data = local_data }) {
                   </Text>
                 </div>
                 <div>
-                  <Button variant={"black"} className="min-w-[100px] xl:min-w-[120px] 2xl:min-w-[160px] mx-auto" asChild>
-                    <Link href={"/"}>
-                      <Image src={"/images/icon-cart.svg"} alt={"icon-cart"} width={15} height={15} className="w-[15px]" />
-                      Add to Cart
-                    </Link>
+                  <Button variant={"black"} className="min-w-[100px] xl:min-w-[120px] 2xl:min-w-[160px] mx-auto" disabled={data?.stock == 0} asChild>
+                    {data?.stock == 0 ? (
+                      <span>Out of Stock</span>
+                    ) : (
+                      <Link href={"/"}>
+                        <Image src={"/images/icon-cart.svg"} alt={"icon-cart"} width={15} height={15} className="w-[15px]" />
+                        Add to Cart
+                      </Link>
+                    )}
                   </Button>
                 </div>
               </div>
