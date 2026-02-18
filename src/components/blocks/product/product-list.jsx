@@ -21,7 +21,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { SelectIcon } from "@radix-ui/react-select";
 import dynamic from "next/dynamic";
 import ProductCard from "@/components/blocks/product/product-card";
-import { ProductData } from "@/lib/api/products/ResourcesApi";
+import { ProductDataClient } from "@/lib/api/products/ResourcesApiClient";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
@@ -286,7 +286,7 @@ export default function ProductList({ data, locale, filterData }) {
       params.append("page", currentPage.toString());
       params.append("limit", ITEMS_PER_PAGE.toString());
 
-      const { data, error } = await ProductData.getProductList(params.toString());
+      const { data, error } = await ProductDataClient.getProductList(params.toString());
       if (error) {
         console.log(error);
       }

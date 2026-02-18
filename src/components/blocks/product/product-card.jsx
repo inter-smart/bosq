@@ -7,8 +7,6 @@ import { Suspense, useState } from "react";
 import { motion } from "motion/react";
 import { Skeleton } from "../../ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { ProductData } from "@/lib/api/products/ResourcesApi";
-import { fetchWithCredentials } from "@/lib/helper";
 import { useToggleWishlistMutation, useGetWishlistQuery } from "@/store/services/wishListApi";
 import { useAppSelector } from "@/store/hooks";
 import { toast } from "sonner";
@@ -19,41 +17,35 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
   const productUrl = `/${locale}/products/${product?.base_slug}${product?.query_params}`;
 
   const { isAuthenticated } = useAppSelector((state) => state.auth);
-  const { data: wishlistData } = useGetWishlistQuery(undefined, {
-    skip: !isAuthenticated,
-  });
 
-  const variantId = product?.variant_id || product?.id;
-  const wishlistItems = wishlistData?.data?.wishlistData?.items || [];
-  const isInWishlist = wishlistItems.some((item) => item.variant_id === variantId);
-
-  const [isWishlisted, setIsWishlisted] = useState(!!product?.isWishlisted || isInWishlist);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [isWishlisted, setIsWishlisted] = useState(product?.wishlisted ?? false);
 
-  const [toggleWishlist, { isLoading }] =
-    useToggleWishlistMutation();
+  const [toggleWishlist] = useToggleWishlistMutation();
 
   const handleToggleWishlist = async (id) => {
+    if (!isAuthenticated) {
+      setShowLoginModal(true);
+      return;
+    }
+    // Optimistic update
+    const prev = isWishlisted;
+    setIsWishlisted(!prev);
     try {
-
-      if (!isAuthenticated) {
-        // toast.error("Please login to add to wishlist");
-        setShowLoginModal(true);
-        return;
-      }
       const result = await toggleWishlist(id).unwrap();
       const added = result?.data?.action === "added";
       setIsWishlisted(added);
+      toast.success(added ? "Added to wishlist" : "Removed from wishlist");
       if (!added) {
         onRemove?.(id);
       }
     } catch (error) {
+      // Revert on failure
+      setIsWishlisted(prev);
+      toast.error("Failed to update wishlist");
       console.error("Wishlist toggle failed:", error);
     }
   };
-
-
-
 
   return (
     <>
@@ -152,9 +144,8 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
           </div>
         </div>
         <LoginRequiredModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} locale={locale} />
-      </Suspense >
+      </Suspense>
     </>
-
   );
 }
 

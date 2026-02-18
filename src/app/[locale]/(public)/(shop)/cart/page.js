@@ -2,6 +2,7 @@ import CartEmpty from "@/components/blocks/cart/cart-empty";
 import CartHero from "@/components/blocks/cart/cart-hero";
 import CartList from "@/components/blocks/cart/cart-list";
 import ProductSimilar from "@/components/blocks/product/product-similar";
+import { checkOutDataServer } from "@/lib/api/cart/cartApiServer";
 import { getMetaData } from "@/lib/api/metaApi";
 
 export async function generateMetadata({ params }) {
@@ -406,12 +407,17 @@ const local_data = {
 export default async function CartPage({ params }) {
   const resolvedParams = await params;
   const { locale } = resolvedParams;
+
+  const { data: similiarProductData } = await checkOutDataServer.getSimilarProducts();
+
+  console.log("SIM", similiarProductData);
+
   return (
     <>
       <CartHero locale={locale} data={local_data?.heroData} slug={"Shopping cart"} itemsCount={local_data?.cartData?.items_count} />
       <>
         <CartList locale={locale} data={local_data?.cartData} />
-        {/* <ProductSimilar locale={locale} data={local_data?.similarData} /> */}
+        {similiarProductData && <ProductSimilar locale={locale} data={similiarProductData} />}
       </>
     </>
   );

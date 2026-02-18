@@ -158,7 +158,8 @@
     "validating": "Validating...",
     "updating": "Updating...",
     "removing": "Removing...",
-    "line_total": "Line Total"
+    "line_total": "Line Total",
+    "similiar_products": "Similiar Products"
   },
   "checkout": {
     "title": "Checkout",

@@ -1,10 +1,11 @@
-import { apiClient } from "../client";
 import { sendError, sendSuccess } from "../api";
+import { fetchApi } from "../server";
 
 export const ProductData = {
   getFilterData: async () => {
+    const endpoint = `/api/frontend/common-actions/listing/filters`;
     try {
-      const data = await apiClient(`/api/frontend/common-actions/listing/filters`);
+      const data = await fetchApi(endpoint, {}, false);
       return sendSuccess(data?.data);
     } catch (error) {
       return sendError(error);
@@ -12,8 +13,10 @@ export const ProductData = {
   },
 
   getProductInitialListing: async () => {
+    const endpoint = `/api/frontend/products/initial-product-list`;
+
     try {
-      const data = await apiClient(`/api/frontend/products/initial-product-list`);
+      const data = await fetchApi(endpoint, {}, false);
 
       return sendSuccess(data?.data);
     } catch (error) {
@@ -25,7 +28,7 @@ export const ProductData = {
     const endpoint = `/api/frontend/products/product-listing?${params}`;
 
     try {
-      const data = await apiClient(endpoint);
+      const data = await fetchApi(endpoint, {}, true);
 
       return sendSuccess(data?.data);
     } catch (error) {
@@ -47,7 +50,7 @@ export const ProductData = {
         params.append(`attr[${attrSlug}]`, valueSlug);
       });
 
-      const data = await apiClient(`/api/frontend/products/product?${params.toString()}`);
+      const data = await fetchApi(`/api/frontend/products/product?${params.toString()}`, {}, true);
 
       return sendSuccess(data?.data);
     } catch (error) {
@@ -55,26 +58,24 @@ export const ProductData = {
     }
   },
 
-  getProductModelBySlug: async (slug) => {
-    try {
-      const data = await apiClient(`/api/frontend/products/product-model?slug=${slug}`);
+  // getProductModelBySlug: async (slug) => {
+  //   const endpoint = `/api/frontend/products/product-model?slug=${slug}`;
+  //   try {
+  //     const data = await fetchApi(endpoint, {}, true);
 
-      return sendSuccess(data?.data);
-    } catch (error) {
-      return sendError(error);
-    }
-  },
+  //     return sendSuccess(data?.data);
+  //   } catch (error) {
+  //     return sendError(error);
+  //   }
+  // },
 
   getSearchSectionSections: async () => {
+    const endpoint = `/api/frontend/product-search/sections`;
     try {
-      const data = await apiClient(`/api/frontend/product-search/categories`);
+      const data = await fetchApi(endpoint, {}, true);
       return sendSuccess(data?.data);
     } catch (error) {
       return sendError(error);
     }
   },
-
-
-
-  
 };

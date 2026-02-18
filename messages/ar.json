@@ -137,7 +137,8 @@
     "validating": "جارٍ التحقق...",
     "updating": "جارٍ التحديث...",
     "removing": "جارٍ الإزالة...",
-    "line_total": "إجمالي السطر"
+    "line_total": "إجمالي السطر",
+    "similiar_products": "منتجات مشابهة"
   },
   "common": {
     "home": "الرئيسية",

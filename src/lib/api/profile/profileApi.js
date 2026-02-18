@@ -7,7 +7,7 @@ export const ProfileData = {
       const data = await fetchApi(
         `/api/frontend/profile/my-profile`,
         {
-          credentials: "include", // ✅ this is enough
+          credentials: "include",
         },
         true,
       );
@@ -23,7 +23,7 @@ export const ProfileData = {
       const data = await fetchApi(
         `/api/frontend/orders`,
         {
-          credentials: "include", // ✅ this is enough
+          credentials: "include",
         },
         true,
       );
@@ -99,12 +99,9 @@ export const ProfileData = {
     }
   },
 
-
-
-
   getWishList: async () => {
     try {
-      const {data} = await fetchApi(
+      const { data } = await fetchApi(
         "/api/frontend/wish-list",
         {
           method: "GET",
@@ -117,8 +114,4 @@ export const ProfileData = {
       return sendError(error);
     }
   },
-
-
-
-  
 };
