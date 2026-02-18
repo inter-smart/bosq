@@ -19,28 +19,32 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
 import { fetchFromAPIWithCredentials } from "@/lib/helper";
-
-// Validation schema
-const formSchema = z
-  .object({
-    currentPassword: z.string().min(6, "Current password is required"),
-    newPassword: z
-      .string()
-      .min(8, "Password must be at least 8 characters")
-      .max(100, "Password cannot exceed 100 characters")
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-        "Password must contain at least one uppercase letter, one lowercase letter, and one number",
-      ),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.newPassword === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
+import { useTranslations } from "next-intl";
 
 export default function PasswordChangeForm({ locale }) {
+  const t = useTranslations("account");
   const { executeRecaptcha } = useGoogleReCaptcha();
+
+  // Validation schema — defined inside component so messages are translated
+  const formSchema = z
+    .object({
+      currentPassword: z
+        .string()
+        .min(6, t("current_password_required")),
+      newPassword: z
+        .string()
+        .min(8, t("password_min_length"))
+        .max(100, t("password_max_length"))
+        .regex(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+          t("password_regex"),
+        ),
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.newPassword === data.confirmPassword, {
+      message: t("password_mismatch"),
+      path: ["confirmPassword"],
+    });
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -119,7 +123,7 @@ export default function PasswordChangeForm({ locale }) {
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                Current Password<span className={errorStyle}>*</span>
+                {t("current_password")}<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <div className="relative">
@@ -127,7 +131,7 @@ export default function PasswordChangeForm({ locale }) {
                     {...field}
                     type={showCurrentPassword ? "text" : "password"}
                     className={cn(inputStyle)}
-                    placeholder="Enter your current password"
+                    placeholder={t("enter_current_password")}
                   />
                   <button
                     type="button"
@@ -154,7 +158,7 @@ export default function PasswordChangeForm({ locale }) {
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                New Password<span className={errorStyle}>*</span>
+                {t("new_password")}<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <div className="relative">
@@ -162,7 +166,7 @@ export default function PasswordChangeForm({ locale }) {
                     {...field}
                     type={showNewPassword ? "text" : "password"}
                     className={cn(inputStyle)}
-                    placeholder="Choose a strong password"
+                    placeholder={t("new_password_placeholder")}
                   />
                   <button
                     type="button"
@@ -189,7 +193,7 @@ export default function PasswordChangeForm({ locale }) {
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                Confirm Password<span className={errorStyle}>*</span>
+                {t("confirm_new_password")}<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <div className="relative">
@@ -197,7 +201,7 @@ export default function PasswordChangeForm({ locale }) {
                     {...field}
                     type={showConfirmPassword ? "text" : "password"}
                     className={cn(inputStyle)}
-                    placeholder="Confirm your password"
+                    placeholder={t("confirm_password_placeholder")}
                   />
                   <button
                     type="button"
@@ -225,7 +229,7 @@ export default function PasswordChangeForm({ locale }) {
             disabled={loading}
             className="min-w-[120px] 2xl:min-w-40"
           >
-            {loading ? "Changing..." : "Change Password"}
+            {loading ? t("changing") : t("change_password")}
           </Button>
         </div>
 
@@ -234,7 +238,8 @@ export default function PasswordChangeForm({ locale }) {
           <p
             className={cn(
               "text-[10px] mt-1 w-full",
-              success.includes("successfully")
+              success === "Password changed successfully" ||
+                success?.toLowerCase().includes("success")
                 ? "text-green-600"
                 : "text-red-600",
             )}

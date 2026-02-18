@@ -24,12 +24,17 @@ import UpdateAddressForm from "@/components/form/update-address-form";
 import dynamic from "next/dynamic";
 import { fetchFromAPIWithCredentials } from "@/lib/helper";
 import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
+import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
 });
 
 export default function AccountAddress({ data, locale, addressData }) {
+  const t = useTranslations("address");
+  const a = useTranslations("account");
+  const c = useTranslations("common");
   const router = useRouter();
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingAddress, setEditingAddress] = useState(null);
@@ -40,10 +45,10 @@ export default function AccountAddress({ data, locale, addressData }) {
   // Sort addresses: default address first
   const sortedAddresses = addressData
     ? [...addressData].sort((a, b) => {
-        if (a.is_default && !b.is_default) return -1;
-        if (!a.is_default && b.is_default) return 1;
-        return 0;
-      })
+      if (a.is_default && !b.is_default) return -1;
+      if (!a.is_default && b.is_default) return 1;
+      return 0;
+    })
     : [];
 
   const handleEditClick = async (address) => {
@@ -70,6 +75,10 @@ export default function AccountAddress({ data, locale, addressData }) {
   };
 
   const handleSetDefault = async (addressId) => {
+
+    try {
+      
+  
     const { error } = await fetchFromAPIWithCredentials(
       `/api/frontend/address/${addressId}/default`,
       {
@@ -80,16 +89,19 @@ export default function AccountAddress({ data, locale, addressData }) {
     if (!error) {
       router.refresh();
     }
+
+    toast.success("Default address set successfully");
+
+      } catch (error) {
+        toast.error("Failed to set default address");
+      }
   };
 
   const handleDelete = async (addressId) => {
     setIsDeleting(addressId);
     setisDeleteItem(true);
-    const {
-      data: responseData,
-      error,
-      message,
-    } = await fetchFromAPIWithCredentials(
+    try {
+    const { data, error, message } = await fetchFromAPIWithCredentials(
       `/api/frontend/address/${addressId}`,
       {
         method: "DELETE",
@@ -101,6 +113,12 @@ export default function AccountAddress({ data, locale, addressData }) {
     }
     setIsDeleting(null);
     setisDeleteItem(false);
+
+    toast.success("Address deleted successfully");
+       
+    } catch (error) {
+      toast.error("Failed to delete address");
+    }
   };
 
   return (
@@ -113,7 +131,7 @@ export default function AccountAddress({ data, locale, addressData }) {
             size="heading5"
             className="font-normal text-[#282828] mb-3 xl:mb-5 2xl:mb-8"
           >
-            Add New Address
+            {t("add_new")}
           </Heading>
           <RecaptchaProvider>
             <AddressForm
@@ -134,11 +152,11 @@ export default function AccountAddress({ data, locale, addressData }) {
                 size={"heading5"}
                 className="font-semibold text-[#282828] mb-1 xl:mb-3"
               >
-                {data?.title}
+                {a("manage_address")}
               </Heading>
 
               <Text as="div" size="text3" className="text-[#282828]">
-                {parse(data?.description)}
+                {t("address_info")}
               </Text>
             </div>
 
@@ -154,7 +172,7 @@ export default function AccountAddress({ data, locale, addressData }) {
                   )}
                 >
                   <Plus className="size-3" />
-                  Add New Address
+                  {t("add_new")}
                 </Button>
               </div>
             </MediaQuery>
@@ -209,7 +227,7 @@ export default function AccountAddress({ data, locale, addressData }) {
                           size="heading4"
                           className="font-medium text-[#282828] mb-1 xl:mb-2"
                         >
-                          Shipping Address
+                          {t("shipping")}
                         </Heading>
                         <Heading
                           as="div"
@@ -245,7 +263,7 @@ export default function AccountAddress({ data, locale, addressData }) {
                         height={10}
                         className="w-2 xl:w-2.5"
                       />
-                      Edit
+                      {c("edit")}
                     </Button>
                     <Button
                       variant={"white"}
@@ -262,7 +280,7 @@ export default function AccountAddress({ data, locale, addressData }) {
                         height={10}
                         className="w-2 xl:w-2.5"
                       />
-                      {isDeleting === item?.id ? "Deleting..." : "Delete"}
+                      {isDeleting === item?.id ? t("deleting") : c("delete")}
                     </Button>
 
                     {item.is_default ? (
@@ -273,7 +291,7 @@ export default function AccountAddress({ data, locale, addressData }) {
                           "min-w-[50px] xl:min-w-[60px] 2xl:min-w-[80px] h-[20px] lg:h-[22px] 2xl:h-[24px] 3xl:h-[26px] gap-1 border border-[#e9e9e9] text-white bg-[#f17423] border-[#f17423] disabled:opacity-100"
                         }
                       >
-                        Default
+                        {t("default")}
                       </Button>
                     ) : (
                       <Button
@@ -283,7 +301,7 @@ export default function AccountAddress({ data, locale, addressData }) {
                           "min-w-[70px] xl:min-w-[80px] 2xl:min-w-[100px] h-[20px] lg:h-[22px] 2xl:h-[24px] 3xl:h-[26px] bg-white gap-1 border border-[#e9e9e9] hover:text-black hover:bg-white hover:border-[#f17423]"
                         }
                       >
-                        Set Default
+                        {t("set_default")}
                       </Button>
                     )}
                   </div>
@@ -301,7 +319,7 @@ export default function AccountAddress({ data, locale, addressData }) {
                 className="min-w-[140px] xl:min-w-[155px] 2xl:min-w-[240px] ml-auto"
               >
                 <Plus className="size-3" />
-                Add New Address
+                {t("add_new")}
               </Button>
             </div>
           </MediaQuery>
@@ -313,13 +331,16 @@ export default function AccountAddress({ data, locale, addressData }) {
                 size="heading5"
                 className="font-normal text-[#282828] mb-3 xl:mb-4 2xl:mb-6"
               >
-                Add New Address
+                {t("add_new")}
               </Heading>
               <RecaptchaProvider>
-                <AddressForm locale={locale}  onSuccess={() => {
-          setShowAddForm(false);   // ✅ close form
-          router.refresh();        // ✅ reload page data
-        }}/>
+                <AddressForm
+                  locale={locale}
+                  onSuccess={() => {
+                    setShowAddForm(false); // ✅ close form
+                    router.refresh(); // ✅ reload page data
+                  }}
+                />
               </RecaptchaProvider>
             </div>
           )}
@@ -337,10 +358,10 @@ export default function AccountAddress({ data, locale, addressData }) {
             className={"flex-row items-center justify-between mb-2 2xl:mb-4"}
           >
             <AlertDialogTitle className="text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-semibold text-[#282828]">
-              Edit Address
+              {t("edit_title")}
             </AlertDialogTitle>
             <AlertDialogDescription className={"sr-only"}>
-              Edit Address go here.
+              {t("edit_description")}
             </AlertDialogDescription>
             <AlertDialogCancel className={"h-auto! p-0!"}>
               <X className="size-5 text-black" />
@@ -350,7 +371,7 @@ export default function AccountAddress({ data, locale, addressData }) {
             {isLoadingEdit ? (
               <div className="flex items-center justify-center py-10">
                 <span className="text-sm text-gray-500">
-                  Loading address...
+                  {t("loading")}
                 </span>
               </div>
             ) : (

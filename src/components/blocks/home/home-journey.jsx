@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/utils/heading";
 import { Text } from "@/components/utils/text";
@@ -7,13 +8,6 @@ import parse from "html-react-parser";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 
-
-const localData = {
-  button: {
-    label: "Explore Our Journey",
-    link: "/",
-  },
-}
 
 export default function HomeJourney({ data, locale, isEN }) {
   const t = useTranslations("home");
@@ -93,7 +87,7 @@ export default function HomeJourney({ data, locale, isEN }) {
             className="min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-40"
             asChild
           >
-            <Link href={`${locale}${localData.button.link}`}>{t("view_details")}</Link>
+            <Link href={`/${locale}${data?.button?.link || ""}`}>{t("view_details")}</Link>
           </Button>
         </div>
       </div>

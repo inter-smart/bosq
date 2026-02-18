@@ -22,6 +22,7 @@ import "react-international-phone/style.css";
 import { fetchFromAPIWithCredentials } from "@/lib/helper";
 import { commonValidations } from "@/lib/validations";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { useTranslations } from "next-intl";
 
 // Validation schema
 const formSchema = z.object({
@@ -44,6 +45,7 @@ const inputStyle = cn(
 const errorStyle = cn("text-[#f17423]");
 
 export default function PersonalInformationForm({ data }) {
+  const t = useTranslations("account");
   const { executeRecaptcha } = useGoogleReCaptcha();
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -98,9 +100,9 @@ export default function PersonalInformationForm({ data }) {
       );
 
       if (!result.error) {
-        setSuccess("Information saved successfully!");
+        setSuccess(t("success_info_update"));
       } else {
-        setSuccess(result.message || "Failed to save information");
+        setSuccess(result.message || t("error_info_update"));
       }
     } catch (err) {
       console.error(err);
@@ -133,13 +135,13 @@ export default function PersonalInformationForm({ data }) {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                First Name<span className={errorStyle}>*</span>
+                {t("first_name")}<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   className={inputStyle}
-                  placeholder="Enter your first name"
+                  placeholder={t("enter_first_name")}
                 />
               </FormControl>
               <FormMessage className={errorStyle} />
@@ -154,13 +156,13 @@ export default function PersonalInformationForm({ data }) {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                Last Name<span className={errorStyle}>*</span>
+                {t("last_name")}<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   className={inputStyle}
-                  placeholder="Enter your last name"
+                  placeholder={t("enter_last_name")}
                 />
               </FormControl>
               <FormMessage className={errorStyle} />
@@ -175,13 +177,13 @@ export default function PersonalInformationForm({ data }) {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                Display Name<span className={errorStyle}>*</span>
+                {t("display_name")}<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   className={inputStyle}
-                  placeholder="This will be how your name will be displayed in the account section and in reviews"
+                  placeholder={t("display_name_desc")}
                 />
               </FormControl>
               <FormMessage className={errorStyle} />
@@ -196,7 +198,7 @@ export default function PersonalInformationForm({ data }) {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                Email Address<span className={errorStyle}>*</span>
+                {t("email_address")}<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
@@ -204,7 +206,7 @@ export default function PersonalInformationForm({ data }) {
                   type="email"
                   className={inputStyle}
                   disabled={true}
-                  placeholder="Enter email address"
+                  placeholder={t("enter_email")}
                 />
               </FormControl>
               <FormMessage className={errorStyle} />
@@ -219,7 +221,7 @@ export default function PersonalInformationForm({ data }) {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                Phone<span className={errorStyle}>*</span>
+                {t("phone")}<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <PhoneInput
@@ -230,7 +232,7 @@ export default function PersonalInformationForm({ data }) {
                     inputStyle,
                     "w-full p-0 [&_input]:flex-1 [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px] [--react-international-phone-flag-width:20px] [--react-international-phone-flag-height:20px]",
                   )}
-                  placeholder="Enter your mobile number"
+                  placeholder={t("enter_mobile")}
                 />
               </FormControl>
               <FormMessage className={errorStyle} />
@@ -246,7 +248,7 @@ export default function PersonalInformationForm({ data }) {
             disabled={loading}
             className="min-w-[120px] 2xl:min-w-40"
           >
-            {loading ? "Saving..." : "Save Changes"}
+            {loading ? t("saving") : t("save_changes")}
           </Button>
 
           <Button
@@ -255,7 +257,7 @@ export default function PersonalInformationForm({ data }) {
             onClick={handleReset}
             className="min-w-[80px] xl:min-w-[90px] 2xl:min-w-[120px] border border-black hover:border-[#f17423]"
           >
-            Reset
+            {t("reset")}
           </Button>
         </div>
 
@@ -264,7 +266,7 @@ export default function PersonalInformationForm({ data }) {
           <p
             className={cn(
               "text-[10px] mt-1 w-full",
-              success.includes("successfully")
+              success.includes(t("success_info_update"))
                 ? "text-green-600"
                 : "text-red-600",
             )}

@@ -29,8 +29,11 @@ const local_data = {
 
   address: {
     title: "Manage Address",
+    title_ar: "إدارة العنوان",
     description:
       "<p>The following addresses will be used on the checkout page by default.</p>",
+      description_ar:
+      "<p>سيتم استخدام العناوين التالية في صفحة الدفع بشكل افتراضي.</p>",
 
     // Shipping information
     shippingAddress: [

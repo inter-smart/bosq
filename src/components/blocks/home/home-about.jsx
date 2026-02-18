@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/utils/heading";
 import { Text } from "@/components/utils/text";
