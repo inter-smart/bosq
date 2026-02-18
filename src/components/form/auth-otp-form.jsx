@@ -25,6 +25,7 @@ import { cn } from "@/lib/utils";
 import { commonValidations } from "@/lib/validations";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 // Validation schema
 const formSchema = z.object({
@@ -44,6 +45,8 @@ const inputStyle = cn(
 const errorStyle = cn("text-[#f17423]");
 
 export default function AuthOtpForm() {
+  const t = useTranslations("auth.otp");
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -62,10 +65,10 @@ export default function AuthOtpForm() {
     const result = await verifyOtp(values.otp, pendingEmail);
 
     if (result.success) {
-      setSuccess("OTP verified successfully!");
+      setSuccess(t("success"));
       router.push("/create-password");
     } else {
-      setSuccess(result.error || "Invalid OTP. Please try again.");
+      setSuccess(result.error || t("error"));
     }
   };
 
@@ -81,7 +84,7 @@ export default function AuthOtpForm() {
           name="otp"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel className={labelStyle}>Enter OTP</FormLabel>
+              <FormLabel className={labelStyle}>{t("label")}</FormLabel>
               <FormControl>
                 <InputOTP
                   maxLength={4}
@@ -115,7 +118,7 @@ export default function AuthOtpForm() {
             disabled={isLoading}
             className="w-full"
           >
-            {isLoading ? "Verifying..." : "Verify OTP"}
+            {isLoading ? t("loading") : t("submit")}
           </Button>
         </div>
 
@@ -124,7 +127,7 @@ export default function AuthOtpForm() {
           <p
             className={cn(
               "text-[10px] mt-1 w-full",
-              success.includes("successfully")
+              success === t("success") || success.includes("successfully")
                 ? "text-green-600"
                 : "text-red-600",
             )}

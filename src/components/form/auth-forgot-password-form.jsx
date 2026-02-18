@@ -24,40 +24,43 @@ import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
 import { commonValidations } from "@/lib/validations";
 import { useAuth } from "@/hooks/useAuth";
-
-// Step 1: Email validation schema
-const emailSchema = z.object({
-  email: z.string().email("Invalid email address"),
-});
-
-// Step 2: OTP validation schema
-const otpSchema = z.object({
-  otp: commonValidations.otp,
-});
-
-// Step 3: Password validation schema
-const passwordSchema = z
-  .object({
-    password: commonValidations.password(),
-    confirmPassword: commonValidations.password(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
-
-// Shared styles
-const labelStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]",
-);
-
-const inputStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1",
-);
-
-const errorStyle = cn("text-[#f17423]");
+import { useTranslations } from "next-intl";
 
 export default function AuthForgotPasswordForm({ locale, setStep, step }) {
+  const t = useTranslations("auth.forgot_password");
+
+  // Step 1: Email validation schema
+  const emailSchema = z.object({
+    email: z.string().email(t("error_email")),
+  });
+
+  // Step 2: OTP validation schema
+  const otpSchema = z.object({
+    otp: commonValidations.otp,
+  });
+
+  // Step 3: Password validation schema
+  const passwordSchema = z
+    .object({
+      password: commonValidations.password(),
+      confirmPassword: commonValidations.password(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t("error_match"),
+      path: ["confirmPassword"],
+    });
+
+  // Shared styles
+  const labelStyle = cn(
+    "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]",
+  );
+
+  const inputStyle = cn(
+    "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1",
+  );
+
+  const errorStyle = cn("text-[#f17423]");
+
   const {
     forgotPassword,
     verifyResetOtp,
@@ -100,13 +103,13 @@ export default function AuthForgotPasswordForm({ locale, setStep, step }) {
     const result = await forgotPassword(values.email);
 
     if (result.success) {
-      setSuccess("OTP sent to your email!");
+      setSuccess(t("success_send"));
       setTimeout(() => {
         setStep(2);
         setSuccess("");
       }, 1500);
     } else {
-      setSuccess(result.error || "Failed to send OTP");
+      setSuccess(result.error || t("error_send"));
     }
   };
 
@@ -118,13 +121,13 @@ export default function AuthForgotPasswordForm({ locale, setStep, step }) {
     const result = await verifyResetOtp(values.otp, pendingEmail);
 
     if (result.success) {
-      setSuccess("OTP verified successfully!");
+      setSuccess(t("success_verify"));
       setTimeout(() => {
         setStep(3);
         setSuccess("");
       }, 1500);
     } else {
-      setSuccess(result.error || "Invalid OTP. Please try again.");
+      setSuccess(result.error || t("error_verify"));
     }
   };
 
@@ -136,12 +139,12 @@ export default function AuthForgotPasswordForm({ locale, setStep, step }) {
     const result = await resetPassword(values.password);
 
     if (result.success) {
-      setSuccess("Password reset successfully!");
+      setSuccess(t("success_reset"));
       setTimeout(() => {
-        window.location.href = "/login";
+        window.location.href = `/${locale}/login`;
       }, 2000);
     } else {
-      setSuccess(result.error || "Something went wrong. Please try again.");
+      setSuccess(result.error || t("error_reset"));
     }
   };
 
@@ -165,14 +168,14 @@ export default function AuthForgotPasswordForm({ locale, setStep, step }) {
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel className={labelStyle}>
-                    Email<span className={errorStyle}>*</span>
+                    {t("email_label")}<span className={errorStyle}>*</span>
                   </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       type="email"
                       className={inputStyle}
-                      placeholder="Enter your email"
+                      placeholder={t("email_placeholder")}
                     />
                   </FormControl>
                   <FormMessage className={errorStyle} />
@@ -187,7 +190,7 @@ export default function AuthForgotPasswordForm({ locale, setStep, step }) {
                 disabled={isLoading}
                 className="w-full"
               >
-                {isLoading ? "Sending..." : "Send OTP"}
+                {isLoading ? t("loading_send") : t("submit_email")}
               </Button>
             </div>
 
@@ -195,7 +198,7 @@ export default function AuthForgotPasswordForm({ locale, setStep, step }) {
               <p
                 className={cn(
                   "text-[10px] mt-1 w-full",
-                  success.includes("sent") ? "text-green-600" : "text-red-600",
+                  success === t("success_send") ? "text-green-600" : "text-red-600",
                 )}
               >
                 {success}
@@ -218,7 +221,7 @@ export default function AuthForgotPasswordForm({ locale, setStep, step }) {
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel className={labelStyle}>
-                    Enter OTP<span className={errorStyle}>*</span>
+                    {t("otp_label")}<span className={errorStyle}>*</span>
                   </FormLabel>
                   <FormControl>
                     <InputOTP
@@ -252,7 +255,7 @@ export default function AuthForgotPasswordForm({ locale, setStep, step }) {
                 disabled={isLoading}
                 className="w-full"
               >
-                {isLoading ? "Verifying..." : "Verify OTP"}
+                {isLoading ? t("loading_verify") : t("submit_otp")}
               </Button>
             </div>
 
@@ -260,7 +263,7 @@ export default function AuthForgotPasswordForm({ locale, setStep, step }) {
               <p
                 className={cn(
                   "text-[10px] mt-1 w-full",
-                  success.includes("verified")
+                  success === t("success_verify")
                     ? "text-green-600"
                     : "text-red-600",
                 )}
@@ -285,7 +288,7 @@ export default function AuthForgotPasswordForm({ locale, setStep, step }) {
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel className={labelStyle}>
-                    New Password<span className={errorStyle}>*</span>
+                    {t("password_label")}<span className={errorStyle}>*</span>
                   </FormLabel>
                   <FormControl>
                     <div className="relative">
@@ -296,7 +299,7 @@ export default function AuthForgotPasswordForm({ locale, setStep, step }) {
                           inputStyle,
                           locale === "ar" ? "pl-10" : "pr-10",
                         )}
-                        placeholder="Choose a strong password"
+                        placeholder={t("password_placeholder")}
                       />
                       <button
                         type="button"
@@ -322,7 +325,7 @@ export default function AuthForgotPasswordForm({ locale, setStep, step }) {
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel className={labelStyle}>
-                    Confirm Password<span className={errorStyle}>*</span>
+                    {t("confirm_password_label")}<span className={errorStyle}>*</span>
                   </FormLabel>
                   <FormControl>
                     <div className="relative">
@@ -333,7 +336,7 @@ export default function AuthForgotPasswordForm({ locale, setStep, step }) {
                           inputStyle,
                           locale === "ar" ? "pl-10" : "pr-10",
                         )}
-                        placeholder="Confirm your password"
+                        placeholder={t("confirm_password_placeholder")}
                       />
                       <button
                         type="button"
@@ -362,7 +365,7 @@ export default function AuthForgotPasswordForm({ locale, setStep, step }) {
                 disabled={isLoading}
                 className="w-full"
               >
-                {isLoading ? "Resetting..." : "Reset Password"}
+                {isLoading ? t("loading_reset") : t("submit_password")}
               </Button>
             </div>
 
@@ -370,7 +373,7 @@ export default function AuthForgotPasswordForm({ locale, setStep, step }) {
               <p
                 className={cn(
                   "text-[10px] mt-1 w-full",
-                  success.includes("successfully")
+                  success === t("success_reset")
                     ? "text-green-600"
                     : "text-red-600",
                 )}

@@ -4,6 +4,7 @@ import { getBlogsData } from "@/lib/api/blog";
 import { parseOtherMeta } from "@/lib/helper";
 import { DefaultOgImage } from "@/lib/api/constants";
 import NotFound from "../../not-found";
+import { getTranslations } from "next-intl/server";
 
 export async function generateMetadata({ params }) {
   const { slug, locale } = await params;
@@ -23,10 +24,12 @@ export async function generateMetadata({ params }) {
     const metadata = data?.data?.metaData;
     console.log("data:", metadata);
 
+    const t = await getTranslations("blog");
+
     if (!metadata) {
       return {
-        title: "Blog Not Found",
-        description: "The requested blog post could not be found.",
+        title: t("not_found_title"),
+        description: t("not_found_description"),
       };
     }
 
@@ -42,19 +45,19 @@ export async function generateMetadata({ params }) {
     const { other } = isEN ? parseOtherMeta(other_meta) : parseOtherMeta(other_meta_ar);
 
     return {
-      title: title || "Blog Post",
-      description: description || "Read our latest blog post",
+      title: title || t("default_meta_title"),
+      description: description || t("default_meta_description"),
       keywords: keywords || "",
 
       openGraph: {
-        title: title || "Blog Post",
-        description: description || "Read our latest blog post",
+        title: title || t("default_meta_title"),
+        description: description || t("default_meta_description"),
         images: [
           {
             url: ogImage,
             width: 1200,
             height: 630,
-            alt: "Blog post image",
+            alt: t("image_alt"),
           },
         ],
         type: "article",
@@ -66,8 +69,8 @@ export async function generateMetadata({ params }) {
 
       twitter: {
         card: "summary_large_image",
-        title: title || "Blog Post",
-        description: description || "Read our latest blog post",
+        title: title || t("default_meta_title"),
+        description: description || t("default_meta_description"),
         images: [ogImage],
       },
 
@@ -85,9 +88,10 @@ export async function generateMetadata({ params }) {
     };
   } catch (error) {
     console.error("Error generating metadata:", error);
+    const t = await getTranslations("blog");
     return {
-      title: "Blog Not Found",
-      description: "The requested blog post could not be found.",
+      title: t("not_found_title"),
+      description: t("not_found_description"),
     };
   }
 }
@@ -97,7 +101,9 @@ export default async function BlogDetailPage({ params }) {
   const { slug } = resolvedParams;
   const locale = resolvedParams.locale;
 
-  const slugData = locale === "en" ? "Blog" : "تفاصيل المقالة";
+  const t = await getTranslations("blog");
+
+  const slugData = t("breadcrumb");
 
   const { data, error } = await getBlogsData.getBlogDetailsData(slug);
 

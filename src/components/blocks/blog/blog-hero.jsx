@@ -21,7 +21,7 @@ export default function BlogHero({ data, locale, slug }) {
         <Breadcrumb className="mb-1 xl:mb-2">
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href={isEn ? "/en" : "/ar"}>Home</BreadcrumbLink>
+              <BreadcrumbLink href={isEn ? "/en" : "/ar"}>{isEn ? "Home" : "الرئيسية"}</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>/</BreadcrumbSeparator>
             {slug && (

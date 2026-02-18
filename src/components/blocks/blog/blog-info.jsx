@@ -178,7 +178,7 @@ export default function BlogInfo({
           <div className="flex flex-wrap -mx-3 xl:-mx-7 2xl:-mx-9 [&>*]:p-3 xl:[&>*]:p-7 2xl:[&>*]:p-9">
             <div className="w-full lg:w-[calc(100%-368px)] 2xl:w-[calc(100%-540px)] max-lg:mb-5">
               <div dir={locale === "ar" ? "rtl" : "ltr"} className="typography">
-                {parse(data?.description)}
+                {parse(isEn?data?.description:data?.description_ar)}
               </div>
               <hr className="my-6 xl:my-7 2xl:my-8" />
               <div className="flex justify-between">
