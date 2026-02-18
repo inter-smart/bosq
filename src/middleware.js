@@ -17,12 +17,10 @@ export function middleware(request) {
   let pathnameWithoutLocale;
 
   if (pathnameHasLocale) {
-    // Extract locale from pathname
     const segments = pathname.split("/").filter(Boolean);
     locale = segments[0];
-    pathnameWithoutLocale = "/" + segments.slice(1).join("/");
+    pathnameWithoutLocale = "/" + segments.slice(1).join("/") || "/";
   } else {
-    // Get locale from detection
     locale = getLocale(request) || defaultLocale;
     pathnameWithoutLocale = pathname;
   }
@@ -34,23 +32,23 @@ export function middleware(request) {
     (protectedPath) => pathnameWithoutLocale === protectedPath || pathnameWithoutLocale.startsWith(`${protectedPath}/`),
   );
 
-  const isAuthPage = AUTH_PAGES.some(
-    (authPath) => pathnameWithoutLocale === authPath || pathnameWithoutLocale.startsWith(`${authPath}/`),
-  );
+  const isAuthPage = AUTH_PAGES.some((authPath) => pathnameWithoutLocale === authPath || pathnameWithoutLocale.startsWith(`${authPath}/`));
 
   const token = request.cookies.get("access_token")?.value;
 
-  // 1. Redirect unauthenticated users away from protected pages
+  // 🔴 Not logged in → block protected pages
   if (isProtected && !token) {
     const loginUrl = new URL(`/${locale}/login`, request.url);
     loginUrl.searchParams.set("redirect", pathname + request.nextUrl.search);
     return NextResponse.redirect(loginUrl);
   }
 
-  // 2. Redirect authenticated users away from auth pages (Login, Signup, etc.)
+  // 🟢 Logged in → block auth pages (even browser back button)
   if (isAuthPage && token) {
-    const homeUrl = new URL(`/${locale}`, request.url);
-    return NextResponse.redirect(homeUrl);
+    // Check if there's a redirect param to send them to, otherwise home
+    const redirectTo = request.nextUrl.searchParams.get("redirect");
+    const destination = redirectTo && redirectTo.startsWith("/") ? redirectTo : `/${locale}`;
+    return NextResponse.redirect(new URL(destination, request.url));
   }
 
   /* --------------------------------------------------

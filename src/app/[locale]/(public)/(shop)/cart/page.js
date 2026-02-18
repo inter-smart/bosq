@@ -1,7 +1,5 @@
-import CartEmpty from "@/components/blocks/cart/cart-empty";
 import CartHero from "@/components/blocks/cart/cart-hero";
 import CartList from "@/components/blocks/cart/cart-list";
-import ProductSimilar from "@/components/blocks/product/product-similar";
 import { checkOutDataServer } from "@/lib/api/cart/cartApiServer";
 import { getMetaData } from "@/lib/api/metaApi";
 
@@ -415,10 +413,7 @@ export default async function CartPage({ params }) {
   return (
     <>
       <CartHero locale={locale} data={local_data?.heroData} slug={"Shopping cart"} itemsCount={local_data?.cartData?.items_count} />
-      <>
-        <CartList locale={locale} data={local_data?.cartData} />
-        {similiarProductData?.length > 0 && <ProductSimilar locale={locale} data={similiarProductData} />}
-      </>
+      <CartList locale={locale} data={local_data?.cartData} similarProducts={similiarProductData} />
     </>
   );
 }

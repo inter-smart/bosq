@@ -115,7 +115,7 @@ export default function AccountNav({ locale }) {
 
   const handleLogout = async () => {
     await logout();
-    router.push(`/${locale}/login`);
+    router.replace(`/${locale}/login`);
   };
 
   return (
@@ -126,7 +126,7 @@ export default function AccountNav({ locale }) {
           className={cn(
             "text-[13px] leading-none font-normal text-black max-w-22 rounded-lg bg-gray-100 p-2 flex gap-1  flex items-center justify-center sm:hidden",
             open && "bg-gray-200 rounded-tb-lg",
-            locale === "ar" ? "mr-auto" : "ml-auto"
+            locale === "ar" ? "mr-auto" : "ml-auto",
           )}
         >
           <Menu className="size-3" />
@@ -136,12 +136,11 @@ export default function AccountNav({ locale }) {
           className={cn(
             "w-full max-w-40 sm:max-w-full bg-[#f4f4f4] border border-[#e0e0e0] rounded-tb-[4px] sm:rounded-s-[4px] shadow-xl sm:shadow-none overflow-hidden max-sm:absolute max-sm:top-full",
             open ? "max-sm:block" : "max-sm:hidden",
-            locale === "ar" ? "max-sm:left-0" : "max-sm:right-0"
+            locale === "ar" ? "max-sm:left-0" : "max-sm:right-0",
           )}
         >
           {ASIDE_ITEMS.map((item) => {
-            const localizedHref =
-              item.href === "#" ? "#" : `/${locale}${item.href}`;
+            const localizedHref = item.href === "#" ? "#" : `/${locale}${item.href}`;
             const isActive = pathname === localizedHref;
             const isLogout = item.id === 8;
 
@@ -151,7 +150,7 @@ export default function AccountNav({ locale }) {
                   key={"account-nav-" + item.id}
                   onClick={handleLogout}
                   className={cn(
-                    "w-full flex gap-x-1.5 xl:gap-x-2.5 items-center py-2.5 xl:py-3 3xl:py-4.5 px-3 xl:px-5 3xl:px-6 transition bg-transparent hover:bg-gray-200 cursor-pointer"
+                    "w-full flex gap-x-1.5 xl:gap-x-2.5 items-center py-2.5 xl:py-3 3xl:py-4.5 px-3 xl:px-5 3xl:px-6 transition bg-transparent hover:bg-gray-200 cursor-pointer",
                   )}
                 >
                   <Image
@@ -161,11 +160,7 @@ export default function AccountNav({ locale }) {
                     height={14}
                     className="w-3 xl:w-3 2xl:w-4 aspect-square object-contain hover:scale-105 transition duration-300 invert-0"
                   />
-                  <Text
-                    as="div"
-                    size="text3"
-                    className="leading-none text-black"
-                  >
+                  <Text as="div" size="text3" className="leading-none text-black">
                     {t(item?.key)}
                   </Text>
                 </button>
@@ -178,7 +173,7 @@ export default function AccountNav({ locale }) {
                 href={localizedHref}
                 className={cn(
                   "w-full flex gap-x-1.5 xl:gap-x-2.5 items-center py-2.5 xl:py-3 3xl:py-4.5 px-3 xl:px-5 3xl:px-6 transition ",
-                  isActive ? "bg-black" : "bg-transparent hover:bg-gray-200"
+                  isActive ? "bg-black" : "bg-transparent hover:bg-gray-200",
                 )}
               >
                 <Image
@@ -188,17 +183,10 @@ export default function AccountNav({ locale }) {
                   height={14}
                   className={cn(
                     "w-3 xl:w-3 2xl:w-4 aspect-square object-contain hover:scale-105 transition duration-300 ",
-                    isActive ? "invert-100" : "invert-0"
+                    isActive ? "invert-100" : "invert-0",
                   )}
                 />
-                <Text
-                  as="div"
-                  size="text3"
-                  className={cn(
-                    "leading-none text-black",
-                    isActive ? "text-white" : "text-black"
-                  )}
-                >
+                <Text as="div" size="text3" className={cn("leading-none text-black", isActive ? "text-white" : "text-black")}>
                   {t(item?.key)}
                 </Text>
               </Link>

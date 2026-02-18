@@ -18,6 +18,7 @@ import {
 } from "@/store/selectors/cart/selectors";
 import { fetchCart } from "@/store/slices/cartSlice";
 import CartEmpty from "./cart-empty";
+import ProductSimilar from "@/components/blocks/product/product-similar";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -29,7 +30,7 @@ const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
 });
 
-export default function CartList({ locale, data }) {
+export default function CartList({ locale, data, similarProducts }) {
   const dispatch = useDispatch();
   const router = useRouter();
   const [validateCart, { isLoading: isValidating }] = useValidateCartMutation();
@@ -156,6 +157,7 @@ export default function CartList({ locale, data }) {
           </Button>
         </div>
       </MediaQuery>
+      {similarProducts?.length > 0 && <ProductSimilar locale={locale} data={similarProducts} />}
     </section>
   );
 }
