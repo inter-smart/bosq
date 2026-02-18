@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Empty,
@@ -11,6 +13,7 @@ import { Text } from "@/components/utils/text";
 import Link from "next/link";
 import { Heading } from "@/components/utils/heading";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 export function OrderEmpty({
   mediaUrl = "/images/order-empty.svg",
@@ -18,6 +21,8 @@ export function OrderEmpty({
   description,
 }) {
   console.log(mediaUrl, title, description);
+
+  const t = useTranslations("cart");
 
   return (
     <Empty>
@@ -53,7 +58,7 @@ export function OrderEmpty({
           className="min-w-[168px] xl:min-w-[190px] 2xl:min-w-[220px] mt-2"
           asChild
         >
-          <Link href="/en/products">Continue shopping</Link>
+          <Link href="/en/products">{t("continue_shopping")}</Link>
         </Button>
       </EmptyContent>
     </Empty>
