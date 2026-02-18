@@ -437,8 +437,6 @@ export default async function ProductDetailPage({ params, searchParams }) {
 
   const { data, error } = await ProductData.getProductDetailsBySlug(slug, variantSku, model, attributeFilters);
 
-  console.log("product data: ", data);
-
   if (!data?.initialVariant) {
     notFound();
   }
@@ -447,7 +445,7 @@ export default async function ProductDetailPage({ params, searchParams }) {
     <>
       <ProductHero locale={locale} data={local_data?.heroData} slug={slug} />
       <ProductDetailCopy locale={locale} initialData={data?.initialVariant} productData={data?.product} models={data?.models} productSlug={slug} />
-      {data?.similarVariants?.length > 0 && <ProductSimilar locale={locale} />}
+      {data?.similarVariants?.length > 0 && <ProductSimilar locale={locale} data={data?.similarVariants} />}
     </>
   );
 }

@@ -417,7 +417,7 @@ export default async function CartPage({ params }) {
       <CartHero locale={locale} data={local_data?.heroData} slug={"Shopping cart"} itemsCount={local_data?.cartData?.items_count} />
       <>
         <CartList locale={locale} data={local_data?.cartData} />
-        {similiarProductData && <ProductSimilar locale={locale} data={similiarProductData} />}
+        {similiarProductData?.length > 0 && <ProductSimilar locale={locale} data={similiarProductData} />}
       </>
     </>
   );
