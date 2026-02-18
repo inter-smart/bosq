@@ -29,6 +29,7 @@ export default async function BlogsPage({ params, searchParams }) {
   const { locale } = resolvedParams;
   const page = Number(resolvedSearchParams?.page) || 1;
 
+  const slug = locale === "en" ? "Blogs" : "المدونة";
   const [cmsResult, blogListResult] = await Promise.all([
     getBlogsData.getCmsData(),
     getBlogsData.getBlogList(page, 6),
@@ -43,7 +44,7 @@ export default async function BlogsPage({ params, searchParams }) {
 
   return (
     <>
-      <BlogHero locale={locale} data={heroData} slug={"Blogs"} />
+      <BlogHero locale={locale} data={heroData} slug={slug} />
       <BlogList locale={locale} data={blogListData} />
     </>
   );

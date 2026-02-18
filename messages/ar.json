@@ -14,7 +14,13 @@
     "u8_description": "سيارة كهربائية فاخرة بتقنية متقدمة.",
     "u9": "يو 9",
     "u9_description": "سيارة خارقة كهربائية عالية الأداء.",
-    "book_test_drive": "كتاب اختبار القيادة"
+    "book_test_drive": "كتاب اختبار القيادة",
+    "login_signup": "تسجيل الدخول/الاشتراك",
+    "navigation": "التنقل",
+    "english": "English",
+    "arabic": "العربية",
+    "user_alt": "مستخدم",
+    "search_alt": "بحث"
   },
   "footer": {
     "menu": "القائمة",
@@ -42,7 +48,13 @@
     "designedBy": "صممت بواسطة",
     "shop": "المتجر",
     "quickLinks": "روابط سريعة",
-    "other_links":"روابط أخرى"
+    "other_links": "روابط أخرى"
+  },
+  "home": {
+    "read_more": "قراءة المزيد",
+    "view_details": "عرض التفاصيل",
+    "view_projects": "عرض المشاريع",
+    "enquiry_dialog_btn": "حوار الاستفسار"
   },
   "form": {
     "fName_placeholder": "الاسم الأول",
@@ -83,7 +95,32 @@
     "submit_error": "حدث خطأ. يرجى المحاولة مرة أخرى لاحقًا.",
     "enquire_now": "استفسر الآن",
     "book_a_test_drive": "احجز تجربة القيادة",
-    "service_enquiry": "استعلام عن الخدمة"
+    "service_enquiry": "استعلام عن الخدمة",
+    "full_name": "الاسم",
+    "first_name": "الاسم الأول",
+    "last_name": "اسم العائلة",
+    "company_name": "اسم الشركة (اختياري)",
+    "phone_number": "رقم الهاتف",
+    "email_id": "معرف البريد الإلكتروني",
+    "tell_us_more": "أخبرنا المزيد",
+    "message": "الرسالة",
+    "enter_name": "أدخل اسمك",
+    "enter_first_name": "أدخل اسمك الأول",
+    "enter_last_name": "أدخل اسم عائلتك",
+    "enter_company_name": "أدخل اسم شركتك",
+    "enter_email_id": "أدخل معرف البريد الإلكتروني",
+    "enter_phone": "أدخل رقم الهاتف",
+    "enter_mobile": "أدخل رقم هاتفك المحمول",
+    "select_state": "اختر الولاية",
+    "help_with": "كيف يمكننا المساعدة؟",
+    "select_option": "اختر خيارًا",
+    "form_placeholder_project": "يرجى تقديم نظرة عامة موجزة عن مشروعك، بما في ذلك أي متطلبات أو أفكار محددة لديك.",
+    "form_placeholder_inquiry": "أخبرنا المزيد عن استفسارك",
+    "no_data": "لم يتم العثور على بيانات",
+    "submit_enquiry": "إرسال الاستفسار",
+    "submit_now": "أرسل الآن",
+    "submitting": "جارٍ الإرسال...",
+    "success_message": "تم إرسال الاستفسار بنجاح"
   },
   "cart": {
     "title": "سلة التسوق",

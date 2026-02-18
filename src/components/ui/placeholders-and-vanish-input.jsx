@@ -17,11 +17,16 @@ export function PlaceholdersAndVanishInput({
 }) {
   const { executeRecaptcha } = useGoogleReCaptcha();
 
+  const activePlaceholders =
+    locale === "ar" || locale !== "en"
+      ? placeholders_ar || placeholders
+      : placeholders;
+
   const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
   const intervalRef = useRef(null);
   const startAnimation = () => {
     intervalRef.current = setInterval(() => {
-      setCurrentPlaceholder((prev) => (prev + 1) % placeholders.length);
+      setCurrentPlaceholder((prev) => (prev + 1) % activePlaceholders.length);
     }, 3000);
   };
   const handleVisibilityChange = () => {
@@ -43,7 +48,7 @@ export function PlaceholdersAndVanishInput({
       }
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [placeholders, placeholders_ar]);
+  }, [activePlaceholders]);
 
   const canvasRef = useRef(null);
   const newDataRef = useRef([]);
@@ -333,7 +338,7 @@ export function PlaceholdersAndVanishInput({
                 variant === "search" && "text-black/50 px-3",
               )}
             >
-              {placeholders[currentPlaceholder]}
+              {activePlaceholders[currentPlaceholder]}
             </motion.p>
           )}
         </AnimatePresence>

@@ -31,6 +31,7 @@ export default async function SustainabilityPage({ params }) {
     return <NotFound />
   }
 
+  const slug = locale === "en" ? "sustainability" : "الاستدامة";
 
   const { heroData, sustainabilityData } = data;
   const bannerData = sustainabilityData?.media;
@@ -44,7 +45,7 @@ export default async function SustainabilityPage({ params }) {
 
   return (
     <>
-      <ProductHero locale={locale} data={heroData} slug={"Sustainability"} />
+      <ProductHero locale={locale} data={heroData} slug={slug} />
       <SustainabilityInfo locale={locale} bannerData={bannerData} sectionData={sectionData} sustainabilityList={sustainabilityData?.sections} />
     </>
   );

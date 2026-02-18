@@ -30,12 +30,13 @@ export default async function FaqsPage({ params }) {
     <NotFound />
   }
 
+  const slug = locale === "en" ? "FAQs" : "الأسئلة الشائعة";
 
   const { heroData, faqData, moreFaq } = data;
 
   return (
     <>
-      <ProductHero locale={locale} data={heroData} slug={"FAQ"} />
+      <ProductHero locale={locale} data={heroData} slug={slug} />
       <FaqInfo locale={locale} data={faqData} moreFaq={moreFaq} />
     </>
   );
