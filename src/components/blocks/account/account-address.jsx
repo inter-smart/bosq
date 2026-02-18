@@ -30,7 +30,6 @@ const MediaQuery = dynamic(() => import("react-responsive"), {
 });
 
 export default function AccountAddress({ data, locale, addressData }) {
-
   const router = useRouter();
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingAddress, setEditingAddress] = useState(null);
@@ -117,7 +116,13 @@ export default function AccountAddress({ data, locale, addressData }) {
             Add New Address
           </Heading>
           <RecaptchaProvider>
-            <AddressForm setShowAddForm={setShowAddForm} locale={locale} />
+            <AddressForm
+              onSuccess={() => {
+                setShowAddForm(false);
+                router.refresh();
+              }}
+              locale={locale}
+            />
           </RecaptchaProvider>
         </div>
       ) : (
@@ -172,14 +177,14 @@ export default function AccountAddress({ data, locale, addressData }) {
                     size="heading5"
                     className="font-medium text-[#282828] mb-1 xl:mb-2"
                   >
-                    {item?.name}
+                    {item?.fullName}
                   </Heading>
                   <Text
                     as="div"
                     size="text3"
                     className="text-[#282828] mb-1 xl:mb-2"
                   >
-                    {item?.address && parse(item?.address)}
+                    {item?.streetAddress && parse(item?.streetAddress)}
                   </Text>
                   <Text
                     as="div"
@@ -311,7 +316,10 @@ export default function AccountAddress({ data, locale, addressData }) {
                 Add New Address
               </Heading>
               <RecaptchaProvider>
-                <AddressForm locale={locale} />
+                <AddressForm locale={locale}  onSuccess={() => {
+          setShowAddForm(false);   // ✅ close form
+          router.refresh();        // ✅ reload page data
+        }}/>
               </RecaptchaProvider>
             </div>
           )}
@@ -346,13 +354,12 @@ export default function AccountAddress({ data, locale, addressData }) {
                 </span>
               </div>
             ) : (
-
               <RecaptchaProvider>
-              <UpdateAddressForm
-                locale={locale}
-                addressData={editingAddress}
-                onSuccess={handleEditSuccess}
-              />
+                <UpdateAddressForm
+                  locale={locale}
+                  addressData={editingAddress}
+                  onSuccess={handleEditSuccess}
+                />
               </RecaptchaProvider>
             )}
           </div>

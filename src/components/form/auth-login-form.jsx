@@ -23,6 +23,7 @@ import Link from "next/link";
 import { commonValidations } from "@/lib/validations";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 // Validation schema
 const formSchema = z.object({
@@ -43,6 +44,9 @@ const inputStyle = cn(
 const errorStyle = cn("text-[#f17423]");
 
 export default function AuthLoginForm({ locale, data }) {
+  const tAuth = useTranslations("auth.login");
+  const tCommon = useTranslations("auth.common");
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -68,12 +72,10 @@ export default function AuthLoginForm({ locale, data }) {
     const result = await login(values);
 
     if (result.success) {
-      setSuccess("Login successful!");
+      setSuccess(tAuth("success"));
       router.push(redirectTo);
     } else {
-      setSuccess(
-        result.error || "Invalid email or password. Please try again.",
-      );
+      setSuccess(result.error || tAuth("error"));
     }
   };
 
@@ -94,13 +96,13 @@ export default function AuthLoginForm({ locale, data }) {
           name="email"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel className={labelStyle}>Email</FormLabel>
+              <FormLabel className={labelStyle}>{tCommon("email_label")}</FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   type="email"
                   className={inputStyle}
-                  placeholder="Enter your email"
+                  placeholder={tCommon("email_placeholder")}
                 />
               </FormControl>
               <FormMessage className={errorStyle} />
@@ -114,7 +116,7 @@ export default function AuthLoginForm({ locale, data }) {
           name="password"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel className={labelStyle}>Password</FormLabel>
+              <FormLabel className={labelStyle}>{tCommon("password_label")}</FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
@@ -124,7 +126,7 @@ export default function AuthLoginForm({ locale, data }) {
                       inputStyle,
                       locale === "ar" ? "pl-10" : "pr-10",
                     )}
-                    placeholder="Enter your password"
+                    placeholder={tCommon("password_placeholder")}
                   />
                   <button
                     type="button"
@@ -159,7 +161,7 @@ export default function AuthLoginForm({ locale, data }) {
                   />
                 </FormControl>
                 <Label htmlFor="rememberMe" className={labelStyle}>
-                  Remember Me
+                  {tCommon("remember_me")}
                 </Label>
               </FormItem>
             )}
@@ -169,7 +171,7 @@ export default function AuthLoginForm({ locale, data }) {
             className="font-light h-auto! p-0 text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px]"
             asChild
           >
-            <Link href="/en/forgot-password">Forgot Password?</Link>
+            <Link href={`/${locale}/forgot-password`}>{tAuth("forgot_password")}</Link>
           </Button>
         </div>
 
@@ -181,7 +183,7 @@ export default function AuthLoginForm({ locale, data }) {
             disabled={isLoading}
             className="w-full"
           >
-            {isLoading ? "Logging in..." : "Login"}
+            {isLoading ? tAuth("loading") : tAuth("submit")}
           </Button>
         </div>
 
@@ -190,7 +192,7 @@ export default function AuthLoginForm({ locale, data }) {
           <p
             className={cn(
               "text-[10px] mt-1 w-full",
-              success.includes("successful")
+              success === tAuth("success") || success.includes("successful")
                 ? "text-green-600"
                 : "text-red-600",
             )}

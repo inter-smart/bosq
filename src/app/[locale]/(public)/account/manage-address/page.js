@@ -86,7 +86,7 @@ export default async function ManageAddressPage({ params }) {
     return <NotFound />
   }
 
-
+const slug = locale === "en" ? "my-profile" : locale === "ar" ? "ملفي-الشخصي" : "my-profile";
 
 
   return (
@@ -94,7 +94,7 @@ export default async function ManageAddressPage({ params }) {
       <ProductHero
         locale={locale}
         data={local_data?.heroData}
-        slug={"My Profile"}
+        slug={slug}
       />
       <AccountLayout locale={locale}>
         <AccountAddress locale={locale} data={local_data?.address} addressData={data?.address} />

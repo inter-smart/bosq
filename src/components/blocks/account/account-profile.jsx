@@ -8,8 +8,12 @@ import Image from "next/image";
 import parse from "html-react-parser";
 import { useSelector } from "react-redux";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export default function AccountProfile({ data, locale }) {
+  const tAccount = useTranslations("account");
+  const tAddress = useTranslations("address");
+
   return (
     <div className="w-full border border-[#e9e9e9] sm:rounded-e-[4px] py-3 xl:py-6 3xl:py-9 px-3 xl:px-4 3xl:px-5">
       <Heading
@@ -17,7 +21,7 @@ export default function AccountProfile({ data, locale }) {
         size={"heading5"}
         className="font-semibold text-[#282828] mb-3 xl:mb-7"
       >
-        My Profile
+        {tAccount("my_profile")}
       </Heading>
       <div className="w-full flex flex-wrap items-center mb-4 xl:mb-8">
         <div className="w-[50px] 2xl:w-[70px] aspect-square overflow-hidden rounded-full border">
@@ -60,7 +64,7 @@ export default function AccountProfile({ data, locale }) {
             size={"heading5"}
             className="font-normal text-[#282828] mb-1.5 xl:mb-2"
           >
-            Personal Information
+            {tAccount("personal_info")}
           </Heading>
 
           <Text
@@ -68,7 +72,7 @@ export default function AccountProfile({ data, locale }) {
             size="text3"
             className="text-[#282828] my-0.5 2xl:my-1"
           >
-            Name: {""}
+            {tAccount("name")} {""}
             {data?.first_name + " " + data?.last_name}
           </Text>
           <Text
@@ -76,7 +80,7 @@ export default function AccountProfile({ data, locale }) {
             size="text3"
             className="text-[#282828] my-0.5 2xl:my-1"
           >
-            Email: {""}
+            {tAccount("email")} {""}
             {data?.email}
           </Text>
           <Text
@@ -84,7 +88,7 @@ export default function AccountProfile({ data, locale }) {
             size="text3"
             className="text-[#282828] my-0.5 2xl:my-1"
           >
-            Phone: {""}
+            {tAccount("phone")} {""}
             {data?.phone}
           </Text>
         </div>
@@ -94,7 +98,7 @@ export default function AccountProfile({ data, locale }) {
             size={"heading5"}
             className="font-normal text-[#282828] mb-1.5 xl:mb-2"
           >
-            Default Address
+            {tAccount("default_address")}
           </Heading>
 
           <Text
@@ -113,7 +117,7 @@ export default function AccountProfile({ data, locale }) {
               size={"heading5"}
               className="font-normal text-[#282828] mb-1.5 xl:mb-2"
             >
-              Shipping Address
+              {tAddress("shipping")}
             </Heading>
 
             <Text
@@ -126,13 +130,13 @@ export default function AccountProfile({ data, locale }) {
           </div>
         )}
       </div>
-      <Link href={"/account/settings"}>
+      <Link href={`/${locale}/account/settings`}>
         <Button
           variant={"black"}
           disabled={false}
           className="min-w-[100px] xl:min-w-[120px] 2xl:min-w-[180px] mt-3 xl:mt-4 2xl:mt-6"
         >
-          Edit Profile
+          {tAccount("edit_profile")}
         </Button>
       </Link>
     </div>

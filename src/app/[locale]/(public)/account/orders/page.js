@@ -532,6 +532,7 @@ export default async function OrdersPage({ params }) {
 
   const { data, error } = await ProfileData.getOrders();
 
+  const slug = locale === "en" ? "My Orders" : "طلباتي";
   const orders = data?.orders;
   const pagination = data?.pagination;
 
@@ -541,7 +542,7 @@ export default async function OrdersPage({ params }) {
 
   return (
     <>
-      <ProductHero locale={locale} data={local_data?.heroData} slug={"My Profile"} />
+      <ProductHero locale={locale} data={local_data?.heroData} slug={slug} />
       <AccountLayout locale={locale}>
         <AccountOrders locale={locale} data={local_data?.orders} orders={orders} pagination={pagination} />
       </AccountLayout>

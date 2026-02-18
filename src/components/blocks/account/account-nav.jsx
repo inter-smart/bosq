@@ -9,6 +9,7 @@ import { useAuth } from "@/hooks/useAuth";
 import dynamic from "next/dynamic";
 import { Menu } from "lucide-react";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
@@ -23,6 +24,7 @@ const ASIDE_ITEMS = [
       alt: "account-nav",
     },
     title: "My Profile",
+    key: "my_profile",
     href: "/account/profile",
   },
   {
@@ -33,6 +35,7 @@ const ASIDE_ITEMS = [
       alt: "account-nav",
     },
     title: "My Orders",
+    key: "my_orders",
     href: "/account/orders",
   },
   {
@@ -43,6 +46,7 @@ const ASIDE_ITEMS = [
       alt: "account-nav",
     },
     title: "Cancelled Orders",
+    key: "cancelled_orders",
     href: "/account/cancelled-orders",
   },
   {
@@ -53,6 +57,7 @@ const ASIDE_ITEMS = [
       alt: "account-nav",
     },
     title: "Manage Address",
+    key: "manage_address",
     href: "/account/manage-address",
   },
   {
@@ -63,6 +68,7 @@ const ASIDE_ITEMS = [
       alt: "account-nav",
     },
     title: "Wishlist",
+    key: "wishlist",
     href: "/account/wishlist",
   },
   {
@@ -73,6 +79,7 @@ const ASIDE_ITEMS = [
       alt: "account-nav",
     },
     title: "Coupons",
+    key: "coupons",
     href: "/account/coupons",
   },
   {
@@ -83,6 +90,7 @@ const ASIDE_ITEMS = [
       alt: "account-nav",
     },
     title: "Account Settings",
+    key: "account_settings",
     href: "/account/settings",
   },
   {
@@ -93,11 +101,13 @@ const ASIDE_ITEMS = [
       alt: "account-nav",
     },
     title: "Log out",
+    key: "log_out",
     href: "#",
   },
 ];
 
-export default function AccountNav({locale}) {
+export default function AccountNav({ locale }) {
+  const t = useTranslations("account");
   const pathname = usePathname();
   const router = useRouter();
   const { logout } = useAuth();
@@ -120,7 +130,7 @@ export default function AccountNav({locale}) {
           )}
         >
           <Menu className="size-3" />
-          Menu
+          {t("menu")}
         </div>
         <div
           className={cn(
@@ -130,7 +140,9 @@ export default function AccountNav({locale}) {
           )}
         >
           {ASIDE_ITEMS.map((item) => {
-            const isActive = pathname === item.href;
+            const localizedHref =
+              item.href === "#" ? "#" : `/${locale}${item.href}`;
+            const isActive = pathname === localizedHref;
             const isLogout = item.id === 8;
 
             if (isLogout) {
@@ -154,7 +166,7 @@ export default function AccountNav({locale}) {
                     size="text3"
                     className="leading-none text-black"
                   >
-                    {item?.title}
+                    {t(item?.key)}
                   </Text>
                 </button>
               );
@@ -163,8 +175,7 @@ export default function AccountNav({locale}) {
             return (
               <Link
                 key={"account-nav-" + item.id}
-                href={item.href}
-
+                href={localizedHref}
                 className={cn(
                   "w-full flex gap-x-1.5 xl:gap-x-2.5 items-center py-2.5 xl:py-3 3xl:py-4.5 px-3 xl:px-5 3xl:px-6 transition ",
                   isActive ? "bg-black" : "bg-transparent hover:bg-gray-200"
@@ -188,7 +199,7 @@ export default function AccountNav({locale}) {
                     isActive ? "text-white" : "text-black"
                   )}
                 >
-                  {item?.title}
+                  {t(item?.key)}
                 </Text>
               </Link>
             );

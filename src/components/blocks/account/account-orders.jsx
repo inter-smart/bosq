@@ -1,7 +1,9 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/utils/heading";
 import { Text } from "@/components/utils/text";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -13,27 +15,29 @@ const btnStyle = cn("underline underline-offset-1 text-[#282828] h-auto! px-1 xl
 
 export default function AccountOrders({ data, locale, orders, pagination }) {
   const isEn = locale === "en";
+  const t = useTranslations("account");
+  const tCommon = useTranslations("common");
 
   return (
     <>
       {orders?.length === 0 ? (
         <div className="w-full border border-[#e9e9e9] sm:rounded-e-lg py-3 xl:py-6 3xl:py-9 px-3 xl:px-4 3xl:px-5">
           <OrderEmpty
-            title={"You haven't placed any orders yet"}
-            description={"Once you place your first order, you'll be able to track your deliveries and manage returns from here."}
+            title={t("no_orders_title")}
+            description={t("no_orders_description")}
           />
         </div>
       ) : (
         <div className="w-full border border-[#e9e9e9] sm:rounded-e-lg py-3 xl:py-6 3xl:py-9 px-3 xl:px-4 3xl:px-5">
           <Heading as="h2" size={"heading5"} className="font-semibold text-[#282828] mb-2 xl:mb-4">
-            My Orders
+            {t("my_orders")}
           </Heading>
 
           {orders?.map((item, index) => (
             <div key={"order" + index} className="w-full mb-4 xl:mb-7 2xl:mb-10">
               <div className="flex items-center gap-x-2.5 xl:gap-x-5 mb-0.5 xl:mb-1">
                 <Text as="div" size="text3" className={labelStyle}>
-                  Order ID: {""}
+                  {t("order_id")} {""}
                   <span>{item?.order_id}</span>
                 </Text>
                 <span className="flex-1 h-[1px] bg-[#e9e9e9]" />
@@ -41,34 +45,34 @@ export default function AccountOrders({ data, locale, orders, pagination }) {
               <div className="flex flex-wrap">
                 <div className="flex-1 flex flex-wrap -mx-0.5 xl:-mx-1 [&>*]:p-0.5 xl:[&>*]:p-1">
                   <Text as="div" size="text3" className={cn(labelStyle, "w-full sm:w-1/3")}>
-                    No of Items: {""}
+                    {t("no_of_items")} {""}
                     <span>{item?.items?.length}</span>
                   </Text>
                   <Text as="div" size="text3" className={cn(labelStyle, "w-full sm:w-1/3")}>
-                    Total: {""}
-                    <span>AED {item?.grand_total}</span> <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc]">Inc Tax</span>
+                    {t("total")} {""}
+                    <span>{tCommon("aed")} {item?.grand_total}</span> <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc]">{tCommon("inc_tax")}</span>
                   </Text>
                   <Text as="div" size="text3" className={cn(labelStyle, "w-full sm:w-1/3")}>
-                    Est. Delivery: {""}
+                    {t("est_delivery")} {""}
                     <span>{item?.est_delivery_details}</span>
                   </Text>
                   <Text as="div" size="text3" className={cn(labelStyle, "w-full sm:w-1/3")}>
-                    Order Date: {""}
+                    {t("order_date")} {""}
                     <span>{item?.createdAt}</span>
                   </Text>
                   <Text as="div" size="text3" className={cn(labelStyle, "w-full sm:w-1/3")}>
-                    Payment: {""}
+                    {t("payment")} {""}
                     <span>{item?.payment_status}</span>
                   </Text>
                   <Text as="div" size="text3" className={cn(labelStyle, "w-full sm:w-1/3")}>
-                    Order Status: {""}
+                    {t("order_status")} {""}
                     <span>{item?.status}</span>
                   </Text>
                 </div>
                 <div>
                   <OrdersDetailModal order={item} locale={locale}>
                     <Button variant={"black"} disabled={false} className="min-w-[90px] xl:min-w-[100px] 2xl:min-w-[120px]">
-                      View Details
+                      {t("view_details")}
                     </Button>
                   </OrdersDetailModal>
                 </div>
@@ -97,17 +101,17 @@ export default function AccountOrders({ data, locale, orders, pagination }) {
                           {item?.variant?.description || item?.variant?.sku}
                         </Text>
                         <Text as="div" size="text3" className="text-[#282828]">
-                          Qty: {""}
+                          {t("qty")} {""}
                           {item?.quantity}
                         </Text>
                         <Text as="div" size="text3" className="font-normal text-[#282828] mt-2 xl:mt-3">
-                          AED {item?.line_total} <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc]">Inc Tax</span>
+                          {tCommon("aed")} {item?.line_total} <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc]">{tCommon("inc_tax")}</span>
                         </Text>
                       </div>
 
                       <div className="w-full flex flex-wrap items-center justify-end mt-2 2xl:mt-4">
                         <Button variant={"link"} className={btnStyle} asChild>
-                          <Link href={"/"}>Track Order</Link>
+                          <Link href={`/${locale}/`}>{t("track_order")}</Link>
                         </Button>
 
                         {/* {item?.actions?.can_cancel && (
@@ -123,9 +127,9 @@ export default function AccountOrders({ data, locale, orders, pagination }) {
                         )} */}
 
                         <Button variant={"link"} className={btnStyle} asChild>
-                          <Link href={"/"}>
+                          <Link href={`/${locale}/`}>
                             <Image src={"/images/icon-reorder.svg"} alt={"icon-reorder"} width={10} height={10} className="w-2 xl:w-2.5" />
-                            Reorder
+                            {t("reorder")}
                           </Link>
                         </Button>
                       </div>

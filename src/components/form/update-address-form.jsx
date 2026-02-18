@@ -91,6 +91,8 @@ const textareaStyle = cn(inputStyle, "leading-tight min-h-[80px] 2xl:min-h-[100p
 export default function UpdateAddressForm({ locale, addressData, onSuccess }) {
   const { executeRecaptcha } = useGoogleReCaptcha();
 
+  console.log(addressData)
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {

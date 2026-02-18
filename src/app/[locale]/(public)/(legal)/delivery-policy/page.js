@@ -11,6 +11,8 @@ export async function generateMetadata({ params }) {
   const { title, description, keywords, twitter, openGraph, alternates, other } = await getMetaData("delivery-policy", locale);
 
 
+  const slug = locale === "en"? "Delivery Policy" : "سياسة التوصيل";
+
   return {
     title,
     description,
@@ -35,7 +37,7 @@ export default async function DeliveryPage({ params }) {
       <ProductHero
         locale={locale}
         data={heroData}
-        slug={"Delivery Policy"}
+        slug={slug}
       />
       <DeliveryInfo
         locale={locale}
