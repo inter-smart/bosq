@@ -65,7 +65,7 @@ export default function Header({ navigationData, locale, data }) {
     // Remove current locale from pathname and add new one
     const segments = pathname.split("/").filter(Boolean);
     segments[0] = newLocale; // Replace locale segment
-    const newPath = `/${segments.join("/")}`;
+    const newPath = `/${segments.join("/")}${window.location.search}`;
 
     // Set cookie for persistence
     document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000`;

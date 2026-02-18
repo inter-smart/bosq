@@ -43,7 +43,7 @@ export function middleware(request) {
   // 1. Redirect unauthenticated users away from protected pages
   if (isProtected && !token) {
     const loginUrl = new URL(`/${locale}/login`, request.url);
-    loginUrl.searchParams.set("redirect", pathname);
+    loginUrl.searchParams.set("redirect", pathname + request.nextUrl.search);
     return NextResponse.redirect(loginUrl);
   }
 

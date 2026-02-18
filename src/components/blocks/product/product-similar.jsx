@@ -59,7 +59,7 @@ export default function ProductSimilar({ locale, data, slug, variantSku }) {
             <div className="flex touch-pan-y touch-pinch-zoom -mx-1 sm:-mx-2 xl:-mx-5 2xl:-mx-8 *:p-1 sm:*:p-2 xl:*:p-5 2xl:*:p-8">
               {data?.product?.map((item, index) => (
                 <div key={"product" + index} className="flex-[0_0_176px] sm:flex-[0_0_33.333%] min-w-0 select-none">
-                  <ProductCard product={item} />
+                  <ProductCard product={item} locale={locale} isEn={locale === "en"} />
                 </div>
               ))}
             </div>
