@@ -9,6 +9,7 @@ import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { API_URL } from "@/lib/api/client";
 export function PlaceholdersAndVanishInput({
   placeholders,
+  placeholders_ar,
   onChange,
   onSubmit,
   locale,
@@ -42,7 +43,7 @@ export function PlaceholdersAndVanishInput({
       }
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [placeholders]);
+  }, [placeholders, placeholders_ar]);
 
   const canvasRef = useRef(null);
   const newDataRef = useRef([]);

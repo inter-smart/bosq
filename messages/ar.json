@@ -26,6 +26,8 @@
     "offers": "العروض",
     "u8": "يو 8",
     "u9": "يو 9",
+    "ph": "الهاتف",
+    "email": "بريد إلكتروني",
     "service_centers": "مراكز الخدمة",
     "showroom": "صالة العرض",
     "subscribe_newsletter": "الاشتراك في النشرة الإخبارية",
@@ -36,7 +38,11 @@
     "terms_conditions": "الشروط والأحكام",
     "privacy_policy": "سياسة الخصوصية",
     "crafted_by": "صيغت بواسطة",
-    "news": "أخبار"
+    "news": "أخبار",
+    "designedBy": "صممت بواسطة",
+    "shop": "المتجر",
+    "quickLinks": "روابط سريعة",
+    "other_links":"روابط أخرى"
   },
   "form": {
     "fName_placeholder": "الاسم الأول",

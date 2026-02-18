@@ -28,6 +28,8 @@
     "u9": "U9",
     "service_centers": "Service Centers",
     "showroom": "Showroom",
+    "ph": "Ph",
+    "email": "Email",
     "subscribe_newsletter": "Subscribe Newsletter",
     "subscribe_placeholder_1": "Enter Your email address",
     "subscribe_placeholder_2": "Subscribe for latest updates",
@@ -36,7 +38,12 @@
     "terms_conditions": "Terms & Conditions",
     "privacy_policy": "Privacy Policy",
     "crafted_by": "Crafted By",
-    "news": "News"
+    "news": "News",
+    "designedBy": "Designed By",
+        "shop": "Shop",
+    "quickLinks": "Quick Links",
+    "other_links":"Other Links"
+
   },
   "form": {
     "fName_placeholder": "First Name",
