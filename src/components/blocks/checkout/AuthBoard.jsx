@@ -4,6 +4,7 @@ import SoftLoginForm from "@/components/form/soft-login-form";
 import { Heading } from "@/components/utils/heading";
 import { Text } from "@/components/utils/text";
 import { logoutUser } from "@/store/slices/authSlice";
+import { resetCart } from "@/store/slices/cartSlice";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,6 +19,7 @@ const AuthBoard = ({ locale }) => {
       const result = await dispatch(logoutUser()).unwrap();
 
       if (result) {
+        dispatch(resetCart());
         router.push(`/${locale}`);
       }
     } catch (err) {
