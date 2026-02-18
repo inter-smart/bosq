@@ -67,8 +67,6 @@ export default async function ProductsPage({ params, searchParams }) {
   const pagination = products?.pagination;
   const productList = products?.products;
 
-  console.log("Product List:", productList);
-
   return (
     <>
       <ProductHero locale={locale} data={local_data?.heroData} slug={slug} />

@@ -16,7 +16,7 @@ export default function CheckoutList({ locale }) {
 
             <div className="w-full lg:w-[calc(100%-320px)] xl:w-[calc(100%-460px)] 2xl:w-[calc(100%-540px)] 3xl:w-[calc(100%-668px)]">
               {/* Personal Information */}
-              <AuthBoard />
+              <AuthBoard locale={locale} />
 
               {/* Shipping Address Block */}
               <AddressSection locale={locale} />

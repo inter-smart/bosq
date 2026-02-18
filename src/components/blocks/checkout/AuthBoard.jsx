@@ -4,15 +4,25 @@ import SoftLoginForm from "@/components/form/soft-login-form";
 import { Heading } from "@/components/utils/heading";
 import { Text } from "@/components/utils/text";
 import { logoutUser } from "@/store/slices/authSlice";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-const AuthBoard = () => {
+const AuthBoard = ({ locale }) => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const user = useSelector((state) => state.auth.user);
 
-  const logout = () => {
-    dispatch(logoutUser());
+  const logout = async () => {
+    try {
+      const result = await dispatch(logoutUser()).unwrap();
+
+      if (result) {
+        router.push(`/${locale}`);
+      }
+    } catch (err) {
+      console.log("LOG OUT ERROR", err);
+    }
   };
 
   return (
