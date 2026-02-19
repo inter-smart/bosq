@@ -30,7 +30,7 @@ const PriceAndCart = ({ stock, price, item }) => {
       toast.success(t("product.item_added_to_cart"));
     } catch (error) {
       // error is already the message string (from rejectWithValue or throw)
-      toast.error(error || t("product.failed_to_add_cart"));
+      toast.error(t("product.failed_to_add_cart"));
     }
   };
 

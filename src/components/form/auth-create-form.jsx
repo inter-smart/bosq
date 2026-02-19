@@ -24,6 +24,7 @@ import { commonValidations } from "@/lib/validations";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { useAuth } from "@/hooks/useAuth";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 // Validation schema
 const formSchema = z.object({
@@ -84,9 +85,11 @@ export default function AuthCreateForm() {
 
       if (result.success) {
         setSuccess(tAuth("success"));
+        toast.success(tAuth("success"));
         router.push("/otp-submission");
       } else {
         setSuccess(result.error || tAuth("error"));
+        toast.error(result.error || tAuth("error"));
       }
     } catch (err) {
       console.error(err);

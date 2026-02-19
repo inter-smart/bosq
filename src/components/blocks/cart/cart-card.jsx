@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { removeFromCart, updateCartItem } from "@/store/slices/cartSlice";
 import { selectCartIsUpdating } from "@/store/selectors/cart/selectors";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 export default function CartCard({ product }) {
   const dispatch = useDispatch();
@@ -18,6 +19,9 @@ export default function CartCard({ product }) {
   const [quantity, setQuantity] = useState(product?.quantity || 1);
   const [isRemoving, setIsRemoving] = useState(false);
 
+  const t= useTranslations("cart");
+  const tCommon = useTranslations("common");
+  const tToast = useTranslations("toast");
   // Sync local quantity with product quantity from Redux
   useEffect(() => {
     setQuantity(product?.quantity || 1);
@@ -35,10 +39,10 @@ export default function CartCard({ product }) {
               variant_id: product.variant_id,
             }),
           ).unwrap();
-          toast.success("Quantity updated");
+          toast.success(`${tToast("quantity_updated")} (${newQuantity})`);
         } catch (error) {
           // error is already the message string (from rejectWithValue or throw)
-          toast.error(error || "Failed to update cart item");
+          toast.error(`${tToast("quantity_update_failed")}`);
         }
       }
     },
@@ -49,9 +53,9 @@ export default function CartCard({ product }) {
     setIsRemoving(true);
     try {
       await dispatch(removeFromCart({ itemId: product.id })).unwrap();
-      toast.success("Item removed from cart");
+      toast.success(`${tToast("item_removed")}`);
     } catch (error) {
-      toast.error(error || "Failed to remove item from cart");
+      toast.error(`${tToast("item_remove_failed")}`);
     }
   };
 
@@ -122,7 +126,7 @@ export default function CartCard({ product }) {
           <div className="flex justify-between items-center gap-1 mb-2 sm:mb-3 xl:mb-4 2xl:mb-6">
             <Text as="div" size="text3" className="font-normal text-[#282828]">
               <Link href={`/products/${productSlug}`}>
-                AED {productPrice} <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc]">Inc Tax</span>
+                AED {productPrice} <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc]">{tCommon("inc_tax")}</span>
               </Link>
             </Text>
             <div className="w-[60px] xl:w-[60px] 2xl:w-[80px] h-[30px] lg:h-[30px] 2xl:h-[40px] flex items-center rounded-[6px] overflow-hidden bg-white border border-[#dedede]">
@@ -155,7 +159,7 @@ export default function CartCard({ product }) {
           <hr className="my-1 xl:mb-2 2xl:my-4" />
           <div className="flex justify-between gap-1">
             <Text as="div" size="text3" className="font-medium text-[#282828]">
-              Line Total: AED {product?.line_total || (parseFloat(productPrice) * quantity).toFixed(2)}
+              {t("line_total")}: AED {product?.line_total || (parseFloat(productPrice) * quantity).toFixed(2)}
             </Text>
             <Button
               variant={"button"}
@@ -165,7 +169,7 @@ export default function CartCard({ product }) {
                 "not-hover:opacity-60 h-auto! has-[>svg]:px-0 transition hover:filter-[brightness(0)_saturate(100%)_invert(31%)_sepia(86%)_saturate(6865%)_hue-rotate(354deg)_brightness(100%)_contrast(128%)] disabled:opacity-50"
               }
             >
-              {isRemoving ? "Removing..." : "Remove"}
+              {isRemoving ? `${t("removing")}...` : tCommon("remove")}
               <Image src={"/images/icon-delete.svg"} alt="icon-delete" width={8} height={8} className="w-2 sm:w-3 block" />
             </Button>
           </div>

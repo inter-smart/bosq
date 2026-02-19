@@ -29,6 +29,7 @@ import { useApplyCouponMutation, useRemoveCouponMutation, usePlaceOrderMutation 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { resetCart } from "@/store/slices/cartSlice";
+import { useTranslations } from "next-intl";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
@@ -71,6 +72,8 @@ const OrderSummary = ({
   const [applyCoupon] = useApplyCouponMutation();
   const [removeCoupon] = useRemoveCouponMutation();
 
+    const t = useTranslations("cart");
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const flow = searchParams.get("flow");
@@ -92,6 +95,8 @@ const OrderSummary = ({
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("cod");
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+
+  const tToast = useTranslations("toast");
 
   // Redirect if not allowed
   useEffect(() => {
@@ -124,10 +129,9 @@ const OrderSummary = ({
     try {
       const result = await applyCoupon({ coupon_code: couponCode }).unwrap();
       updateSummaryFromResponse(result?.data);
-      toast.success(result?.message || "Coupon applied successfully");
+      toast.success(`${tToast("coupon_success")}`);
     } catch (error) {
-      console.error("Failed to apply coupon:", error);
-      toast.error(error || "Failed to apply coupon");
+      toast.error(`${tToast("coupon_failed")}`);
     }
   };
 
@@ -137,10 +141,9 @@ const OrderSummary = ({
       const result = await removeCoupon({ coupon_code: appliedCoupon || couponCode }).unwrap();
       updateSummaryFromResponse(result?.data);
       setCouponCode("");
-      toast.success(result?.message || "Coupon removed successfully");
+      toast.success(`${tToast("coupon_removed")}`);
     } catch (error) {
-      console.error("Failed to remove coupon:", error);
-      toast.error(error || "Failed to remove coupon");
+      toast.error(`${tToast("coupon_remove_failed")}`);
     }
   };
 
@@ -300,7 +303,7 @@ const OrderSummary = ({
               size="text3"
               className="font-normal text-[#282828] my-2 xl:my-3 2xl:my-4 [&_span]:font-light [&_span]:text-[#808080] flex justify-between"
             >
-              <span>Subtotal ({itemsCount})</span>
+              <span>{t("subtotal")} ({itemsCount})</span>
               {subTotal}
             </Text>
             <Text
@@ -308,7 +311,7 @@ const OrderSummary = ({
               size="text3"
               className="font-normal text-[#282828] my-2 xl:my-3 2xl:my-4 [&_span]:font-light [&_span]:text-[#808080] flex justify-between"
             >
-              <span>Shipping Charge</span>
+              <span>{t("shipping_charge")}</span>
               {"Free"}
             </Text>
 
@@ -354,7 +357,7 @@ const OrderSummary = ({
             {/* Total Price */}
             <Text as="div" size="text3" className="font-normal text-[#282828] my-2 xl:my-3 2xl:my-4 flex justify-between max-sm:font-semibold">
               <span>
-                Total Price
+                {t("total_price")}
                 <br />
                 <span className="text-[8px] 2xl:text-[10px] font-light text-[#808080]">Inc Tax</span>
               </span>

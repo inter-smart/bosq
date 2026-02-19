@@ -24,6 +24,7 @@ import { cn } from "@/lib/utils";
 import { useDeleteAddressMutation, useUpdateDefaultAddressMutation } from "@/store/services/addressApi";
 import { toast } from "sonner";
 import { setSelectedShippingAddress, setSelectedBillingAddress } from "@/store/slices/checkoutSlice";
+import { useTranslations } from "next-intl";
 
 const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress, disabled = false }) => {
   const dispatch = useDispatch();
@@ -37,6 +38,9 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
   const [editingAddress, setEditingAddress] = useState(null);
 
   const [pendingAction, setPendingAction] = useState(null);
+
+
+  const tToast  = useTranslations("toast");
 
   // Get the selected address ID based on variant
   const selectedAddressId = variant === "shipping" ? selectedShippingAddressId : selectedBillingAddressId;
@@ -98,13 +102,13 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
     try {
       if (pendingAction.kind === "delete") {
         await deleteAddress({ id: pendingAction.id, addressType: pendingAction.addressType }).unwrap();
-        toast.success("Address deleted successfully");
+        toast.success(`${tToast("delete_address")}`);
       } else {
         await updateDefaultAddress({ id: pendingAction.id, addressType: pendingAction.addressType }).unwrap();
-        toast.success("Default address updated");
+        toast.success(`${tToast("update_address")}`);
       }
-    } catch {
-      toast.error("Something went wrong");
+    } catch (error) {
+      toast.error(`${tToast("something_went_wrong")}`);
     } finally {
       setPendingAction(null);
     }

@@ -11,6 +11,7 @@ import { useToggleWishlistMutation, useGetWishlistQuery } from "@/store/services
 import { useAppSelector } from "@/store/hooks";
 import { toast } from "sonner";
 import LoginRequiredModal from "../../common/login-required-modal";
+import { useTranslations } from "next-intl";
 const colorVariant = ["#bababa", "#333333", "#8db600", "#ff0000", "#000000"];
 
 export default function ProductCard({ product, isEn, locale = "en", onRemove }) {
@@ -20,8 +21,9 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
 
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(product?.wishlisted ?? false);
-
   const [toggleWishlist] = useToggleWishlistMutation();
+
+  const tToast = useTranslations("toast");
 
   const handleToggleWishlist = async (id) => {
     if (!isAuthenticated) {
@@ -35,15 +37,14 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
       const result = await toggleWishlist(id).unwrap();
       const added = result?.data?.action === "added";
       setIsWishlisted(added);
-      toast.success(added ? "Added to wishlist" : "Removed from wishlist");
+      toast.success(added ? `${tToast("wishlist_success")}` : `${tToast("wishlist_removed")}`);
       if (!added) {
         onRemove?.(id);
       }
     } catch (error) {
       // Revert on failure
       setIsWishlisted(prev);
-      toast.error("Failed to update wishlist");
-      console.error("Wishlist toggle failed:", error);
+      toast.error( `${tToast("wishlist_remove_failed")}`);
     }
   };
 

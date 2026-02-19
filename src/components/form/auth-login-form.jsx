@@ -17,7 +17,7 @@ import { commonValidations } from "@/lib/validations";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-
+import { toast } from "sonner";
 // Validation schema
 const formSchema = z.object({
   email: commonValidations.email(),
@@ -63,6 +63,7 @@ export default function AuthLoginForm({ locale, data }) {
     const result = await login(values);
 
     if (result.success) {
+      toast.success(tAuth("success"));
       setSuccess(tAuth("success"));
       router.replace(redirectTo);
     } else {
