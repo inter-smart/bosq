@@ -8,11 +8,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "@/store/slices/cartSlice";
 import { selectCartIsUpdating } from "@/store/selectors/cart/selectors";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 const PriceAndCart = ({ stock, price, item }) => {
   const dispatch = useDispatch();
   const isUpdating = useSelector(selectCartIsUpdating);
   const [quantity, setQuantity] = useState(1);
+  const t = useTranslations();
 
   const handleAddToCart = async () => {
     const { product_id, id: variant_id } = item;
@@ -25,10 +27,10 @@ const PriceAndCart = ({ stock, price, item }) => {
           quantity,
         }),
       ).unwrap();
-      toast.success("Item added to cart");
+      toast.success(t("product.item_added_to_cart"));
     } catch (error) {
       // error is already the message string (from rejectWithValue or throw)
-      toast.error(error || "Failed to add item to cart");
+      toast.error(error || t("product.failed_to_add_cart"));
     }
   };
 
@@ -78,11 +80,11 @@ const PriceAndCart = ({ stock, price, item }) => {
         <Button variant={"black"} className="flex-1 max-w-[320px] xl:max-w-[768px]" disabled={isUpdating || stock === 0} asChild>
           <div onClick={handleAddToCart}>
             {isUpdating ? (
-              "Adding..."
+              t("product.adding")
             ) : (
               <>
                 <Image src={"/images/icon-cart.svg"} alt={"icon-cart"} width={15} height={15} className="w-[15px]" />
-                Add to Cart
+                {t("product.add_to_cart")}
               </>
             )}
           </div>
@@ -91,7 +93,7 @@ const PriceAndCart = ({ stock, price, item }) => {
 
       <div className="w-full mb-1 xl:mb-2">
         <Text as="div" size="text3" className="text-[#282828] max-w-[95%]">
-          {"Total: AED "}
+          {t("product.total")}{":"}  {t("common.aed")}{" "}
           <span className="font-medium">{(quantity * price).toFixed(2)}</span>
         </Text>
       </div>

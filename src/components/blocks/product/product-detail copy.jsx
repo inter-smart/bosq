@@ -23,15 +23,18 @@ import ProductEnquireModal from "./ProductEnquireModal";
 import ProductDetails from "./ProductDetails";
 import ProductChooseDesign from "./ProductChooseDesign";
 import PriceAndCart from "./PriceAndCart";
+import { useTranslations } from "next-intl";
 
-const enq = {
-  title: "Enquire Now",
-  subtitle: "Bulk Orders & Customisation Available!",
-  description: "<p>Need 10 or 100 chairs? Want them in your brand colours or a unique design? No problem. Just tell us what you need below!</p>",
-};
 
 export default function ProductDetailCopy({ locale, initialData, productData, models, productSlug }) {
+  const t = useTranslations();
   const [isModelLoading, setIsModelLoading] = useState(false);
+
+  const enq = {
+    title: t("product.enquire_now"),
+    subtitle: t("product.enquire_subtitle"),
+    description: t("product.enquire_description"),
+  };
 
   const productImages = initialData?.images || [];
   const currentModelId = initialData?.model_id;
@@ -226,7 +229,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
               <hr className="my-3 sm:my-3 2xl:my-5 mx-[-5px]" />
 
               <Heading as="div" size="heading5" className="font-normal text-[#282828] mb-2 2xl:mb-3 mt-2.5 2xl:mt-4">
-                Choose Your Design
+                {t("product.choose_your_design")}
               </Heading>
 
               <div className="mb-2">
@@ -256,7 +259,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                         variant={"link"}
                         className={"text-[8px] xl:text-[10px] 2xl:text-[10px] 3xl:text-[12px] leading-normal font-light text-[#282828] h-auto! "}
                       >
-                        + More
+                        {t("product.more_colors")}
                       </Button>
                     </ProductChooseDesign>
                   </div>
@@ -276,7 +279,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                 size="none"
                 className="text-[12px] xl:text-[14px] 2xl:text-[18px] 3xl:text-[22px] leading-tight font-normal text-[#282828] [&_span]:text-[70%] [&_span]:font-light [&_span]:text-[#bbbcbc] mb-2 xl:mb-3 2xl:mb-5"
               >
-                AED {initialData?.price} <span>Inc Tax</span>
+                {t("common.aed")} {initialData?.price} <span>{t("common.inc_tax")}</span>
               </Heading>
 
               <PriceAndCart stock={initialData?.stock} price={initialData?.price} item={initialData} />
@@ -284,15 +287,15 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
               <div className="flex flex-wrap items-center justify-between gap-4 2xl:gap-6 mb-2 xl:mb-3 2xl:mb-5 max-lg:flex-wrap-reverse">
                 <div className="flex lg:flex-1">
                   <Text as="div" size="text3" className="text-[#282828] max-w-[95%]">
-                    {"Enhance Your Productivity by Upgrading Your Workspace Comfort Today"}
+                    {productData?.purchase_tagline || t("product.enquire_subtitle")}
                   </Text>
                 </div>
                 <Button variant={"link"} className={"font-normal underline h-auto "} asChild>
-                  <Link href={"/"}>Buy Now</Link>
+                  <Link href={"/"}>{t("product.buy_now")}</Link>
                 </Button>
                 <ProductEnquireModal data={enq} productId={initialData?.id} locale={locale}>
                   <Button variant={"link"} className={"font-normal underline h-auto"}>
-                    Enquire Now
+                    {t("product.enquire_now")}
                   </Button>
                 </ProductEnquireModal>
               </div>

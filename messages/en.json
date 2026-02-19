@@ -400,7 +400,14 @@
     "product_details": "Product Details",
     "projects": "Projects",
     "additional_info": "Additional Information",
-    "faq": "FAQ"
+    "faq": "FAQ",
+    "choose_your_design": "Choose Your Design",
+    "buy_now": "Buy Now",
+    "enquire_now": "Enquire Now",
+    "enquire_subtitle": "Bulk Orders & Customisation Available!",
+    "enquire_description": "<p>Need 10 or 100 chairs? Want them in your brand colours or a unique design? No problem. Just tell us what you need below!</p>",
+    "item_added_to_cart": "Item added to cart",
+    "failed_to_add_cart": "Failed to add item to cart"
   },
   "search": {
     "title": "Search Now",
