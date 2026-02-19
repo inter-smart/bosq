@@ -395,9 +395,11 @@ export default async function CheckoutPage({ params }) {
   const resolvedParams = await params;
   const { locale } = resolvedParams;
 
+  const slug = locale === "en" ? "checkout" : "الدفع";
+
   return (
     <>
-      <CartHero locale={locale} data={local_data?.heroData} slug={"Checkout"} />
+      <CartHero locale={locale} data={local_data?.heroData} slug={slug} />
       <CheckoutList locale={locale} data={local_data?.checkoutData} />
     </>
   );

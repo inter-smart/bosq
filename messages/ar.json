@@ -419,6 +419,34 @@
     "see_all_results": "عرض جميع النتائج ({count})"
   },
 
+  "toast": {
+    "added_to_cart": "تمت إضافة المنتج إلى السلة",
+    "failed_to_add_cart": "فشل في إضافة المنتج إلى السلة",
+    "default_address": "تم تعيين العنوان الافتراضي بنجاح",
+    "failed_default_address": "فشل في تعيين العنوان الافتراضي",
+    "delete_address": "تم حذف العنوان بنجاح",
+    "updated_address": "تم تحديث العنوان بنجاح",
+    "failed_update_address": "فشل في تحديث العنوان",
+    "failed_delete_address": "فشل في حذف العنوان",
+    "quantity_updated": "تم تحديث الكمية بنجاح",
+    "failed_update_quantity": "فشل في تحديث الكمية",
+    "item_removed": "تمت إزالة المنتج من السلة",
+    "failed_remove_item": "فشل في إزالة المنتج من السلة",
+    "Something_went_wrong": "حدث خطأ ما",
+    "coupon_success": "تم تطبيق القسيمة بنجاح",
+    "coupon_invalid": "رمز القسيمة غير صالح",
+    "coupon_expired": "انتهت صلاحية رمز القسيمة",
+    "coupon_failed": "فشل في تطبيق القسيمة",
+    "coupon_removed": "تمت إزالة القسيمة بنجاح",
+    "coupon_remove_failed": "فشل في إزالة القسيمة",
+    "wishlist_success": "تمت الإضافة إلى قائمة المفضلة",
+    "wishlist_failed": "فشل في الإضافة إلى قائمة المفضلة",
+    "wishlist_updated": "تم تحديث قائمة المفضلة بنجاح",
+    "wishlist_update_failed": "فشل في تحديث قائمة المفضلة",
+    "wishlist_removed": "تمت الإزالة من قائمة المفضلة",
+    "wishlist_remove_failed": "فشل في الإزالة من قائمة المفضلة"
+  },
+
   "validation": {
     "name": {
       "min": "يجب أن يحتوي الاسم على حرفين على الأقل",

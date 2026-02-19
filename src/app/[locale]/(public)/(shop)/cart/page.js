@@ -406,13 +406,15 @@ export default async function CartPage({ params }) {
   const resolvedParams = await params;
   const { locale } = resolvedParams;
 
+  // arabic
+  const  slug = locale==="en" ? "cart" : "عربة-التسوق";
+
   const { data: similiarProductData } = await checkOutDataServer.getSimilarProducts();
 
-  console.log("SIM", similiarProductData);
 
   return (
     <>
-      <CartHero locale={locale} data={local_data?.heroData} slug={"Shopping cart"} itemsCount={local_data?.cartData?.items_count} />
+      <CartHero locale={locale} data={local_data?.heroData} slug={slug} itemsCount={local_data?.cartData?.items_count} />
       <CartList locale={locale} data={local_data?.cartData} similarProducts={similiarProductData} />
     </>
   );
