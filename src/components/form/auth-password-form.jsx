@@ -55,7 +55,7 @@ export default function AuthPasswordForm({ locale }) {
 
     if (result.success) {
       setSuccess("Password created successfully!");
-      router.push("/login");
+      router.push("login");
     } else {
       setSuccess(result.error || "Something went wrong. Please try again.");
     }

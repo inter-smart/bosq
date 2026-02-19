@@ -136,6 +136,11 @@
     "select_country_first": "Select country first",
     "order_notes_placeholder": "Notes about your order, e.g. special notes for delivery",
     "enter_recipient_name": "Enter recipient name",
+    "city": "City",
+    "enter_city": "Enter Your City",
+    "upload_image": "Upload Image",
+    "choose_image": "Choose Image",
+    "attachment_hint": "Max. 10 MB. (Type: pdf, doc, png, jpeg, docx)",
     "add_address": "Add Address",
     "update_address": "Update Address",
     "added_success": "Address added successfully",
@@ -148,7 +153,9 @@
     "shipping_name_required": "Shipping name is required",
     "shipping_country_required": "Shipping country is required",
     "shipping_state_required": "Shipping state is required",
-    "shipping_street_address_required": "Shipping street address is required"
+    "shipping_street_address_required": "Shipping street address is required",
+    "shipping_address": "Shipping Address"
+
   },
   "common": {
     "home": "Home",
@@ -188,6 +195,7 @@
     "removing": "Removing...",
     "line_total": "Line Total",
     "similiar_products": "Similiar Products"
+
   },
   "checkout": {
     "title": "Checkout",
@@ -417,5 +425,104 @@
     "category": "Category",
     "results_for": "Found {count} results for \"{query}\"",
     "see_all_results": "See All Results ({count})"
+  },
+
+  "toast": {
+    "added_to_cart": "Item added to cart",
+    "failed_to_add_cart": "Failed to add item to cart",
+    "default_address": "Default address set successfully",
+    "failed_default_address": "Failed to set default address",
+    "delete_address": "Address deleted successfully",
+    "updated_address": "Address updated successfully",
+    "failed_update_address": "Failed to update address",
+    "failed_delete_address": "Failed to delete address",
+    "quantity_updated": "Quantity updated successfully",
+    "failed_update_quantity": "Failed to update quantity",
+    "item_removed": "Item removed from cart",
+    "failed_remove_item": "Failed to remove item from cart",
+    "Something_went_wrong": "Something went wrong",
+    "coupon_success": "Coupon applied successfully",
+    "coupon_invalid": "Invalid coupon code",
+    "coupon_expired": "Coupon code has expired",
+    "coupon_failed": "Failed to apply coupon",
+    "coupon_removed": "Coupon removed successfully",
+    "coupon_remove_failed": "Failed to remove coupon",
+    "wishlist_success": "Added to wishlist",
+    "wishlist_failed": "Failed to add to wishlist",
+    "wishlist_updated": "Wishlist updated successfully",
+    "wishlist_update_failed": "Failed to update wishlist",
+    "wishlist_removed": "Removed from wishlist",
+    "wishlist_remove_failed": "Failed to remove from wishlist",
+    "logout_success": "Logged out successfully",
+    "logout_failed": "Failed to log out"
+  },
+
+  "validation": {
+    "name": {
+      "min": "{name} must be at least 2 characters",
+      "max": "{name} must be under 100 characters",
+      "invalid_whitespace": "{name} contains invalid whitespace",
+      "invalid_characters": "{name} contains invalid characters",
+      "no_numbers": "{name} must not contain numbers",
+      "invalid_content": "Invalid {name} content"
+    },
+    "email": {
+      "required": "Email is required",
+      "max": "Email must be under 256 characters",
+      "invalid_format": "Invalid email format",
+      "no_spaces": "Email must not contain spaces",
+      "invalid_characters": "Invalid characters in email",
+      "invalid_content": "Invalid email content"
+    },
+    "password": {
+      "min": "Password must be at least 8 characters",
+      "max": "Password cannot exceed 100 characters",
+      "weak": "Password must contain at least one uppercase letter, one lowercase letter, and one number"
+    },
+    "otp": {
+      "length": "OTP must be exactly 4 digits",
+      "digits_only": "OTP must contain only numbers"
+    },
+    "phone": {
+      "required": "Phone number is required",
+      "invalid_characters": "Phone number contains invalid characters",
+      "invalid_format": "Invalid phone number format",
+      "invalid_length": "Phone number length is invalid",
+      "all_zeros": "Phone number cannot be all zeros"
+    },
+    "common": {
+      "required": "{label} is required"
+    },
+    "region": {
+      "required": "Please select a region"
+    }
+  },
+  "errors": {
+    "required": "{field} is required",
+    "min_length": "{field} must be at least {min} characters",
+    "max_length": "{field} must be at most {max} characters",
+
+    "invalid_whitespace": "{field} contains invalid whitespace",
+    "invalid_characters": "{field} contains invalid characters",
+    "no_numbers": "{field} must not contain numbers",
+    "no_spaces": "Spaces are not allowed",
+    "invalid_content": "{field} contains invalid or unsafe content",
+
+    "invalid_email": "Please enter a valid email address",
+
+    "password_min": "Password must be at least 8 characters",
+    "password_max": "Password must not exceed 100 characters",
+    "password_strength": "Password must include uppercase, lowercase, and a number",
+
+    "otp_length": "OTP must be exactly 4 digits",
+    "otp_numeric": "OTP must contain only numbers",
+
+    "invalid_phone": "Please enter a valid phone number",
+    "invalid_phone_format": "Invalid phone number format",
+    "invalid_phone_length": "Phone number must be between 8 and 15 digits",
+    "phone_all_zeros": "Phone number cannot contain only zeros",
+
+    "select_region": "Please select a region"
   }
+
 }

@@ -10,6 +10,7 @@ import dynamic from "next/dynamic";
 import { Menu } from "lucide-react";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
@@ -113,9 +114,16 @@ export default function AccountNav({ locale }) {
   const { logout } = useAuth();
   const [open, setOpen] = useState(false);
 
+  const tToast = useTranslations("toast");
+
   const handleLogout = async () => {
-    await logout();
-    router.replace(`/${locale}/login`);
+    try {
+      await logout();
+      toast.success(tToast("logout_success"));
+      router.replace(`profile`);
+    } catch (error) {
+      toast.error(tToast("logout_failed"));
+    }
   };
 
   return (

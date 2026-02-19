@@ -136,6 +136,11 @@
     "select_country_first": "اختر البلد أولاً",
     "order_notes_placeholder": "ملاحظات حول طلبك، على سبيل المثال ملاحظات خاصة للتسليم",
     "enter_recipient_name": "أدخل اسم المستلم",
+    "city": "المدينة",
+    "enter_city": "أدخل مدينتك",
+    "upload_image": "تحميل صورة",
+    "choose_image": "اختر صورة",
+    "attachment_hint": "الحد الأقصى 10 ميغابايت. (النوع: pdf, doc, png, jpeg, docx)",
     "add_address": "إضافة عنوان",
     "update_address": "تحديث العنوان",
     "added_success": "تم إضافة العنوان بنجاح",
@@ -148,7 +153,8 @@
     "shipping_name_required": "اسم الشحن مطلوب",
     "shipping_country_required": "بلد الشحن مطلوب",
     "shipping_state_required": "ولاية الشحن مطلوبة",
-    "shipping_street_address_required": "عنوان شارع الشحن مطلوب"
+    "shipping_street_address_required": "عنوان شارع الشحن مطلوب",
+    "shipping_address": "عنوان الشحن"
   },
   "cart": {
     "title": "سلة التسوق",
@@ -417,5 +423,131 @@
     "category": "الفئة",
     "results_for": "تم العثور على {count} نتائج لـ \"{query}\"",
     "see_all_results": "عرض جميع النتائج ({count})"
+  },
+
+  "toast": {
+    "added_to_cart": "تمت إضافة المنتج إلى السلة",
+    "failed_to_add_cart": "فشل في إضافة المنتج إلى السلة",
+    "default_address": "تم تعيين العنوان الافتراضي بنجاح",
+    "failed_default_address": "فشل في تعيين العنوان الافتراضي",
+    "delete_address": "تم حذف العنوان بنجاح",
+    "updated_address": "تم تحديث العنوان بنجاح",
+    "failed_update_address": "فشل في تحديث العنوان",
+    "failed_delete_address": "فشل في حذف العنوان",
+    "quantity_updated": "تم تحديث الكمية بنجاح",
+    "failed_update_quantity": "فشل في تحديث الكمية",
+    "item_removed": "تمت إزالة المنتج من السلة",
+    "failed_remove_item": "فشل في إزالة المنتج من السلة",
+    "Something_went_wrong": "حدث خطأ ما",
+    "coupon_success": "تم تطبيق القسيمة بنجاح",
+    "coupon_invalid": "رمز القسيمة غير صالح",
+    "coupon_expired": "انتهت صلاحية رمز القسيمة",
+    "coupon_failed": "فشل في تطبيق القسيمة",
+    "coupon_removed": "تمت إزالة القسيمة بنجاح",
+    "coupon_remove_failed": "فشل في إزالة القسيمة",
+    "wishlist_success": "تمت الإضافة إلى قائمة المفضلة",
+    "wishlist_failed": "فشل في الإضافة إلى قائمة المفضلة",
+    "wishlist_updated": "تم تحديث قائمة المفضلة بنجاح",
+    "wishlist_update_failed": "فشل في تحديث قائمة المفضلة",
+    "wishlist_removed": "تمت الإزالة من قائمة المفضلة",
+    "wishlist_remove_failed": "فشل في الإزالة من قائمة المفضلة"
+  },
+
+  "validation": {
+    "name": {
+      "min": "يجب أن يحتوي الاسم على حرفين على الأقل",
+      "max": "يجب أن يكون الاسم أقل من 100 حرف",
+      "invalid_whitespace": "الاسم يحتوي على مسافات غير صالحة",
+      "invalid_characters": "الاسم يحتوي على أحرف غير صالحة",
+      "no_numbers": "يجب ألا يحتوي الاسم على أرقام",
+      "invalid_content": "محتوى الاسم غير صالح"
+    },
+    "email": {
+      "required": "البريد الإلكتروني مطلوب",
+      "max": "يجب أن يكون البريد الإلكتروني أقل من 256 حرفاً",
+      "invalid_format": "صيغة البريد الإلكتروني غير صحيحة",
+      "no_spaces": "يجب ألا يحتوي البريد الإلكتروني على مسافات",
+      "invalid_characters": "يحتوي البريد الإلكتروني على أحرف غير صالحة",
+      "invalid_content": "محتوى البريد الإلكتروني غير صالح"
+    },
+    "password": {
+      "min": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل",
+      "max": "يجب ألا تتجاوز كلمة المرور 100 حرف",
+      "weak": "يجب أن تحتوي كلمة المرور على حرف كبير وحرف صغير ورقم على الأقل"
+    },
+    "otp": {
+      "length": "يجب أن يتكون رمز التحقق من 4 أرقام بالضبط",
+      "digits_only": "يجب أن يحتوي رمز التحقق على أرقام فقط"
+    },
+    "phone": {
+      "required": "رقم الهاتف مطلوب",
+      "invalid_characters": "رقم الهاتف يحتوي على أحرف غير صالحة",
+      "invalid_format": "صيغة رقم الهاتف غير صحيحة",
+      "invalid_length": "طول رقم الهاتف غير صالح",
+      "all_zeros": "لا يمكن أن يكون رقم الهاتف أصفاراً فقط"
+    },
+    "common": {
+      "required": "{label} مطلوب"
+    },
+    "region": {
+      "required": "يرجى اختيار المنطقة"
+    }
+  },
+  "errors": {
+    "required": "{field} مطلوب",
+    "min_length": "يجب أن يحتوي {field} على {min} أحرف على الأقل",
+    "max_length": "يجب ألا يزيد {field} عن {max} حرفًا",
+
+    "invalid_whitespace": "{field} يحتوي على مسافات غير صالحة",
+    "invalid_characters": "{field} يحتوي على أحرف غير صالحة",
+    "no_numbers": "يجب ألا يحتوي {field} على أرقام",
+    "no_spaces": "المسافات غير مسموحة",
+    "invalid_content": "{field} يحتوي على محتوى غير صالح",
+
+    "invalid_email": "يرجى إدخال بريد إلكتروني صالح",
+
+    "password_min": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل",
+    "password_max": "يجب ألا تتجاوز كلمة المرور 100 حرف",
+    "password_strength": "يجب أن تحتوي كلمة المرور على حرف كبير، حرف صغير، ورقم",
+
+    "otp_length": "يجب أن يتكون رمز التحقق من 4 أرقام",
+    "otp_numeric": "رمز التحقق يجب أن يحتوي على أرقام فقط",
+
+    "invalid_phone": "يرجى إدخال رقم هاتف صالح",
+    "invalid_phone_format": "تنسيق رقم الهاتف غير صالح",
+    "invalid_phone_length": "يجب أن يكون رقم الهاتف بين 8 و 15 رقمًا",
+    "phone_all_zeros": "لا يمكن أن يحتوي رقم الهاتف على أصفار فقط",
+
+    "select_region": "يرجى اختيار المنطقة"
+  },
+
+  "toast": {
+    "added_to_cart": "تمت إضافة المنتج إلى السلة",
+    "failed_to_add_cart": "فشل في إضافة المنتج إلى السلة",
+    "default_address": "تم تعيين العنوان الافتراضي بنجاح",
+    "failed_default_address": "فشل في تعيين العنوان الافتراضي",
+    "delete_address": "تم حذف العنوان بنجاح",
+    "updated_address": "تم تحديث العنوان بنجاح",
+    "failed_update_address": "فشل في تحديث العنوان",
+    "failed_delete_address": "فشل في حذف العنوان",
+    "quantity_updated": "تم تحديث الكمية بنجاح",
+    "failed_update_quantity": "فشل في تحديث الكمية",
+    "item_removed": "تمت إزالة المنتج من السلة",
+    "failed_remove_item": "فشل في إزالة المنتج من السلة",
+    "Something_went_wrong": "حدث خطأ ما",
+    "coupon_success": "تم تطبيق الكوبون بنجاح",
+    "coupon_invalid": "رمز الكوبون غير صالح",
+    "coupon_expired": "انتهت صلاحية رمز الكوبون",
+    "coupon_failed": "فشل في تطبيق الكوبون",
+    "coupon_removed": "تمت إزالة الكوبون بنجاح",
+    "coupon_remove_failed": "فشل في إزالة الكوبون",
+    "wishlist_success": "تمت الإضافة إلى المفضلة",
+    "wishlist_failed": "فشل في الإضافة إلى المفضلة",
+    "wishlist_updated": "تم تحديث المفضلة بنجاح",
+    "wishlist_update_failed": "فشل في تحديث المفضلة",
+    "wishlist_removed": "تمت الإزالة من المفضلة",
+    "wishlist_remove_failed": "فشل في الإزالة من المفضلة",
+    "logout_success": "تم تسجيل الخروج بنجاح",
+    "logout_failed": "فشل في تسجيل الخروج"
   }
 }

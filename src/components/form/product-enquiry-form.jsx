@@ -25,18 +25,11 @@ import "react-international-phone/style.css";
 
 import Image from "next/image";
 import { X } from "lucide-react";
-import { commonValidations } from "@/lib/validations";
+import { commonValidations, setValidationTranslator } from "@/lib/validations";
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 
-// ✅ Final Correct Schema
-const formSchema = z.object({
-  fullName: commonValidations.name("Full Name"),
-  email: commonValidations.email("Email Address"),
-  phone: commonValidations.phone,
-  city: commonValidations.text("City").optional(),
-  message: commonValidations.text("Message").optional(),
-  attachment: z.any().optional(),
-});
+
 
 // Styles
 const labelStyle = cn(
@@ -59,6 +52,24 @@ export default function ProductEnquiryForm({ productId }) {
   const { executeRecaptcha } = useGoogleReCaptcha();
   const [submitProductEnquiry, { isLoading }] = useSubmitProductEnquiryMutation();
 
+  const t = useTranslations("form");
+  const tErrors = useTranslations("errors");
+
+  // ✅ inject translator (once per render is fine)
+  setValidationTranslator(tErrors);
+   
+
+
+
+  // ✅ Final Correct Schema
+const formSchema = z.object({
+  fullName: commonValidations.name("Full Name"),
+  email: commonValidations.email("Email Address"),
+  phone: commonValidations.phone(),
+  city: commonValidations.text("City").optional(),
+  message: commonValidations.text("Message").optional(),
+  attachment: z.any().optional(),
+});
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -105,10 +116,10 @@ export default function ProductEnquiryForm({ productId }) {
 
       form.reset();
       setUploadedFile(null);
-      setSuccess("Enquiry sent successfully!");
+      setSuccess(t("success_message"));
     } catch (error) {
       console.error(error);
-      setErrorMessage(error?.data?.message || "Something went wrong. Please try again.");
+      setErrorMessage(error?.data?.message || tErrors("invalid_content", { field: "form" }));
     }
   };
 
@@ -139,13 +150,13 @@ export default function ProductEnquiryForm({ productId }) {
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                Name<span className={errorStyle}>*</span>
+                {t("full_name")}<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   className={inputStyle}
-                  placeholder="Enter your name"
+                  placeholder={t("enter_name")}
                 />
               </FormControl>
               <FormMessage />
@@ -160,14 +171,14 @@ export default function ProductEnquiryForm({ productId }) {
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                Email Address<span className={errorStyle}>*</span>
+                {t("email_id")}<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   type="email"
                   className={inputStyle}
-                  placeholder="Enter Email Address"
+                  placeholder={t("enter_email_id")}
                 />
               </FormControl>
               <FormMessage />
@@ -182,14 +193,14 @@ export default function ProductEnquiryForm({ productId }) {
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                Contact Number<span className={errorStyle}>*</span>
+                {t("phone_number")}<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <PhoneInput
                   defaultCountry="ae"
                   {...field}
                   className={cn(inputStyle, "w-full p-0 [&_input]:flex-1  [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px] [--react-international-phone-flag-width:20px] [--react-international-phone-flag-height:20px]")}
-                  placeholder="Enter phone number"
+                  placeholder={t("enter_phone")}
                   onChange={(value) => field.onChange(value)}
                 />
               </FormControl>
@@ -204,12 +215,12 @@ export default function ProductEnquiryForm({ productId }) {
           name="city"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel className={labelStyle}>City</FormLabel>
+              <FormLabel className={labelStyle}>{t("city")}</FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   className={inputStyle}
-                  placeholder="Enter Your City"
+                  placeholder={t("enter_city")}
                 />
               </FormControl>
               <FormMessage />
@@ -223,7 +234,7 @@ export default function ProductEnquiryForm({ productId }) {
           name="attachment"
           render={() => (
             <FormItem className="w-full">
-              <FormLabel className={labelStyle}>Upload Image</FormLabel>
+              <FormLabel className={labelStyle}>{t("upload_image")}</FormLabel>
               <FormControl>
                 <div className="max-w-full space-y-2">
                   {!uploadedFile ? (
@@ -234,7 +245,7 @@ export default function ProductEnquiryForm({ productId }) {
                         "flex items-center justify-between gap-x-1 border cursor-pointer"
                       )}
                     >
-                      <span className="text-[#aeaeae]">Choose Image</span>
+                      <span className="text-[#aeaeae]">{t("choose_image")}</span>
                       <Image
                         src="/images/icon-attachment.svg"
                         alt="icon-attachment"
@@ -275,7 +286,7 @@ export default function ProductEnquiryForm({ productId }) {
               </FormControl>
 
               <FormMessage className="font-light text-black">
-                &nbsp;Max. 10 MB. (Type: pdf, doc, png, jpeg, docx)
+                &nbsp;{t("attachment_hint")}
               </FormMessage>
             </FormItem>
           )}
@@ -287,12 +298,12 @@ export default function ProductEnquiryForm({ productId }) {
           name="message"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel className={labelStyle}>Message</FormLabel>
+              <FormLabel className={labelStyle}>{t("message")}</FormLabel>
               <FormControl>
                 <Textarea
                   {...field}
                   className={textareaStyle}
-                  placeholder="Enter Message..."
+                  placeholder={t("form_placeholder_inquiry")}
                 />
               </FormControl>
               <FormMessage />
@@ -308,7 +319,7 @@ export default function ProductEnquiryForm({ productId }) {
             disabled={isLoading}
             className="min-w-full"
           >
-            {isLoading ? "Sending..." : "Submit Enquiry"}
+            {isLoading ? t("submitting") : t("submit_enquiry")}
           </Button>
           {errorMessage && (
             <p className="text-red-600 text-sm mt-1">{errorMessage}</p>

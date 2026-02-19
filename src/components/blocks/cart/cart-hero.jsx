@@ -19,7 +19,7 @@ export default function CartHero({ data, locale, slug, itemsCount }) {
         <Breadcrumb className="mb-1.5 2xl:mb-2">
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href={locale=== "en"? "/en" : "/ar"}>{locale==="en"? "HHome" : "الرئيسية"}</BreadcrumbLink>
+              <BreadcrumbLink href={locale=== "en"? "/en" : "/ar"}>{locale==="en"? "Home" : "الرئيسية"}</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>/</BreadcrumbSeparator>
             {/* <BreadcrumbItem>

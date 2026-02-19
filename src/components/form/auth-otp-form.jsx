@@ -22,15 +22,11 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { commonValidations } from "@/lib/validations";
+import { commonValidations, setValidationTranslator } from "@/lib/validations";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
-// Validation schema
-const formSchema = z.object({
-  otp: commonValidations.otp,
-});
 
 // Shared styles
 const labelStyle = cn(
@@ -46,6 +42,16 @@ const errorStyle = cn("text-[#f17423]");
 
 export default function AuthOtpForm() {
   const t = useTranslations("auth.otp");
+  const tErrors = useTranslations("errors");
+
+
+      // ✅ inject translator (once per render is fine)
+  setValidationTranslator(tErrors);
+ 
+  // Validation schema
+const formSchema = z.object({
+  otp: commonValidations.otp(),
+});
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -66,7 +72,7 @@ export default function AuthOtpForm() {
 
     if (result.success) {
       setSuccess(t("success"));
-      router.push("/create-password");
+      router.push("create-password");
     } else {
       setSuccess(result.error || t("error"));
     }

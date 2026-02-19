@@ -30,7 +30,7 @@ const formSchema = z.object({
   lastName: commonValidations.name("Last name"),
   displayName: commonValidations.name("Display name"),
   email: commonValidations.email(),
-  phone: commonValidations.phone,
+  phone: commonValidations.phone(),
 });
 
 // Shared styles

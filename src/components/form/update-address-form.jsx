@@ -28,7 +28,7 @@ const formSchema = z
     fullName: commonValidations.name("Fu,ll Name"),
     companyName: commonValidations.optionalString(),
     email: commonValidations.email(),
-    phone: commonValidations.phone,
+    phone: commonValidations.phone(),
     country: z.string().min(1, "Please select a country"),
     streetAddress: z.string().min(1, "Street address is required"),
     apartment: commonValidations.optionalString(),

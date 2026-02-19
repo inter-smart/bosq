@@ -35,6 +35,7 @@ export default function AccountAddress({ data, locale, addressData }) {
   const t = useTranslations("address");
   const a = useTranslations("account");
   const c = useTranslations("common");
+  const tTost = useTranslations("toast");
   const router = useRouter();
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingAddress, setEditingAddress] = useState(null);
@@ -42,6 +43,9 @@ export default function AccountAddress({ data, locale, addressData }) {
   const [isLoadingEdit, setIsLoadingEdit] = useState(false);
   const [isDeleting, setIsDeleting] = useState(null);
   const [isDeleteItem, setisDeleteItem] = useState(false);
+
+
+
   // Sort addresses: default address first
   const sortedAddresses = addressData
     ? [...addressData].sort((a, b) => {
@@ -90,10 +94,10 @@ export default function AccountAddress({ data, locale, addressData }) {
       router.refresh();
     }
 
-    toast.success("Default address set successfully");
+    toast.success(`${tTost("default_address")}`);
 
       } catch (error) {
-        toast.error("Failed to set default address");
+        toast.error(`${tTost("failed_default_address")}`);
       }
   };
 
@@ -114,10 +118,10 @@ export default function AccountAddress({ data, locale, addressData }) {
     setIsDeleting(null);
     setisDeleteItem(false);
 
-    toast.success("Address deleted successfully");
+    toast.success(`${tTost("delete_address")}`);
        
     } catch (error) {
-      toast.error("Failed to delete address");
+      toast.error(`${tTost("failed_delete_address")}`);
     }
   };
 

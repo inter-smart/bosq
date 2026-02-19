@@ -216,7 +216,6 @@ export function PlaceholdersAndVanishInput({
 
       toast.success(data?.message);
     } catch (error) {
-      console.log("Newsletter subscription error:", error);
       toast.error(
         error.message || "An error occurred. Please try again later.",
       );

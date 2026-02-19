@@ -22,21 +22,27 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
-import { commonValidations } from "@/lib/validations";
+import { commonValidations, setValidationTranslator } from "@/lib/validations";
 import { useAuth } from "@/hooks/useAuth";
 import { useTranslations } from "next-intl";
 
 export default function AuthForgotPasswordForm({ locale, setStep, step }) {
   const t = useTranslations("auth.forgot_password");
 
+  const tErrors = useTranslations("errors");
+  
+  
+        // ✅ inject translator (once per render is fine)
+    setValidationTranslator(tErrors);
+
   // Step 1: Email validation schema
   const emailSchema = z.object({
-    email: z.string().email(t("error_email")),
+    email:commonValidations.email(),
   });
 
   // Step 2: OTP validation schema
   const otpSchema = z.object({
-    otp: commonValidations.otp,
+    otp: commonValidations.otp(),
   });
 
   // Step 3: Password validation schema

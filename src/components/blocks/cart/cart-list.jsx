@@ -25,6 +25,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useValidateCartMutation } from "@/store/services/commonApi";
 import { toast } from "sonner";
 import { setIsCheckoutAllowed } from "@/store/slices/checkoutSlice";
+import { useTranslations } from "next-intl";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
@@ -34,6 +35,9 @@ export default function CartList({ locale, data, similarProducts }) {
   const dispatch = useDispatch();
   const router = useRouter();
   const [validateCart, { isLoading: isValidating }] = useValidateCartMutation();
+
+  const t = useTranslations("cart");
+  const tCommon = useTranslations("common");
 
   const cartItems = useSelector(selectCartItems);
   const itemCount = useSelector(selectCartCount);
@@ -80,36 +84,54 @@ export default function CartList({ locale, data, similarProducts }) {
           <div className="w-full lg:w-[calc(100%-320px)] xl:w-[calc(100%-460px)] 2xl:w-[calc(100%-540px)] 3xl:w-[calc(100%-668px)] max-sm:mb-2">
             <div className="flex flex-wrap -m-[5px] *:p-[5px]">
               {cartItems?.map((item, index) => (
-                <div key={`cart-item-${item.id || index}`} className="w-full flex flex-wrap ">
+                <div
+                  key={`cart-item-${item.id || index}`}
+                  className="w-full flex flex-wrap "
+                >
                   <CartCard product={item} />
                 </div>
               ))}
             </div>
             <div className="mt-3 xl:mt-6">
-              <Button variant={"link"} className={"h-auto! gap-1 has-[>svg]:px-0"} asChild>
+              <Button
+                variant={"link"}
+                className={"h-auto! gap-1 has-[>svg]:px-0"}
+                asChild
+              >
                 <Link href="/products">
-                  <svg width="3" height="6" viewBox="0 0 3 6" fill="none" xmlns="http://www.w3.org/2000/svg" className="size-2 block">
+                  <svg
+                    width="3"
+                    height="6"
+                    viewBox="0 0 3 6"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="size-2 block"
+                  >
                     <path
                       d="M-0.000651243 2.6667C-0.000651246 2.7287 0.0210708 2.79076 0.0644594 2.83809L2.28667 5.26233C2.3735 5.35706 2.51411 5.35706 2.60089 5.26233C2.68767 5.1676 2.68772 5.01421 2.60089 4.91954L0.53579 2.6667L2.60089 0.413851C2.68772 0.319124 2.68772 0.16573 2.60089 0.071063C2.51406 -0.0236034 2.37345 -0.023664 2.28667 0.071063L0.0644594 2.4953C0.0210708 2.54264 -0.00065124 2.6047 -0.000651243 2.6667Z"
                       fill="#282828"
                     />
                   </svg>
-                  Continue Shopping
+                  {t("continue_shopping")}
                 </Link>
               </Button>
             </div>
           </div>
           <div className="w-full lg:w-[320px] xl:w-[460px] 2xl:w-[540px] 3xl:w-[668px]">
             <div className="w-full bg-[#f4f4f4] border border-[#e0e0e0] rounded-[4px] p-3 sm:p-4 xl:p-7 2xl:p-8 sticky top-[var(--header-y)] ">
-              <Heading as="div" size="heading4" className="text-[#282828] mb-3 xl:mb-5 2xl:mb-8">
-                Order Summary
+              <Heading
+                as="div"
+                size="heading4"
+                className="text-[#282828] mb-3 xl:mb-5 2xl:mb-8"
+              >
+                {t("order_summary")}
               </Heading>
               <Text
                 as="div"
                 size="text3"
                 className="font-normal text-[#282828] my-2 xl:my-3 2xl:my-4 [&_span]:font-light [&_span]:text-[#808080] flex justify-between"
               >
-                <span>Subtotal ({itemCount} items)</span>
+                <span> {t("subtotal", { count: itemCount })}</span>
                 AED {subtotal}
               </Text>
 
@@ -128,21 +150,40 @@ export default function CartList({ locale, data, similarProducts }) {
                 size="text3"
                 className="font-normal text-[#282828] my-2 xl:my-3 2xl:my-4 [&_span]:font-light [&_span]:text-[#808080] flex justify-between"
               >
-                <span>Shipping Charge</span>
-                Free
+                <span>{t("shipping_charge")}</span>
+                {tCommon("free")}
               </Text>
               <hr />
-              <Text as="div" size="text3" className="font-normal text-[#282828] my-2 xl:my-3 2xl:my-4 flex justify-between">
+              <Text
+                as="div"
+                size="text3"
+                className="font-normal text-[#282828] my-2 xl:my-3 2xl:my-4 flex justify-between"
+              >
                 <span>
-                  Total Price
+                  {t("total_price")}
                   <br />
-                  <span className="text-[8px] 2xl:text-[10px] font-light text-[#808080]">Inc Tax</span>
+                  <span className="text-[8px] 2xl:text-[10px] font-light text-[#808080]">
+                    {tCommon("inc_tax")}
+                  </span>
                 </span>
                 AED {grandTotal}
               </Text>
               <MediaQuery minWidth={640}>
-                <Button variant={"black"} disabled={isUpdating || isValidating || cartItems.length === 0} className="min-w-full mt-2" asChild>
-                  <div onClick={validateCheckout}>{isValidating ? "Validating..." : isUpdating ? "Updating..." : "Checkout"}</div>
+                <Button
+                  variant={"black"}
+                  disabled={
+                    isUpdating || isValidating || cartItems.length === 0
+                  }
+                  className="min-w-full mt-2"
+                  asChild
+                >
+                  <div onClick={validateCheckout}>
+                    {isValidating
+                      ? "Validating..."
+                      : isUpdating
+                        ? "Updating..."
+                        : `${t("checkout")}`}
+                  </div>
                 </Button>
               </MediaQuery>
             </div>
@@ -152,12 +193,25 @@ export default function CartList({ locale, data, similarProducts }) {
       <MediaQuery maxWidth={639}>
         <hr />
         <div className="w-full py-1 px-4 pb-2 bg-white sticky z-1 bottom-0 left-0 right-0 shadow-[0px_-5px_10px_rgba(0,0,0,0.1)]">
-          <Button variant={"black"} disabled={isUpdating || isValidating || cartItems.length === 0} className="min-w-full" asChild>
-            <div onClick={validateCheckout}>{isValidating ? "Validating..." : isUpdating ? "Updating..." : "Checkout"}</div>
+          <Button
+            variant={"black"}
+            disabled={isUpdating || isValidating || cartItems.length === 0}
+            className="min-w-full"
+            asChild
+          >
+            <div onClick={validateCheckout}>
+              {isValidating
+                ? "Validating..."
+                : isUpdating
+                  ? "Updating..."
+                  : "Checkout"}
+            </div>
           </Button>
         </div>
       </MediaQuery>
-      {similarProducts?.length > 0 && <ProductSimilar locale={locale} data={similarProducts} />}
+      {similarProducts?.length > 0 && (
+        <ProductSimilar locale={locale} data={similarProducts} />
+      )}
     </section>
   );
 }
@@ -170,7 +224,10 @@ function CartListSkeleton() {
           <div className="w-full lg:w-[calc(100%-320px)] xl:w-[calc(100%-460px)] 2xl:w-[calc(100%-540px)] 3xl:w-[calc(100%-668px)] max-sm:mb-2">
             <div className="flex flex-wrap -m-[5px] *:p-[5px]">
               {[1, 2, 3].map((i) => (
-                <div key={`skeleton-${i}`} className="w-full flex flex-wrap p-[5px]">
+                <div
+                  key={`skeleton-${i}`}
+                  className="w-full flex flex-wrap p-[5px]"
+                >
                   <div className="w-full flex flex-wrap items-center p-3 sm:p-3 xl:p-5 2xl:p-6 border border-[#e9e9e9] rounded-lg">
                     <Skeleton className="w-[60px] sm:w-[100px] xl:w-[168px] 2xl:w-[200px] aspect-[168/186] rounded-lg max-sm:mb-3" />
                     <div className="w-full sm:w-[calc(100%-100px)] xl:w-[calc(100%-168px)] 2xl:w-[calc(100%-200px)] sm:px-2.5 xl:px-4 2xl:px-5">

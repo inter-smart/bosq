@@ -13,17 +13,13 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
-import { commonValidations } from "@/lib/validations";
+import { commonValidations, setValidationTranslator } from "@/lib/validations";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-
+import { toast } from "sonner";
 // Validation schema
-const formSchema = z.object({
-  email: commonValidations.email(),
-  password: commonValidations.password(),
-  rememberMe: commonValidations.rememberMe,
-});
+
 
 // Shared styles
 const labelStyle = cn("text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]");
@@ -37,7 +33,20 @@ const errorStyle = cn("text-[#f17423]");
 export default function AuthLoginForm({ locale, data }) {
   const tAuth = useTranslations("auth.login");
   const tCommon = useTranslations("auth.common");
+  const tErrors = useTranslations("errors");
 
+
+      // ✅ inject translator (once per render is fine)
+  setValidationTranslator(tErrors);
+ 
+
+
+
+  const formSchema = z.object({
+  email: commonValidations.email(),
+  password: commonValidations.password(),
+  rememberMe: commonValidations.rememberMe,
+});
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -54,7 +63,7 @@ export default function AuthLoginForm({ locale, data }) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const redirectTo = searchParams.get("redirect") || "/";
+  const redirectTo = searchParams.get("redirect") || "";
 
   const onSubmit = async (values) => {
     clearAuthError();
@@ -63,6 +72,7 @@ export default function AuthLoginForm({ locale, data }) {
     const result = await login(values);
 
     if (result.success) {
+      toast.success(tAuth("success"));
       setSuccess(tAuth("success"));
       router.replace(redirectTo);
     } else {

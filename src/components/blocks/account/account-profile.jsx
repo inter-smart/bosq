@@ -27,7 +27,7 @@ export default function AccountProfile({ data, locale }) {
         <div className="w-[50px] 2xl:w-[70px] aspect-square overflow-hidden rounded-full border">
           <Image
             src={data?.image ?? "/images/user-1.jpg"}
-            alt={data?.first_name}
+            alt={data?.name}
             width={100}
             height={100}
             className="w-full h-full object-cover hover:scale-110 transition duration-300"
@@ -39,7 +39,9 @@ export default function AccountProfile({ data, locale }) {
             size="text3"
             className="font-normal text-[#282828] my-0.5 2xl:my-1"
           >
-            {data?.first_name + " " + data?.last_name}
+            {data?.first_name
+              ? data?.first_name + " " + data?.last_name
+              : data?.name}
           </Text>
           <Text
             as="div"
@@ -73,7 +75,9 @@ export default function AccountProfile({ data, locale }) {
             className="text-[#282828] my-0.5 2xl:my-1"
           >
             {tAccount("name")} {""}
-            {data?.first_name + " " + data?.last_name}
+            {data?.first_name
+              ? data?.first_name + " " + data?.last_name
+              : data?.name}
           </Text>
           <Text
             as="div"
@@ -92,22 +96,28 @@ export default function AccountProfile({ data, locale }) {
             {data?.phone}
           </Text>
         </div>
-        <div className={`w-full ${data?.shipping_address ? "sm:w-1/4" : "sm:w-1/2"}`}>
-          <Heading
-            as="h2"
-            size={"heading5"}
-            className="font-normal text-[#282828] mb-1.5 xl:mb-2"
-          >
-            {tAccount("default_address")}
-          </Heading>
+        <div
+          className={`w-full ${data?.shipping_address ? "sm:w-1/4" : "sm:w-1/2"}`}
+        >
+          {data?.address && (
+            <>
+              <Heading
+                as="h2"
+                size={"heading5"}
+                className="font-normal text-[#282828] mb-1.5 xl:mb-2"
+              >
+                {tAccount("default_address")}
+              </Heading>
 
-          <Text
-            as="div"
-            size="text3"
-            className="leading-relaxed text-[#282828]"
-          >
-            {parse(data?.address)}
-          </Text>
+              <Text
+                as="div"
+                size="text3"
+                className="leading-relaxed text-[#282828]"
+              >
+                {parse(data?.address)}
+              </Text>
+            </>
+          )}
         </div>
 
         {data?.shipping_address && (
