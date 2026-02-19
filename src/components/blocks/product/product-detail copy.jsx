@@ -205,17 +205,17 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                               type: "video",
                               width: 1280,
                               height: 720,
-                              poster: item.thumbnail_path,
+                              poster: item.media_path,
                               autoPlay: true,
                               sources: [
                                 {
-                                  src: item.path,
+                                  src: item.media_path,
                                   type: "video/mp4",
                                 },
                               ],
                             }
                           : {
-                              src: item.path,
+                              src: item.media_path,
                             },
                       )}
                       animation={{ fade: 10 }}

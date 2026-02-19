@@ -57,7 +57,7 @@ export const commonValidations = {
     z
       .string()
       .trim()
-      .min(1, vt("required", { field: "Email" }))
+      .min(1, vt("email_required"))
       .max(255, vt("max_length", { field: "Email", max: 255 }))
       .email(vt("invalid_email"))
       .refine((val) => !/\s/.test(val), vt("no_spaces"))

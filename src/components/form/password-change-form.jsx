@@ -20,26 +20,21 @@ import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
 import { fetchFromAPIWithCredentials } from "@/lib/helper";
 import { useTranslations } from "next-intl";
+import { commonValidations } from "@/lib/validations";
 
 export default function PasswordChangeForm({ locale }) {
   const t = useTranslations("account");
   const { executeRecaptcha } = useGoogleReCaptcha();
 
+
+  
+
   // Validation schema — defined inside component so messages are translated
   const formSchema = z
     .object({
-      currentPassword: z
-        .string()
-        .min(6, t("current_password_required")),
-      newPassword: z
-        .string()
-        .min(8, t("password_min_length"))
-        .max(100, t("password_max_length"))
-        .regex(
-          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-          t("password_regex"),
-        ),
-      confirmPassword: z.string(),
+      currentPassword:commonValidations.password(),
+      newPassword:commonValidations.password(),
+      confirmPassword: commonValidations.password(),
     })
     .refine((data) => data.newPassword === data.confirmPassword, {
       message: t("password_mismatch"),
