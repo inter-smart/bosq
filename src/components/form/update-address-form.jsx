@@ -23,7 +23,6 @@ import { useUpdateAddressMutation } from "@/store/services/addressApi";
 import { toast } from "sonner";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
-
 const formSchema = z
   .object({
     fullName: commonValidations.name("Fu,ll Name"),
@@ -206,7 +205,7 @@ export default function UpdateAddressForm({ locale, addressData, onSuccess }) {
   const onSubmit = async (values) => {
     try {
       await updateAddress({
-        id: addressData?._id,
+        id: addressData?.id,
         values: {
           ...values,
           addressType: addressData?.addressType,
@@ -246,7 +245,8 @@ export default function UpdateAddressForm({ locale, addressData, onSuccess }) {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                {t("full_name")}<span className={errorStyle}>*</span>
+                {t("full_name")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input {...field} className={inputStyle} placeholder={t("enter_name")} />
@@ -278,7 +278,8 @@ export default function UpdateAddressForm({ locale, addressData, onSuccess }) {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                {t("email_address")}<span className={errorStyle}>*</span>
+                {t("email_address")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input {...field} type="email" className={inputStyle} placeholder={t("enter_email")} />
@@ -295,7 +296,8 @@ export default function UpdateAddressForm({ locale, addressData, onSuccess }) {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                {t("phone")}<span className={errorStyle}>*</span>
+                {t("phone")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <PhoneInput
@@ -320,7 +322,8 @@ export default function UpdateAddressForm({ locale, addressData, onSuccess }) {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                {t("country")}<span className={errorStyle}>*</span>
+                {t("country")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <Select
                 dir={locale === "ar" ? "rtl" : "ltr"}
@@ -355,7 +358,8 @@ export default function UpdateAddressForm({ locale, addressData, onSuccess }) {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                {t("street_address")}<span className={errorStyle}>*</span>
+                {t("street_address")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input {...field} className={inputStyle} placeholder={t("enter_street_address")} />
@@ -387,7 +391,8 @@ export default function UpdateAddressForm({ locale, addressData, onSuccess }) {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                {t("state")}<span className={errorStyle}>*</span>
+                {t("state")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <Select
                 dir={locale === "ar" ? "rtl" : "ltr"}
@@ -462,7 +467,8 @@ export default function UpdateAddressForm({ locale, addressData, onSuccess }) {
               render={({ field }) => (
                 <FormItem className="w-full sm:w-1/2">
                   <FormLabel className={labelStyle}>
-                    {t("full_name")}<span className={errorStyle}>*</span>
+                    {t("full_name")}
+                    <span className={errorStyle}>*</span>
                   </FormLabel>
                   <FormControl>
                     <Input {...field} className={inputStyle} placeholder={t("enter_recipient_name")} />
@@ -492,7 +498,8 @@ export default function UpdateAddressForm({ locale, addressData, onSuccess }) {
               render={({ field }) => (
                 <FormItem className="w-full sm:w-1/2">
                   <FormLabel className={labelStyle}>
-                    {t("country")}<span className={errorStyle}>*</span>
+                    {t("country")}
+                    <span className={errorStyle}>*</span>
                   </FormLabel>
                   <Select
                     dir={locale === "ar" ? "rtl" : "ltr"}
@@ -526,7 +533,8 @@ export default function UpdateAddressForm({ locale, addressData, onSuccess }) {
               render={({ field }) => (
                 <FormItem className="w-full sm:w-1/2">
                   <FormLabel className={labelStyle}>
-                    {t("street_address")}<span className={errorStyle}>*</span>
+                    {t("street_address")}
+                    <span className={errorStyle}>*</span>
                   </FormLabel>
                   <FormControl>
                     <Input {...field} className={inputStyle} placeholder={t("enter_street_address")} />
@@ -556,7 +564,8 @@ export default function UpdateAddressForm({ locale, addressData, onSuccess }) {
               render={({ field }) => (
                 <FormItem className="w-full sm:w-1/2">
                   <FormLabel className={labelStyle}>
-                    {t("state")}<span className={errorStyle}>*</span>
+                    {t("state")}
+                    <span className={errorStyle}>*</span>
                   </FormLabel>
                   <Select
                     dir={locale === "ar" ? "rtl" : "ltr"}

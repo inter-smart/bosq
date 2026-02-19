@@ -175,6 +175,12 @@ const OrderSummary = ({
   const handlePlaceOrder = () => {
     const { shippingId, billingId } = getFinalAddressIds();
 
+    // Validate terms accepted
+    if (!termsAccepted) {
+      toast.error("Please accept the Terms and Conditions to proceed");
+      return;
+    }
+
     // Validate shipping address is selected
     if (!shippingId) {
       if (selectedBillingAddressId && !useSameAddressForShipping) {
@@ -222,7 +228,6 @@ const OrderSummary = ({
 
       const orderId = orderData.data?.order_id;
 
-
       dispatch(resetCart());
       setShowConfirmDialog(false);
       router.push(`/${locale}/order/success?orderId=${orderId}`);
@@ -234,7 +239,7 @@ const OrderSummary = ({
 
   // Check if order can be placed
   const { shippingId, billingId } = getFinalAddressIds();
-  const canPlaceOrder = termsAccepted && shippingId && billingId;
+  const canPlaceOrder = shippingId && billingId;
 
   return (
     <>
@@ -410,11 +415,9 @@ const OrderSummary = ({
           </div>
 
           {/* Place Order Button - Desktop */}
-          <MediaQuery minWidth={640}>
-            <Button variant={"black"} disabled={!canPlaceOrder} onClick={handlePlaceOrder} className="min-w-full mt-2">
-              {"Place Order"}
-            </Button>
-          </MediaQuery>
+          <Button variant={"black"} disabled={!canPlaceOrder} onClick={handlePlaceOrder} className="min-w-full mt-2">
+            {"Place Order"}
+          </Button>
         </div>
       ) : (
         <div className="w-full lg:w-[320px] xl:w-[460px] 2xl:w-[540px] 3xl:w-[668px]">
