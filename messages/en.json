@@ -136,6 +136,11 @@
     "select_country_first": "Select country first",
     "order_notes_placeholder": "Notes about your order, e.g. special notes for delivery",
     "enter_recipient_name": "Enter recipient name",
+    "city": "City",
+    "enter_city": "Enter Your City",
+    "upload_image": "Upload Image",
+    "choose_image": "Choose Image",
+    "attachment_hint": "Max. 10 MB. (Type: pdf, doc, png, jpeg, docx)",
     "add_address": "Add Address",
     "update_address": "Update Address",
     "added_success": "Address added successfully",
@@ -148,7 +153,9 @@
     "shipping_name_required": "Shipping name is required",
     "shipping_country_required": "Shipping country is required",
     "shipping_state_required": "Shipping state is required",
-    "shipping_street_address_required": "Shipping street address is required"
+    "shipping_street_address_required": "Shipping street address is required",
+    "shipping_address": "Shipping Address"
+
   },
   "common": {
     "home": "Home",
@@ -188,6 +195,7 @@
     "removing": "Removing...",
     "line_total": "Line Total",
     "similiar_products": "Similiar Products"
+
   },
   "checkout": {
     "title": "Checkout",

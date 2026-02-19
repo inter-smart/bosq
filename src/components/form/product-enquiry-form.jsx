@@ -52,11 +52,11 @@ export default function ProductEnquiryForm({ productId }) {
   const { executeRecaptcha } = useGoogleReCaptcha();
   const [submitProductEnquiry, { isLoading }] = useSubmitProductEnquiryMutation();
 
-   const tErrors = useTranslations("errors");
-  
-  
-        // ✅ inject translator (once per render is fine)
-    setValidationTranslator(tErrors);
+  const t = useTranslations("form");
+  const tErrors = useTranslations("errors");
+
+  // ✅ inject translator (once per render is fine)
+  setValidationTranslator(tErrors);
    
 
 
@@ -116,10 +116,10 @@ const formSchema = z.object({
 
       form.reset();
       setUploadedFile(null);
-      setSuccess("Enquiry sent successfully!");
+      setSuccess(t("success_message"));
     } catch (error) {
       console.error(error);
-      setErrorMessage(error?.data?.message || "Something went wrong. Please try again.");
+      setErrorMessage(error?.data?.message || tErrors("invalid_content", { field: "form" }));
     }
   };
 
@@ -150,13 +150,13 @@ const formSchema = z.object({
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                Name<span className={errorStyle}>*</span>
+                {t("full_name")}<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   className={inputStyle}
-                  placeholder="Enter your name"
+                  placeholder={t("enter_name")}
                 />
               </FormControl>
               <FormMessage />
@@ -171,14 +171,14 @@ const formSchema = z.object({
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                Email Address<span className={errorStyle}>*</span>
+                {t("email_id")}<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   type="email"
                   className={inputStyle}
-                  placeholder="Enter Email Address"
+                  placeholder={t("enter_email_id")}
                 />
               </FormControl>
               <FormMessage />
@@ -193,14 +193,14 @@ const formSchema = z.object({
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                Contact Number<span className={errorStyle}>*</span>
+                {t("phone_number")}<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <PhoneInput
                   defaultCountry="ae"
                   {...field}
                   className={cn(inputStyle, "w-full p-0 [&_input]:flex-1  [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px] [--react-international-phone-flag-width:20px] [--react-international-phone-flag-height:20px]")}
-                  placeholder="Enter phone number"
+                  placeholder={t("enter_phone")}
                   onChange={(value) => field.onChange(value)}
                 />
               </FormControl>
@@ -215,12 +215,12 @@ const formSchema = z.object({
           name="city"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel className={labelStyle}>City</FormLabel>
+              <FormLabel className={labelStyle}>{t("city")}</FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   className={inputStyle}
-                  placeholder="Enter Your City"
+                  placeholder={t("enter_city")}
                 />
               </FormControl>
               <FormMessage />
@@ -234,7 +234,7 @@ const formSchema = z.object({
           name="attachment"
           render={() => (
             <FormItem className="w-full">
-              <FormLabel className={labelStyle}>Upload Image</FormLabel>
+              <FormLabel className={labelStyle}>{t("upload_image")}</FormLabel>
               <FormControl>
                 <div className="max-w-full space-y-2">
                   {!uploadedFile ? (
@@ -245,7 +245,7 @@ const formSchema = z.object({
                         "flex items-center justify-between gap-x-1 border cursor-pointer"
                       )}
                     >
-                      <span className="text-[#aeaeae]">Choose Image</span>
+                      <span className="text-[#aeaeae]">{t("choose_image")}</span>
                       <Image
                         src="/images/icon-attachment.svg"
                         alt="icon-attachment"
@@ -286,7 +286,7 @@ const formSchema = z.object({
               </FormControl>
 
               <FormMessage className="font-light text-black">
-                &nbsp;Max. 10 MB. (Type: pdf, doc, png, jpeg, docx)
+                &nbsp;{t("attachment_hint")}
               </FormMessage>
             </FormItem>
           )}
@@ -298,12 +298,12 @@ const formSchema = z.object({
           name="message"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel className={labelStyle}>Message</FormLabel>
+              <FormLabel className={labelStyle}>{t("message")}</FormLabel>
               <FormControl>
                 <Textarea
                   {...field}
                   className={textareaStyle}
-                  placeholder="Enter Message..."
+                  placeholder={t("form_placeholder_inquiry")}
                 />
               </FormControl>
               <FormMessage />
@@ -319,7 +319,7 @@ const formSchema = z.object({
             disabled={isLoading}
             className="min-w-full"
           >
-            {isLoading ? "Sending..." : "Submit Enquiry"}
+            {isLoading ? t("submitting") : t("submit_enquiry")}
           </Button>
           {errorMessage && (
             <p className="text-red-600 text-sm mt-1">{errorMessage}</p>
