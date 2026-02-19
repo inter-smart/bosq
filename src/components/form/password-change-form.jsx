@@ -26,19 +26,28 @@ export default function PasswordChangeForm({ locale }) {
   const t = useTranslations("account");
   const { executeRecaptcha } = useGoogleReCaptcha();
 
-
-  
-
   // Validation schema — defined inside component so messages are translated
   const formSchema = z
     .object({
-      currentPassword:commonValidations.password(),
-      newPassword:commonValidations.password(),
-      confirmPassword: commonValidations.password(),
+      currentPassword: commonValidations.password(),
+      newPassword: commonValidations.password(),
+      confirmPassword: z.string().min(1, t("confirm_password_required")),
     })
-    .refine((data) => data.newPassword === data.confirmPassword, {
-      message: t("password_mismatch"),
-      path: ["confirmPassword"],
+    .superRefine((data, ctx) => {
+      if (data.newPassword === data.currentPassword) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: t("password_same_as_current"),
+          path: ["newPassword"],
+        });
+      }
+      if (data.newPassword !== data.confirmPassword) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: t("password_mismatch"),
+          path: ["confirmPassword"],
+        });
+      }
     });
 
   const form = useForm({
@@ -118,7 +127,8 @@ export default function PasswordChangeForm({ locale }) {
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                {t("current_password")}<span className={errorStyle}>*</span>
+                {t("current_password")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <div className="relative">
@@ -153,12 +163,17 @@ export default function PasswordChangeForm({ locale }) {
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                {t("new_password")}<span className={errorStyle}>*</span>
+                {t("new_password")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      form.trigger("confirmPassword");
+                    }}
                     type={showNewPassword ? "text" : "password"}
                     className={cn(inputStyle)}
                     placeholder={t("new_password_placeholder")}
@@ -188,7 +203,8 @@ export default function PasswordChangeForm({ locale }) {
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                {t("confirm_new_password")}<span className={errorStyle}>*</span>
+                {t("confirm_new_password")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <div className="relative">

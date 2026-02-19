@@ -393,6 +393,8 @@
     "change_password": "تغيير كلمة المرور",
     "changing": "جاري التغيير...",
     "password_mismatch": "كلمة المرور غير متطابقة",
+    "password_same_as_current": "يجب أن تكون كلمة المرور الجديدة مختلفة عن كلمة المرور الحالية",
+    "confirm_password_required": "يرجى تأكيد كلمة المرور الجديدة",
     "current_password_required": "كلمة المرور الحالية مطلوبة",
     "password_min_length": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
     "password_max_length": "لا يمكن أن تتجاوز كلمة المرور 100 حرف",
