@@ -43,7 +43,7 @@ import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
       fullName: commonValidations.name("Full Name"),
       companyName: commonValidations.optionalString(),
       email: commonValidations.email(),
-      phone: commonValidations.phone,
+      phone: commonValidations.phone(),
       streetAddress: commonValidations.requiredString("Street Adress"),
       apartment: commonValidations.optionalString(),
       country: z.string().min(1, "Please select a country"),

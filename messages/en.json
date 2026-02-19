@@ -487,5 +487,33 @@
     "region": {
       "required": "Please select a region"
     }
+  },
+  "errors": {
+    "required": "{field} is required",
+    "min_length": "{field} must be at least {min} characters",
+    "max_length": "{field} must be at most {max} characters",
+
+    "invalid_whitespace": "{field} contains invalid whitespace",
+    "invalid_characters": "{field} contains invalid characters",
+    "no_numbers": "{field} must not contain numbers",
+    "no_spaces": "Spaces are not allowed",
+    "invalid_content": "{field} contains invalid or unsafe content",
+
+    "invalid_email": "Please enter a valid email address",
+
+    "password_min": "Password must be at least 8 characters",
+    "password_max": "Password must not exceed 100 characters",
+    "password_strength": "Password must include uppercase, lowercase, and a number",
+
+    "otp_length": "OTP must be exactly 4 digits",
+    "otp_numeric": "OTP must contain only numbers",
+
+    "invalid_phone": "Please enter a valid phone number",
+    "invalid_phone_format": "Invalid phone number format",
+    "invalid_phone_length": "Phone number must be between 8 and 15 digits",
+    "phone_all_zeros": "Phone number cannot contain only zeros",
+
+    "select_region": "Please select a region"
   }
+
 }

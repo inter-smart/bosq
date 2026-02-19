@@ -18,7 +18,7 @@ export default function AuthLogin({ locale, data }) {
       </div>
       <Text as="div" size="text1" className="text-center text-black">
         New here?{" "}
-        <Link href="/signup" className="font-normal hover:underline">
+        <Link href="signup" className="font-normal hover:underline">
           Create an Account
         </Link>
       </Text>

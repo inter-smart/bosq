@@ -39,7 +39,7 @@ const formSchema = z.object({
   lastName: commonValidations.name("Last name"),
   companyName: commonValidations.optionalString(),
   email: commonValidations.email(),
-  phone: commonValidations.phone,
+  phone: commonValidations.phone(),
   state: commonValidations.region(),
   dropdown_id: commonValidations.optionalString(),
   message: commonValidations.optionalString(),

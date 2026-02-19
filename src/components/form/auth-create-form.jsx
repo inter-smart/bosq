@@ -20,17 +20,15 @@ import { cn } from "@/lib/utils";
 
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
-import { commonValidations } from "@/lib/validations";
+import { commonValidations, setValidationTranslator } from "@/lib/validations";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { useAuth } from "@/hooks/useAuth";
 import { useTranslations } from "next-intl";
 
-// Validation schema
-const formSchema = z.object({
-  fullName: commonValidations.name(),
-  email: commonValidations.email(),
-  phone: commonValidations.phone
-});
+
+
+
+
 
 // Shared styles
 const labelStyle = cn(
@@ -46,6 +44,18 @@ const errorStyle = cn("text-[#f17423]");
 export default function AuthCreateForm() {
   const tAuth = useTranslations("auth.signup");
   const tCommon = useTranslations("auth.common");
+  const tErrors = useTranslations("errors");
+
+
+      // ✅ inject translator (once per render is fine)
+  setValidationTranslator(tErrors);
+ 
+
+   const formSchema = z.object({
+    fullName: commonValidations.name(`${tCommon("name_label")}`),
+    email: commonValidations.email(),
+    phone: commonValidations.phone(),
+  });
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -68,10 +78,6 @@ export default function AuthCreateForm() {
     try {
       const phoneNumber = parsePhoneNumberFromString(values.phone);
 
-      if (!phoneNumber || !phoneNumber.isValid()) {
-        setSuccess(tAuth("invalid_phone"));
-        return;
-      }
 
       const payload = {
         name: values.fullName,
@@ -84,7 +90,7 @@ export default function AuthCreateForm() {
 
       if (result.success) {
         setSuccess(tAuth("success"));
-        router.push("/otp-submission");
+        router.push("otp-submission");
       } else {
         setSuccess(result.error || tAuth("error"));
       }

@@ -27,7 +27,7 @@ import { commonValidations } from "@/lib/validations";
 const formSchema = z.object({
   name: commonValidations.name("Name"),
   email: commonValidations.email(),
-  phone: commonValidations.phone,
+  phone: commonValidations.phone(),
   additionalDetails: commonValidations.optionalString(),
 });
 

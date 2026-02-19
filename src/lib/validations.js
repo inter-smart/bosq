@@ -1,171 +1,129 @@
+import { isValidPhoneNumber } from "libphonenumber-js";
 import z from "zod";
 
-export const createCommonValidations = (t) => ({
-  name: () =>
+
+let t = null;
+
+export const setValidationTranslator = (translator) => {
+  t = translator;
+};
+
+
+const vt = (key, values) => {
+  if (!t) return key; // fallback to key if not set
+  return t(key, values);
+};
+
+
+
+
+export const commonValidations = {
+  name: (Value) =>
     z
       .string()
       .trim()
-      .min(2, t("name.min", {  min: 2 }))
-      .max(100, t("name.max", { max: 100 }))
+      .min(2, vt("min_length", { field: Value, min: 2 }))
+      .max(100, vt("max_length", { field: Value, max: 100 }))
+
       .refine(
         (val) => !/[\t\n\r]/.test(val),
-        t("name.invalid_whitespace"),
+        vt("invalid_whitespace", { field: Value }),
       )
+
       .refine(
         (val) => /^[\p{L}][\p{L}\s'-]*$/u.test(val),
-        t("name.invalid_characters"),
+        vt("invalid_characters", { field: Value }),
       )
+
       .refine(
         (val) => !/\d/.test(val),
-        t("name.no_numbers"),
+        vt("no_numbers", { field: Value }),
       )
+
       .refine(
         (val) =>
-          !/(<script>|<\/script>|javascript:|alert\(|onerror=|onload=|<img|<iframe)/i.test(val),
-        t("name.invalid_content"),
+          !/(<script>|<\/script>|javascript:|alert\(|onerror=|onload=)/i.test(
+            val,
+          ),
+        vt("invalid_content", { field: Value }),
       )
+
       .refine(
         (val) => !/('|--|;|\/\*|\*\/| OR | AND )/i.test(val),
-        t("name.invalid_content"),
+        vt("invalid_content", { field: Value }),
       ),
 
   email: () =>
     z
       .string()
       .trim()
-      .min(1, t("email.required"))
-      .max(255, t("email.max", { max: 255 }))
-      .email(t("email.invalid_format"))
-      .refine(
-        (val) => !/\s/.test(val),
-        t("email.no_spaces"),
-      )
-      .refine(
-        (val) => !/[<>]/.test(val),
-        t("email.invalid_characters"),
-      )
+      .min(1, vt("required", { field: "Email" }))
+      .max(255, vt("max_length", { field: "Email", max: 255 }))
+      .email(vt("invalid_email"))
+      .refine((val) => !/\s/.test(val), vt("no_spaces"))
+      .refine((val) => !/[<>]/.test(val), vt("invalid_characters"))
       .refine(
         (val) =>
           !/(script|<script>|<\/script>|alert\(|onerror=|onload=)/i.test(val),
-        t("email.invalid_content"),
-      )
-      .refine(
-        (val) => !/('|--|;|\/\*|\*\/| OR | AND )/i.test(val),
-        t("email.invalid_content"),
+        vt("invalid_content", { field: "Email" }),
       ),
 
   password: () =>
     z
       .string()
-      .min(8, t("password.min", { min: 8 }))
-      .max(100, t("password.max", { max: 100 }))
+      .min(8, vt("password_min"))
+      .max(100, vt("password_max"))
       .regex(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-        t("password.weak"),
+        vt("password_strength"),
       ),
 
-  otp: z
+  otp: ()=> z
     .string()
-    .length(4, t("otp.length", { length: 4 }))
-    .regex(/^\d+$/, t("otp.digits_only")),
+    .length(4, vt("otp_length"))
+    .regex(/^\d+$/, vt("otp_numeric")),
 
   rememberMe: z.boolean().default(false),
 
-  phone: z
+  phone: ()=> z
     .string()
     .trim()
-    .min(1, t("phone.required"))
-    .refine(
-      (val) => /^[0-9+\s()-]+$/.test(val),
-      { message: t("phone.invalid_characters") },
-    )
-    .refine(
-      (val) => /^(\+(?!\+))?[0-9\s()-]+$/.test(val),
-      { message: t("phone.invalid_format") },
-    )
+    .min(1, vt("required", { field: "Phone" }))
+
+    .refine((val) => isValidPhoneNumber(val), {
+      message: vt("invalid_phone"),
+    })
+
+    .refine((val) => /^[0-9+\s()-]+$/.test(val), {
+      message: vt("invalid_characters"),
+    })
+
     .transform((val) => val.replace(/[\s()-]/g, ""))
-    .refine(
-      (val) => /^\+?[0-9]+$/.test(val),
-      { message: t("phone.invalid_format") },
-    )
+
+    .refine((val) => /^\+?[0-9]+$/.test(val), {
+      message: vt("invalid_phone_format"),
+    })
+
     .refine(
       (val) => {
         const digits = val.replace("+", "");
         return digits.length >= 8 && digits.length <= 15;
       },
-      { message: t("phone.invalid_length", { min: 8, max: 15 }) },
+      { message: vt("invalid_phone_length") },
     )
-    .refine(
-      (val) => !/^(\+)?0+$/.test(val),
-      { message: t("phone.all_zeros") },
-    )
-    .refine(
-      (val) =>
-        !/(<script>|<\/script>|javascript:|alert\(|onerror=|onload=)/i.test(val),
-      { message: t("phone.invalid_content") },
-    )
-    .refine(
-      (val) => !/('|--|;|\/\*|\*\/| OR | AND )/i.test(val),
-      { message: t("phone.invalid_content") },
-    ),
 
-  message: () =>
-    z
-      .string()
-      .trim()
-      .min(2, t("message.min", { min: 2 }))
-      .max(2000, t("message.max", { max: 2000 }))
-      .refine(
-        (val) => /[\p{L}\p{N}]/u.test(val),
-        t("message.no_meaningful_content"),
-      )
-      .refine(
-        (val) =>
-          !/(<script>|<\/script>|javascript:|alert\(|onerror=|onload=|<img|<iframe)/i.test(val),
-        t("message.invalid_content"),
-      )
-      .refine(
-        (val) => !/('|--|;|\/\*|\*\/| OR | AND )/i.test(val),
-        t("message.invalid_content"),
-      )
-      .refine(
-        (val) => !/\{\{.*?\}\}/s.test(val),
-        t("message.invalid_content"),
-      ),
+    .refine((val) => !/^(\+)?0+$/.test(val), {
+      message: vt("phone_all_zeros"),
+    }),
 
-  subject: () =>
-    z
-      .string()
-      .trim()
-      .min(2, t("subject.min", { min: 2 }))
-      .max(200, t("subject.max", { max: 200 }))
-      .refine(
-        (val) => /[\p{L}\p{N}]/u.test(val),
-        t("subject.no_meaningful_content"),
-      )
-      .refine(
-        (val) =>
-          !/(<script>|<\/script>|javascript:|alert\(|onerror=|onload=|<img|<iframe)/i.test(val),
-        t("subject.invalid_content"),
-      )
-      .refine(
-        (val) => !/('|--|;|\/\*|\*\/| OR | AND )/i.test(val),
-        t("subject.invalid_content"),
-      )
-      .refine(
-        (val) => !/\{\{.*?\}\}/s.test(val),
-        t("subject.invalid_content"),
-      ),
-
-  requiredString: (label) =>
-    z.string().min(1, t("common.required", { label })),
+  requiredString: (val) =>
+    z.string().min(1, vt("required", { field: val })),
 
   optionalBoolean: () => z.boolean().optional(),
-
   optionalString: () => z.string().optional(),
 
-  text: (label) =>
-    z.string().trim().min(1, t("common.required", { label })),
+  text: (val) =>
+    z.string().trim().min(1, vt("required", { field: val })),
 
-  region: () => z.string().min(1, t("region.required")),
-});
+  region: () => z.string().min(1, vt("select_region")),
+};

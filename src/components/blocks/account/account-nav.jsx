@@ -115,7 +115,7 @@ export default function AccountNav({ locale }) {
 
   const handleLogout = async () => {
     await logout();
-    router.replace(`/${locale}/login`);
+    router.replace(`login`);
   };
 
   return (

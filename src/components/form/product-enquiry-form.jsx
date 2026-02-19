@@ -32,7 +32,7 @@ import { useParams } from "next/navigation";
 const formSchema = z.object({
   fullName: commonValidations.name("Full Name"),
   email: commonValidations.email("Email Address"),
-  phone: commonValidations.phone,
+  phone: commonValidations.phone(),
   city: commonValidations.text("City").optional(),
   message: commonValidations.text("Message").optional(),
   attachment: z.any().optional(),
