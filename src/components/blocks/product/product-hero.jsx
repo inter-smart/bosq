@@ -1,10 +1,13 @@
+"use client";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import parse from "html-react-parser";
 import { cn } from "@/lib/utils";
 import { Heading } from "@/components/utils/heading";
+import { useTranslations } from "next-intl";
 
 export default function ProductHero({ data, locale, slug, link }) {
   const isEn = locale === "en";
+  const t = useTranslations();
 
   return (
     <section className="w-full pt-[calc(var(--header-y)_+_20px)] sm:pt-[calc(var(--header-y)_+_10px)] pb-1 sm:pb-2.5">
@@ -12,7 +15,7 @@ export default function ProductHero({ data, locale, slug, link }) {
         <Breadcrumb className="mb-1 xl:mb-2">
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href={`/${locale}`}>{isEn ? "Home" : "بيت"}</BreadcrumbLink>
+              <BreadcrumbLink href={`/${locale}`}>{t("common.home")}</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>/</BreadcrumbSeparator>
 

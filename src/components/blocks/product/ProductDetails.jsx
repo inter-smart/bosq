@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import React from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 const Lightbox = dynamic(() => import("yet-another-react-lightbox"));
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
@@ -16,6 +17,7 @@ const accordionTriggerStyle = cn(
 );
 
 const ProductDetails = ({ data, locale, setIndexProject, setOpenProject, openProject, indexProject }) => {
+  const t = useTranslations();
   const faqs = data?.faqs || [];
   const projects = data?.project_images || [];
   const additionalInfo = data?.additional_details || "";
@@ -26,7 +28,7 @@ const ProductDetails = ({ data, locale, setIndexProject, setOpenProject, openPro
       <Accordion type="single" collapsible className="w-full" defaultValue="item-1">
         <hr />
         <AccordionItem value="item-1">
-          <AccordionTrigger className={accordionTriggerStyle}>Product Details</AccordionTrigger>
+          <AccordionTrigger className={accordionTriggerStyle}>{t("product.product_details")}</AccordionTrigger>
           <AccordionContent className="sm:px-2">
             <div dir={locale === "ar" ? "rtl" : "ltr"} className="typography flex flex-wrap justify-between">
               <div className="xl:max-w-[540px] 2xl:max-w-[650px] 3xl:max-w-[820px]">{parse(details?.details)}</div>
@@ -40,7 +42,7 @@ const ProductDetails = ({ data, locale, setIndexProject, setOpenProject, openPro
         {projects?.length > 0 && (
           <>
             <AccordionItem value="item-2">
-              <AccordionTrigger className={accordionTriggerStyle}>Projects</AccordionTrigger>
+              <AccordionTrigger className={accordionTriggerStyle}>{t("product.projects")}</AccordionTrigger>
               <AccordionContent className="sm:p-2">
                 <div className="flex flex-wrap -mx-0.5 *:p-0.5 mt-4 mb-4 xl:mb-6 2xl:mb-10">
                   {projects?.map((item, index) => (
@@ -85,7 +87,7 @@ const ProductDetails = ({ data, locale, setIndexProject, setOpenProject, openPro
           </>
         )}
         <AccordionItem value="item-3">
-          <AccordionTrigger className={accordionTriggerStyle}>Additional Information</AccordionTrigger>
+          <AccordionTrigger className={accordionTriggerStyle}>{t("product.additional_info")}</AccordionTrigger>
           <AccordionContent className="sm:p-2">
             <div dir={locale === "ar" ? "rtl" : "ltr"} className="typography">
               {parse(additionalInfo)}
@@ -96,7 +98,7 @@ const ProductDetails = ({ data, locale, setIndexProject, setOpenProject, openPro
           <>
             <hr />
             <AccordionItem value="item-4">
-              <AccordionTrigger className={accordionTriggerStyle}>FAQ</AccordionTrigger>
+              <AccordionTrigger className={accordionTriggerStyle}>{t("product.faq")}</AccordionTrigger>
               <AccordionContent className="sm:p-2">
                 {faqs.map((faq, index) => (
                   <div key={"faq" + index} className="typography mb-4">
