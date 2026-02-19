@@ -206,7 +206,7 @@ export default function UpdateAddressForm({ locale, addressData, onSuccess }) {
   const onSubmit = async (values) => {
     try {
       await updateAddress({
-        id: addressData?._id,
+        id: addressData?.id,
         values: {
           ...values,
           addressType: addressData?.addressType,

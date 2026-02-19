@@ -25,18 +25,11 @@ import "react-international-phone/style.css";
 
 import Image from "next/image";
 import { X } from "lucide-react";
-import { commonValidations } from "@/lib/validations";
+import { commonValidations, setValidationTranslator } from "@/lib/validations";
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 
-// ✅ Final Correct Schema
-const formSchema = z.object({
-  fullName: commonValidations.name("Full Name"),
-  email: commonValidations.email("Email Address"),
-  phone: commonValidations.phone(),
-  city: commonValidations.text("City").optional(),
-  message: commonValidations.text("Message").optional(),
-  attachment: z.any().optional(),
-});
+
 
 // Styles
 const labelStyle = cn(
@@ -59,6 +52,24 @@ export default function ProductEnquiryForm({ productId }) {
   const { executeRecaptcha } = useGoogleReCaptcha();
   const [submitProductEnquiry, { isLoading }] = useSubmitProductEnquiryMutation();
 
+   const tErrors = useTranslations("errors");
+  
+  
+        // ✅ inject translator (once per render is fine)
+    setValidationTranslator(tErrors);
+   
+
+
+
+  // ✅ Final Correct Schema
+const formSchema = z.object({
+  fullName: commonValidations.name("Full Name"),
+  email: commonValidations.email("Email Address"),
+  phone: commonValidations.phone(),
+  city: commonValidations.text("City").optional(),
+  message: commonValidations.text("Message").optional(),
+  attachment: z.any().optional(),
+});
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {

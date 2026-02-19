@@ -44,11 +44,6 @@ const errorStyle = cn("text-[#f17423]");
 export default function AuthCreateForm() {
   const tAuth = useTranslations("auth.signup");
   const tCommon = useTranslations("auth.common");
-  const tErrors = useTranslations("errors");
-
-
-      // ✅ inject translator (once per render is fine)
-  setValidationTranslator(tErrors);
  
 
    const formSchema = z.object({

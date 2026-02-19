@@ -513,5 +513,35 @@
     "phone_all_zeros": "لا يمكن أن يحتوي رقم الهاتف على أصفار فقط",
 
     "select_region": "يرجى اختيار المنطقة"
+  },
+
+  "toast": {
+    "added_to_cart": "تمت إضافة المنتج إلى السلة",
+    "failed_to_add_cart": "فشل في إضافة المنتج إلى السلة",
+    "default_address": "تم تعيين العنوان الافتراضي بنجاح",
+    "failed_default_address": "فشل في تعيين العنوان الافتراضي",
+    "delete_address": "تم حذف العنوان بنجاح",
+    "updated_address": "تم تحديث العنوان بنجاح",
+    "failed_update_address": "فشل في تحديث العنوان",
+    "failed_delete_address": "فشل في حذف العنوان",
+    "quantity_updated": "تم تحديث الكمية بنجاح",
+    "failed_update_quantity": "فشل في تحديث الكمية",
+    "item_removed": "تمت إزالة المنتج من السلة",
+    "failed_remove_item": "فشل في إزالة المنتج من السلة",
+    "Something_went_wrong": "حدث خطأ ما",
+    "coupon_success": "تم تطبيق الكوبون بنجاح",
+    "coupon_invalid": "رمز الكوبون غير صالح",
+    "coupon_expired": "انتهت صلاحية رمز الكوبون",
+    "coupon_failed": "فشل في تطبيق الكوبون",
+    "coupon_removed": "تمت إزالة الكوبون بنجاح",
+    "coupon_remove_failed": "فشل في إزالة الكوبون",
+    "wishlist_success": "تمت الإضافة إلى المفضلة",
+    "wishlist_failed": "فشل في الإضافة إلى المفضلة",
+    "wishlist_updated": "تم تحديث المفضلة بنجاح",
+    "wishlist_update_failed": "فشل في تحديث المفضلة",
+    "wishlist_removed": "تمت الإزالة من المفضلة",
+    "wishlist_remove_failed": "فشل في الإزالة من المفضلة",
+    "logout_success": "تم تسجيل الخروج بنجاح",
+    "logout_failed": "فشل في تسجيل الخروج"
   }
 }

@@ -418,37 +418,7 @@
     "results_for": "Found {count} results for \"{query}\"",
     "see_all_results": "See All Results ({count})"
   },
-  "toast": {
-    "added_to_cart": "Item added to cart",
-    "failed_to_add_cart": "Failed to add item to cart",
-    "default_address" :"Default address set successfully",
-    "failed_default_address": "Failed to set default address",
-    "delete_address": "Address deleted successfully",
-    "updated_address": "Address updated successfully",
-    "failed_update_address": "Failed to update address",
-    "failed_delete_address": "Failed to delete address",
-    "quantity_updated": "Quantity updated successfully",
-    "failed_update_quantity": "Failed to update quantity",
-    "item_removed": "Item removed from cart",
-    "failed_remove_item": "Failed to remove item from cart",
-    "Something_went_wrong": "Something went wrong",
-    "coupon_success": "Coupon applied successfully",
-    "coupon_invalid": "Invalid coupon code",
-    "coupon_expired": "Coupon code has expired",
-    "coupon_failed": "Failed to apply coupon",
-    "coupon_removed": "Coupon removed successfully",
-    "coupon_remove_failed": "Failed to remove coupon",
-    "wishlist_success":"Added to wishlist",
-    "wishlist_failed":"Failed to add to wishlist",
-    "wishlist_updated":"Wishlist updated successfully",
-    "wishlist_update_failed":"Failed to update wishlist",
-    "wishlist_removed":"Removed from wishlist",
-    "wishlist_remove_failed":"Failed to remove from wishlist",
 
-    "logout_success": "Logged out successfully",
-    "logout_failed": "Failed to log out"
-
-  },
   "toast": {
     "added_to_cart": "Item added to cart",
     "failed_to_add_cart": "Failed to add item to cart",

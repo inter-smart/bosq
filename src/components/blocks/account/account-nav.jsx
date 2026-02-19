@@ -120,7 +120,7 @@ export default function AccountNav({ locale }) {
     try {
       await logout();
       toast.success(tToast("logout_success"));
-      router.replace(`login`);
+      router.replace(`profile`);
     } catch (error) {
       toast.error(tToast("logout_failed"));
     }
