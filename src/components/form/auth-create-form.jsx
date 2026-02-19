@@ -29,7 +29,7 @@ import { useTranslations } from "next-intl";
 const formSchema = z.object({
   fullName: commonValidations.name(),
   email: commonValidations.email(),
-  phone: z.string().min(8, "Phone number is required"),
+  phone: commonValidations.phone
 });
 
 // Shared styles

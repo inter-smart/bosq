@@ -417,5 +417,75 @@
     "category": "Category",
     "results_for": "Found {count} results for \"{query}\"",
     "see_all_results": "See All Results ({count})"
+  },
+  "toast": {
+    "added_to_cart": "Item added to cart",
+    "failed_to_add_cart": "Failed to add item to cart",
+    "default_address": "Default address set successfully",
+    "failed_default_address": "Failed to set default address",
+    "delete_address": "Address deleted successfully",
+    "updated_address": "Address updated successfully",
+    "failed_update_address": "Failed to update address",
+    "failed_delete_address": "Failed to delete address",
+    "quantity_updated": "Quantity updated successfully",
+    "failed_update_quantity": "Failed to update quantity",
+    "item_removed": "Item removed from cart",
+    "failed_remove_item": "Failed to remove item from cart",
+    "Something_went_wrong": "Something went wrong",
+    "coupon_success": "Coupon applied successfully",
+    "coupon_invalid": "Invalid coupon code",
+    "coupon_expired": "Coupon code has expired",
+    "coupon_failed": "Failed to apply coupon",
+    "coupon_removed": "Coupon removed successfully",
+    "coupon_remove_failed": "Failed to remove coupon",
+    "wishlist_success": "Added to wishlist",
+    "wishlist_failed": "Failed to add to wishlist",
+    "wishlist_updated": "Wishlist updated successfully",
+    "wishlist_update_failed": "Failed to update wishlist",
+    "wishlist_removed": "Removed from wishlist",
+    "wishlist_remove_failed": "Failed to remove from wishlist",
+    "logout_success": "Logged out successfully",
+    "logout_failed": "Failed to log out"
+  },
+
+  "validation": {
+    "name": {
+      "min": "{name} must be at least 2 characters",
+      "max": "{name} must be under 100 characters",
+      "invalid_whitespace": "{name} contains invalid whitespace",
+      "invalid_characters": "{name} contains invalid characters",
+      "no_numbers": "{name} must not contain numbers",
+      "invalid_content": "Invalid {name} content"
+    },
+    "email": {
+      "required": "Email is required",
+      "max": "Email must be under 256 characters",
+      "invalid_format": "Invalid email format",
+      "no_spaces": "Email must not contain spaces",
+      "invalid_characters": "Invalid characters in email",
+      "invalid_content": "Invalid email content"
+    },
+    "password": {
+      "min": "Password must be at least 8 characters",
+      "max": "Password cannot exceed 100 characters",
+      "weak": "Password must contain at least one uppercase letter, one lowercase letter, and one number"
+    },
+    "otp": {
+      "length": "OTP must be exactly 4 digits",
+      "digits_only": "OTP must contain only numbers"
+    },
+    "phone": {
+      "required": "Phone number is required",
+      "invalid_characters": "Phone number contains invalid characters",
+      "invalid_format": "Invalid phone number format",
+      "invalid_length": "Phone number length is invalid",
+      "all_zeros": "Phone number cannot be all zeros"
+    },
+    "common": {
+      "required": "{label} is required"
+    },
+    "region": {
+      "required": "Please select a region"
+    }
   }
 }

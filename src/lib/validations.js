@@ -1,113 +1,171 @@
 import z from "zod";
 
-export const commonValidations = {
-  name: (Value) =>
+export const createCommonValidations = (t) => ({
+  name: () =>
     z
       .string()
       .trim()
-      .min(2, `${Value} must be at least 2 characters`)
-      .max(100, `${Value} must be under 100 characters`)
-      // Reject tabs & newlines
+      .min(2, t("name.min", {  min: 2 }))
+      .max(100, t("name.max", { max: 100 }))
       .refine(
         (val) => !/[\t\n\r]/.test(val),
-        `${Value} contains invalid whitespace`,
+        t("name.invalid_whitespace"),
       )
-      // Allow letters (unicode), spaces, apostrophe & hyphen
       .refine(
         (val) => /^[\p{L}][\p{L}\s'-]*$/u.test(val),
-        `${Value} contains invalid characters`,
+        t("name.invalid_characters"),
       )
-      // Reject numbers
-      .refine((val) => !/\d/.test(val), `${Value} must not contain numbers`)
-      // Block script / JS / SQL injections
+      .refine(
+        (val) => !/\d/.test(val),
+        t("name.no_numbers"),
+      )
       .refine(
         (val) =>
-          !/(<script>|<\/script>|javascript:|alert\(|onerror=|onload=)/i.test(
-            val,
-          ),
-        `Invalid ${Value} content`,
+          !/(<script>|<\/script>|javascript:|alert\(|onerror=|onload=|<img|<iframe)/i.test(val),
+        t("name.invalid_content"),
       )
       .refine(
         (val) => !/('|--|;|\/\*|\*\/| OR | AND )/i.test(val),
-        `Invalid ${Value} content`,
+        t("name.invalid_content"),
       ),
 
   email: () =>
     z
       .string()
       .trim()
-      .min(1, "Email is required")
-      .max(255, "Email must be under 256 characters")
-      .email("Invalid email format")
-      .refine((val) => !/\s/.test(val), "Email must not contain spaces")
-      .refine((val) => !/[<>]/.test(val), "Invalid characters in email")
+      .min(1, t("email.required"))
+      .max(255, t("email.max", { max: 255 }))
+      .email(t("email.invalid_format"))
+      .refine(
+        (val) => !/\s/.test(val),
+        t("email.no_spaces"),
+      )
+      .refine(
+        (val) => !/[<>]/.test(val),
+        t("email.invalid_characters"),
+      )
       .refine(
         (val) =>
           !/(script|<script>|<\/script>|alert\(|onerror=|onload=)/i.test(val),
-        "Invalid email content",
+        t("email.invalid_content"),
       )
       .refine(
         (val) => !/('|--|;|\/\*|\*\/| OR | AND )/i.test(val),
-        "Invalid email content",
+        t("email.invalid_content"),
       ),
 
   password: () =>
     z
       .string()
-      .min(8, "Password must be at least 8 characters")
-      .max(100, "Password cannot exceed 100 characters")
+      .min(8, t("password.min", { min: 8 }))
+      .max(100, t("password.max", { max: 100 }))
       .regex(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-        "Password must contain at least one uppercase letter, one lowercase letter, and one number",
+        t("password.weak"),
       ),
 
   otp: z
     .string()
-    .length(4, "OTP must be exactly 4 digits")
-    .regex(/^\d+$/, "OTP must contain only numbers"),
+    .length(4, t("otp.length", { length: 4 }))
+    .regex(/^\d+$/, t("otp.digits_only")),
 
   rememberMe: z.boolean().default(false),
 
   phone: z
     .string()
     .trim()
-    .min(1, "Phone number is required")
-
-    // Allow only digits, spaces, +, -, ()
-    .refine((val) => /^[0-9+\s()-]+$/.test(val), {
-      message: "Phone number contains invalid characters",
-    })
-
-    // Normalize → remove spaces, -, ()
+    .min(1, t("phone.required"))
+    .refine(
+      (val) => /^[0-9+\s()-]+$/.test(val),
+      { message: t("phone.invalid_characters") },
+    )
+    .refine(
+      (val) => /^(\+(?!\+))?[0-9\s()-]+$/.test(val),
+      { message: t("phone.invalid_format") },
+    )
     .transform((val) => val.replace(/[\s()-]/g, ""))
-
-    // Allow optional leading +
-    .refine((val) => /^\+?[0-9]+$/.test(val), {
-      message: "Invalid phone number format",
-    })
-
-    // Length check (E.164: max 15 digits, min 8 is practical)
+    .refine(
+      (val) => /^\+?[0-9]+$/.test(val),
+      { message: t("phone.invalid_format") },
+    )
     .refine(
       (val) => {
         const digits = val.replace("+", "");
         return digits.length >= 8 && digits.length <= 15;
       },
-      {
-        message: "Phone number length is invalid",
-      },
+      { message: t("phone.invalid_length", { min: 8, max: 15 }) },
     )
+    .refine(
+      (val) => !/^(\+)?0+$/.test(val),
+      { message: t("phone.all_zeros") },
+    )
+    .refine(
+      (val) =>
+        !/(<script>|<\/script>|javascript:|alert\(|onerror=|onload=)/i.test(val),
+      { message: t("phone.invalid_content") },
+    )
+    .refine(
+      (val) => !/('|--|;|\/\*|\*\/| OR | AND )/i.test(val),
+      { message: t("phone.invalid_content") },
+    ),
 
-    // Reject all zeros
-    .refine((val) => !/^(\+)?0+$/.test(val), {
-      message: "Phone number cannot be all zeros",
-    }),
+  message: () =>
+    z
+      .string()
+      .trim()
+      .min(2, t("message.min", { min: 2 }))
+      .max(2000, t("message.max", { max: 2000 }))
+      .refine(
+        (val) => /[\p{L}\p{N}]/u.test(val),
+        t("message.no_meaningful_content"),
+      )
+      .refine(
+        (val) =>
+          !/(<script>|<\/script>|javascript:|alert\(|onerror=|onload=|<img|<iframe)/i.test(val),
+        t("message.invalid_content"),
+      )
+      .refine(
+        (val) => !/('|--|;|\/\*|\*\/| OR | AND )/i.test(val),
+        t("message.invalid_content"),
+      )
+      .refine(
+        (val) => !/\{\{.*?\}\}/s.test(val),
+        t("message.invalid_content"),
+      ),
 
-  requiredString: (val) => z.string().min(1, `${val} is required`),
+  subject: () =>
+    z
+      .string()
+      .trim()
+      .min(2, t("subject.min", { min: 2 }))
+      .max(200, t("subject.max", { max: 200 }))
+      .refine(
+        (val) => /[\p{L}\p{N}]/u.test(val),
+        t("subject.no_meaningful_content"),
+      )
+      .refine(
+        (val) =>
+          !/(<script>|<\/script>|javascript:|alert\(|onerror=|onload=|<img|<iframe)/i.test(val),
+        t("subject.invalid_content"),
+      )
+      .refine(
+        (val) => !/('|--|;|\/\*|\*\/| OR | AND )/i.test(val),
+        t("subject.invalid_content"),
+      )
+      .refine(
+        (val) => !/\{\{.*?\}\}/s.test(val),
+        t("subject.invalid_content"),
+      ),
+
+  requiredString: (label) =>
+    z.string().min(1, t("common.required", { label })),
 
   optionalBoolean: () => z.boolean().optional(),
 
   optionalString: () => z.string().optional(),
 
-  text: (val) => z.string().trim().min(1, `${val} is required`),
-  region: () => z.string().min(1, "Please select a region"),
-};
+  text: (label) =>
+    z.string().trim().min(1, t("common.required", { label })),
+
+  region: () => z.string().min(1, t("region.required")),
+});
