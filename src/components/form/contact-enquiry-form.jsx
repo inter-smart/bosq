@@ -24,17 +24,7 @@ import "react-international-phone/style.css";
 import { toast } from "sonner";
 import { API_URL } from "@/lib/api/client";
 import { useTranslations } from "next-intl";
-
-// Validation schema
-const formSchema = z.object({
-  name: z
-    .string()
-    .min(2, "Full name must be at least 2 characters")
-    .max(50, "Full name cannot exceed 50 characters"),
-  email: z.string().email("Invalid email address"),
-  phone: z.string().min(8, "Phone number is required"),
-  message: z.string().optional(),
-});
+import { commonValidations, setValidationTranslator } from "@/lib/validations";
 
 // Shared styles
 const labelStyle = cn(
@@ -55,7 +45,18 @@ const textareaStyle = cn(
 export default function ContactEnquiryForm({ locale }) {
   const t = useTranslations("form");
   const { executeRecaptcha } = useGoogleReCaptcha();
+  const tErrors = useTranslations("errors");
 
+  // ✅ inject translator (once per render is fine)
+  setValidationTranslator(tErrors);
+
+  // Validation schema
+  const formSchema = z.object({
+    name: commonValidations.name(t("full_name")),
+    email: commonValidations.email(),
+    phone: commonValidations.phone(),
+    message: commonValidations.message(),
+  });
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -101,7 +102,7 @@ export default function ContactEnquiryForm({ locale }) {
       console.error(err);
       setSuccess(err.message || t("submit_error"));
       toast.error(err.message || t("submit_error"));
-      console.log(err)
+      console.log(err);
     }
 
     setLoading(false);
@@ -120,7 +121,8 @@ export default function ContactEnquiryForm({ locale }) {
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                {t("full_name")}<span className={errorStyle}>*</span>
+                {t("full_name")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
@@ -141,7 +143,8 @@ export default function ContactEnquiryForm({ locale }) {
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                {t("phone_number")}<span className={errorStyle}>*</span>
+                {t("phone_number")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <PhoneInput
@@ -167,7 +170,8 @@ export default function ContactEnquiryForm({ locale }) {
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                {t("email_id")}<span className={errorStyle}>*</span>
+                {t("email_id")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input

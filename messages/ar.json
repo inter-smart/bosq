@@ -501,6 +501,7 @@
     "min_length": "يجب أن يحتوي {field} على {min} أحرف على الأقل",
     "max_length": "يجب ألا يزيد {field} عن {max} حرفًا",
 
+    "phone_number": "رقم الهاتف",
     "invalid_whitespace": "{field} يحتوي على مسافات غير صالحة",
     "invalid_characters": "{field} يحتوي على أحرف غير صالحة",
     "no_numbers": "يجب ألا يحتوي {field} على أرقام",

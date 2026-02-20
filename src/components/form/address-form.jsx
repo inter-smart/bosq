@@ -64,67 +64,61 @@ export default function AddressForm({
   const t = useTranslations("form");
   const { executeRecaptcha } = useGoogleReCaptcha();
 
-
-    const tErrors = useTranslations("errors");
-  
-  
-        // ✅ inject translator (once per render is fine)
-    setValidationTranslator(tErrors);
-  
-
+  const tErrors = useTranslations("errors");
+  setValidationTranslator(tErrors);
 
   const formSchema = z
-  .object({
-    fullName: commonValidations.name(t("full_name")),
-    companyName: commonValidations.optionalString(),
-    email: commonValidations.email(),
-    phone: commonValidations.phone(),
-    streetAddress: commonValidations.requiredString(t("street_address")),
-    apartment: commonValidations.optionalString(),
-    country: z.string().min(1, t("country_required")),
-    state: z.string().min(1, t("state_required")),
-    orderNotes: commonValidations.optionalString(),
-    shipToDifferentAddress: commonValidations.optionalBoolean(),
-    shippingFullName: commonValidations.optionalString(),
-    shippingCompanyName: commonValidations.optionalString(),
-    shippingCountry: commonValidations.optionalString(),
-    shippingState: commonValidations.optionalString(),
-    shippingStreetAddress: commonValidations.optionalString(),
-    shippingApartment: commonValidations.optionalString(),
-  })
-  .superRefine((data, ctx) => {
-    // Validate shipping fields only if checkbox is checked
-    if (data.shipToDifferentAddress) {
-      if (!data.shippingFullName || data.shippingFullName.length < 2) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: t("shipping_name_required"),
-          path: ["shippingFullName"],
-        });
+    .object({
+      fullName: commonValidations.name(t("full_name")),
+      companyName: commonValidations.optionalString(),
+      email: commonValidations.email(),
+      phone: commonValidations.phone(),
+      streetAddress: commonValidations.requiredString(t("street_address")),
+      apartment: commonValidations.optionalString(),
+      country: z.string().min(1, t("country_required")),
+      state: z.string().min(1, t("state_required")),
+      orderNotes: commonValidations.optionalString(),
+      shipToDifferentAddress: commonValidations.optionalBoolean(),
+      shippingFullName: commonValidations.optionalString(),
+      shippingCompanyName: commonValidations.optionalString(),
+      shippingCountry: commonValidations.optionalString(),
+      shippingState: commonValidations.optionalString(),
+      shippingStreetAddress: commonValidations.optionalString(),
+      shippingApartment: commonValidations.optionalString(),
+    })
+    .superRefine((data, ctx) => {
+      // Validate shipping fields only if checkbox is checked
+      if (data.shipToDifferentAddress) {
+        if (!data.shippingFullName || data.shippingFullName.length < 2) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: t("shipping_name_required"),
+            path: ["shippingFullName"],
+          });
+        }
+        if (!data.shippingCountry) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: t("shipping_country_required"),
+            path: ["shippingCountry"],
+          });
+        }
+        if (!data.shippingState) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: t("shipping_state_required"),
+            path: ["shippingState"],
+          });
+        }
+        if (!data.shippingStreetAddress) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: t("shipping_street_address_required"),
+            path: ["shippingStreetAddress"],
+          });
+        }
       }
-      if (!data.shippingCountry) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: t("shipping_country_required"),
-          path: ["shippingCountry"],
-        });
-      }
-      if (!data.shippingState) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: t("shipping_state_required"),
-          path: ["shippingState"],
-        });
-      }
-      if (!data.shippingStreetAddress) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: t("shipping_street_address_required"),
-          path: ["shippingStreetAddress"],
-        });
-      }
-    }
-  });
+    });
 
   const form = useForm({
     resolver: zodResolver(formSchema),

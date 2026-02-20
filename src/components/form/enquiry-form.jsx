@@ -21,15 +21,8 @@ import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { toast } from "sonner";
 import { API_URL } from "@/lib/api/client";
 import { useTranslations } from "next-intl";
-import { commonValidations } from "@/lib/validations";
+import { commonValidations, setValidationTranslator } from "@/lib/validations";
 
-// ✅ Validation schema
-const formSchema = z.object({
-  name: commonValidations.name("Name"),
-  email: commonValidations.email(),
-  phone: commonValidations.phone(),
-  additionalDetails: commonValidations.optionalString(),
-});
 
 // ✅ Shared styles
 const labelStyle = cn(
@@ -49,6 +42,21 @@ const textareaStyle = cn(
 
 export default function EnquiryForm() {
   const t = useTranslations("form");
+
+
+  const tErrors = useTranslations("errors");
+
+  setValidationTranslator(tErrors);
+
+
+  // ✅ Validation schema
+const formSchema = z.object({
+  name: commonValidations.name(t("name")),
+  email: commonValidations.email(),
+  phone: commonValidations.phone(),
+  additionalDetails: commonValidations.message(t("message")), 
+});
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
