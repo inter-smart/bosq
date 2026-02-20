@@ -1,11 +1,18 @@
 "use client";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import parse from "html-react-parser";
 import { cn } from "@/lib/utils";
 import { Heading } from "@/components/utils/heading";
 import { useTranslations } from "next-intl";
 
-export default function ProductHero({ data, locale, slug, link }) {
+export default function ProductHero({ data, locale, slug, link, type = "" }) {
   const isEn = locale === "en";
   const t = useTranslations();
 
@@ -15,16 +22,31 @@ export default function ProductHero({ data, locale, slug, link }) {
         <Breadcrumb className="mb-1 xl:mb-2">
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href={`/${locale}`}>{t("common.home")}</BreadcrumbLink>
+              <BreadcrumbLink href={`/${locale}`}>
+                {t("common.home")}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>/</BreadcrumbSeparator>
-
+            {type === "product" && (
+              <>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href={`/products`}>
+                    {t("common.products")}
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator>/</BreadcrumbSeparator>
+              </>
+            )}
             {slug && (
               <BreadcrumbItem>
                 {link ? (
-                  <BreadcrumbLink href={`/${locale}${link}`}>{slug}</BreadcrumbLink>
+                  <BreadcrumbLink href={`/${locale}${link}`}>
+                    {slug}
+                  </BreadcrumbLink>
                 ) : (
-                  <BreadcrumbPage className={"capitalize"}>{slug}</BreadcrumbPage>
+                  <BreadcrumbPage className={"capitalize"}>
+                    {slug}
+                  </BreadcrumbPage>
                 )}
               </BreadcrumbItem>
             )}
@@ -36,14 +58,19 @@ export default function ProductHero({ data, locale, slug, link }) {
             <span
               className={cn(
                 "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
-                locale === "ar" ? "-translate-x-1 xl:-translate-x-2 " : "translate-x-1 xl:translate-x-2 ",
+                locale === "ar"
+                  ? "-translate-x-1 xl:-translate-x-2 "
+                  : "translate-x-1 xl:translate-x-2 ",
               )}
             />
           </Heading>
         )}
 
         {data?.description && (
-          <div dir={locale === "ar" ? "rtl" : "ltr"} className={cn("typography", "[--text-color:#282828]")}>
+          <div
+            dir={locale === "ar" ? "rtl" : "ltr"}
+            className={cn("typography", "[--text-color:#282828]")}
+          >
             {parse(isEn ? data?.description : data?.description_ar)}
           </div>
         )}

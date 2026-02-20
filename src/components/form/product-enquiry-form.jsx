@@ -63,11 +63,11 @@ export default function ProductEnquiryForm({ productId }) {
 
   // ✅ Final Correct Schema
 const formSchema = z.object({
-  fullName: commonValidations.name("Full Name"),
-  email: commonValidations.email("Email Address"),
+  fullName: commonValidations.name(t("full_name")),
+  email: commonValidations.email(),
   phone: commonValidations.phone(),
   city: commonValidations.text("City").optional(),
-  message: commonValidations.text("Message").optional(),
+  message: commonValidations.message(t("message")),
   attachment: z.any().optional(),
 });
   const form = useForm({

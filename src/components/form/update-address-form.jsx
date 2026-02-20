@@ -18,63 +18,10 @@ import { fetchFromAPIWithCredentials } from "@/lib/helper";
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 import { Heading } from "../utils/heading";
-import { commonValidations } from "@/lib/validations";
+import { commonValidations, setValidationTranslator } from "@/lib/validations";
 import { useUpdateAddressMutation } from "@/store/services/addressApi";
 import { toast } from "sonner";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
-
-const formSchema = z
-  .object({
-    fullName: commonValidations.name("Fu,ll Name"),
-    companyName: commonValidations.optionalString(),
-    email: commonValidations.email(),
-    phone: commonValidations.phone(),
-    country: z.string().min(1, "Please select a country"),
-    streetAddress: z.string().min(1, "Street address is required"),
-    apartment: commonValidations.optionalString(),
-    state: z.string().min(1, "Please select a state"),
-    orderNotes: commonValidations.optionalString(),
-    shipToDifferentAddress: z.boolean().default(false),
-    shippingFullName: commonValidations.optionalString(),
-    shippingCompanyName: commonValidations.optionalString(),
-    shippingCountry: commonValidations.optionalString(),
-    shippingStreetAddress: commonValidations.optionalString(),
-    shippingApartment: commonValidations.optionalString(),
-    shippingState: commonValidations.optionalString(),
-  })
-  .superRefine((data, ctx) => {
-    // Validate shipping fields only if checkbox is checked
-    if (data.shipToDifferentAddress) {
-      if (!data.shippingFullName || data.shippingFullName.length < 2) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Shipping name is required",
-          path: ["shippingFullName"],
-        });
-      }
-      if (!data.shippingCountry) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Shipping country is required",
-          path: ["shippingCountry"],
-        });
-      }
-      if (!data.shippingState) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Shipping state is required",
-          path: ["shippingState"],
-        });
-      }
-      if (!data.shippingStreetAddress) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Shipping street address is required",
-          path: ["shippingStreetAddress"],
-        });
-      }
-    }
-  });
 
 // Shared styles
 const labelStyle = cn("text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]");
@@ -92,6 +39,64 @@ import { useTranslations } from "next-intl";
 export default function UpdateAddressForm({ locale, addressData, onSuccess }) {
   const t = useTranslations("form");
   const { executeRecaptcha } = useGoogleReCaptcha();
+
+  const tErrors = useTranslations("errors");
+
+  // ✅ inject translator (once per render is fine)
+  setValidationTranslator(tErrors);
+
+  const formSchema = z
+    .object({
+      fullName: commonValidations.name(t("full_name")),
+      companyName: commonValidations.optionalString(),
+      email: commonValidations.email(),
+      phone: commonValidations.phone(),
+      country: z.string().min(1, t("country_required")),
+      streetAddress: z.string().min(1, t("street_address_required")),
+      apartment: commonValidations.optionalString(),
+      state: z.string().min(1, t("state_required")),
+      orderNotes: commonValidations.optionalString(),
+      shipToDifferentAddress: z.boolean().default(false),
+      shippingFullName: commonValidations.optionalString(),
+      shippingCompanyName: commonValidations.optionalString(),
+      shippingCountry: commonValidations.optionalString(),
+      shippingStreetAddress: commonValidations.optionalString(),
+      shippingApartment: commonValidations.optionalString(),
+      shippingState: commonValidations.optionalString(),
+    })
+    .superRefine((data, ctx) => {
+      // Validate shipping fields only if checkbox is checked
+      if (data.shipToDifferentAddress) {
+        if (!data.shippingFullName || data.shippingFullName.length < 2) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: t("shipping_name_required"),
+            path: ["shippingFullName"],
+          });
+        }
+        if (!data.shippingCountry) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: t("shipping_country_required"),
+            path: ["shippingCountry"],
+          });
+        }
+        if (!data.shippingState) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: t("shipping_state_required"),
+            path: ["shippingState"],
+          });
+        }
+        if (!data.shippingStreetAddress) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: t("shipping_street_address_required"),
+            path: ["shippingStreetAddress"],
+          });
+        }
+      }
+    });
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -204,10 +209,13 @@ export default function UpdateAddressForm({ locale, addressData, onSuccess }) {
 
   const onSubmit = async (values) => {
     try {
+      const recaptchaToken = await executeRecaptcha("update_address");
+
       await updateAddress({
         id: addressData?.id,
         values: {
           ...values,
+          recaptcha_token: recaptchaToken,
           addressType: addressData?.addressType,
         },
       }).unwrap();

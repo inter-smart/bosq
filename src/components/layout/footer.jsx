@@ -341,8 +341,8 @@ export default function Footer({
                   isEn ? data?.newsletter?.title : data?.newsletter?.title_ar,
                 )}
               </Text>
-              <div className="w-full sm:w-[60%]">
                 <RecaptchaProvider>
+              <div className="w-full sm:w-[60%]">
                   <PlaceholdersAndVanishInput
                     placeholders={placeholders}
                     placeholders_ar={placeholders_ar}
@@ -350,8 +350,8 @@ export default function Footer({
                     onSubmit={onSubmit}
                     locale={locale}
                   />
-                </RecaptchaProvider>
               </div>
+                </RecaptchaProvider>
             </div>
           </div>
 

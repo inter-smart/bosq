@@ -20,18 +20,9 @@ import { parsePhoneNumberFromString } from "libphonenumber-js";
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 import { fetchFromAPIWithCredentials } from "@/lib/helper";
-import { commonValidations } from "@/lib/validations";
+import { commonValidations, setValidationTranslator } from "@/lib/validations";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useTranslations } from "next-intl";
-
-// Validation schema
-const formSchema = z.object({
-  firstName: commonValidations.name("First name"),
-  lastName: commonValidations.name("Last name"),
-  displayName: commonValidations.name("Display name"),
-  email: commonValidations.email(),
-  phone: commonValidations.phone(),
-});
 
 // Shared styles
 const labelStyle = cn(
@@ -47,6 +38,21 @@ const errorStyle = cn("text-[#f17423]");
 export default function PersonalInformationForm({ data }) {
   const t = useTranslations("account");
   const { executeRecaptcha } = useGoogleReCaptcha();
+
+  const tErrors = useTranslations("errors");
+
+  // ✅ inject translator (once per render is fine)
+  setValidationTranslator(tErrors);
+
+  // Validation schema
+  const formSchema = z.object({
+    firstName: commonValidations.name("First name"),
+    lastName: commonValidations.name("Last name"),
+    displayName: commonValidations.name("Display name"),
+    email: commonValidations.email(),
+    phone: commonValidations.phone(),
+  });
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -135,7 +141,8 @@ export default function PersonalInformationForm({ data }) {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                {t("first_name")}<span className={errorStyle}>*</span>
+                {t("first_name")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
@@ -156,7 +163,8 @@ export default function PersonalInformationForm({ data }) {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                {t("last_name")}<span className={errorStyle}>*</span>
+                {t("last_name")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
@@ -177,7 +185,8 @@ export default function PersonalInformationForm({ data }) {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                {t("display_name")}<span className={errorStyle}>*</span>
+                {t("display_name")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
@@ -198,7 +207,8 @@ export default function PersonalInformationForm({ data }) {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                {t("email_address")}<span className={errorStyle}>*</span>
+                {t("email_address")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
@@ -221,7 +231,8 @@ export default function PersonalInformationForm({ data }) {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                {t("phone")}<span className={errorStyle}>*</span>
+                {t("phone")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <PhoneInput

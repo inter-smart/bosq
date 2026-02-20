@@ -27,23 +27,13 @@ import { cn } from "@/lib/utils";
 
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
-import { commonValidations } from "@/lib/validations";
+import { commonValidations, setValidationTranslator } from "@/lib/validations";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { toast } from "sonner";
 import { API_URL } from "@/lib/api/client";
 import { useTranslations } from "next-intl";
 
-// Validation schema
-const formSchema = z.object({
-  firstName: commonValidations.name("First name"),
-  lastName: commonValidations.name("Last name"),
-  companyName: commonValidations.optionalString(),
-  email: commonValidations.email(),
-  phone: commonValidations.phone(),
-  state: commonValidations.region(),
-  dropdown_id: commonValidations.optionalString(),
-  message: commonValidations.optionalString(),
-});
+
 
 // Shared styles
 const labelStyle = cn(
@@ -78,6 +68,24 @@ export default function RequestEnquiryForm({
 
   console.log(dropdownData)
   const isEN = locale === "en";
+  const t = useTranslations("form");
+
+  const tErrors = useTranslations("errors");
+
+  setValidationTranslator(tErrors);
+
+
+  // Validation schema
+const formSchema = z.object({
+  firstName: commonValidations.name(t("full_name")),
+  lastName: commonValidations.name(t("last_name")),
+  companyName: commonValidations.optionalString(),
+  email: commonValidations.email(),
+  phone: commonValidations.phone(),
+  state: commonValidations.region(),
+  dropdown_id: commonValidations.optionalString(),
+  message: commonValidations.message(t("message")),
+});
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -142,7 +150,6 @@ export default function RequestEnquiryForm({
   };
 
   const hasData = Array.isArray(dropdownData) && dropdownData.length > 0;
-  const t = useTranslations("form");
 
   return (
     <Form {...form}>
