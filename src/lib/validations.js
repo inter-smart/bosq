@@ -85,37 +85,38 @@ export const commonValidations = {
 
   rememberMe: z.boolean().default(false),
 
-  phone: () => z
-    .string()
-    .trim()
-    .min(1, vt("required", { field: vt("phone_number") }))
+  phone: () =>
+    z
+      .string()
+      .trim()
+      .min(1, vt("required", { field: vt("phone_number") }))
 
-    // .refine((val) => isValidPhoneNumber(val), {
-    //   message: vt("invalid_phone"),
-    // })
+      // allowed characters
+      .refine((val) => /^[0-9+\s()-]+$/.test(val), {
+        message: vt("invalid_characters"),
+      })
 
-    .refine((val) => /^[0-9+\s()-]+$/.test(val), {
-      message: vt("invalid_characters"),
-    })
+      // 👇 smart validation
+      .superRefine((val, ctx) => {
+        const digits = val.replace(/[^\d]/g, "");
 
-    .transform((val) => val.replace(/[\s()-]/g, ""))
+        // 🔑 allow intermediate states (+971, +971 5, etc.)
+        if (digits.length < 4) return;
 
-    .refine((val) => /^\+?[0-9]+$/.test(val), {
-      message: vt("invalid_phone_format"),
-    })
+        if (digits.length < 8 || digits.length > 15) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: vt("invalid_phone_length"),
+          });
+        }
 
-    .refine(
-      (val) => {
-        const digits = val.replace("+", "");
-        return digits.length >= 8 && digits.length <= 15;
-      },
-      { message: vt("invalid_phone_length") },
-    )
-
-    .refine((val) => !/^(\+)?0+$/.test(val), {
-      message: vt("phone_all_zeros"),
-    }),
-
+        if (/^0+$/.test(digits)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: vt("phone_all_zeros"),
+          });
+        }
+      }),
   requiredString: (val) =>
     z.string().min(1, vt("required", { field: val })),
 

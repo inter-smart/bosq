@@ -55,11 +55,11 @@ export default function ContactEnquiryForm({ locale }) {
     name: commonValidations.name(t("full_name")),
     email: commonValidations.email(),
     phone: commonValidations.phone(),
-    message: commonValidations.message(),
+    message: commonValidations.message(t("message")),
   });
   const form = useForm({
     resolver: zodResolver(formSchema),
-    reValidateMode: "onSubmit",
+    reValidateMode: "onChange",
     defaultValues: {
       name: "",
       email: "",
@@ -140,7 +140,7 @@ export default function ContactEnquiryForm({ locale }) {
         />
 
         {/* Phone */}
-        <FormField
+        {/* <FormField
           control={form.control}
           name="phone"
           render={({ field }) => (
@@ -164,8 +164,36 @@ export default function ContactEnquiryForm({ locale }) {
               <FormMessage className={errorStyle} />
             </FormItem>
           )}
-        />
+        /> */}
 
+        <FormField
+          control={form.control}
+          name="phone"
+          render={({ field }) => (
+            <FormItem className="w-full">
+              <FormLabel className={labelStyle}>
+                {t("phone_number")}
+                <span className={errorStyle}>*</span>
+              </FormLabel>
+
+              <FormControl>
+                <PhoneInput
+                  value={field.value}
+                  onChange={(value) => field.onChange(value)}
+                  defaultCountry="ae"
+                  dir={locale === "ar" ? "rtl" : "ltr"}
+                  className={cn(
+                    inputStyle,
+                    "w-full p-0 [&_input]:flex-1 [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px]"
+                  )}
+                  placeholder={t("enter_mobile")}
+                />
+              </FormControl>
+
+              <FormMessage className={errorStyle} />
+            </FormItem>
+          )}
+        />
         {/* Email */}
         <FormField
           control={form.control}
