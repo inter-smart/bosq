@@ -187,5 +187,46 @@ export const commonValidations = {
         }
       }),
 
+  image: ({
+    required = false,
+    maxSizeMB = 5,
+  } = {}) =>
+    z
+      .any()
+      .refine(
+        (file) => {
+          // optional field
+          if (!required && (!file || file.length === 0)) return true;
+          return file instanceof File || file?.[0] instanceof File;
+        },
+        { message: vt("file_required") }
+      )
+      .refine(
+        (file) => {
+          if (!file || file.length === 0) return true;
+          const f = file instanceof File ? file : file[0];
+          return f.type.startsWith("image/");
+        },
+        { message: vt("only_image_allowed") }
+      )
+      .refine(
+        (file) => {
+          if (!file || file.length === 0) return true;
+          const f = file instanceof File ? file : file[0];
 
+          // ❌ Explicitly block PDF
+          if (f.type === "application/pdf") return false;
+
+          return true;
+        },
+        { message: vt("pdf_not_allowed") }
+      )
+      .refine(
+        (file) => {
+          if (!file || file.length === 0) return true;
+          const f = file instanceof File ? file : file[0];
+          return f.size <= maxSizeMB * 1024 * 1024;
+        },
+        { message: vt("file_size_exceeded", { size: maxSizeMB }) }
+      ),
 };

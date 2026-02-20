@@ -28,6 +28,7 @@ import { X } from "lucide-react";
 import { commonValidations, setValidationTranslator } from "@/lib/validations";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 
 
@@ -54,24 +55,25 @@ export default function ProductEnquiryForm({ productId }) {
 
   const t = useTranslations("form");
   const tErrors = useTranslations("errors");
-
+  const tToast = useTranslations("toast");
   // ✅ inject translator (once per render is fine)
   setValidationTranslator(tErrors);
-   
+
 
 
 
   // ✅ Final Correct Schema
-const formSchema = z.object({
-  fullName: commonValidations.name(t("full_name")),
-  email: commonValidations.email(),
-  phone: commonValidations.phone(),
-  city: commonValidations.text("City").optional(),
-  message: commonValidations.message(t("message")),
-  attachment: z.any().optional(),
-});
+  const formSchema = z.object({
+    fullName: commonValidations.name(t("full_name")),
+    email: commonValidations.email(),
+    phone: commonValidations.phone(),
+    city: commonValidations.text("City").optional(),
+    message: commonValidations.message(t("message")),
+    attachment: commonValidations.image()
+  });
   const form = useForm({
     resolver: zodResolver(formSchema),
+    reValidateMode: "onChange",
     defaultValues: {
       fullName: "",
       email: "",
@@ -117,6 +119,8 @@ const formSchema = z.object({
       form.reset();
       setUploadedFile(null);
       setSuccess(t("success_message"));
+      toast.success(t("success_message"))
+
     } catch (error) {
       console.error(error);
       setErrorMessage(error?.data?.message || tErrors("invalid_content", { field: "form" }));
@@ -128,7 +132,10 @@ const formSchema = z.object({
 
     if (file) {
       setUploadedFile(file);
-      form.setValue("attachment", file);
+      form.setValue("attachment", file, {
+        shouldValidate: true,   // ✅ trigger Zod
+        shouldDirty: true,     // ✅ mark field as touched
+      });
     }
   };
 
@@ -284,10 +291,7 @@ const formSchema = z.object({
                   )}
                 </div>
               </FormControl>
-
-              <FormMessage className="font-light text-black">
-                &nbsp;{t("attachment_hint")}
-              </FormMessage>
+              <FormMessage />
             </FormItem>
           )}
         />

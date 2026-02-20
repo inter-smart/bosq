@@ -427,7 +427,6 @@
     "results_for": "تم العثور على {count} نتائج لـ \"{query}\"",
     "see_all_results": "عرض جميع النتائج ({count})"
   },
-
   "toast": {
     "added_to_cart": "تمت إضافة المنتج إلى السلة",
     "failed_to_add_cart": "فشل في إضافة المنتج إلى السلة",
@@ -455,7 +454,6 @@
     "wishlist_removed": "تمت الإزالة من قائمة المفضلة",
     "wishlist_remove_failed": "فشل في الإزالة من قائمة المفضلة"
   },
-
   "validation": {
     "name": {
       "min": "يجب أن يحتوي الاسم على حرفين على الأقل",
@@ -500,32 +498,29 @@
     "required": "{field} مطلوب",
     "min_length": "يجب أن يحتوي {field} على {min} أحرف على الأقل",
     "max_length": "يجب ألا يزيد {field} عن {max} حرفًا",
-
     "phone_number": "رقم الهاتف",
     "invalid_whitespace": "{field} يحتوي على مسافات غير صالحة",
     "invalid_characters": "{field} يحتوي على أحرف غير صالحة",
     "no_numbers": "يجب ألا يحتوي {field} على أرقام",
     "no_spaces": "المسافات غير مسموحة",
     "invalid_content": "{field} يحتوي على محتوى غير صالح",
-
     "invalid_email": "يرجى إدخال بريد إلكتروني صالح",
     "email_required": "البريد الإلكتروني مطلوب.",
-
     "password_min": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل",
     "password_max": "يجب ألا تتجاوز كلمة المرور 100 حرف",
     "password_strength": "يجب أن تحتوي كلمة المرور على حرف كبير، حرف صغير، ورقم",
-
     "otp_length": "يجب أن يتكون رمز التحقق من 4 أرقام",
     "otp_numeric": "رمز التحقق يجب أن يحتوي على أرقام فقط",
-
     "invalid_phone": "يرجى إدخال رقم هاتف صالح",
     "invalid_phone_format": "تنسيق رقم الهاتف غير صالح",
     "invalid_phone_length": "يجب أن يكون رقم الهاتف بين 8 و 15 رقمًا",
     "phone_all_zeros": "لا يمكن أن يحتوي رقم الهاتف على أصفار فقط",
-
+    "file_required": "الملف مطلوب",
+    "only_image_allowed": "يُسمح بملفات الصور فقط",
+    "pdf_not_allowed": "لا يُسمح بملفات PDF",
+    "file_size_exceeded": "يجب ألا يتجاوز حجم الصورة {size} ميجابايت",
     "select_region": "يرجى اختيار المنطقة"
   },
-
   "toast": {
     "added_to_cart": "تمت إضافة المنتج إلى السلة",
     "failed_to_add_cart": "فشل في إضافة المنتج إلى السلة",
