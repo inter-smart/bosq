@@ -5,7 +5,7 @@ import { Text } from "@/components/utils/text";
 import Image from "next/image";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart } from "@/store/slices/cartSlice";
+import { addToCart, fetchCart } from "@/store/slices/cartSlice";
 import { selectCartIsUpdating } from "@/store/selectors/cart/selectors";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
@@ -29,6 +29,7 @@ const PriceAndCart = ({ stock, price, item, locale }) => {
           quantity,
         }),
       ).unwrap();
+      dispatch(fetchCart());
       toast.success(t("product.item_added_to_cart"));
     } catch (error) {
       console.log("CART EROR", error);
