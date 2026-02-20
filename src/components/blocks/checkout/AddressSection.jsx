@@ -70,31 +70,17 @@ const AddressSection = ({ locale }) => {
             />
           )
         )}
-
-        {/* Add New Shipping Address Button */}
-        {!showShippingAddressForm && !useSameAddressForShipping && (
-          <div className="w-full mb-1 xl:mb-2.5 2xl:mb-4">
-            <Button
-              variant={"white"}
-              onClick={() => setShowShippingAddressForm(true)}
-              className="xl:text-[12px] 2xl:text-[14px] font-medium min-w-[120px] xl:min-w-[150px] 2xl:min-w-[190px] bg-white"
-            >
-              Add New Address
-              <Plus className="size-3" />
-            </Button>
-          </div>
-        )}
-
-        {/* Shipping Address Form */}
-        {showShippingAddressForm && !useSameAddressForShipping && (
-          <AddAddressBlock
-            locale={locale}
-            variant="shipping"
-            onCancel={() => setShowShippingAddressForm(false)}
-            onSuccess={() => setShowShippingAddressForm(false)}
-          />
-        )}
       </div>
+
+      {/* Shipping Address Form */}
+      {showShippingAddressForm && (
+        <AddAddressBlock
+          locale={locale}
+          variant="shipping"
+          onCancel={() => setShowShippingAddressForm(false)}
+          onSuccess={() => setShowShippingAddressForm(false)}
+        />
+      )}
 
       {/* Billing Address Block - disabled when "Use Same For Billing" is checked on shipping */}
       <div className={cn(useSameAddressForBilling && "opacity-50 pointer-events-none")}>
@@ -109,20 +95,6 @@ const AddressSection = ({ locale }) => {
           />
         )}
 
-        {/* Add New Billing Address Button */}
-        {!showBillingAddressForm && !useSameAddressForBilling && (
-          <div className="w-full mb-1 xl:mb-2.5 2xl:mb-4">
-            <Button
-              variant={"white"}
-              onClick={() => setShowBillingAddressForm(true)}
-              className="xl:text-[12px] 2xl:text-[14px] font-medium min-w-[120px] xl:min-w-[150px] 2xl:min-w-[190px] bg-white"
-            >
-              Add New Billing Address
-              <Plus className="size-3" />
-            </Button>
-          </div>
-        )}
-
         {/* Billing Address Form */}
         {showBillingAddressForm && !useSameAddressForBilling && (
           <AddAddressBlock
@@ -132,6 +104,16 @@ const AddressSection = ({ locale }) => {
             onSuccess={() => setShowBillingAddressForm(false)}
           />
         )}
+      </div>
+      <div className="w-full mb-1 xl:mb-2.5 2xl:mb-4">
+        <Button
+          variant={"white"}
+          onClick={() => setShowShippingAddressForm(true)}
+          className="xl:text-[12px] 2xl:text-[14px] font-medium min-w-[120px] xl:min-w-[150px] 2xl:min-w-[190px] bg-white"
+        >
+          Add New Address
+          <Plus className="size-3" />
+        </Button>
       </div>
     </>
   );

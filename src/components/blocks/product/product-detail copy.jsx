@@ -323,13 +323,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                 {t("common.aed")} {initialData?.price} <span>{t("common.inc_tax")}</span>
               </Heading>
               {initialData?.stock > 0 && (
-                <PriceAndCart
-                  stock={initialData?.stock}
-                  price={initialData?.price}
-                  item={initialData}
-                  quantity={quantity}
-                  setQuantity={setQuantity}
-                />
+                <PriceAndCart stock={initialData?.stock} price={initialData?.price} item={initialData} quantity={quantity} locale={locale} />
               )}
 
               <div className="flex flex-wrap items-center justify-between gap-4 2xl:gap-6 mb-2 xl:mb-3 2xl:mb-5 max-lg:flex-wrap-reverse">

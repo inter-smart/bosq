@@ -155,7 +155,6 @@
     "shipping_state_required": "Shipping state is required",
     "shipping_street_address_required": "Shipping street address is required",
     "shipping_address": "Shipping Address"
-
   },
   "common": {
     "home": "Home",
@@ -196,7 +195,6 @@
     "removing": "Removing...",
     "line_total": "Line Total",
     "similiar_products": "Similiar Products"
-
   },
   "checkout": {
     "title": "Checkout",
@@ -417,7 +415,7 @@
     "buy_now": "Buy Now",
     "enquire_now": "Enquire Now",
     "enquire_subtitle": "Bulk Orders & Customisation Available!",
-    "enquire_description": "<p>Need 10 or 100 chairs? Want them in your brand colours or a unique design? No problem. Just tell us what you need below!</p>",
+    "enquire_description": "Need 10 or 100 chairs? Want them in your brand colours or a unique design? No problem. Just tell us what you need below!",
     "item_added_to_cart": "Item added to cart",
     "failed_to_add_cart": "Failed to add item to cart"
   },
@@ -526,5 +524,4 @@
 
     "select_region": "Please select a region"
   }
-
 }

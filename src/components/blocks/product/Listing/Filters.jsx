@@ -125,9 +125,7 @@ const ProductListFilters = ({ filterData, isEn }) => {
         const attrSlug = slugify(attr.name);
         const valueSlugs = getAttributeValuesFromUrl(attrSlug);
         if (valueSlugs.length > 0) {
-          const valueIds = valueSlugs
-            .map((valSlug) => slugMaps.attributeSlugToId[attrSlug]?.values[valSlug])
-            .filter(Boolean);
+          const valueIds = valueSlugs.map((valSlug) => slugMaps.attributeSlugToId[attrSlug]?.values[valSlug]).filter(Boolean);
           if (valueIds.length > 0) {
             attributesFromUrl[attr.id] = valueIds;
           }
@@ -169,10 +167,13 @@ const ProductListFilters = ({ filterData, isEn }) => {
     [filterData, slugMaps],
   );
 
-  const getPriceRangeLabel = useCallback((key) => {
-    const range = PRICE_RANGES.find((p) => p.key === key);
-    return range ? (isEn ? range.label : range.label_ar) : key;
-  }, [isEn]);
+  const getPriceRangeLabel = useCallback(
+    (key) => {
+      const range = PRICE_RANGES.find((p) => p.key === key);
+      return range ? (isEn ? range.label : range.label_ar) : key;
+    },
+    [isEn],
+  );
 
   const getAttributeValueLabel = useCallback(
     (attrSlug, valSlug) => {
@@ -200,9 +201,7 @@ const ProductListFilters = ({ filterData, isEn }) => {
   const toggleTempFilter = useCallback((filterType, value) => {
     setTempFilters((prev) => ({
       ...prev,
-      [filterType]: prev[filterType].includes(value)
-        ? prev[filterType].filter((item) => item !== value)
-        : [...prev[filterType], value],
+      [filterType]: prev[filterType].includes(value) ? prev[filterType].filter((item) => item !== value) : [...prev[filterType], value],
     }));
   }, []);
 
@@ -210,9 +209,7 @@ const ProductListFilters = ({ filterData, isEn }) => {
   const toggleTempAttributeFilter = useCallback((attributeId, valueId) => {
     setTempFilters((prev) => {
       const currentValues = prev.attributes[attributeId] || [];
-      const newValues = currentValues.includes(valueId)
-        ? currentValues.filter((id) => id !== valueId)
-        : [...currentValues, valueId];
+      const newValues = currentValues.includes(valueId) ? currentValues.filter((id) => id !== valueId) : [...currentValues, valueId];
 
       return {
         ...prev,
@@ -228,13 +225,7 @@ const ProductListFilters = ({ filterData, isEn }) => {
   const removeFilter = useCallback(
     (filterType, slug) => {
       const urlKey =
-        filterType === "categories"
-          ? "category"
-          : filterType === "subCategories"
-            ? "subcategory"
-            : filterType === "sectors"
-              ? "sector"
-              : "price";
+        filterType === "categories" ? "category" : filterType === "subCategories" ? "subcategory" : filterType === "sectors" ? "sector" : "price";
       setQueryState((prev) => ({
         [urlKey]: prev[urlKey].filter((item) => item !== slug),
         page: 1,
@@ -384,9 +375,7 @@ const ProductListFilters = ({ filterData, isEn }) => {
                 <Image src="/images/icon-filter.svg" alt="Filter" width={20} height={20} className="w-[10px] xl:w-[15px] block" />
                 <span>{isEn ? "Filters" : "المرشحات"}</span>
                 {activeFilterCount > 0 && (
-                  <span className="text-[8px] sm:text-[10px] leading-normal bg-black text-white px-2 py-0.5 rounded-full">
-                    {activeFilterCount}
-                  </span>
+                  <span className="text-[8px] sm:text-[10px] leading-normal bg-black text-white px-2 py-0.5 rounded-full">{activeFilterCount}</span>
                 )}
               </button>
             </SheetTrigger>
@@ -402,84 +391,87 @@ const ProductListFilters = ({ filterData, isEn }) => {
 
               <div className="w-full min-h-[calc(100vh-240px)] overflow-y-scroll px-2 sm:px-5">
                 <Accordion type="single" collapsible className="w-full" defaultValue="item-1">
-                  {/* Categories */}
-                  <AccordionItem value="item-1" className="py-2 sm:py-3">
-                    <AccordionTrigger className={accordionTriggerStyle}>{isEn ? "Categories" : "الاقسام"}</AccordionTrigger>
-                    <AccordionContent className="p-2">
-                      <div className="flex flex-col gap-2 sm:gap-4">
-                        {filterData?.categories
-                          ?.filter((cat) => cat.parent_id === null)
-                          ?.map((cat) => (
-                            <div key={cat.id} className="flex items-center gap-2">
-                              <Checkbox
-                                id={`cat-${cat.id}`}
-                                checked={tempFilters.categories.includes(cat.id)}
-                                onCheckedChange={() => toggleTempFilter("categories", cat.id)}
-                                className="rounded-none"
-                              />
-                              <Label
-                                htmlFor={`cat-${cat.id}`}
-                                className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
-                              >
-                                {isEn ? cat.name : cat.name_ar}
-                              </Label>
-                            </div>
-                          ))}
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-
-                  {/* Sub Categories */}
-                  <AccordionItem value="item-2" className="py-2 sm:py-3">
-                    <AccordionTrigger className={accordionTriggerStyle}>{isEn ? "Sub Categories" : "الاقسام الفرعية"}</AccordionTrigger>
-                    <AccordionContent className="p-2">
-                      <div className="flex flex-col gap-2 sm:gap-4">
-                        {filterData?.categories
-                          ?.filter((cat) => cat.parent_id !== null)
-                          ?.map((subCat) => (
-                            <div key={subCat.id} className="flex items-center gap-2">
-                              <Checkbox
-                                id={`subcat-${subCat.id}`}
-                                checked={tempFilters.subCategories.includes(subCat.id)}
-                                onCheckedChange={() => toggleTempFilter("subCategories", subCat.id)}
-                                className="rounded-none"
-                              />
-                              <Label
-                                htmlFor={`subcat-${subCat.id}`}
-                                className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
-                              >
-                                {isEn ? subCat.name : subCat.name_ar}
-                              </Label>
-                            </div>
-                          ))}
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
+                  {filterData?.categories?.length > 0 && (
+                    <>
+                      <AccordionItem value="item-1" className="py-2 sm:py-3">
+                        <AccordionTrigger className={accordionTriggerStyle}>{isEn ? "Categories" : "الاقسام"}</AccordionTrigger>
+                        <AccordionContent className="p-2">
+                          <div className="flex flex-col gap-2 sm:gap-4">
+                            {filterData?.categories
+                              ?.filter((cat) => cat.parent_id === null)
+                              ?.map((cat) => (
+                                <div key={cat.id} className="flex items-center gap-2">
+                                  <Checkbox
+                                    id={`cat-${cat.id}`}
+                                    checked={tempFilters.categories.includes(cat.id)}
+                                    onCheckedChange={() => toggleTempFilter("categories", cat.id)}
+                                    className="rounded-none"
+                                  />
+                                  <Label
+                                    htmlFor={`cat-${cat.id}`}
+                                    className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
+                                  >
+                                    {isEn ? cat.name : cat.name_ar}
+                                  </Label>
+                                </div>
+                              ))}
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                      <AccordionItem value="item-2" className="py-2 sm:py-3">
+                        <AccordionTrigger className={accordionTriggerStyle}>{isEn ? "Sub Categories" : "الاقسام الفرعية"}</AccordionTrigger>
+                        <AccordionContent className="p-2">
+                          <div className="flex flex-col gap-2 sm:gap-4">
+                            {filterData?.categories
+                              ?.filter((cat) => cat.parent_id !== null)
+                              ?.map((subCat) => (
+                                <div key={subCat.id} className="flex items-center gap-2">
+                                  <Checkbox
+                                    id={`subcat-${subCat.id}`}
+                                    checked={tempFilters.subCategories.includes(subCat.id)}
+                                    onCheckedChange={() => toggleTempFilter("subCategories", subCat.id)}
+                                    className="rounded-none"
+                                  />
+                                  <Label
+                                    htmlFor={`subcat-${subCat.id}`}
+                                    className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
+                                  >
+                                    {isEn ? subCat.name : subCat.name_ar}
+                                  </Label>
+                                </div>
+                              ))}
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </>
+                  )}
 
                   {/* Sectors */}
-                  <AccordionItem value="item-3" className="py-2 sm:py-3">
-                    <AccordionTrigger className={accordionTriggerStyle}>{isEn ? "Sectors" : "القطاعات"}</AccordionTrigger>
-                    <AccordionContent className="p-2">
-                      <div className="flex flex-col gap-2 sm:gap-4">
-                        {filterData?.sectors?.map((s) => (
-                          <div key={s.id} className="flex items-center gap-2">
-                            <Checkbox
-                              id={`sector-${s.id}`}
-                              checked={tempFilters.sectors.includes(s.id)}
-                              onCheckedChange={() => toggleTempFilter("sectors", s.id)}
-                              className="rounded-none"
-                            />
-                            <Label
-                              htmlFor={`sector-${s.id}`}
-                              className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
-                            >
-                              {isEn ? s.name : s.name_ar}
-                            </Label>
-                          </div>
-                        ))}
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
+                  {filterData?.sectors?.length > 0 && (
+                    <AccordionItem value="item-3" className="py-2 sm:py-3">
+                      <AccordionTrigger className={accordionTriggerStyle}>{isEn ? "Sectors" : "القطاعات"}</AccordionTrigger>
+                      <AccordionContent className="p-2">
+                        <div className="flex flex-col gap-2 sm:gap-4">
+                          {filterData?.sectors?.map((s) => (
+                            <div key={s.id} className="flex items-center gap-2">
+                              <Checkbox
+                                id={`sector-${s.id}`}
+                                checked={tempFilters.sectors.includes(s.id)}
+                                onCheckedChange={() => toggleTempFilter("sectors", s.id)}
+                                className="rounded-none"
+                              />
+                              <Label
+                                htmlFor={`sector-${s.id}`}
+                                className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
+                              >
+                                {isEn ? s.name : s.name_ar}
+                              </Label>
+                            </div>
+                          ))}
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  )}
 
                   {/* Price Range */}
                   <AccordionItem value="item-4" className="py-2 sm:py-3">
