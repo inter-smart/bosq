@@ -32,7 +32,6 @@ const PriceAndCart = ({ stock, price, item, locale }) => {
       dispatch(fetchCart());
       toast.success(t("product.item_added_to_cart"));
     } catch (error) {
-      console.log("CART EROR", error);
       toast.error(isEn ? error?.en : error?.ar || "Failed to add item to cart");
     }
   };

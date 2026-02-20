@@ -16,11 +16,12 @@ const accordionTriggerStyle = cn(
   "text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-normal font-normal text-[#282828] py-4 sm:py-4 xl:py-5 [&>svg]:w-4 sm:[&>svg]:w-4 [&>svg]:aspect-square [&>svg]:bg-[#e9e9e9] [&>svg]:rounded-full [&>svg]:p-0.5 [&[data-state=open]>svg]:invert-100",
 );
 
-const ProductDetails = ({ data, locale, setIndexProject, setOpenProject, openProject, indexProject }) => {
+const ProductDetails = ({ data, isEn, setIndexProject, setOpenProject, openProject, indexProject }) => {
   const t = useTranslations();
   const faqs = data?.faqs || [];
   const projects = data?.project_images || [];
   const additionalInfo = data?.additional_details || "";
+  const additionalInfoAr = data?.additional_details_ar || "";
   const details = data?.details || "";
 
   return (
@@ -30,10 +31,10 @@ const ProductDetails = ({ data, locale, setIndexProject, setOpenProject, openPro
         <AccordionItem value="item-1">
           <AccordionTrigger className={accordionTriggerStyle}>{t("product.product_details")}</AccordionTrigger>
           <AccordionContent className="sm:px-2">
-            <div dir={locale === "ar" ? "rtl" : "ltr"} className="typography flex flex-wrap justify-between">
+            <div dir={!isEn ? "rtl" : "ltr"} className="typography flex flex-wrap justify-between">
               <div className="xl:max-w-[540px] 2xl:max-w-[650px] 3xl:max-w-[820px]">{details?.details_title && parse(details?.details)}</div>
               <div className="xl:max-w-[468px] 2xl:max-w-[576px] 3xl:max-w-[700px] border border-[#e9e9e9] rounded-lg px-2.5 xl:px-5 2xl:px-7.5 py-1 xl:py-2.5 2xl:py-4">
-                {details?.details_points && parse(details?.details_points)}
+                {details?.details_points && parse(isEn ? details?.details_points : details?.details_points_ar)}
               </div>
             </div>
           </AccordionContent>
@@ -89,8 +90,8 @@ const ProductDetails = ({ data, locale, setIndexProject, setOpenProject, openPro
         <AccordionItem value="item-3">
           <AccordionTrigger className={accordionTriggerStyle}>{t("product.additional_info")}</AccordionTrigger>
           <AccordionContent className="sm:p-2">
-            <div dir={locale === "ar" ? "rtl" : "ltr"} className="typography">
-              {additionalInfo && parse(additionalInfo)}
+            <div dir={!isEn ? "rtl" : "ltr"} className="typography">
+              {additionalInfo || (additionalInfoAr && parse(isEn ? additionalInfo : additionalInfoAr))}
             </div>
           </AccordionContent>
         </AccordionItem>
@@ -103,9 +104,9 @@ const ProductDetails = ({ data, locale, setIndexProject, setOpenProject, openPro
                 {faqs.map((faq, index) => (
                   <div key={"faq" + index} className="typography mb-4">
                     <h6>
-                      Q{index}: {faq?.question}
+                      Q{index}: {isEn ? faq?.question : faq?.question_ar}
                     </h6>
-                    <p>{faq?.answer}</p>
+                    <p>{isEn ? faq?.answer : faq?.answer_ar}</p>
                   </div>
                 ))}
               </AccordionContent>

@@ -13,19 +13,21 @@ import { selectCartIsUpdating } from "@/store/selectors/cart/selectors";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 
-export default function CartCard({ product }) {
+export default function CartCard({ product, isEn }) {
   const dispatch = useDispatch();
   const isUpdating = useSelector(selectCartIsUpdating);
   const [quantity, setQuantity] = useState(product?.quantity || 1);
   const [isRemoving, setIsRemoving] = useState(false);
 
-  const t= useTranslations("cart");
+  const t = useTranslations("cart");
   const tCommon = useTranslations("common");
   const tToast = useTranslations("toast");
   // Sync local quantity with product quantity from Redux
   useEffect(() => {
     setQuantity(product?.quantity || 1);
   }, [product?.quantity]);
+
+  const stock = product?.variant?.stock;
 
   // Debounced update to avoid too many API calls
   const updateQuantity = useCallback(
@@ -39,10 +41,10 @@ export default function CartCard({ product }) {
               variant_id: product.variant_id,
             }),
           ).unwrap();
-          toast.success(`${tToast("quantity_updated")} (${newQuantity})`);
+          toast.success(`${tToast("quantity_updated")} `);
         } catch (error) {
-          // error is already the message string (from rejectWithValue or throw)
-          toast.error(`${tToast("quantity_update_failed")}`);
+          setQuantity(product?.quantity);
+          toast.error(isEn ? error?.en : error?.ar || "Failed to add item to cart");
         }
       }
     },
@@ -80,7 +82,6 @@ export default function CartCard({ product }) {
   };
 
   const handleBlur = () => {
-    // Update on blur to avoid too many API calls while typing
     if (quantity !== product?.quantity && quantity >= 1) {
       updateQuantity(quantity);
     }
@@ -92,6 +93,7 @@ export default function CartCard({ product }) {
   const productSlug = product?.product?.slug || product?.slug;
   const productPrice = product?.price;
   const isProductOutOfStock = product?.is_sold_out;
+  const isMaxQuantity = stock != null && quantity >= stock;
 
   return (
     <Suspense fallback={<CartCardSkeleton />}>

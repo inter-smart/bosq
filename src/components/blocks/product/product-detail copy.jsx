@@ -35,6 +35,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
   const t = useTranslations();
   const [isModelLoading, setIsModelLoading] = useState(false);
   const [quantity, setQuantity] = useState(1);
+  const isEn = locale === "en";
 
   const enq = {
     title: t("product.enquire_now"),
@@ -258,13 +259,13 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                 size="none"
                 className="text-[10px] xl:text-[8px] 2xl:text-[10px] 3xl:text-[12px] leading-normal font-light truncate text-[#bbbcbc] mb-1"
               >
-                {productData?.category_name}
+                {isEn ? productData?.category_name : productData?.category_name_ar}
               </Heading>
               <Heading as="div" size="heading2" className="font-normal text-[#282828] mb-1 2xl:mb-2 max-sm:font-bold">
-                {initialData?.title}
+                {isEn ? initialData?.title : initialData?.title_ar}
               </Heading>
               <Text as="div" size="text3" className="text-[#282828] mb-2 2xl:mb-4">
-                {parse(productData?.description)}
+                {parse(isEn ? productData?.description : productData?.description_ar)}
               </Text>
 
               <hr className="my-3 sm:my-3 2xl:my-5 mx-[-5px]" />
@@ -286,7 +287,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                   </div>
                   <div className="flex-1 flex justify-between gap-2 p-2 xl:p-2.5 2xl:p-[15px] ">
                     <div className="text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#282828]">
-                      {initialData?.model_title}
+                      {isEn ? initialData?.model_title : initialData?.model_title_ar}
                     </div>
                     <ProductChooseDesign
                       data={initialData}
@@ -312,7 +313,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                 size="none"
                 className="text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#808080] mb-2 xl:mb-3 2xl:mb-5"
               >
-                {/* todo */}
+                {isEn ? initialData?.design_title : initialData?.design_title_ar}
               </Heading>
               <hr className="my-3 sm:my-3 2xl:my-5 mx-[-5px]" />
               <Heading
@@ -329,7 +330,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
               <div className="flex flex-wrap items-center justify-between gap-4 2xl:gap-6 mb-2 xl:mb-3 2xl:mb-5 max-lg:flex-wrap-reverse">
                 <div className="flex lg:flex-1">
                   <Text as="div" size="text3" className="text-[#282828] max-w-[95%]">
-                    {productData?.purchase_tagline || t("product.enquire_subtitle")}
+                    {isEn ? productData?.enhance_title : productData?.enhance_title_ar}
                   </Text>
                 </div>
                 <Button variant={"link"} className={"font-normal underline h-auto "} disabled={initialData?.stock == 0} onClick={handleBuyNow}>
@@ -361,7 +362,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                         unoptimized
                       />
 
-                      {parse(item?.name)}
+                      {item?.name && parse(isEn ? item?.name : item?.name_ar)}
                     </Text>
                   </div>
                 ))}
@@ -443,7 +444,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
         </div>
         <ProductDetails
           data={productData}
-          locale={locale}
+          isEn={isEn}
           setIndexProject={setIndexProduct}
           setOpenProject={setOpenProduct}
           openProject={openProduct}

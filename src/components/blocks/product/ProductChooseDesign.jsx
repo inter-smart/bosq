@@ -22,6 +22,8 @@ const ProductChooseDesign = ({
   const router = useRouter();
   const pathname = usePathname();
 
+  const isEn = locale === "en";
+
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [models, setModels] = useState([]);
   const [isModelLoading, setIsModelLoading] = useState(false);
@@ -31,7 +33,6 @@ const ProductChooseDesign = ({
   const [selectedModelId, setSelectedModelId] = useState(currentModelId);
 
   const isModelChanged = selectedModelId !== currentModelId;
-
 
   /* ----------------------------------------
    * Fetch models from API
@@ -54,7 +55,6 @@ const ProductChooseDesign = ({
 
     fetchModels();
   }, [productSlug]);
-
 
   /* ----------------------------------------
    * Selected model
@@ -181,7 +181,7 @@ const ProductChooseDesign = ({
         className="max-w-[320px] sm:max-w-[320px] xl:max-w-[340px] 2xl:max-w-[468px] gap-0"
       >
         <SheetHeader className="min-h-(--header-y) border-b border-[#eee] px-4 sm:px-7 justify-center">
-          <SheetTitle>Choose Your Design</SheetTitle>
+          <SheetTitle>{isEn ? "Choose Your Design" : "اختر تصميمك"}</SheetTitle>
           <SheetDescription className="sr-only">Select your preferences</SheetDescription>
         </SheetHeader>
 
@@ -214,7 +214,7 @@ const ProductChooseDesign = ({
                             height={85}
                             className="w-[40px] xl:w-[45px] 2xl:w-[70px] aspect-[75/85] mx-auto mb-1 block"
                           />
-                          <div className="text-[8px] 2xl:text-[12px] text-center">{item.title}</div>
+                          <div className="text-[8px] 2xl:text-[12px] text-center">{isEn ? item.title : item.title_ar}</div>
                         </div>
                       </div>
                     ))}

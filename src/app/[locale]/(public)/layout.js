@@ -139,21 +139,11 @@ export default async function PublicLayout({ children, params }) {
 
   return (
     <>
-      <Header
-        locale={locale}
-        navigationData={navigationData}
-        data={headerData}
-      />
+      <Header locale={locale} navigationData={navigationData} data={headerData} />
 
       <main>{children}</main>
-      <Toaster position="top-right" richColors closeButton />
-      <Footer
-        locale={locale}
-        footerData={local_data.footer_data}
-        socialLinkData={socialMedia}
-        data={footerData}
-        paymentCards={cards}
-      />
+      <Toaster position={locale === "ar" ? "top-left" : "top-right"} richColors closeButton />
+      <Footer locale={locale} footerData={local_data.footer_data} socialLinkData={socialMedia} data={footerData} paymentCards={cards} />
     </>
   );
 }
