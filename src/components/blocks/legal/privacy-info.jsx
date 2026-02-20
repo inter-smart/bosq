@@ -34,7 +34,7 @@ export default function PrivacyInfo({ data, locale }) {
                 {parse(isEN ? item?.description : item?.description_ar)}
               </div>
             </div>
-            {index === data?.categories?.length - 1 && (
+            {index === data?.categories?.length - 2 && (
               <div className="w-full py-0!">
                 <hr />
               </div>

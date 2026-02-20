@@ -32,12 +32,6 @@ const local_data = {
         link: "/terms-and-conditions",
       },
       {
-        id: "08",
-        label: "Return & Refund Policy",
-        label_ar: "سياسة الإرجاع والاسترداد",
-        link: "/return-policy",
-      },
-      {
         id: "02",
         label: "Delivery",
         label_ar: "التوصيل",
