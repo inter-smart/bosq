@@ -108,7 +108,7 @@ const local_data = {
 
       {
         id: "05",
-        label: "F&Q",
+        label: "FAQs",
         label_ar: "الأسئلة الشائعة",
         link: "/faqs",
       },
