@@ -78,21 +78,21 @@ export const commonValidations = {
         vt("password_strength"),
       ),
 
-  otp: ()=> z
+  otp: () => z
     .string()
     .length(4, vt("otp_length"))
     .regex(/^\d+$/, vt("otp_numeric")),
 
   rememberMe: z.boolean().default(false),
 
-  phone: ()=> z
+  phone: () => z
     .string()
     .trim()
     .min(1, vt("required", { field: vt("phone_number") }))
 
-    .refine((val) => isValidPhoneNumber(val), {
-      message: vt("invalid_phone"),
-    })
+    // .refine((val) => isValidPhoneNumber(val), {
+    //   message: vt("invalid_phone"),
+    // })
 
     .refine((val) => /^[0-9+\s()-]+$/.test(val), {
       message: vt("invalid_characters"),
@@ -127,64 +127,64 @@ export const commonValidations = {
 
   region: () => z.string().min(1, vt("select_region")),
 
-message: (field = "Message") =>
-  z
-    .string()
-    .trim()
-    .max(1000, vt("max_length", { field, max: 1000 }))
-    .superRefine((val, ctx) => {
-      // ✅ Allow empty (optional field)
-      if (!val) return;
+  message: (field = "Message") =>
+    z
+      .string()
+      .trim()
+      .max(1000, vt("max_length", { field, max: 1000 }))
+      .superRefine((val, ctx) => {
+        // ✅ Allow empty (optional field)
+        if (!val) return;
 
-      // 1. Min length only if user typed something
-      if (val.length < 2) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: vt("min_length", { field, min: 2 }),
-        });
-        return;
-      }
+        // 1. Min length only if user typed something
+        if (val.length < 2) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: vt("min_length", { field, min: 2 }),
+          });
+          return;
+        }
 
-      // 2. Reject tabs & newlines
-      if (/[\t\n\r]/.test(val)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: vt("invalid_whitespace", { field }),
-        });
-      }
+        // 2. Reject tabs & newlines
+        if (/[\t\n\r]/.test(val)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: vt("invalid_whitespace", { field }),
+          });
+        }
 
-      // 3. Must contain at least one letter or number
-      if (!/[\p{L}\p{N}]/u.test(val)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: vt("invalid_characters", { field }),
-        });
-      }
+        // 3. Must contain at least one letter or number
+        if (!/[\p{L}\p{N}]/u.test(val)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: vt("invalid_characters", { field }),
+          });
+        }
 
-      // 4. XSS patterns
-      if (/(<script|<\/script>|javascript:|onerror=|onload=|alert\s*\()/i.test(val)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: vt("invalid_content", { field }),
-        });
-      }
+        // 4. XSS patterns
+        if (/(<script|<\/script>|javascript:|onerror=|onload=|alert\s*\()/i.test(val)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: vt("invalid_content", { field }),
+          });
+        }
 
-      // 5. iframe / template injection
-      if (/(<iframe|<\/iframe>|\{\{|\}\}|\$\{)/i.test(val)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: vt("invalid_content", { field }),
-        });
-      }
+        // 5. iframe / template injection
+        if (/(<iframe|<\/iframe>|\{\{|\}\}|\$\{)/i.test(val)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: vt("invalid_content", { field }),
+          });
+        }
 
-      // 6. SQL injection patterns
-      if (/(\bDROP\b|\bSELECT\b|\bINSERT\b|\bDELETE\b|\bUPDATE\b|--|;)/i.test(val)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: vt("invalid_content", { field }),
-        });
-      }
-    }),
+        // 6. SQL injection patterns
+        if (/(\bDROP\b|\bSELECT\b|\bINSERT\b|\bDELETE\b|\bUPDATE\b|--|;)/i.test(val)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: vt("invalid_content", { field }),
+          });
+        }
+      }),
 
 
 };
