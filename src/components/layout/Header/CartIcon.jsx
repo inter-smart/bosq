@@ -11,6 +11,8 @@ const CartIcon = ({ showDarkHeader, locale }) => {
   const dispatch = useDispatch();
   const cartCount = useSelector(selectCartCount);
 
+  console.log("CART", cartCount);
+
   useEffect(() => {
     dispatch(fetchCart());
   }, [dispatch]);

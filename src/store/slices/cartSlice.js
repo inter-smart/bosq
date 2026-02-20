@@ -12,7 +12,12 @@ export const fetchCart = createAsyncThunk("cart/fetchCart", async (_, { getState
 
     return res;
   } catch (error) {
-    return rejectWithValue(error.message || "Failed to fetch cart");
+    return rejectWithValue(
+      error || {
+        en: "Failed to add item to cart",
+        ar: "فشل في إضافة المنتج إلى السلة",
+      },
+    );
   }
 });
 
@@ -27,8 +32,12 @@ export const addToCart = createAsyncThunk("cart/addToCart", async ({ product_id,
 
     return data;
   } catch (error) {
-    console.log("CART EROR", error);
-    return rejectWithValue(error?.message || "Failed to add item to cart");
+    return rejectWithValue(
+      error || {
+        en: "Failed to add item to cart",
+        ar: "فشل في إضافة المنتج إلى السلة",
+      },
+    );
   }
 });
 
@@ -44,7 +53,12 @@ export const updateCartItem = createAsyncThunk("cart/updateCartItem", async ({ i
     return res;
   } catch (error) {
     console.log("ERROR", error);
-    return rejectWithValue(error.message || "Failed to update cart item");
+    return rejectWithValue(
+      error || {
+        en: "Failed to add item to cart",
+        ar: "فشل في إضافة المنتج إلى السلة",
+      },
+    );
   }
 });
 
@@ -57,7 +71,12 @@ export const removeFromCart = createAsyncThunk("cart/removeFromCart", async ({ i
 
     return data;
   } catch (error) {
-    return rejectWithValue(error.message || "Failed to remove item from cart");
+    return rejectWithValue(
+      error || {
+        en: "Failed to add item to cart",
+        ar: "فشل في إضافة المنتج إلى السلة",
+      },
+    );
   }
 });
 
@@ -68,7 +87,12 @@ export const clearCart = createAsyncThunk("cart/clearCart", async (_, { getState
 
     return data;
   } catch (error) {
-    return rejectWithValue(error.message || "Failed to clear cart");
+    return rejectWithValue(
+      error || {
+        en: "Failed to add item to cart",
+        ar: "فشل في إضافة المنتج إلى السلة",
+      },
+    );
   }
 });
 

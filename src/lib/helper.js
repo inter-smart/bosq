@@ -142,7 +142,26 @@ export async function fetchWithCredentials(endpoint, options = {}) {
   const data = await response.json();
 
   if (!response.ok || data?.success === false) {
-    throw new Error(data?.message || data?.error?.message || `Error: ${response.status} ${response.statusText}`);
+    let message = data?.message || data?.error;
+
+    if (typeof message === "string") {
+      message = {
+        en: message,
+        ar: message, // fallback (or you can customize)
+      };
+    } else if (typeof message === "object" && message !== null) {
+      message = {
+        en: message.en || message.ar || "Something went wrong",
+        ar: message.ar || message.en || "حدث خطأ ما",
+      };
+    } else {
+      message = {
+        en: "Something went wrong",
+        ar: "حدث خطأ ما",
+      };
+    }
+
+    throw message; // ✅ ALWAYS object now
   }
 
   return data?.data;
