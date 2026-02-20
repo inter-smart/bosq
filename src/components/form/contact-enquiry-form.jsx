@@ -59,6 +59,7 @@ export default function ContactEnquiryForm({ locale }) {
   });
   const form = useForm({
     resolver: zodResolver(formSchema),
+    reValidateMode: "onSubmit",
     defaultValues: {
       name: "",
       email: "",
@@ -78,6 +79,7 @@ export default function ContactEnquiryForm({ locale }) {
 
     try {
       const recaptchaToken = await executeRecaptcha("contact_enquiry_form");
+      const normalizedPhone = values.phone.replace(/[^\d+]/g, "");
 
       const res = await fetch(URL, {
         method: "POST",
@@ -85,6 +87,7 @@ export default function ContactEnquiryForm({ locale }) {
         body: JSON.stringify({
           recaptcha_token: recaptchaToken,
           type: "contact",
+          phone: normalizedPhone,
           ...values,
         }),
       });
