@@ -27,7 +27,8 @@ export const addToCart = createAsyncThunk("cart/addToCart", async ({ product_id,
 
     return data;
   } catch (error) {
-    return rejectWithValue(error.message || "Failed to add item to cart");
+    console.log("CART EROR", error);
+    return rejectWithValue(error?.message || "Failed to add item to cart");
   }
 });
 
@@ -134,6 +135,7 @@ const cartSlice = createSlice({
         }
       })
       .addCase(fetchCart.rejected, (state, action) => {
+        console.log("CART EROR", action.payload);
         state.isLoading = false;
         state.error = action.payload || "Failed to fetch cart";
       })

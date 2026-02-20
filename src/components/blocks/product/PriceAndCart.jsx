@@ -10,7 +10,9 @@ import { selectCartIsUpdating } from "@/store/selectors/cart/selectors";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 
-const PriceAndCart = ({ stock, price, item }) => {
+const PriceAndCart = ({ stock, price, item, locale }) => {
+  const isEn = locale === "en";
+
   const dispatch = useDispatch();
   const isUpdating = useSelector(selectCartIsUpdating);
   const [quantity, setQuantity] = useState(1);
@@ -29,8 +31,8 @@ const PriceAndCart = ({ stock, price, item }) => {
       ).unwrap();
       toast.success(t("product.item_added_to_cart"));
     } catch (error) {
-      // error is already the message string (from rejectWithValue or throw)
-      toast.error(t("product.failed_to_add_cart"));
+      console.log("CART EROR", error);
+      toast.error(isEn ? error?.en : error?.ar || "Failed to add item to cart");
     }
   };
 
@@ -93,8 +95,8 @@ const PriceAndCart = ({ stock, price, item }) => {
 
       <div className="w-full mb-1 xl:mb-2">
         <Text as="div" size="text3" className="text-[#282828] max-w-[95%]">
-          {t("product.total")}{":"}  {t("common.aed")}{" "}
-          <span className="font-medium">{(quantity * price).toFixed(2)}</span>
+          {t("product.total")}
+          {":"} {t("common.aed")} <span className="font-medium">{(quantity * price).toFixed(2)}</span>
         </Text>
       </div>
     </>
