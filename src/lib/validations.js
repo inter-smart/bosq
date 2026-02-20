@@ -128,7 +128,7 @@ export const commonValidations = {
 
   region: () => z.string().min(1, vt("select_region")),
 
-  message: (field = "Message") =>
+  message: (field) =>
     z
       .string()
       .trim()
