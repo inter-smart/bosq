@@ -7,6 +7,7 @@ import "./../globals.css";
 import { cn } from "@/lib/utils";
 import { locales, localeDirection } from "../../il8n/config";
 import ReduxProvider from "@/store/provider";
+import { Toaster } from "sonner";
 
 const heroNew = localFont({
   src: [
@@ -83,6 +84,7 @@ export default async function RootLayout({ children, params }) {
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ReduxProvider>
             <NuqsAdapter>{children}</NuqsAdapter>
+            <Toaster position={locale === "ar" ? "top-left" : "top-right"} richColors closeButton />
           </ReduxProvider>
         </NextIntlClientProvider>
       </body>

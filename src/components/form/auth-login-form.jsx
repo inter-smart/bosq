@@ -59,6 +59,9 @@ export default function AuthLoginForm({ locale, data }) {
   const searchParams = useSearchParams();
 
   const redirectTo = searchParams.get("redirect") || `/${locale}`;
+  const activity = searchParams.get("activity") || null;
+
+  console.log(activity);
 
   // Guard: if already logged in (e.g. browser back button), redirect away
   useEffect(() => {
@@ -66,6 +69,10 @@ export default function AuthLoginForm({ locale, data }) {
       router.replace(redirectTo);
     }
   }, [isAuthenticated, redirectTo, router]);
+
+  useEffect(() => {
+    if (activity && activity === "wishlist") toast.error("Please login to access your wishlist.", { id: "wishlist-auth" });
+  }, [activity]);
 
   const onSubmit = async (values) => {
     clearAuthError();

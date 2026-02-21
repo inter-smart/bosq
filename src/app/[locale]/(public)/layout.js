@@ -1,7 +1,6 @@
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import { getSiteData } from "@/lib/api/CMS/basicGet";
-import { Toaster } from "sonner";
 
 const local_data = {
   footer_data: {
@@ -142,7 +141,6 @@ export default async function PublicLayout({ children, params }) {
       <Header locale={locale} navigationData={navigationData} data={headerData} />
 
       <main>{children}</main>
-      <Toaster position={locale === "ar" ? "top-left" : "top-right"} richColors closeButton />
       <Footer locale={locale} footerData={local_data.footer_data} socialLinkData={socialMedia} data={footerData} paymentCards={cards} />
     </>
   );

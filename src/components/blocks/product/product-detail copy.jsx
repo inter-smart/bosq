@@ -106,8 +106,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
 
   const handleWishlistToggle = async () => {
     if (!isAuthenticated) {
-      toast.error("Please login to add to wishlist");
-      router.push(`/${locale}/login`);
+      router.push(`/${locale}/login?activity=wishlist`);
       return;
     }
     setWishlist((prev) => !prev);
