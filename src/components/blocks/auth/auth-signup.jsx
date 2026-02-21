@@ -1,6 +1,7 @@
 import { Text } from "@/components/utils/text";
 import Link from "next/link";
 import AuthCreateForm from "@/components/form/auth-create-form";
+import GoogleLoginButton from "@/components/form/google-login-button";
 
 export default function AuthSignup({locale}) {
   return (
@@ -13,9 +14,7 @@ export default function AuthSignup({locale}) {
       >
         or
       </Text>
-      <div className="w-full p-2 bg-gray-400 text-center my-1.5 xl:my-3">
-        Continue with Google
-      </div>
+      <GoogleLoginButton locale={locale} />
       <Text as="div" size="text1" className="text-[#282828]">
         Already have an account?{" "}
         <Link href="login" className="font-normal hover:underline">

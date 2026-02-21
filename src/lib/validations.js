@@ -61,7 +61,7 @@ export const commonValidations = {
       .max(255, vt("max_length", { field: "Email", max: 255 }))
       .email(vt("invalid_email"))
       .refine((val) => !/\s/.test(val), vt("no_spaces"))
-      .refine((val) => !/[<>]/.test(val), vt("invalid_characters"))
+      .refine((val) => !/[<>]/.test(val), vt("invalid_characters", { field: "Email" }))
       .refine(
         (val) =>
           !/(script|<script>|<\/script>|alert\(|onerror=|onload=)/i.test(val),
@@ -95,7 +95,7 @@ export const commonValidations = {
     })
 
     .refine((val) => /^[0-9+\s()-]+$/.test(val), {
-      message: vt("invalid_characters"),
+      message: vt("invalid_characters", { field: "Phone" }),
     })
 
     .transform((val) => val.replace(/[\s()-]/g, ""))

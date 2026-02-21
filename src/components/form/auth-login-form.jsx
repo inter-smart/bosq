@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { z } from "zod";
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -20,7 +20,6 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 // Validation schema
 
-
 // Shared styles
 const labelStyle = cn("text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]");
 
@@ -35,18 +34,14 @@ export default function AuthLoginForm({ locale, data }) {
   const tCommon = useTranslations("auth.common");
   const tErrors = useTranslations("errors");
 
-
-      // ✅ inject translator (once per render is fine)
+  // ✅ inject translator (once per render is fine)
   setValidationTranslator(tErrors);
- 
-
-
 
   const formSchema = z.object({
-  email: commonValidations.email(),
-  password: commonValidations.password(),
-  rememberMe: commonValidations.rememberMe,
-});
+    email: commonValidations.email(),
+    password: commonValidations.password(),
+    rememberMe: commonValidations.rememberMe,
+  });
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -56,14 +51,21 @@ export default function AuthLoginForm({ locale, data }) {
     },
   });
 
-  const { login, isLoading, clearAuthError } = useAuth();
+  const { login, isAuthenticated, isLoading, clearAuthError } = useAuth();
   const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const redirectTo = searchParams.get("redirect") || "";
+  const redirectTo = searchParams.get("redirect") || `/${locale}`;
+
+  // Guard: if already logged in (e.g. browser back button), redirect away
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.replace(redirectTo);
+    }
+  }, [isAuthenticated, redirectTo, router]);
 
   const onSubmit = async (values) => {
     clearAuthError();
@@ -73,8 +75,8 @@ export default function AuthLoginForm({ locale, data }) {
 
     if (result.success) {
       toast.success(tAuth("success"));
-      setSuccess(tAuth("success"));
       router.replace(redirectTo);
+      // router.refresh();
     } else {
       setSuccess(result.error || tAuth("error"));
     }

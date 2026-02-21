@@ -74,7 +74,7 @@ export default function CartList({ locale, data, similarProducts }) {
 
       router.push(`/${locale}/checkout?flow=${encoded}`);
     } catch (error) {
-      toast.error(error || "Failed to validate cart");
+      toast.error(isEn ? error?.en : error?.ar || "Failed to add item to cart");
     }
   };
 

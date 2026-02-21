@@ -13,6 +13,8 @@ import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { addToCart } from "@/store/slices/cartSlice";
 import { toast } from "sonner";
+import { useToggleWishlistMutation } from "@/store/services/wishListApi";
+import { useAuth } from "@/hooks/useAuth";
 
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
@@ -33,6 +35,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
   const router = useRouter();
   const dispatch = useDispatch();
   const t = useTranslations();
+  const tToast = useTranslations("toast");
   const [isModelLoading, setIsModelLoading] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const isEn = locale === "en";
@@ -92,7 +95,30 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
 
   const [isChooseDesignOpen, setIsChooseDesignOpen] = useState(false);
 
-  const [wishlist, setWishlist] = useState(false);
+  const [wishlist, setWishlist] = useState(initialData?.isWishlisted ?? false);
+  const [toggleWishlist, { isLoading: isWishlistLoading }] = useToggleWishlistMutation();
+  const { isAuthenticated } = useAuth();
+
+  // Sync wishlist state when variant changes (filter/design selection)
+  useEffect(() => {
+    setWishlist(initialData?.isWishlisted ?? false);
+  }, [initialData?.id, initialData?.isWishlisted]);
+
+  const handleWishlistToggle = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please login to add to wishlist");
+      router.push(`/${locale}/login`);
+      return;
+    }
+    setWishlist((prev) => !prev);
+    try {
+      await toggleWishlist(initialData?.id).unwrap();
+      toast.success(wishlist ? `${tToast("wishlist_removed")}` : `${tToast("wishlist_success")}`);
+    } catch {
+      setWishlist((prev) => !prev);
+      toast.error(`${tToast("wishlist_remove_failed")}`);
+    }
+  };
 
   const handleBuyNow = async () => {
     // Note: Since quantity is managed inside PriceAndCart,
@@ -110,7 +136,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
       ).unwrap();
       router.push("/cart");
     } catch (error) {
-      toast.error(error || "Failed to add item to cart");
+      toast.error(isEn ? error?.en : error?.ar || "Failed to add item to cart");
     }
   };
 
@@ -235,7 +261,11 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                     locale === "ar" ? "left-2 xl:left-4 2xl:left-5" : "right-2 xl:right-4 2xl:right-5",
                   )}
                 >
-                  <button onClick={() => setWishlist(!wishlist)} className="w-3 2xl:w-4.5 hover:cursor-pointer transition hover:scale-105">
+                  <button
+                    onClick={handleWishlistToggle}
+                    disabled={isWishlistLoading}
+                    className="w-3 2xl:w-4.5 hover:cursor-pointer transition hover:scale-105 disabled:opacity-60 disabled:scale-100"
+                  >
                     <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full block">
                       <path
                         d="M7.39062 2.03027C8.85818 0.419111 10.5094 0.0894194 11.749 0.544922C12.9908 1.00129 13.9263 2.28275 13.8955 4.12402C13.8676 5.78912 12.7686 7.51198 11.3096 9.04004C9.9379 10.4766 8.3011 11.6826 7.12598 12.4326C5.95106 11.6827 4.3155 10.4769 2.94434 9.04102C1.48523 7.51297 0.385558 5.78917 0.357422 4.12402C0.326449 2.28301 1.26218 1.00146 2.50391 0.544922C3.74349 0.0891915 5.39453 0.418918 6.8623 2.03027L7.12695 2.32031L7.39062 2.03027Z"

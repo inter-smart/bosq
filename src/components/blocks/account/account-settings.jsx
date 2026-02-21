@@ -7,9 +7,11 @@ import { OrderEmpty } from "./order-empty";
 import PersonalInformationForm from "@/components/form/personal-information-form";
 import PasswordChangeForm from "@/components/form/password-change-form";
 import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function AccountSettings({ data, locale }) {
   const t = useTranslations("account");
+  const { isGoogleUser } = useAuth();
   return (
     <>
       {data?.coupons?.length === 0 ? (
@@ -39,20 +41,24 @@ export default function AccountSettings({ data, locale }) {
             <RecaptchaProvider>
               <PersonalInformationForm data={data} />
             </RecaptchaProvider>
-            <Heading
-              as="h4"
-              size="heading5"
-              className="font-normal text-[#282828] mb-3 xl:mb-5 2xl:mb-8 mt-6 xl:mt-10 2xl:mt-12"
-            >
-              {t("password_change")}
-            </Heading>
-            <div className="flex">
-              <div className="w-full lg:w-1/2">
-                <RecaptchaProvider>
-                  <PasswordChangeForm locale={locale} />
-                </RecaptchaProvider>
-              </div>
-            </div>
+            {!isGoogleUser && (
+              <>
+                <Heading
+                  as="h4"
+                  size="heading5"
+                  className="font-normal text-[#282828] mb-3 xl:mb-5 2xl:mb-8 mt-6 xl:mt-10 2xl:mt-12"
+                >
+                  {t("password_change")}
+                </Heading>
+                <div className="flex">
+                  <div className="w-full lg:w-1/2">
+                    <RecaptchaProvider>
+                      <PasswordChangeForm locale={locale} />
+                    </RecaptchaProvider>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}
