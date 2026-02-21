@@ -222,7 +222,7 @@ export default async function ProjectDetailPage({ params }) {
         data={specializedAreasData}
       />
 
-      <HomeEnquiry locale={locale} data={enquiryData} />
+      <HomeEnquiry locale={locale} data={enquiryData} projectId={projectData?.id} type={"project"} />
     </>
   );
 }

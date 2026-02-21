@@ -23,7 +23,6 @@ import { API_URL } from "@/lib/api/client";
 import { useTranslations } from "next-intl";
 import { commonValidations, setValidationTranslator } from "@/lib/validations";
 
-
 // ✅ Shared styles
 const labelStyle = cn(
   "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]",
@@ -40,22 +39,21 @@ const textareaStyle = cn(
   "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none",
 );
 
-export default function EnquiryForm(type) {
+export default function ProjectEnquiryForm({ projectId }) {
   const t = useTranslations("form");
-
+  console.log("project id", projectId);
 
   const tErrors = useTranslations("errors");
 
   setValidationTranslator(tErrors);
 
-
   // ✅ Validation schema
-const formSchema = z.object({
-  name: commonValidations.name(t("name")),
-  email: commonValidations.email(),
-  phone: commonValidations.phone(),
-  additionalDetails: commonValidations.message(t("message")), 
-});
+  const formSchema = z.object({
+    name: commonValidations.name(t("name")),
+    email: commonValidations.email(),
+    phone: commonValidations.phone(),
+    additionalDetails: commonValidations.message(t("message")),
+  });
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -71,14 +69,14 @@ const formSchema = z.object({
   const [success, setSuccess] = useState(null);
 
   const { executeRecaptcha } = useGoogleReCaptcha();
-  const URL = `${API_URL}/api/frontend/enquiries/contact`;
+  const URL = `${API_URL}/api/frontend/enquiries/project`;
 
   const onSubmit = async (values) => {
     setLoading(true);
     setSuccess(null);
 
     try {
-      const recaptchaToken = await executeRecaptcha("lead_generation_form");
+      const recaptchaToken = await executeRecaptcha("project_enquiry_form");
 
       const res = await fetch(URL, {
         method: "POST",
@@ -86,8 +84,8 @@ const formSchema = z.object({
         body: JSON.stringify({
           ...values,
           message: values.additionalDetails,
+          project_id: projectId || null,
           recaptcha_token: recaptchaToken,
-          type: "lead-generation",
         }),
       });
 
@@ -120,7 +118,8 @@ const formSchema = z.object({
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                {t("full_name")}<span className={errorStyle}>*</span>
+                {t("full_name")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
@@ -141,7 +140,8 @@ const formSchema = z.object({
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                {t("phone_number")}<span className={errorStyle}>*</span>
+                {t("phone_number")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
@@ -163,7 +163,8 @@ const formSchema = z.object({
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                {t("email_id")}<span className={errorStyle}>*</span>
+                {t("email_id")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input

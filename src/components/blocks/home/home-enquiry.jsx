@@ -5,9 +5,9 @@ import parse from "html-react-parser";
 import EnquiryForm from "@/components/form/enquiry-form";
 import { cn } from "@/lib/utils";
 import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
+import ProjectEnquiryForm from "@/components/form/project-enquiry-form";
 
-export default function HomeEnquiry({ data, locale, isEN }) {
-
+export default function HomeEnquiry({ data, locale, isEN, type = "", projectId = null }) {
   return (
     <section className="w-full h-auto block py-[30px] sm:py-[40px] xl:py-[60px] 2xl:py-[80px] bg-[#ebebeb]">
       <div className="container">
@@ -56,9 +56,16 @@ export default function HomeEnquiry({ data, locale, isEN }) {
               >
                 {parse(isEN ? data?.description : data?.description_ar)}
               </Text>
-              <RecaptchaProvider>
-                <EnquiryForm />
-              </RecaptchaProvider>
+
+              {type === "project" ? (
+                <RecaptchaProvider>
+                  <ProjectEnquiryForm projectId={projectId} />
+                </RecaptchaProvider>
+              ) : (
+                <RecaptchaProvider>
+                  <EnquiryForm />
+                </RecaptchaProvider>
+              )}
             </div>
           </div>
         </div>
