@@ -51,7 +51,7 @@ export default function EnquiryForm(type) {
 
   // ✅ Validation schema
 const formSchema = z.object({
-  name: commonValidations.name(t("name")),
+  name: commonValidations.name(t("full_name")),
   email: commonValidations.email(),
   phone: commonValidations.phone(),
   additionalDetails: commonValidations.message(t("message")), 
