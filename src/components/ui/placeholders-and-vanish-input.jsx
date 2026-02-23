@@ -212,7 +212,10 @@ export function PlaceholdersAndVanishInput({
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data?.message || "Failed to send enquiry");
+      
+      if (!res.ok) {
+        
+        throw new Error(data?.error?.message || data?.message || "Failed to send enquiry");}
 
       toast.success(data?.message);
     } catch (error) {
