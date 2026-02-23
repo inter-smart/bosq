@@ -72,7 +72,7 @@ const OrderSummary = ({
   const [applyCoupon] = useApplyCouponMutation();
   const [removeCoupon] = useRemoveCouponMutation();
 
-    const t = useTranslations("cart");
+  const t = useTranslations("cart");
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -131,7 +131,8 @@ const OrderSummary = ({
       updateSummaryFromResponse(result?.data);
       toast.success(`${tToast("coupon_success")}`);
     } catch (error) {
-      toast.error(`${tToast("coupon_failed")}`);
+      console.log("Apply coupon error:", error);
+      toast.error(locale === "en" ? error?.en : error?.ar || "Failed to apply coupon");
     }
   };
 
@@ -180,16 +181,16 @@ const OrderSummary = ({
 
     // Validate terms accepted
     if (!termsAccepted) {
-      toast.error("Please accept the Terms and Conditions to proceed");
+      toast.error(tToast("accept_terms"));
       return;
     }
 
     // Validate shipping address is selected
     if (!shippingId) {
       if (selectedBillingAddressId && !useSameAddressForShipping) {
-        toast.error("Please select a shipping address or check 'Use Same Address For Shipping' in billing section");
+        toast.error(tToast("select_shipping_or_same"));
       } else {
-        toast.error("Please select a shipping address");
+        toast.error(tToast("select_shipping_address"));
       }
       return;
     }
@@ -197,9 +198,9 @@ const OrderSummary = ({
     // Validate billing address is selected
     if (!billingId) {
       if (selectedShippingAddressId && !useSameAddressForBilling) {
-        toast.error("Please select a billing address or check 'Use Same Address For Billing' in shipping section");
+        toast.error(tToast("select_billing_or_same"));
       } else {
-        toast.error("Please select a billing address");
+        toast.error(tToast("select_billing_address"));
       }
       return;
     }
@@ -236,7 +237,7 @@ const OrderSummary = ({
       router.push(`/${locale}/order/success?orderId=${orderId}`);
     } catch (error) {
       console.log("error", error);
-      toast.error(error || "Failed to place order");
+      toast.error(error || tToast("order_failed"));
     }
   };
 
@@ -308,7 +309,9 @@ const OrderSummary = ({
               size="text3"
               className="font-normal text-[#282828] my-2 xl:my-3 2xl:my-4 [&_span]:font-light [&_span]:text-[#808080] flex justify-between"
             >
-              <span>{t("subtotal")} ({itemsCount})</span>
+              <span>
+                {t("subtotal")} ({itemsCount})
+              </span>
               {subTotal}
             </Text>
             <Text
