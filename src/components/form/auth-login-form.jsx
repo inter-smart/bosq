@@ -54,14 +54,13 @@ export default function AuthLoginForm({ locale, data }) {
   const { login, isAuthenticated, isLoading, clearAuthError } = useAuth();
   const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const redirectTo = searchParams.get("redirect") || `/${locale}`;
   const activity = searchParams.get("activity") || null;
-
-  console.log(activity);
 
   // Guard: if already logged in (e.g. browser back button), redirect away
   useEffect(() => {
@@ -82,8 +81,7 @@ export default function AuthLoginForm({ locale, data }) {
 
     if (result.success) {
       toast.success(tAuth("success"));
-      router.replace(redirectTo);
-      // router.refresh();
+      setIsRedirecting(true);
     } else {
       setSuccess(result.error || tAuth("error"));
     }
@@ -174,6 +172,13 @@ export default function AuthLoginForm({ locale, data }) {
           </p>
         )}
       </form>
+
+      {/* Redirect overlay */}
+      {isRedirecting && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/70 backdrop-blur-sm">
+          <div className="h-10 w-10 rounded-full border-4 border-[#e9e9e9] border-t-[#f17423] animate-spin" />
+        </div>
+      )}
     </Form>
   );
 }
