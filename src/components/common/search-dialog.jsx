@@ -219,7 +219,7 @@ export default function SearchDialog({ children, locale }) {
                                 </div>
                               )}
                               <Image
-                                src={item?.media?.path ?? "images/placeholder.jpg"}
+                                src={item?.media?.path ?? "/images/placeholder.jpg"}
                                 alt={item?.media?.alt}
                                 width={550}
                                 height={440}
@@ -227,7 +227,7 @@ export default function SearchDialog({ children, locale }) {
                               />
                               {item?.hoverMedia?.path && (
                                 <Image
-                                  src={item?.hoverMedia?.path ?? "images/placeholder.jpg"}
+                                  src={item?.hoverMedia?.path ?? "/images/placeholder.jpg"}
                                   alt={item?.hoverMedia?.alt}
                                   width={550}
                                   height={440}

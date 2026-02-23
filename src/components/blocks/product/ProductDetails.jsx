@@ -17,6 +17,10 @@ const accordionTriggerStyle = cn(
 );
 
 const ProductDetails = ({ data, isEn, setIndexProject, setOpenProject, openProject, indexProject }) => {
+
+
+   console.log("product data: ", data)
+
   const t = useTranslations();
   const faqs = data?.faqs || [];
   const projects = data?.project_images || [];
@@ -32,7 +36,7 @@ const ProductDetails = ({ data, isEn, setIndexProject, setOpenProject, openProje
           <AccordionTrigger className={accordionTriggerStyle}>{t("product.product_details")}</AccordionTrigger>
           <AccordionContent className="sm:px-2">
             <div dir={!isEn ? "rtl" : "ltr"} className="typography flex flex-wrap justify-between">
-              <div className="xl:max-w-[540px] 2xl:max-w-[650px] 3xl:max-w-[820px]">{details?.details_title && parse(details?.details)}</div>
+              <div className="xl:max-w-[540px] 2xl:max-w-[650px] 3xl:max-w-[820px]">{isEn ? details?.details && parse(details?.details) : details?.details_ar && parse(details?.details_ar)}</div>
               <div className="xl:max-w-[468px] 2xl:max-w-[576px] 3xl:max-w-[700px] border border-[#e9e9e9] rounded-lg px-2.5 xl:px-5 2xl:px-7.5 py-1 xl:py-2.5 2xl:py-4">
                 {details?.details_points && parse(isEn ? details?.details_points : details?.details_points_ar)}
               </div>
@@ -91,7 +95,7 @@ const ProductDetails = ({ data, isEn, setIndexProject, setOpenProject, openProje
           <AccordionTrigger className={accordionTriggerStyle}>{t("product.additional_info")}</AccordionTrigger>
           <AccordionContent className="sm:p-2">
             <div dir={!isEn ? "rtl" : "ltr"} className="typography">
-              {additionalInfo || (additionalInfoAr && parse(isEn ? additionalInfo : additionalInfoAr))}
+              {parse(additionalInfo) || (additionalInfoAr && parse(isEn ? additionalInfo : additionalInfoAr))}
             </div>
           </AccordionContent>
         </AccordionItem>

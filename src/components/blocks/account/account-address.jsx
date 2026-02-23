@@ -125,6 +125,10 @@ export default function AccountAddress({ data, locale, addressData }) {
     }
   };
 
+
+
+  console.log("addressdata: ", addressData)
+
   return (
     <>
       {!addressData || addressData?.length === 0 ? (
@@ -238,7 +242,7 @@ export default function AccountAddress({ data, locale, addressData }) {
                           size="heading5"
                           className="font-medium text-[#282828] mb-1 xl:mb-2"
                         >
-                          {item?.shipping_name}
+                          {item?.shippingFullName}
                         </Heading>
                         <Text
                           as="div"

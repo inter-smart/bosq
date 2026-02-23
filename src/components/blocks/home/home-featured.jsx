@@ -28,7 +28,6 @@ export default function HomeFeatured({ data, locale }) {
   //   onNextButtonClick,
   // } = usePrevNextButtons(emblaApi);
 
-  
   return (
     <section className="w-full h-auto block py-[30px] sm:py-[40px_60px] xl:py-[60px_80px] 2xl:py-[80px_100px]">
       <div className="container">
@@ -68,17 +67,17 @@ export default function HomeFeatured({ data, locale }) {
                     <Link
                       href={{
                         pathname: `/${locale}/products`,
-                        query: {
-                          subcategory: item?.slug,
-                          page: 1,
-                        },
+                        query:
+                          item?.parent_id !== null
+                            ? { subcategory: item.slug, page: 1 }
+                            : { category: item.slug, page: 1 },
                       }}
                       className="group w-full h-auto block"
                     >
                       <div className="w-full aspect-440/576 overflow-hidden mb-1 xl:mb-3 2xl:mb-5">
                         <Image
-                          src={item?.media?.path}
-                          alt={isEN?item?.media?.alt: item?.media?.alt_ar}
+                          src={item?.media?.path ?? "/images/placeholder.jpg"}
+                          alt={isEN ? item?.media?.alt : item?.media?.alt_ar}
                           width={308}
                           height={517}
                           className="w-full h-full object-cover hover:scale-110 transition duration-300"
@@ -90,7 +89,7 @@ export default function HomeFeatured({ data, locale }) {
                           size="heading3"
                           className="font-normal capitalize text-[#282828] flex items-center gap-2"
                         >
-                          {parse(isEN? item?.name: item?.name_ar)}{" "}
+                          {parse(isEN ? item?.name : item?.name_ar)}{" "}
                           <span className="w-6 xl:w-7 2xl:w-9 h-0.5 bg-[#f17423] opacity-0 -translate-x-5 transition group-hover:opacity-100 not group-hover:translate-x-0" />
                         </Heading>
                       </div>

@@ -99,7 +99,7 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
               </div>
             )}
             <Image
-              src={product?.media_path}
+              src={product?.media_path ?? "/images/placeholder.jpg"}
               alt={isEn ? product?.title : product?.title_ar}
               width={550}
               height={440}
