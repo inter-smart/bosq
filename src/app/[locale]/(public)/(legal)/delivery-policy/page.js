@@ -30,6 +30,8 @@ export default async function DeliveryPage({ params }) {
   const resolvedParams = await params;
   const { locale } = resolvedParams;
 
+  const slug = locale === "en"? "Delivery Policy" : "سياسة التوصيل";
+
   const {data} = await getDeliveryPolicyCms.getCmsData();
   const { heroData, deliveryData, deliveryInfo } = data;
    return (
