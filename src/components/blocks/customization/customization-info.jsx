@@ -1,4 +1,4 @@
-import parse from "html-react-parser";
+import parse, { domToReact } from "html-react-parser";
 import { cn } from "@/lib/utils";
 import { Heading } from "@/components/utils/heading";
 import Image from "next/image";
@@ -141,39 +141,39 @@ export default function CustomizationInfo({
             </div>
             {(customizationProcess?.title ||
               customizationProcess?.title_ar) && (
-              <Heading as="h2" size="heading1" className="text-[#282828]">
-                {parse(
-                  isEn
-                    ? customizationProcess?.title
-                    : customizationProcess?.title_ar
-                )}
-                <span
-                  className={cn(
-                    "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
-                    locale === "ar"
-                      ? "-translate-x-1 xl:-translate-x-2 "
-                      : "translate-x-1 xl:translate-x-2 ",
+                <Heading as="h2" size="heading1" className="text-[#282828]">
+                  {parse(
+                    isEn
+                      ? customizationProcess?.title
+                      : customizationProcess?.title_ar
                   )}
-                />
-                &nbsp;
-              </Heading>
-            )}
+                  <span
+                    className={cn(
+                      "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
+                      locale === "ar"
+                        ? "-translate-x-1 xl:-translate-x-2 "
+                        : "translate-x-1 xl:translate-x-2 ",
+                    )}
+                  />
+                  &nbsp;
+                </Heading>
+              )}
             {(customizationProcess?.description ||
               customizationProcess?.description_ar) && (
-              <div
-                dir={locale === "ar" ? "rtl" : "ltr"}
-                className={cn(
-                  "typography mb-6 xl:mb-7 2xl:mb-14",
-                  "[--text-color:#282828]",
-                )}
-              >
-                {parse(
-                  isEn
-                    ? customizationProcess?.description
-                    : customizationProcess?.description_ar
-                )}
-              </div>
-            )}
+                <div
+                  dir={locale === "ar" ? "rtl" : "ltr"}
+                  className={cn(
+                    "typography mb-6 xl:mb-7 2xl:mb-14",
+                    "[--text-color:#282828]",
+                  )}
+                >
+                  {parse(
+                    isEn
+                      ? customizationProcess?.description
+                      : customizationProcess?.description_ar
+                  )}
+                </div>
+              )}
             {customizationProcess?.items?.map((item, index) => (
               <div key={"customizationProcess-info-" + index}>
                 <div
@@ -299,7 +299,21 @@ export default function CustomizationInfo({
                       : "[&_ul>li]:list-inside",
                   )}
                 >
-                  {parse(isEn ? item?.description : item?.description_ar)}
+                  {parse(isEn ? item?.description : item?.description_ar,
+                    {
+                      replace: (domNode) => {
+                        if (
+                          domNode.type === "tag" &&
+                          domNode.name === "p" &&
+                          domNode.parent &&
+                          (domNode.parent).name === "li"
+                        ) {
+                          // Replace <p> inside <li> with just its children
+                          return <>{domToReact(domNode.children)}</>;
+                        }
+                      },
+                    }
+                  )}
                 </div>
               )}
               <div className="clear-both" />
@@ -349,7 +363,7 @@ export default function CustomizationInfo({
           <div className="w-full h-auto flex flex-wrap gap-6 sm:gap-12 xl:gap-18 2xl:gap-30">
             <div className="flex-1">
               <RecaptchaProvider>
-              <RequestEnquiryForm states={states} locale={locale} dropdownData={dropdownData} />
+                <RequestEnquiryForm states={states} locale={locale} dropdownData={dropdownData} />
               </RecaptchaProvider>
             </div>
             <div className="w-full lg:max-w-[46%]">

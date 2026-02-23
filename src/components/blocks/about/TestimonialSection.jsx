@@ -102,13 +102,13 @@ export default function TestimonialSection({ data, locale }) {
                   >
                     <div className="w-full h-auto my-auto">
                       <div className="text-[13px] 2xl:text-[16px] 3xl:text-[18px] leading-[1.4] font-normal text-[#282828] mb-3 sm:mb-5 2xl:mb-7.5">
-                        {isEn? item?.name: item?.name_ar}
+                        {isEn? item?.title: item?.title_ar}
                       </div>
                       <div className="text-[11px] lg:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-[1.8] font-light text-[#282828] mb-3 sm:mb-5 2xl:mb-7.5">
                         {isEn? item?.description: item?.description_ar}
                       </div>
                       <div className="text-[13px] 2xl:text-[16px] 3xl:text-[18px] leading-[1.4] font-normal text-[#282828]">
-                        {isEn? item?.designation: item?.designation_ar}
+                        {isEn? item?.name: item?.name_ar}, {isEn? item?.designation: item?.designation_ar}
                       </div>
                     </div>
                   </div>

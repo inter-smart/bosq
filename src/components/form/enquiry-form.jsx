@@ -40,7 +40,7 @@ const textareaStyle = cn(
   "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none",
 );
 
-export default function EnquiryForm() {
+export default function EnquiryForm(type) {
   const t = useTranslations("form");
 
 
@@ -51,7 +51,7 @@ export default function EnquiryForm() {
 
   // ✅ Validation schema
 const formSchema = z.object({
-  name: commonValidations.name(t("name")),
+  name: commonValidations.name(t("full_name")),
   email: commonValidations.email(),
   phone: commonValidations.phone(),
   additionalDetails: commonValidations.message(t("message")), 

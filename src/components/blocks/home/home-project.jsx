@@ -21,10 +21,8 @@ export default function HomeProject({ data, locale, isEN }) {
   const t = useTranslations("home");
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { loop: false, align: "start", direction: locale === "ar" ? "rtl" : "ltr" },
-    [ClassNames(), Autoplay({ delay: 4000, stopOnInteraction: true })]
+    [ClassNames(), Autoplay({ delay: 4000, stopOnInteraction: true })],
   );
-
-
 
   const { selectedIndex, scrollSnaps, onDotButtonClick } =
     useDotButton(emblaApi);
@@ -42,22 +40,25 @@ export default function HomeProject({ data, locale, isEN }) {
                 "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
                 locale === "ar"
                   ? "-translate-x-1 xl:-translate-x-2 "
-                  : "translate-x-1 xl:translate-x-2 "
+                  : "translate-x-1 xl:translate-x-2 ",
               )}
             />
           </Heading>
-          <div className="flex py-2 gap-1 xl:gap-3">
-            {scrollSnaps.map((_, index) => (
-              <DotButton
-                key={index}
-                onClick={() => onDotButtonClick(index)}
-                className={cn(
-                  "w-2 h-2 border border-[#8e8e90] bg-none rounded-full",
-                  index === selectedIndex && "bg-[#f17423] border-[#f17423] "
-                )}
-              />
-            ))}
-          </div>
+
+          {data?.list.length > 3 && (
+            <div className="flex py-2 gap-1 xl:gap-3">
+              {scrollSnaps.map((_, index) => (
+                <DotButton
+                  key={index}
+                  onClick={() => onDotButtonClick(index)}
+                  className={cn(
+                    "w-2 h-2 border border-[#8e8e90] bg-none rounded-full",
+                    index === selectedIndex && "bg-[#f17423] border-[#f17423] ",
+                  )}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
       <div
@@ -65,7 +66,7 @@ export default function HomeProject({ data, locale, isEN }) {
           "container",
           locale === "ar"
             ? "max-sm:[mask-image:linear-gradient(to_left,white_0%,white_98%,transparent_100%)] max-sm:pl-0"
-            : "max-sm:[mask-image:linear-gradient(to_right,white_0%,white_98%,transparent_100%)] max-sm:pr-0"
+            : "max-sm:[mask-image:linear-gradient(to_right,white_0%,white_98%,transparent_100%)] max-sm:pr-0",
         )}
       >
         <div className="w-full max-w-full">
@@ -78,16 +79,19 @@ export default function HomeProject({ data, locale, isEN }) {
                     key={"product" + index}
                     className={cn(
                       "flex-[0_0_40px] sm:flex-[0_0_20%] min-w-0 px-0.5 sm:px-1 select-none transition-all duration-600",
-                      isActive && "flex-[0_0_268px] sm:flex-[0_0_60%]"
+                      isActive && "flex-[0_0_268px] sm:flex-[0_0_60%]",
                     )}
                   >
                     <div
                       className="w-full h-[268px] sm:h-[368px] xl:h-[468px] 2xl:h-[576px] 3xl:h-[668px] bg-black overflow-hidden relative z-0"
                       onClick={() => setActiveIndex(index)}
                     >
-                      <div className={cn("w-full h-0.5 bg-[#f17423] absolute bottom-0 left-0 right-0 z-1 transition",
-                        isActive ? "visible" : "invisible"
-                      )} />
+                      <div
+                        className={cn(
+                          "w-full h-0.5 bg-[#f17423] absolute bottom-0 left-0 right-0 z-1 transition",
+                          isActive ? "visible" : "invisible",
+                        )}
+                      />
                       <Image
                         src={item?.media?.path}
                         alt={isEN ? item?.media?.alt : item?.media?.alt_ar}
@@ -98,7 +102,7 @@ export default function HomeProject({ data, locale, isEN }) {
                       <div
                         className={cn(
                           "w-full absolute z-0 inset-0 p-[20px] xl:p-[40px] 2xl:p-[50px] opacity-0 invisible translate-x-10 transition duration-500",
-                          isActive && "opacity-100 visible translate-x-0"
+                          isActive && "opacity-100 visible translate-x-0",
                         )}
                       >
                         <Heading
@@ -113,7 +117,9 @@ export default function HomeProject({ data, locale, isEN }) {
                           className="min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-40"
                           asChild
                         >
-                          <Link href={`/projects/${item?.slug}` || "/projects/slug"}>
+                          <Link
+                            href={`/projects/${item?.slug}` || "/projects/slug"}
+                          >
                             {t("view_projects")}
                           </Link>
                         </Button>

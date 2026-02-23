@@ -1,4 +1,4 @@
-import parse from "html-react-parser";
+import parse, { domToReact } from "html-react-parser";
 import { cn } from "@/lib/utils";
 import { Heading } from "@/components/utils/heading";
 import Image from "next/image";
@@ -35,7 +35,7 @@ export default function DeliveryInfo({ data, deliveryInfo, locale }) {
                   "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block",
                   locale === "ar"
                     ? "-translate-x-1 xl:-translate-x-2 "
-                    : "translate-x-1 xl:translate-x-2 "
+                    : "translate-x-1 xl:translate-x-2 ",
                 )}
               />
             </Heading>
@@ -73,7 +73,7 @@ export default function DeliveryInfo({ data, deliveryInfo, locale }) {
                     "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
                     locale === "ar"
                       ? "-translate-x-1 xl:-translate-x-2 "
-                      : "translate-x-1 xl:translate-x-2 "
+                      : "translate-x-1 xl:translate-x-2 ",
                   )}
                 />
                 &nbsp;
@@ -83,7 +83,7 @@ export default function DeliveryInfo({ data, deliveryInfo, locale }) {
                   {parse(
                     isEn
                       ? deliveryInfo?.description
-                      : deliveryInfo?.description_ar
+                      : deliveryInfo?.description_ar,
                   )}
                 </Text>
                 <span className="flex-1 h-[1px] bg-[#e9e9e9]" />
@@ -96,7 +96,7 @@ export default function DeliveryInfo({ data, deliveryInfo, locale }) {
                       "w-1/2 sm:w-1/3 lg:w-1/5 border-[#e0e0e0]",
                       locale === "ar"
                         ? "lg:not-last:border-l-[1px]"
-                        : "lg:not-last:border-r-[1px]"
+                        : "lg:not-last:border-r-[1px]",
                     )}
                   >
                     <div className="w-full">
@@ -142,7 +142,7 @@ export default function DeliveryInfo({ data, deliveryInfo, locale }) {
                   "w-full max-w-[220px] sm:max-w-[46%] aspect-54/41 overflow-hidden mb-3 xl:mb-5",
                   index % 2 === 0
                     ? "sm:float-right sm:ml-20 xl:ml-34 2xl:ml-42 3xl:ml-52 sm:mr-0"
-                    : "sm:float-left sm:mr-20 xl:mr-34 2xl:mr-42 3xl:mr-52 sm:ml-0"
+                    : "sm:float-left sm:mr-20 xl:mr-34 2xl:mr-42 3xl:mr-52 sm:ml-0",
                 )}
               >
                 <Image
@@ -167,7 +167,7 @@ export default function DeliveryInfo({ data, deliveryInfo, locale }) {
                       "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
                       locale === "ar"
                         ? "-translate-x-1 xl:-translate-x-2 "
-                        : "translate-x-1 xl:translate-x-2 "
+                        : "translate-x-1 xl:translate-x-2 ",
                     )}
                   />
                   &nbsp;
@@ -176,11 +176,28 @@ export default function DeliveryInfo({ data, deliveryInfo, locale }) {
               {item?.description && (
                 <div
                   dir={locale === "ar" ? "rtl" : "ltr"}
-                  className={cn("typography [--text-color:#282828]",
-                    index % 2 === 0 ? "[&_ul>li]:list-outside" : "[&_ul>li]:list-inside"
+                  className={cn(
+                    "typography [--text-color:#282828]",
+                    index % 2 === 0
+                      ? "[&_ul>li]:list-outside"
+                      : "[&_ul>li]:list-inside",
                   )}
                 >
-                  {parse(isEn ? item?.description : item?.description_ar)}
+                  {parse(isEn ? item?.description : item?.description_ar, 
+                    {
+                            replace: (node) => {
+                              // ✅ Remove <p> ONLY when it is inside <li>
+                              if (
+                                node.type === "tag" &&
+                                node.name === "p" &&
+                                node.parent?.type === "tag" &&
+                                node.parent.name === "li"
+                              ) {
+                                return <>{domToReact(node.children)}</>;
+                              }
+                            },
+                          },
+                  )}
                 </div>
               )}
               <div className="clear-both" />
