@@ -22,7 +22,6 @@ import { commonValidations, setValidationTranslator } from "@/lib/validations";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
-import { toast } from "sonner";
 
 // Styles
 const labelStyle = cn("text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]");
