@@ -70,7 +70,7 @@ export default async function HomePage({ params }) {
     brandsSection,
     formSection,
     enquiryDropdowns,
-    state
+    state,
   } = data;
 
   const isEN = locale === "en";
@@ -78,16 +78,33 @@ export default async function HomePage({ params }) {
   return (
     <>
       <HomeHero locale={locale} data={sliders} />
-      <HomeAbout locale={locale} data={aboutSection} state={state} dropdownData={enquiryDropdowns} />
-      <HomeFeatured locale={locale} data={featuredSection} />
-      <HomeJourney locale={locale} data={journeySection} isEN={isEN} />
-      <HomeProject locale={locale} data={projectSection} isEN={isEN} />
-      <HomeCalculator
+      <HomeAbout
         locale={locale}
-        smartSpaceSection={smartSpaceSection}
-        isEN={isEN}
+        data={aboutSection}
+        state={state}
+        dropdownData={enquiryDropdowns}
       />
-      <HomeFind locale={locale} data={fitsSection} isEN={isEN} />
+
+      {featuredSection?.list.length > 0 && (
+        <HomeFeatured locale={locale} data={featuredSection} />
+      )}
+      <HomeJourney locale={locale} data={journeySection} isEN={isEN} />
+
+      {projectSection?.list.length > 0 && (
+        <HomeProject locale={locale} data={projectSection} isEN={isEN} />
+      )}
+
+      {smartSpaceSection?.list.length > 0 && (
+        <HomeCalculator
+          locale={locale}
+          smartSpaceSection={smartSpaceSection}
+          isEN={isEN}
+        />
+      )}
+
+      {fitsSection?.projects.length > 0 && (
+        <HomeFind locale={locale} data={fitsSection} isEN={isEN} />
+      )}
       {brandsSection?.list.length > 0 && (
         <HomeBrand locale={locale} data={brandsSection} isEN={isEN} />
       )}

@@ -13,7 +13,15 @@ export async function generateMetadata({ params }) {
   const resolvedParams = await params;
   const locale = resolvedParams.locale;
   const slug = resolvedParams.slug;
-  const { title, description, keywords, twitter, openGraph, alternates, other } = await getMetaData(`project-${slug}`, locale, `projects/${slug}`);
+  const {
+    title,
+    description,
+    keywords,
+    twitter,
+    openGraph,
+    alternates,
+    other,
+  } = await getMetaData(`project-${slug}`, locale, `projects/${slug}`);
 
   return {
     title,
@@ -191,20 +199,22 @@ export default async function ProjectDetailPage({ params }) {
   const resolvedParams = await params;
   const { locale, slug } = resolvedParams;
 
-
-
-
-  const { data, error } = await getProjectDetails({ slug })
-
+  const { data, error } = await getProjectDetails({ slug });
 
   if (error) {
-    return <NotFound />
+    return <NotFound />;
   }
 
-  console.log(error)
+  const {
+    heroData,
+    cmsData,
+    projectData,
+    solutionData,
+    specializedAreasData,
+    enquiryData,
+  } = data;
 
-  const { heroData, cmsData, projectData, solutionData, specializedAreasData, enquiryData } = data;
-
+  const isEn = locale === "en";
   const slugData = locale === "en" ? "Project" : "تفاصيل المشروع";
 
   return (
@@ -212,17 +222,26 @@ export default async function ProjectDetailPage({ params }) {
       <ProductHero
         locale={locale}
         data={heroData}
-        slug={slugData}
-        link={"/projects"}
+        slug={`Projects / ${slug}`}
       />
-      <ProjectDetail locale={locale} data={local_data?.projectData} projectData={projectData} />
-      <ProjectSolution locale={locale} data={solutionData} />
-      <ProjectSpecialized
+      <ProjectDetail
         locale={locale}
-        data={specializedAreasData}
+        data={local_data?.projectData}
+        projectData={projectData}
       />
+      <ProjectSolution locale={locale} data={solutionData} />
 
-      <HomeEnquiry locale={locale} data={enquiryData} projectId={projectData?.id} type={"project"} />
+      {specializedAreasData?.items?.length > 0 && (
+        <ProjectSpecialized locale={locale} data={specializedAreasData} />
+      )}
+
+      <HomeEnquiry
+      isEN={isEn}
+        locale={locale}
+        data={enquiryData}
+        projectId={projectData?.id}
+        type={"project"}
+      />
     </>
   );
 }

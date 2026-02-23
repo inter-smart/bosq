@@ -110,7 +110,7 @@ export const commonValidations = {
         return digits.length >= 8 && digits.length <= 15;
       },
       { message: vt("invalid_phone_length") },
-    )
+    ),
 
         // if (/^0+$/.test(digits)) {
         //   ctx.addIssue({
@@ -118,7 +118,7 @@ export const commonValidations = {
         //     message: vt("phone_all_zeros"),
         //   });
         // }
-      }),
+      // }),
   requiredString: (val) =>
     z.string().min(1, vt("required", { field: val })),
 
