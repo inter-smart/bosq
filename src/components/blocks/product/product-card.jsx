@@ -12,6 +12,7 @@ import { useAppSelector } from "@/store/hooks";
 import { toast } from "sonner";
 import LoginRequiredModal from "../../common/login-required-modal";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 const colorVariant = ["#bababa", "#333333", "#8db600", "#ff0000", "#000000"];
 
 export default function ProductCard({ product, isEn, locale = "en", onRemove }) {
@@ -19,15 +20,26 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
 
   const { isAuthenticated } = useAppSelector((state) => state.auth);
 
+  const router = useRouter();
+
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(product?.isWishlisted ?? false);
   const [toggleWishlist] = useToggleWishlistMutation();
 
   const tToast = useTranslations("toast");
 
+  const handleWishlistClick = (e) => {
+    e.stopPropagation();
+    handleToggleWishlist(product?.variant_id || product?.id);
+  };
+
+  const goToProduct = () => {
+    router.push(productUrl);
+  };
+
   const handleToggleWishlist = async (id) => {
     if (!isAuthenticated) {
-      setShowLoginModal(true);
+      router.push(`/${locale}/login?activity=wishlist`);
       return;
     }
     // Optimistic update
@@ -56,11 +68,14 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
     <>
       <Suspense fallback={<ProductCardSkelton />}>
         <div className="group w-full block">
-          <div className="w-full aspect-[550/440] overflow-hidden rounded-[4px] border border-[#f4f4f4] mb-3 2xl:mb-4 bg-[#f4f4f4] relative z-0">
+          <div
+            onClick={goToProduct}
+            className="w-full aspect-[550/440] overflow-hidden rounded-[4px] border border-[#f4f4f4] mb-3 2xl:mb-4 bg-[#f4f4f4] relative z-0"
+          >
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              onClick={() => handleToggleWishlist(product?.variant_id || product?.id)}
+              onClick={(e) => handleWishlistClick(e)}
               className="absolute z-2 top-2 xl:top-4 right-2 xl:right-4"
             >
               <svg width="15" height="13" viewBox="0 0 15 13" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -90,10 +105,10 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
               height={440}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />
-            {product?.hoverMedia && (
+            {product?.hover_media_path && (
               <Image
-                src={product?.hoverMedia?.path}
-                alt={product?.hoverMedia?.alt}
+                src={product?.hover_media_path}
+                alt={isEn ? product?.title : product?.title_ar}
                 width={550}
                 height={440}
                 quality={100}
@@ -126,9 +141,9 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
               </Link>
             </Text>
             <div className="flex items-center gap-0.5 xl:gap-1">
-              {product?.colorVariant ? (
+              {product?.hasMoreVariants ? (
                 <>
-                  {product?.colorVariant?.slice(0, 3).map((color, index) => (
+                  {colorVariant?.slice(0, 3).map((color, index) => (
                     <Link
                       key={"color" + index}
                       href={productUrl}

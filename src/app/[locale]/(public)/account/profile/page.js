@@ -8,15 +8,7 @@ import { notFound, redirect } from "next/navigation";
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
   const locale = resolvedParams.locale;
-  const {
-    title,
-    description,
-    keywords,
-    twitter,
-    openGraph,
-    alternates,
-    other,
-  } = await getMetaData("profile", locale, "account/profile");
+  const { title, description, keywords, twitter, openGraph, alternates, other } = await getMetaData("profile", locale, "account/profile");
 
   return {
     title,
@@ -43,8 +35,7 @@ const local_data = {
     email: "john.doe@email.com",
     date_of_birth: "1991-05-15",
     phone: "+971 50 123 4567",
-    address:
-      "<p>123 Business Tower<br />Downtown, Dubai<br />United Arab Emirates</p>",
+    address: "<p>123 Business Tower<br />Downtown, Dubai<br />United Arab Emirates</p>",
     subscribed_to_news_letter: "1",
     image: "/images/user-1.jpg",
     notes: "string",
@@ -59,24 +50,17 @@ export default async function ProfilePage({ params }) {
 
   const { data, error } = await ProfileData.getMyProfile();
 
-
   if (error) {
     return notFound();
   }
 
+  console.log("PROFILE DATA", data);
 
   return (
     <>
-      <ProductHero
-        locale={locale}
-        data={local_data?.heroData}
-        slug={locale === "en" ? "My Profile" : "ملفي الشخصي"}
-      />
+      <ProductHero locale={locale} data={local_data?.heroData} slug={locale === "en" ? "My Profile" : "ملفي الشخصي"} />
       <AccountLayout locale={locale}>
-        <AccountProfile
-          locale={locale}
-          data={data ? data : local_data?.userData}
-        />
+        <AccountProfile locale={locale} data={data ? data : local_data?.userData} />
       </AccountLayout>
     </>
   );

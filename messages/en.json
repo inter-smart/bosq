@@ -267,6 +267,8 @@
     "new_here": "New here?",
     "create_account": "Create an Account",
     "already_have_account": "Already have an account?",
+    "google_success": "Signed in with Google successfully!",
+    "google_error": "Google sign-in failed. Please try again.",
     "log_in": "Log in",
     "login": {
       "title": "Welcome Back",
