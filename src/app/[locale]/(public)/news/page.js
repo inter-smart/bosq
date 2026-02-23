@@ -39,12 +39,15 @@ export default async function NewsPage({ params, searchParams }) {
     NotFound()
   }
 
+  
+  const slug = locale==="en" ? "News" : "أخبار";
+
   const { heroData } = cmsResult.data;
   const blogListData = blogListResult.data || { blog: [], pagination: {} };
 
   return (
     <>
-      <NewsHero locale={locale} data={heroData} slug={"News"} type={"news"} />
+      <NewsHero locale={locale} data={heroData} slug={slug} type={"news"} />
       <NewsList locale={locale} data={blogListData} />
     </>
   );

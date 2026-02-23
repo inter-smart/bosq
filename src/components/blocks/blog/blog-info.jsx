@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import BlogRelated from "./blog-related";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
@@ -31,17 +32,13 @@ const navBtnStyle = cn(
   "text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-white flex items-center gap-0.5 disabled:opacity-50 not-disabled:hover:scale-110 transition cursor-pointer",
 );
 
-export default function BlogInfo({
-  data,
-  popularData,
-  relatedData,
-  locale,
-}) {
+
+export default function BlogInfo({ data, popularData, relatedData, locale }) {
   const isEn = locale === "en";
-
   const pathname = usePathname();
-
   const blogUrl = `${window.location.origin}${pathname}`;
+  const t = useTranslations("common");
+
 
   const [emblaRef, emblaApi] = useEmblaCarousel(
     {
@@ -178,7 +175,7 @@ export default function BlogInfo({
           <div className="flex flex-wrap -mx-3 xl:-mx-7 2xl:-mx-9 [&>*]:p-3 xl:[&>*]:p-7 2xl:[&>*]:p-9">
             <div className="w-full lg:w-[calc(100%-368px)] 2xl:w-[calc(100%-540px)] max-lg:mb-5">
               <div dir={locale === "ar" ? "rtl" : "ltr"} className="typography">
-                {parse(isEn?data?.description:data?.description_ar)}
+                {parse(isEn ? data?.description : data?.description_ar)}
               </div>
               <hr className="my-6 xl:my-7 2xl:my-8" />
               <div className="flex justify-between">
@@ -215,9 +212,7 @@ export default function BlogInfo({
                 <div>
                   <div className="flex gap-4 xl:gap-8">
                     {data?.prevData && (
-                      <Link
-                        href={`/${locale}/blogs/${data?.prevData}`}
-                      >
+                      <Link href={`/${locale}/blogs/${data?.prevData}`}>
                         <PrevButton
                           onClick={onPrevButtonClick}
                           disabled={!data?.prevData}
@@ -229,20 +224,18 @@ export default function BlogInfo({
                               locale === "ar" && "rotate-180",
                             )}
                           />
-                          <span className="hidded sm:block">Previous </span>
+                          <span className="hidded sm:block">{t("previous")} </span>
                         </PrevButton>
                       </Link>
                     )}
                     {data?.nextData && (
-                      <Link
-                        href={`/${locale}/blogs/${data?.nextData}`}
-                      >
+                      <Link href={`/${locale}/blogs/${data?.nextData}`}>
                         <NextButton
                           onClick={onNextButtonClick}
                           disabled={!data?.nextData}
                           className={cn(navBtnStyle, "text-black")}
                         >
-                          <span className="hidded sm:block">Next </span>
+                          <span className="hidded sm:block">{t("next")} </span>
                           <ChevronRight
                             className={cn(
                               "size-3.5",
@@ -262,103 +255,106 @@ export default function BlogInfo({
             </div>
             <MediaQuery minWidth={1024}>
               <div className="w-full lg:w-[368px] 2xl:w-[420px]">
-                <div className="w-full sticky top-[var(--header-y)]">
-                  <Heading
-                    as="h2"
-                    size="heading2"
-                    className="text-black mt-2.5 lg:mt-4 mb-5 xl:mb-7 3xl:mb-9"
-                  >
-                    {isEn ? popularData?.title : popularData?.title_ar}
-                    <span
-                      className={cn(
-                        "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
-                        locale === "ar"
-                          ? "-translate-x-1 xl:-translate-x-2 "
-                          : "translate-x-1 xl:translate-x-2 ",
-                      )}
-                    />
-                  </Heading>
-
-                  {popularData?.list?.map((item) => {
-                    return (
-                      <div key={item.id} className="w-full">
-                        <Suspense fallback={<p>loading</p>}>
-                          <div className="group w-full h-auto flex flex-wrap items-center sm:mb-4 xl:mb-6 3xl:mb-8">
-                            <Link
-                              href={item?.slug}
-                              className="w-20 xl:w-[90px] 2xl:w-[140px] h-20 xl:h-[90px] 2xl:h-[140px] aspect-aquare overflow-hidden border border-gray-100 block"
-                            >
-                              <Image
-                                src={
-                                  item?.media?.path || "/images/placeholder.jpg"
-                                }
-                                alt={
-                                  isEn ? item?.media?.alt : item?.media?.alt_ar
-                                }
-                                width={583}
-                                height={290}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                              />
-                            </Link>
-                            <div
-                              className={cn(
-                                "flex-1 flex flex-col justify-between",
-                                locale === "ar"
-                                  ? "pr-3 2xl:pr-4"
-                                  : "pl-3 2xl:pl-4",
-                              )}
-                            >
-                              <Heading
-                                as="div"
-                                size="heading5"
-                                className="leading-tight tracking-tight line-clamp-2 text-[#282828]  mb-2 xl:mb-3 2xl:mb-4 hover:underline"
-                              >
-                                <Link href={item?.slug}>
-                                  {isEn ? item?.title : item?.title_ar}
-                                </Link>
-                              </Heading>
-                              <Text
-                                as="div"
-                                size="text3"
-                                className="truncate text-[#b1b3b4]"
-                              >
-                                {data?.publishedAt}
-                              </Text>
-                            </div>
-                          </div>
-                        </Suspense>
-                      </div>
-                    );
-                  })}
-
-                  {popularData?.list?.length > 3 && (
-                    <Button
-                      variant="link"
-                      size="none"
-                      className={
-                        "text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black"
-                      }
-                      asChild
+                {popularData?.list?.length > 0 && (
+                  <div className="w-full sticky top-[var(--header-y)]">
+                    <Heading
+                      as="h2"
+                      size="heading2"
+                      className="text-black mt-2.5 lg:mt-4 mb-5 xl:mb-7 3xl:mb-9"
                     >
-                      <Link
-                        href={`/${locale}/blogs`}
+                      {isEn ? popularData?.title : popularData?.title_ar}
+                      <span
+                        className={cn(
+                          "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
+                          locale === "ar"
+                            ? "-translate-x-1 xl:-translate-x-2 "
+                            : "translate-x-1 xl:translate-x-2 ",
+                        )}
+                      />
+                    </Heading>
+
+                    {popularData?.list?.map((item) => {
+                      return (
+                        <div key={item.id} className="w-full">
+                          <Suspense fallback={<p>loading</p>}>
+                            <div className="group w-full h-auto flex flex-wrap items-center sm:mb-4 xl:mb-6 3xl:mb-8">
+                              <Link
+                                href={item?.slug}
+                                className="w-20 xl:w-[90px] 2xl:w-[140px] h-20 xl:h-[90px] 2xl:h-[140px] aspect-aquare overflow-hidden border border-gray-100 block"
+                              >
+                                <Image
+                                  src={
+                                    item?.media?.path ||
+                                    "/images/placeholder.jpg"
+                                  }
+                                  alt={
+                                    isEn
+                                      ? item?.media?.alt
+                                      : item?.media?.alt_ar
+                                  }
+                                  width={583}
+                                  height={290}
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                />
+                              </Link>
+                              <div
+                                className={cn(
+                                  "flex-1 flex flex-col justify-between",
+                                  locale === "ar"
+                                    ? "pr-3 2xl:pr-4"
+                                    : "pl-3 2xl:pl-4",
+                                )}
+                              >
+                                <Heading
+                                  as="div"
+                                  size="heading5"
+                                  className="leading-tight tracking-tight line-clamp-2 text-[#282828]  mb-2 xl:mb-3 2xl:mb-4 hover:underline"
+                                >
+                                  <Link href={item?.slug}>
+                                    {isEn ? item?.title : item?.title_ar}
+                                  </Link>
+                                </Heading>
+                                <Text
+                                  as="div"
+                                  size="text3"
+                                  className="truncate text-[#b1b3b4]"
+                                >
+                                  {data?.publishedAt}
+                                </Text>
+                              </div>
+                            </div>
+                          </Suspense>
+                        </div>
+                      );
+                    })}
+
+                    {popularData?.list?.length > 3 && (
+                      <Button
+                        variant="link"
+                        size="none"
+                        className={
+                          "text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black"
+                        }
+                        asChild
                       >
-                        {isEn ? "See all" : "شاهد الكل"}
-                        <ChevronRight
-                          className={cn(
-                            "size-3.5",
-                            locale === "ar" && "rotate-180",
-                          )}
-                        />
-                      </Link>
-                    </Button>
-                  )}
-                </div>
+                        <Link href={`/${locale}/blogs`}>
+                          {isEn ? "See all" : "شاهد الكل"}
+                          <ChevronRight
+                            className={cn(
+                              "size-3.5",
+                              locale === "ar" && "rotate-180",
+                            )}
+                          />
+                        </Link>
+                      </Button>
+                    )}
+                  </div>
+                )}
               </div>
             </MediaQuery>
 
             <MediaQuery maxWidth={1023}>
-              <BlogRelated locale={locale} data={popularData} />
+                <BlogRelated locale={locale} data={popularData} />
             </MediaQuery>
           </div>
         </div>
