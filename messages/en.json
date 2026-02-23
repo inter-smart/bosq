@@ -458,7 +458,13 @@
     "wishlist_removed": "Removed from wishlist",
     "wishlist_remove_failed": "Failed to remove from wishlist",
     "logout_success": "Logged out successfully",
-    "logout_failed": "Failed to log out"
+    "logout_failed": "Failed to log out",
+    "accept_terms": "Please accept the Terms and Conditions to proceed",
+    "order_failed": "Failed to place order",
+    "select_shipping_address": "Please select a shipping address",
+    "select_billing_address": "Please select a billing address",
+    "select_shipping_or_same": "Please select a shipping address or check 'Use Same Address For Shipping' in billing section",
+    "select_billing_or_same": "Please select a billing address or check 'Use Same Address For Billing' in shipping section"
   },
   "validation": {
     "name": {

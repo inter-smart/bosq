@@ -18,7 +18,17 @@ export const orderApi = createApi({
         },
       }),
       transformErrorResponse: (response) => {
-        return response?.data?.message || "Failed to place order";
+        const message = response?.data?.message;
+
+        if (!message) {
+          return { en: "Failed to place order", ar: "فشل في تقديم الطلب" };
+        }
+
+        if (typeof message === "string") {
+          return { en: message, ar: message };
+        }
+
+        return message;
       },
     }),
 
@@ -31,7 +41,17 @@ export const orderApi = createApi({
         },
       }),
       transformErrorResponse: (response) => {
-        return response?.data?.message || "Failed to apply coupon";
+        const message = response?.data?.message;
+
+        if (!message) {
+          return { en: "Failed to apply coupon", ar: "فشل في تطبيق الكوبون" };
+        }
+
+        if (typeof message === "string") {
+          return { en: message, ar: message };
+        }
+
+        return message;
       },
     }),
 
@@ -44,7 +64,17 @@ export const orderApi = createApi({
         },
       }),
       transformErrorResponse: (response) => {
-        return response?.data?.message || "Failed to remove coupon";
+        const message = response?.data?.message;
+
+        if (!message) {
+          return { en: "Failed to remove coupon", ar: "فشل في إزالة الكوبون" };
+        }
+
+        if (typeof message === "string") {
+          return { en: message, ar: message };
+        }
+
+        return message;
       },
     }),
   }),
