@@ -262,6 +262,8 @@
   },
   "auth": {
     "continue_with_google": "المتابعة مع جوجل",
+    "google_success": "تم تسجيل الدخول باستخدام Google بنجاح!",
+    "google_error": "فشل تسجيل الدخول باستخدام Google. يرجى المحاولة مرة أخرى.",
     "new_here": "جديد هنا؟",
     "create_account": "إنشاء حساب",
     "already_have_account": "لديك حساب بالفعل؟",

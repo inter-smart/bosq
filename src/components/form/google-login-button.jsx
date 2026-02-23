@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 export default function GoogleLoginButton({ locale }) {
   const { googleLogin, isLoading } = useAuth();
@@ -12,19 +13,21 @@ export default function GoogleLoginButton({ locale }) {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect") || `/${locale}`;
 
+  const t = useTranslations("auth");
+
   const handleGoogleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       const result = await googleLogin(tokenResponse.access_token);
 
       if (result.success) {
-        toast.success("Signed in with Google successfully!");
+        toast.success(t("google_success"));
         router.replace(redirectTo);
       } else {
-        toast.error(result.error || "Google sign-in failed. Please try again.");
+        toast.error(result.error || t("google_error"));
       }
     },
     onError: () => {
-      toast.error("Google sign-in was cancelled or failed.");
+      toast.error(t("google_error"));
     },
   });
 
@@ -61,7 +64,7 @@ export default function GoogleLoginButton({ locale }) {
         />
         <path fill="none" d="M0 0h48v48H0z" />
       </svg>
-      Continue with Google
+      {t("continue_with_google")}
     </button>
   );
 }

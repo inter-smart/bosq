@@ -46,7 +46,10 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
     description: t("product.enquire_description"),
   };
 
-  const productImages = initialData?.images || [];
+  const productImages =
+    initialData?.images?.length > 0
+      ? initialData.images
+      : Array(5).fill({ media_type: "image", media_path: "/images/placeholder.png", alt: "placeholder" });
   const currentModelId = initialData?.model_id;
 
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -177,107 +180,119 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                   isChooseDesignOpen ? "lg:relative lg:z-51" : "relative z-0",
                 )}
               >
-                <div className="overflow-hidden" ref={emblaMainRef}>
-                  <div className="flex h-[320px] sm:h-[376px] xl:h-[420px] 2xl:h-[576px] 3xl:h-[740px] touch-pan-y touch-pinch-zoom">
-                    {productImages?.map((item, index) => (
-                      <div
-                        key={index}
-                        className="flex-[0_0_100%] min-w-0"
-                        onClick={() => {
-                          setIndexProduct(index);
-                          setOpenProduct(true);
-                        }}
-                      >
+                <>
+                  <div className="overflow-hidden" ref={emblaMainRef}>
+                    <div className="flex h-[320px] sm:h-[376px] xl:h-[420px] 2xl:h-[576px] 3xl:h-[740px] touch-pan-y touch-pinch-zoom">
+                      {productImages?.map((item, index) => (
                         <div
-                          className={cn(
-                            "w-full h-full rounded-[4px] overflow-hidden border transition-all duration-300 bg-white select-none relative",
-                          )}
+                          key={index}
+                          className="flex-[0_0_100%] min-w-0"
+                          onClick={() => {
+                            setIndexProduct(index);
+                            setOpenProduct(true);
+                          }}
                         >
-                          {initialData?.stock == 0 && (
-                            <div className="w-full h-full bg-[#f4f4f4]/90 flex items-center justify-center absolute z-2 inset-0">
-                              <Button
-                                variant={"black"}
-                                disabled={true}
-                                className="min-w-[100px] xl:min-w-[120px] 2xl:min-w-[200px] disabled:opacity-100 rounded-[2px] m-auto"
-                              >
-                                Out of Stock
-                              </Button>
-                            </div>
-                          )}
-                          {item?.media_type === "video" ? (
-                            <video autoPlay loop muted playsInline className="w-full h-full object-cover">
-                              <source src={item?.media_path} type="video/mp4" />
-                            </video>
-                          ) : (
-                            <Image
-                              src={item?.media_path || "/images/placeholder.jpg"}
-                              alt={item?.alt || "main"}
-                              width={1080}
-                              height={1080}
-                              className="w-full h-full object-cover"
-                            />
-                          )}
+                          <div
+                            className={cn(
+                              "w-full h-full rounded-[4px] overflow-hidden border transition-all duration-300 bg-white select-none relative",
+                            )}
+                          >
+                            {initialData?.stock == 0 && (
+                              <div className="w-full h-full bg-[#f4f4f4]/90 flex items-center justify-center absolute z-2 inset-0">
+                                <Button
+                                  variant={"black"}
+                                  disabled={true}
+                                  className="min-w-[100px] xl:min-w-[120px] 2xl:min-w-[200px] disabled:opacity-100 rounded-[2px] m-auto"
+                                >
+                                  Out of Stock
+                                </Button>
+                              </div>
+                            )}
+                            {item?.media_type === "video" ? (
+                              <video autoPlay loop muted playsInline className="w-full h-full object-cover">
+                                <source src={item?.media_path} type="video/mp4" />
+                              </video>
+                            ) : (
+                              <Image
+                                src={item?.media_path}
+                                alt={item?.alt || "main"}
+                                width={1080}
+                                height={1080}
+                                className="w-full h-full object-cover"
+                              />
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
 
-                    <Lightbox
-                      open={openProduct}
-                      close={() => setOpenProduct(false)}
-                      index={indexProduct}
-                      slides={productImages?.map((item) =>
-                        item.media_type === "video"
-                          ? {
-                              type: "video",
-                              width: 1280,
-                              height: 720,
-                              poster: item.media_path,
-                              autoPlay: true,
-                              sources: [
-                                {
-                                  src: item.media_path,
-                                  type: "video/mp4",
-                                },
-                              ],
-                            }
-                          : {
-                              src: item.media_path,
-                            },
-                      )}
-                      animation={{ fade: 10 }}
-                      controller={{
-                        closeOnPullDown: true,
-                        closeOnBackdropClick: true,
-                      }}
-                      plugins={[Video, Zoom]}
-                    />
-                  </div>
-                </div>
-
-                <div
-                  className={cn(
-                    "flex gap-3 2xl:gap-4 absolute z-2 top-2 xl:top-4",
-                    locale === "ar" ? "left-2 xl:left-4 2xl:left-5" : "right-2 xl:right-4 2xl:right-5",
-                  )}
-                >
-                  <button
-                    onClick={handleWishlistToggle}
-                    disabled={isWishlistLoading}
-                    className="w-3 2xl:w-4.5 hover:cursor-pointer transition hover:scale-105 disabled:opacity-60 disabled:scale-100"
-                  >
-                    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full block">
-                      <path
-                        d="M7.39062 2.03027C8.85818 0.419111 10.5094 0.0894194 11.749 0.544922C12.9908 1.00129 13.9263 2.28275 13.8955 4.12402C13.8676 5.78912 12.7686 7.51198 11.3096 9.04004C9.9379 10.4766 8.3011 11.6826 7.12598 12.4326C5.95106 11.6827 4.3155 10.4769 2.94434 9.04102C1.48523 7.51297 0.385558 5.78917 0.357422 4.12402C0.326449 2.28301 1.26218 1.00146 2.50391 0.544922C3.74349 0.0891915 5.39453 0.418918 6.8623 2.03027L7.12695 2.32031L7.39062 2.03027Z"
-                        fill={wishlist ? "black" : "none"}
-                        stroke="#282828"
-                        strokeWidth="1"
+                      <Lightbox
+                        open={openProduct}
+                        close={() => setOpenProduct(false)}
+                        index={indexProduct}
+                        slides={productImages?.map((item) =>
+                          item.media_type === "video"
+                            ? {
+                                type: "video",
+                                width: 1280,
+                                height: 720,
+                                poster: item.media_path,
+                                autoPlay: true,
+                                sources: [
+                                  {
+                                    src: item.media_path,
+                                    type: "video/mp4",
+                                  },
+                                ],
+                              }
+                            : {
+                                src: item.media_path,
+                              },
+                        )}
+                        animation={{ fade: 10 }}
+                        controller={{
+                          closeOnPullDown: true,
+                          closeOnBackdropClick: true,
+                        }}
+                        plugins={[Video, Zoom]}
                       />
-                    </svg>
-                  </button>
-                  <button className="w-2.5 2xl:w-3.5 hover:cursor-pointer transition hover:scale-105">
-                    <Image src="/images/icon-share.svg" alt="icon-share" width={12} height={12} className="w-full h-full block" />
-                  </button>
-                </div>
+                    </div>
+                  </div>
+                  {initialData?.images?.length > 0 && (
+                    <div
+                      className={cn(
+                        "flex gap-3 2xl:gap-4 absolute z-2 top-2 xl:top-4",
+                        locale === "ar" ? "left-2 xl:left-4 2xl:left-5" : "right-2 xl:right-4 2xl:right-5",
+                      )}
+                    >
+                      <button
+                        onClick={handleWishlistToggle}
+                        disabled={isWishlistLoading}
+                        className="w-3 2xl:w-4.5 hover:cursor-pointer transition hover:scale-105 disabled:opacity-60 disabled:scale-100"
+                      >
+                        <svg
+                          width="15"
+                          height="15"
+                          viewBox="0 0 15 15"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="w-full h-full block"
+                        >
+                          <path
+                            d="M7.39062 2.03027C8.85818 0.419111 10.5094 0.0894194 11.749 0.544922C12.9908 1.00129 13.9263 2.28275 13.8955 4.12402C13.8676 5.78912 12.7686 7.51198 11.3096 9.04004C9.9379 10.4766 8.3011 11.6826 7.12598 12.4326C5.95106 11.6827 4.3155 10.4769 2.94434 9.04102C1.48523 7.51297 0.385558 5.78917 0.357422 4.12402C0.326449 2.28301 1.26218 1.00146 2.50391 0.544922C3.74349 0.0891915 5.39453 0.418918 6.8623 2.03027L7.12695 2.32031L7.39062 2.03027Z"
+                            fill={wishlist ? "black" : "none"}
+                            stroke="#282828"
+                            strokeWidth="1"
+                          />
+                        </svg>
+                      </button>
+                      <button className="w-2.5 2xl:w-3.5 hover:cursor-pointer transition hover:scale-105">
+                        <Image src="/images/icon-share.svg" alt="icon-share" width={12} height={12} className="w-full h-full block" />
+                      </button>
+                    </div>
+                  )}
+                </>
+
+                {}
               </div>
             </div>
           </div>

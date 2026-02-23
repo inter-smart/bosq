@@ -25,18 +25,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  useGetSearchQuery,
-  useLazyGetSearchQuery,
-} from "@/store/services/searchApi";
+import { useGetSearchQuery, useLazyGetSearchQuery } from "@/store/services/searchApi";
 import { useState } from "react";
 import { useDebouncedValue } from "@/hooks/use-debounce";
 
-const placeholders = [
-  "Search by Category",
-  "Ergonomic Chairs",
-  "Office Chairs",
-];
+const placeholders = ["Search by Category", "Ergonomic Chairs", "Office Chairs"];
 
 export default function SearchDialog({ children, locale }) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -65,9 +58,7 @@ export default function SearchDialog({ children, locale }) {
   const suggestedData = getStoredVariants("recently_viewed");
   const categories = getStoredVariants("categories");
 
-  const visibleSuggestions = showAllSuggestions
-    ? suggestedData
-    : suggestedData?.slice(0, 5);
+  const visibleSuggestions = showAllSuggestions ? suggestedData : suggestedData?.slice(0, 5);
 
   const suggestedItems = [
     {
@@ -99,20 +90,14 @@ export default function SearchDialog({ children, locale }) {
     });
   };
 
-
-  const slicedProducts = products.length< 5 ? products : products.slice(0, 5)
+  const slicedProducts = products.length < 5 ? products : products.slice(0, 5);
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent
-        showCloseButton={false}
-        className="inset-0 translate-none rounded-none p-0 max-w-full sm:max-w-full mt-(--header-y) mt-0"
-      >
+      <DialogContent showCloseButton={false} className="inset-0 translate-none rounded-none p-0 max-w-full sm:max-w-full mt-(--header-y) mt-0">
         <DialogHeader className={"sr-only"}>
           <DialogTitle>Search products</DialogTitle>
-          <DialogDescription>
-            Make changes to your profile here. Click save when you&apos;re done.
-          </DialogDescription>
+          <DialogDescription>Make changes to your profile here. Click save when you&apos;re done.</DialogDescription>
         </DialogHeader>
 
         <DialogClose asChild>
@@ -147,18 +132,12 @@ export default function SearchDialog({ children, locale }) {
             <div className="container">
               <div className="flex flex-wrap -mx-4 xl:-mx-10 2xl:-mx-16 [&>div]:px-4 xl:[&>div]:px-10 2xl:[&>div]:px-16">
                 <div className="w-full sm:w-[200px] lg:w-[220px] xl:w-[420px] 2xl:w-[468px] 3xl:w-[576px]">
-                  <Heading
-                    as="div"
-                    size="heading6"
-                    className="text-[#282828] mb-2 xl:mb-3 2xl:mb-6"
-                  >
+                  <Heading as="div" size="heading6" className="text-[#282828] mb-2 xl:mb-3 2xl:mb-6">
                     Search Now
                     <span
                       className={cn(
                         "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
-                        locale === "ar"
-                          ? "-translate-x-1 xl:-translate-x-2 "
-                          : "translate-x-1 xl:translate-x-2 ",
+                        locale === "ar" ? "-translate-x-1 xl:-translate-x-2 " : "translate-x-1 xl:translate-x-2 ",
                       )}
                     />
                   </Heading>
@@ -173,35 +152,20 @@ export default function SearchDialog({ children, locale }) {
                   />
 
                   {suggestedItems?.map((item, index) => (
-                    <div
-                      className="w-full mt-4 sm:mt-3 xl:mt-4 2xl:mt-8"
-                      key={index}
-                    >
+                    <div className="w-full mt-4 sm:mt-3 xl:mt-4 2xl:mt-8" key={index}>
                       {item?.items.length > 0 && (
-                        <Heading
-                          as="div"
-                          size="heading4"
-                          className="text-[#282828] mb-2 xl:mb-3 2xl:mb-4"
-                        >
+                        <Heading as="div" size="heading4" className="text-[#282828] mb-2 xl:mb-3 2xl:mb-4">
                           {item?.title}
                         </Heading>
                       )}
                       {item?.items?.map((item, idx) => (
-                        <Text
-                          key={"suggesions-item-" + idx}
-                          as="div"
-                          size="text3"
-                          className="text-black flex items-center gap-1 my-1 xl:my-1.5"
-                        >
+                        <Text key={"suggesions-item-" + idx} as="div" size="text3" className="text-black flex items-center gap-1 my-1 xl:my-1.5">
                           <Image
                             src={"/images/search-right.svg"}
                             alt={"search-right"}
                             width={6}
                             height={4}
-                            className={cn(
-                              "w-1 xl:w-1.5",
-                              locale === "ar" && "rotate-180",
-                            )}
+                            className={cn("w-1 xl:w-1.5", locale === "ar" && "rotate-180")}
                           />
 
                           <DialogClose asChild>
@@ -218,8 +182,7 @@ export default function SearchDialog({ children, locale }) {
                           onClick={() => setShowAllSuggestions(true)}
                         >
                           <Link href={"/products"}>
-                            <Plus className="size-2 xl:size-2 inline-block" />{" "}
-                            See More
+                            <Plus className="size-2 xl:size-2 inline-block" /> See More
                           </Link>
                         </Text>
                       )}
@@ -229,11 +192,7 @@ export default function SearchDialog({ children, locale }) {
 
                 <MediaQuery minWidth={639}>
                   <div className="w-full sm:w-[calc(100%-200px)] lg:w-[calc(100%-220px)] xl:w-[calc(100%-420px)] 2xl:w-[calc(100%-468px)] 3xl:w-[calc(100%-576px)]">
-                    <Heading
-                      as="div"
-                      size="heading4"
-                      className="text-[#282828] my-2 xl:my-3 2xl:my-4"
-                    >
+                    <Heading as="div" size="heading4" className="text-[#282828] my-2 xl:my-3 2xl:my-4">
                       {isLoading
                         ? "Loading..."
                         : searchQuery
@@ -244,11 +203,8 @@ export default function SearchDialog({ children, locale }) {
                     </Heading>
 
                     <div className="flex flex-wrap -mx-1 sm:-mx-1.5 xl:-mx-2 2xl:-mx-2.5 [&>*]:p-1 sm:[&>*]:p-1.5 xl:[&>*]:p-2 2xl:[&>*]:p-2.5">
-                      {products?.slice(0,5)?.map((item) => (
-                        <div
-                          key={item.id}
-                          className="w-full 2xs:w-1/2 sm:w-1/3 md:w-1/3"
-                        >
+                      {products?.slice(0, 5)?.map((item) => (
+                        <div key={item.id} className="w-full 2xs:w-1/2 sm:w-1/3 md:w-1/3">
                           <div className="group w-full block">
                             <div className="w-full aspect-[550/440] overflow-hidden rounded-[4px] border border-white mb-2 2xl:mb-3 bg-white relative z-0">
                               {!item?.stock > 0 && (
@@ -263,9 +219,7 @@ export default function SearchDialog({ children, locale }) {
                                 </div>
                               )}
                               <Image
-                                src={
-                                  item?.media?.path ?? "images/placeholder.jpg"
-                                }
+                                src={item?.media?.path ?? "images/placeholder.jpg"}
                                 alt={item?.media?.alt}
                                 width={550}
                                 height={440}
@@ -273,10 +227,7 @@ export default function SearchDialog({ children, locale }) {
                               />
                               {item?.hoverMedia && (
                                 <Image
-                                  src={
-                                    item?.hoverMedia?.path ??
-                                    "images/placeholder.jpg"
-                                  }
+                                  src={item?.hoverMedia?.path ?? "images/placeholder.jpg"}
                                   alt={item?.hoverMedia?.alt}
                                   width={550}
                                   height={440}
@@ -301,9 +252,7 @@ export default function SearchDialog({ children, locale }) {
                                     </Link>
                                   </DialogClose>
                                 ) : (
-                                  <span className="opacity-50">
-                                    {item?.category?.name}
-                                  </span>
+                                  <span className="opacity-50">{item?.category?.name}</span>
                                 )}
                               </Heading>
                               <Heading
@@ -314,9 +263,7 @@ export default function SearchDialog({ children, locale }) {
                                 <DialogClose asChild>
                                   <Link
                                     href={`/${locale}/products/${item?.baseSlug}?sku=${item?.slug}`}
-                                    onClick={() =>
-                                      handleAddToLocalStorage(item)
-                                    }
+                                    onClick={() => handleAddToLocalStorage(item)}
                                   >
                                     {item?.title}
                                   </Link>
@@ -330,15 +277,9 @@ export default function SearchDialog({ children, locale }) {
                         <div className="w-full 2xs:w-1/2 sm:w-1/3 md:w-1/3">
                           <div className="group w-full block">
                             <div className="w-full aspect-[550/440] overflow-hidden rounded-[4px] border border-[#e9e9e9] bg-[#f4f4f4] flex items-center justify-center">
-                              <Text
-                                as="div"
-                                size="text3"
-                                className="font-normal text-black hover:underline"
-                              >
+                              <Text as="div" size="text3" className="font-normal text-black hover:underline">
                                 <DialogClose asChild>
-                                  <Link href={`/${locale}/products`}>
-                                    See All Results ({products.length})
-                                  </Link>
+                                  <Link href={`/${locale}/products`}>See All Results ({products.length})</Link>
                                 </DialogClose>
                               </Text>
                             </div>
