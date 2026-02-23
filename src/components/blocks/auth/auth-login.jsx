@@ -1,21 +1,17 @@
 import { Text } from "@/components/utils/text";
 import Link from "next/link";
 import AuthLoginForm from "@/components/form/auth-login-form";
+import GoogleLoginButton from "@/components/form/google-login-button";
+import { toast } from "sonner";
 
 export default function AuthLogin({ locale, data }) {
   return (
     <>
       <AuthLoginForm locale={locale} data={data} />
-      <Text
-        as="div"
-        size="text1"
-        className="text-center text-black my-1.5 xl:my-3"
-      >
+      <Text as="div" size="text1" className="text-center text-black my-1.5 xl:my-3">
         or
       </Text>
-      <div className="w-full p-2 bg-gray-400 text-center my-1.5 xl:my-3">
-        Continue with Google
-      </div>
+      <GoogleLoginButton locale={locale} />
       <Text as="div" size="text1" className="text-center text-black">
         New here?{" "}
         <Link href="signup" className="font-normal hover:underline">

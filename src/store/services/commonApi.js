@@ -11,7 +11,17 @@ export const commonApi = createApi({
     validateCart: builder.mutation({
       query: () => "/api/frontend/checkout/validate-checkout",
       transformErrorResponse: (response) => {
-        return response?.data?.message || "Failed to validate cart";
+        const message = response?.data?.message;
+
+        if (!message) {
+          return { en: "Failed to validate cart", ar: "فشل في التحقق من السلة" };
+        }
+
+        if (typeof message === "string") {
+          return { en: message, ar: message };
+        }
+
+        return message;
       },
     }),
   }),

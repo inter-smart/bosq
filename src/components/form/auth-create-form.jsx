@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 
@@ -41,7 +41,7 @@ const inputStyle = cn(
 
 const errorStyle = cn("text-[#f17423]");
 
-export default function AuthCreateForm() {
+export default function AuthCreateForm({ locale }) {
   const tAuth = useTranslations("auth.signup");
   const tCommon = useTranslations("auth.common");
  
@@ -61,10 +61,17 @@ export default function AuthCreateForm() {
     },
   });
 
-  const { register, isLoading, clearAuthError } = useAuth();
+  const { register, isAuthenticated, isLoading, clearAuthError } = useAuth();
   const [success, setSuccess] = useState("");
 
   const router = useRouter();
+
+  // Guard: if already logged in (e.g. browser back button), redirect to home
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.replace(`/${locale}`);
+    }
+  }, [isAuthenticated, locale, router]);
 
   const onSubmit = async (values) => {
     clearAuthError();
@@ -86,7 +93,7 @@ export default function AuthCreateForm() {
       if (result.success) {
         setSuccess(tAuth("success"));
         toast.success(tAuth("success"));
-        router.push("otp-submission");
+        router.replace(`/${locale}/otp-submission`);
       } else {
         setSuccess(result.error || tAuth("error"));
         toast.error(result.error || tAuth("error"));

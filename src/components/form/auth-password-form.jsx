@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { z } from "zod";
 
 import {
@@ -41,11 +41,20 @@ export default function AuthPasswordForm({ locale }) {
     },
   });
 
-  const { createPassword, isLoading, clearAuthError } = useAuth();
+  const { createPassword, tempToken, isAuthenticated, isLoading, clearAuthError } = useAuth();
   const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const router = useRouter();
+
+  // Guard: if already logged in redirect home; if no flow state redirect to signup
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.replace(`/${locale}`);
+    } else if (!tempToken) {
+      router.replace(`/${locale}/signup`);
+    }
+  }, [isAuthenticated, tempToken, locale, router]);
 
   const onSubmit = async (values) => {
     clearAuthError();
@@ -55,7 +64,7 @@ export default function AuthPasswordForm({ locale }) {
 
     if (result.success) {
       setSuccess("Password created successfully!");
-      router.push("login");
+      router.push(`/${locale}/login`);
     } else {
       setSuccess(result.error || "Something went wrong. Please try again.");
     }

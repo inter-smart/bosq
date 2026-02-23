@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { z } from "zod";
 
 import {
@@ -40,14 +40,14 @@ const inputStyle = cn(
 
 const errorStyle = cn("text-[#f17423]");
 
-export default function AuthOtpForm() {
+export default function AuthOtpForm({ locale }) {
   const t = useTranslations("auth.otp");
   const tErrors = useTranslations("errors");
 
 
       // ✅ inject translator (once per render is fine)
   setValidationTranslator(tErrors);
- 
+
   // Validation schema
 const formSchema = z.object({
   otp: commonValidations.otp(),
@@ -60,10 +60,20 @@ const formSchema = z.object({
     },
   });
 
-  const { verifyOtp, pendingEmail, isLoading, clearAuthError } = useAuth();
+  const { verifyOtp, pendingEmail, isAuthenticated, isLoading, clearAuthError } = useAuth();
   const [success, setSuccess] = useState("");
 
   const router = useRouter();
+
+  // Guard: if already logged in redirect home; if no flow state redirect to signup
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.replace(`/${locale}`);
+    } else if (!pendingEmail) {
+      router.replace(`/${locale}/signup`);
+    }
+  }, [isAuthenticated, pendingEmail, locale, router]);
+
   const onSubmit = async (values) => {
     clearAuthError();
     setSuccess("");
@@ -72,7 +82,7 @@ const formSchema = z.object({
 
     if (result.success) {
       setSuccess(t("success"));
-      router.push("create-password");
+      router.push(`/${locale}/create-password`);
     } else {
       setSuccess(result.error || t("error"));
     }

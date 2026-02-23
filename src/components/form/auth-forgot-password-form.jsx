@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { z } from "zod";
 
 import {
@@ -24,6 +24,7 @@ import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
 import { commonValidations, setValidationTranslator } from "@/lib/validations";
 import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
 export default function AuthForgotPasswordForm({ locale, setStep, step }) {
@@ -72,9 +73,19 @@ export default function AuthForgotPasswordForm({ locale, setStep, step }) {
     verifyResetOtp,
     resetPassword,
     pendingEmail,
+    isAuthenticated,
     isLoading,
     clearAuthError,
   } = useAuth();
+
+  const router = useRouter();
+
+  // Guard: if already logged in (e.g. browser back button), redirect to home
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.replace(`/${locale}`);
+    }
+  }, [isAuthenticated, locale, router]);
 
   const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);

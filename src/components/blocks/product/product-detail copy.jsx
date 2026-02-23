@@ -13,6 +13,8 @@ import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { addToCart } from "@/store/slices/cartSlice";
 import { toast } from "sonner";
+import { useToggleWishlistMutation } from "@/store/services/wishListApi";
+import { useAuth } from "@/hooks/useAuth";
 
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
@@ -33,8 +35,10 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
   const router = useRouter();
   const dispatch = useDispatch();
   const t = useTranslations();
+  const tToast = useTranslations("toast");
   const [isModelLoading, setIsModelLoading] = useState(false);
   const [quantity, setQuantity] = useState(1);
+  const isEn = locale === "en";
 
   const enq = {
     title: t("product.enquire_now"),
@@ -91,7 +95,29 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
 
   const [isChooseDesignOpen, setIsChooseDesignOpen] = useState(false);
 
-  const [wishlist, setWishlist] = useState(false);
+  const [wishlist, setWishlist] = useState(initialData?.isWishlisted ?? false);
+  const [toggleWishlist, { isLoading: isWishlistLoading }] = useToggleWishlistMutation();
+  const { isAuthenticated } = useAuth();
+
+  // Sync wishlist state when variant changes (filter/design selection)
+  useEffect(() => {
+    setWishlist(initialData?.isWishlisted ?? false);
+  }, [initialData?.id, initialData?.isWishlisted]);
+
+  const handleWishlistToggle = async () => {
+    if (!isAuthenticated) {
+      router.push(`/${locale}/login?activity=wishlist`);
+      return;
+    }
+    setWishlist((prev) => !prev);
+    try {
+      await toggleWishlist(initialData?.id).unwrap();
+      toast.success(wishlist ? `${tToast("wishlist_removed")}` : `${tToast("wishlist_success")}`);
+    } catch {
+      setWishlist((prev) => !prev);
+      toast.error(`${tToast("wishlist_remove_failed")}`);
+    }
+  };
 
   const handleBuyNow = async () => {
     // Note: Since quantity is managed inside PriceAndCart,
@@ -109,7 +135,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
       ).unwrap();
       router.push("/cart");
     } catch (error) {
-      toast.error(error || "Failed to add item to cart");
+      toast.error(isEn ? error?.en : error?.ar || "Failed to add item to cart");
     }
   };
 
@@ -234,7 +260,11 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                     locale === "ar" ? "left-2 xl:left-4 2xl:left-5" : "right-2 xl:right-4 2xl:right-5",
                   )}
                 >
-                  <button onClick={() => setWishlist(!wishlist)} className="w-3 2xl:w-4.5 hover:cursor-pointer transition hover:scale-105">
+                  <button
+                    onClick={handleWishlistToggle}
+                    disabled={isWishlistLoading}
+                    className="w-3 2xl:w-4.5 hover:cursor-pointer transition hover:scale-105 disabled:opacity-60 disabled:scale-100"
+                  >
                     <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full block">
                       <path
                         d="M7.39062 2.03027C8.85818 0.419111 10.5094 0.0894194 11.749 0.544922C12.9908 1.00129 13.9263 2.28275 13.8955 4.12402C13.8676 5.78912 12.7686 7.51198 11.3096 9.04004C9.9379 10.4766 8.3011 11.6826 7.12598 12.4326C5.95106 11.6827 4.3155 10.4769 2.94434 9.04102C1.48523 7.51297 0.385558 5.78917 0.357422 4.12402C0.326449 2.28301 1.26218 1.00146 2.50391 0.544922C3.74349 0.0891915 5.39453 0.418918 6.8623 2.03027L7.12695 2.32031L7.39062 2.03027Z"
@@ -258,13 +288,13 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                 size="none"
                 className="text-[10px] xl:text-[8px] 2xl:text-[10px] 3xl:text-[12px] leading-normal font-light truncate text-[#bbbcbc] mb-1"
               >
-                {productData?.category_name}
+                {isEn ? productData?.category_name : productData?.category_name_ar}
               </Heading>
               <Heading as="div" size="heading2" className="font-normal text-[#282828] mb-1 2xl:mb-2 max-sm:font-bold">
-                {initialData?.title}
+                {isEn ? initialData?.title : initialData?.title_ar}
               </Heading>
               <Text as="div" size="text3" className="text-[#282828] mb-2 2xl:mb-4">
-                {parse(productData?.description)}
+                {parse(isEn ? productData?.description : productData?.description_ar)}
               </Text>
 
               <hr className="my-3 sm:my-3 2xl:my-5 mx-[-5px]" />
@@ -286,7 +316,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                   </div>
                   <div className="flex-1 flex justify-between gap-2 p-2 xl:p-2.5 2xl:p-[15px] ">
                     <div className="text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#282828]">
-                      {initialData?.model_title}
+                      {isEn ? initialData?.model_title : initialData?.model_title_ar}
                     </div>
                     <ProductChooseDesign
                       data={initialData}
@@ -312,7 +342,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                 size="none"
                 className="text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#808080] mb-2 xl:mb-3 2xl:mb-5"
               >
-                {/* todo */}
+                {isEn ? initialData?.design_title : initialData?.design_title_ar}
               </Heading>
               <hr className="my-3 sm:my-3 2xl:my-5 mx-[-5px]" />
               <Heading
@@ -329,7 +359,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
               <div className="flex flex-wrap items-center justify-between gap-4 2xl:gap-6 mb-2 xl:mb-3 2xl:mb-5 max-lg:flex-wrap-reverse">
                 <div className="flex lg:flex-1">
                   <Text as="div" size="text3" className="text-[#282828] max-w-[95%]">
-                    {productData?.purchase_tagline || t("product.enquire_subtitle")}
+                    {isEn ? productData?.enhance_title : productData?.enhance_title_ar}
                   </Text>
                 </div>
                 <Button variant={"link"} className={"font-normal underline h-auto "} disabled={initialData?.stock == 0} onClick={handleBuyNow}>
@@ -361,7 +391,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                         unoptimized
                       />
 
-                      {parse(item?.name)}
+                      {item?.name && parse(isEn ? item?.name : item?.name_ar)}
                     </Text>
                   </div>
                 ))}
@@ -443,7 +473,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
         </div>
         <ProductDetails
           data={productData}
-          locale={locale}
+          isEn={isEn}
           setIndexProject={setIndexProduct}
           setOpenProject={setOpenProduct}
           openProject={openProduct}

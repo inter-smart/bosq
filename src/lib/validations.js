@@ -60,7 +60,7 @@ export const commonValidations = {
       .min(1, vt("email_required"))
       .email(vt("invalid_email"))
       .refine((val) => !/\s/.test(val), vt("no_spaces"))
-      .refine((val) => !/[<>]/.test(val), vt("invalid_characters", { field: vt("email") }))
+      .refine((val) => !/[<>]/.test(val), vt("invalid_characters", { field: "Email" }))
       .refine(
         (val) =>
           !/(script|<script>|<\/script>|alert\(|onerror=|onload=)/i.test(val),
@@ -90,31 +90,34 @@ export const commonValidations = {
       .trim()
       .min(1, vt("required", { field: vt("phone_number") }))
 
-      // allowed characters
-      .refine((val) => /^[0-9+\s()-]+$/.test(val), {
-        message: vt("invalid_characters", { field: vt("phone_number") }),
-      })
+    .refine((val) => isValidPhoneNumber(val), {
+      message: vt("invalid_phone"),
+    })
 
-      // 👇 smart validation
-      .superRefine((val, ctx) => {
-        const digits = val.replace(/[^\d]/g, "");
+    .refine((val) => /^[0-9+\s()-]+$/.test(val), {
+      message: vt("invalid_characters", { field: "Phone" }),
+    })
 
-        // 🔑 allow intermediate states (+971, +971 5, etc.)
-        if (digits.length < 4) return;
+    .transform((val) => val.replace(/[\s()-]/g, ""))
 
-        if (digits.length < 8 || digits.length > 15) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: vt("invalid_phone_length"),
-          });
-        }
+    .refine((val) => /^\+?[0-9]+$/.test(val), {
+      message: vt("invalid_phone_format"),
+    })
 
-        if (/^0+$/.test(digits)) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: vt("phone_all_zeros"),
-          });
-        }
+    .refine(
+      (val) => {
+        const digits = val.replace("+", "");
+        return digits.length >= 8 && digits.length <= 15;
+      },
+      { message: vt("invalid_phone_length") },
+    )
+
+        // if (/^0+$/.test(digits)) {
+        //   ctx.addIssue({
+        //     code: z.ZodIssueCode.custom,
+        //     message: vt("phone_all_zeros"),
+        //   });
+        // }
       }),
   requiredString: (val) =>
     z.string().min(1, vt("required", { field: val })),

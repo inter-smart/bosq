@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Heading } from "../../utils/heading";
 import { Text } from "../../utils/text";
 import Link from "next/link";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { Skeleton } from "../../ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,7 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
   const { isAuthenticated } = useAppSelector((state) => state.auth);
 
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [isWishlisted, setIsWishlisted] = useState(product?.wishlisted ?? false);
+  const [isWishlisted, setIsWishlisted] = useState(product?.isWishlisted ?? false);
   const [toggleWishlist] = useToggleWishlistMutation();
 
   const tToast = useTranslations("toast");
@@ -44,9 +44,13 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
     } catch (error) {
       // Revert on failure
       setIsWishlisted(prev);
-      toast.error( `${tToast("wishlist_remove_failed")}`);
+      toast.error(`${tToast("wishlist_remove_failed")}`);
     }
   };
+
+  useEffect(() => {
+    setIsWishlisted(product?.isWishlisted ?? false);
+  }, [product?.id, product?.isWishlisted]);
 
   return (
     <>

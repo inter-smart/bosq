@@ -12,6 +12,7 @@ import {
   verifyResetOtpThunk,
   resetPasswordThunk,
   fetchUserProfile,
+  googleLoginUser,
   clearError,
   clearAuth,
   setPendingEmail,
@@ -27,6 +28,7 @@ export function useAuth() {
     resetToken,
     pendingEmail,
     isAuthenticated,
+    isGoogleUser,
     isLoading,
     error,
   } = useAppSelector((state) => state.auth);
@@ -130,6 +132,18 @@ export function useAuth() {
   );
 
 
+  // Google Login
+  const googleLogin = useCallback(
+    async (token) => {
+      const result = await dispatch(googleLoginUser(token));
+      if (googleLoginUser.fulfilled.match(result)) {
+        return { success: true, data: result.payload };
+      }
+      return { success: false, error: result.payload };
+    },
+    [dispatch]
+  );
+
   // Clear error
   const clearAuthError = useCallback(() => {
     dispatch(clearError());
@@ -148,6 +162,7 @@ export function useAuth() {
     resetToken,
     pendingEmail,
     isAuthenticated,
+    isGoogleUser,
     isLoading,
     error,
 
@@ -161,6 +176,7 @@ export function useAuth() {
     forgotPassword,
     verifyResetOtp,
     resetPassword,
+    googleLogin,
     clearAuthError,
     clearAllAuth,
   };

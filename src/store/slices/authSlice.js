@@ -10,6 +10,7 @@ import {
   logout as logoutAPI,
   fetchFromAPI,
   fetchUserProfileAPI,
+  googleLogin as googleLoginAPI,
 } from "@/lib/helper";
 import { mergeCartAPI } from "@/lib/api/cart/cartApi";
 
@@ -36,6 +37,30 @@ export const loginUser = createAsyncThunk("auth/login", async (credentials, { re
     };
   } catch (error) {
     return rejectWithValue(error.message || "Login failed");
+  }
+});
+
+// Google login
+export const googleLoginUser = createAsyncThunk("auth/googleLogin", async (token, { rejectWithValue }) => {
+  try {
+    const { data, error, message } = await googleLoginAPI(token);
+
+    if (error) {
+      return rejectWithValue(message);
+    }
+
+    try {
+      await mergeCartAPI();
+    } catch (mergeError) {
+      console.error("Cart merge failed:", mergeError);
+    }
+
+    return {
+      accessToken: data.accessToken,
+      user: data.user || null,
+    };
+  } catch (error) {
+    return rejectWithValue(error.message || "Google login failed");
   }
 });
 
@@ -200,6 +225,7 @@ const initialState = {
   resetToken: null,
   pendingEmail: null,
   isAuthenticated: false,
+  isGoogleUser: false,
   isLoading: false,
   error: null,
 };
@@ -218,6 +244,7 @@ const authSlice = createSlice({
       state.resetToken = null;
       state.pendingEmail = null;
       state.isAuthenticated = false;
+      state.isGoogleUser = false;
       state.error = null;
     },
     setTempToken: (state, action) => {
@@ -243,12 +270,30 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isAuthenticated = true;
+        state.isGoogleUser = false;
         state.user = action.payload.user || null;
         state.error = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload || "Login failed";
+      })
+
+      // Google Login
+      .addCase(googleLoginUser.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(googleLoginUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isAuthenticated = true;
+        state.isGoogleUser = true;
+        state.user = action.payload.user || null;
+        state.error = null;
+      })
+      .addCase(googleLoginUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload || "Google login failed";
       })
 
       // Logout
@@ -258,6 +303,7 @@ const authSlice = createSlice({
         state.resetToken = null;
         state.pendingEmail = null;
         state.isAuthenticated = false;
+        state.isGoogleUser = false;
         state.error = null;
       })
 

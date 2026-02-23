@@ -234,6 +234,14 @@ export async function resetPassword({ password }) {
   });
 }
 
+// google login
+export async function googleLogin(token) {
+  return fetchFromAPIWithCredentials("/api/frontend/auth/google-login", {
+    method: "POST",
+    body: JSON.stringify({ token }),
+  });
+}
+
 // logout
 export async function logout() {
   return fetchFromAPIWithCredentials("/api/frontend/profile/logout", {
