@@ -28,6 +28,7 @@ import { X } from "lucide-react";
 import { commonValidations, setValidationTranslator } from "@/lib/validations";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 
 
@@ -47,7 +48,7 @@ const textareaStyle = cn(
   "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none"
 );
 
-export default function ProductEnquiryForm({ productId }) {
+export default function ProductEnquiryForm({ productId, onClose }) {
 
   const { executeRecaptcha } = useGoogleReCaptcha();
   const [submitProductEnquiry, { isLoading }] = useSubmitProductEnquiryMutation();
@@ -82,14 +83,12 @@ const formSchema = z.object({
     },
   });
 
-  const [success, setSuccess] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
   // File upload
   const [uploadedFile, setUploadedFile] = useState(null);
 
   const onSubmit = async (values) => {
-    setSuccess("");
     setErrorMessage("");
 
     if (!executeRecaptcha) {
@@ -116,7 +115,8 @@ const formSchema = z.object({
 
       form.reset();
       setUploadedFile(null);
-      setSuccess(t("success_message"));
+      toast.success(t("success_message"));
+      onClose?.();
     } catch (error) {
       console.error(error);
       setErrorMessage(error?.data?.message || tErrors("invalid_content", { field: "form" }));
@@ -323,9 +323,6 @@ const formSchema = z.object({
           </Button>
           {errorMessage && (
             <p className="text-red-600 text-sm mt-1">{errorMessage}</p>
-          )}
-          {success && !isLoading && (
-            <p className="text-green-600 text-sm mt-1">{success}</p>
           )}
         </div>
 

@@ -34,15 +34,16 @@ export default function ProductSimilar({ locale, data }) {
               )}
             />
           </Heading>
-
-          <div className="flex gap-x-2.5 2xl:gap-x-3 xl:mt-3">
-            <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} className="disabled:opacity-50 not-disabled:hover:scale-110">
-              <ChevronLeft className={cn("size-3 2xl:size-5 text-[#282828]", locale === "ar" && "rotate-180")} />
-            </PrevButton>
-            <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} className="disabled:opacity-50 not-disabled:hover:scale-110">
-              <ChevronRight className={cn("size-3 2xl:size-5 text-[#282828]", locale === "ar" && "rotate-180")} />
-            </NextButton>
-          </div>
+          {products?.length > 3 && (
+            <div className="flex gap-x-2.5 2xl:gap-x-3 xl:mt-3">
+              <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} className="disabled:opacity-50 not-disabled:hover:scale-110">
+                <ChevronLeft className={cn("size-3 2xl:size-5 text-[#282828]", locale === "ar" && "rotate-180")} />
+              </PrevButton>
+              <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} className="disabled:opacity-50 not-disabled:hover:scale-110">
+                <ChevronRight className={cn("size-3 2xl:size-5 text-[#282828]", locale === "ar" && "rotate-180")} />
+              </NextButton>
+            </div>
+          )}
         </div>
       </div>
       <div

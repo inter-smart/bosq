@@ -225,7 +225,7 @@ export default function SearchDialog({ children, locale }) {
                                 height={440}
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                               />
-                              {item?.hoverMedia && (
+                              {item?.hoverMedia?.path && (
                                 <Image
                                   src={item?.hoverMedia?.path ?? "images/placeholder.jpg"}
                                   alt={item?.hoverMedia?.alt}
