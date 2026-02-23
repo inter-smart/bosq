@@ -31,7 +31,7 @@ const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
 });
 
-export default function CartList({ locale, data, similarProducts }) {
+export default function CartList({ locale, similarProducts }) {
   const dispatch = useDispatch();
   const router = useRouter();
   const [validateCart, { isLoading: isValidating }] = useValidateCartMutation();
