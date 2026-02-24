@@ -21,7 +21,7 @@ export default function GoogleLoginButton({ locale }) {
 
       if (result.success) {
         toast.success(t("google_success"));
-        router.push(redirectTo);
+        router.replace(redirectTo);
       } else {
         toast.error(result.error || t("google_error"));
       }
