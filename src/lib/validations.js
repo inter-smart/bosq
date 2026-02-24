@@ -84,13 +84,13 @@ export const commonValidations = {
 
   rememberMe: z.boolean().default(false),
 
-  phone: () =>
+  phone: (country) =>
     z
       .string()
       .trim()
       .min(1, vt("required", { field: vt("phone_number") }))
 
-    .refine((val) => isValidPhoneNumber(val), {
+    .refine((val) => isValidPhoneNumber(val, country || undefined), {
       message: vt("invalid_phone"),
     })
 
@@ -112,13 +112,44 @@ export const commonValidations = {
       { message: vt("invalid_phone_length") },
     ),
 
-        // if (/^0+$/.test(digits)) {
-        //   ctx.addIssue({
-        //     code: z.ZodIssueCode.custom,
-        //     message: vt("phone_all_zeros"),
-        //   });
-        // }
-      // }),
+normalPhoneNumber: () =>
+  z
+    .string()
+    .trim()
+    .min(1, vt("required", { field: vt("phone_number") }))
+
+    // Allow digits, spaces, +, parens, dashes
+    .refine((val) => /^[+0-9\s()-]+$/.test(val), {
+      message: vt("invalid_characters", { field: "Phone" }),
+    })
+
+    // Reject double (or more) leading plus signs
+    .refine((val) => !/^\+{2,}/.test(val), {
+      message: vt("invalid_phone_format"),
+    })
+
+    // Remove spaces, parens, dashes
+    .transform((val) => val.replace(/[\s()-]/g, ""))
+
+    // Must be digits only, with optional single leading +
+    .refine((val) => /^\+?[0-9]+$/.test(val), {
+      message: vt("invalid_phone_format"),
+    })
+
+    // Length check (8–15 digits, excluding +)
+    .refine(
+      (val) => {
+        const digits = val.replace("+", "");
+        return digits.length >= 8 && digits.length <= 15;
+      },
+      { message: vt("invalid_phone_length") }
+    )
+
+    // Reject all zeros
+    .refine(
+      (val) => !/^0+$/.test(val.replace("+", "")),
+      { message: vt("invalid_phone") }
+    ),
   requiredString: (val) =>
     z.string().min(1, vt("required", { field: val })),
 

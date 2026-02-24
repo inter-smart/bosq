@@ -50,11 +50,13 @@ export default function ContactEnquiryForm({ locale }) {
   // ✅ inject translator (once per render is fine)
   setValidationTranslator(tErrors);
 
+  const [selectedCountry, setSelectedCountry] = useState("ae");
+
   // Validation schema
   const formSchema = z.object({
     name: commonValidations.name(t("full_name")),
     email: commonValidations.email(),
-    phone: commonValidations.phone(),
+    phone: commonValidations.phone(selectedCountry.toUpperCase()),
     message: commonValidations.message(t("message")),
   });
   const form = useForm({
@@ -179,7 +181,11 @@ export default function ContactEnquiryForm({ locale }) {
               <FormControl>
                 <PhoneInput
                   value={field.value}
-                  onChange={(value) => field.onChange(value)}
+                  onChange={(phone, meta) => {
+                    field.onChange(phone);
+                    setSelectedCountry(meta.country.iso2);
+                    form.trigger("phone");
+                  }}
                   defaultCountry="ae"
                   dir={locale === "ar" ? "rtl" : "ltr"}
                   className={cn(

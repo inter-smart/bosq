@@ -100,7 +100,7 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
             )}
             <Image
               src={product?.media_path ?? "/images/placeholder.jpg"}
-              alt={isEn ? product?.title : product?.title_ar}
+              alt={isEn ? product?.title : product?.title_ar ?? "test"}
               width={550}
               height={440}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"

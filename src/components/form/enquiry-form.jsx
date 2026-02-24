@@ -17,6 +17,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { PhoneInput } from "react-international-phone";
+import "react-international-phone/style.css";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { toast } from "sonner";
 import { API_URL } from "@/lib/api/client";
@@ -40,7 +42,7 @@ const textareaStyle = cn(
   "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none",
 );
 
-export default function EnquiryForm(type) {
+export default function EnquiryForm({ locale }) {
   const t = useTranslations("form");
 
 
@@ -48,13 +50,14 @@ export default function EnquiryForm(type) {
 
   setValidationTranslator(tErrors);
 
+  const [selectedCountry, setSelectedCountry] = useState("ae");
 
   // ✅ Validation schema
 const formSchema = z.object({
   name: commonValidations.name(t("full_name")),
   email: commonValidations.email(),
-  phone: commonValidations.phone(),
-  additionalDetails: commonValidations.message(t("message")), 
+  phone: commonValidations.phone(selectedCountry.toUpperCase()),
+  additionalDetails: commonValidations.message(t("message")),
 });
 
   const form = useForm({
@@ -79,12 +82,14 @@ const formSchema = z.object({
 
     try {
       const recaptchaToken = await executeRecaptcha("lead_generation_form");
+      const normalizedPhone = values.phone.replace(/[^\d+]/g, "");
 
       const res = await fetch(URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...values,
+          phone: normalizedPhone,
           message: values.additionalDetails,
           recaptcha_token: recaptchaToken,
           type: "lead-generation",
@@ -100,8 +105,8 @@ const formSchema = z.object({
       setSuccess(data?.message || t("success_message"));
     } catch (err) {
       console.error(err);
-      setSuccess(err.message || t("submit_error"));
-      toast.error(err.message || t("submit_error"));
+      setSuccess(isEn ? err.en : err.ar || t("submit_error"));
+      toast.error(isEn ? err.en : err.ar || t("submit_error"));
     }
 
     setLoading(false);
@@ -144,10 +149,19 @@ const formSchema = z.object({
                 {t("phone_number")}<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  type="tel"
-                  className={inputStyle}
+                <PhoneInput
+                  value={field.value}
+                  onChange={(phone, meta) => {
+                    field.onChange(phone);
+                    setSelectedCountry(meta.country.iso2);
+                    form.trigger("phone");
+                  }}
+                  defaultCountry="ae"
+                  dir={locale === "ar" ? "rtl" : "ltr"}
+                  className={cn(
+                    inputStyle,
+                    "w-full p-0 [&_input]:flex-1 [--react-international-phone-country-selector-border-color:#bababa] [--react-international-phone-border-color:#bababa] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px]",
+                  )}
                   placeholder={t("enter_phone")}
                 />
               </FormControl>

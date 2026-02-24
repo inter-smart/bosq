@@ -59,11 +59,11 @@ export default function HomeEnquiry({ data, locale, isEN, type = "", projectId =
 
               {type === "project" ? (
                 <RecaptchaProvider>
-                  <ProjectEnquiryForm projectId={projectId} />
+                  <ProjectEnquiryForm projectId={projectId} locale={locale} />
                 </RecaptchaProvider>
               ) : (
                 <RecaptchaProvider>
-                  <EnquiryForm />
+                  <EnquiryForm locale={locale} />
                 </RecaptchaProvider>
               )}
             </div>
