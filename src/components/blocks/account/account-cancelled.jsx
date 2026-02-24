@@ -45,6 +45,7 @@ export default function AccountCancelled({ data, locale }) {
                       width={120}
                       height={120}
                       className="w-full h-full object-cover hover:scale-105 transition duration-300"
+                      quality={90}
                     />
                   </div>
                   <div className="w-[calc(100%-80px)] xl:w-[calc(100%-80px)] 2xl:w-[calc(100%-100px)] px-3 xl:px-6 2xl:px-8 *:my-0.5 2xl:*:my-1">
@@ -101,6 +102,7 @@ export default function AccountCancelled({ data, locale }) {
                               width={10}
                               height={10}
                               className="w-2 xl:w-2.5"
+                              quality={90}
                             />
                             Reorder
                           </Link>

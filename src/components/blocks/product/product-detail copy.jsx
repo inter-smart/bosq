@@ -11,7 +11,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
-import { addToCart } from "@/store/slices/cartSlice";
+import { addToCart, buyNow } from "@/store/slices/cartSlice";
 import { toast } from "sonner";
 import { useToggleWishlistMutation } from "@/store/services/wishListApi";
 import { useAuth } from "@/hooks/useAuth";
@@ -30,6 +30,7 @@ import ProductDetails from "./ProductDetails";
 import ProductChooseDesign from "./ProductChooseDesign";
 import PriceAndCart from "./PriceAndCart";
 import { useTranslations } from "next-intl";
+import { setIsCheckoutAllowed } from "@/store/slices/checkoutSlice";
 
 export default function ProductDetailCopy({ locale, initialData, productData, models, productSlug }) {
   const router = useRouter();
@@ -130,15 +131,19 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
 
     try {
       await dispatch(
-        addToCart({
+        buyNow({
           product_id,
           variant_id,
           quantity,
         }),
       ).unwrap();
-      router.push("/cart");
+      dispatch(setIsCheckoutAllowed(true));
+
+      const encoded = btoa("allowed");
+
+      router.push(`/${locale}/checkout?flow=${encoded}&type=buynow`);
     } catch (error) {
-      toast.error(isEn ? error?.en : error?.ar || "Failed to add item to cart");
+      toast.error(isEn ? error?.en : error?.ar || "Failed to buy item");
     }
   };
 
@@ -166,7 +171,14 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                             index === selectedIndex ? " border-[#282828]" : "border-[#e9e9e9]",
                           )}
                         >
-                          <Image src={item?.media_path} alt={item?.alt || "thumb"} width={512} height={512} className="w-full h-full object-cover" />
+                          <Image
+                            src={item?.media_path}
+                            alt={item?.alt || "thumb"}
+                            width={512}
+                            height={512}
+                            className="w-full h-full object-cover"
+                            quality={90}
+                          />
                         </button>
                       </div>
                     ))}
@@ -219,6 +231,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                                 width={1080}
                                 height={1080}
                                 className="w-full h-full object-cover"
+                                quality={90}
                               />
                             )}
                           </div>
@@ -286,7 +299,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                         </svg>
                       </button>
                       <button className="w-2.5 2xl:w-3.5 hover:cursor-pointer transition hover:scale-105">
-                        <Image src="/images/icon-share.svg" alt="icon-share" width={12} height={12} className="w-full h-full block" />
+                        <Image src="/images/icon-share.svg" alt="icon-share" width={12} height={12} className="w-full h-full block" quality={90} />
                       </button>
                     </div>
                   )}
@@ -327,6 +340,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                       width={1080}
                       height={1080}
                       className="w-full h-full object-contain"
+                      quality={90}
                     />
                   </div>
                   <div className="flex-1 flex justify-between gap-2 p-2 xl:p-2.5 2xl:p-[15px] ">
@@ -368,7 +382,14 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                 {t("common.aed")} {initialData?.price} <span>{t("common.inc_tax")}</span>
               </Heading>
               {initialData?.stock > 0 && (
-                <PriceAndCart stock={initialData?.stock} price={initialData?.price} item={initialData} quantity={quantity} locale={locale} />
+                <PriceAndCart
+                  stock={initialData?.stock}
+                  price={initialData?.price}
+                  item={initialData}
+                  quantity={quantity}
+                  setQuantity={setQuantity}
+                  locale={locale}
+                />
               )}
 
               <div className="flex flex-wrap items-center justify-between gap-4 2xl:gap-6 mb-2 xl:mb-3 2xl:mb-5 max-lg:flex-wrap-reverse">
@@ -444,6 +465,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                                 "absolute top-1/2 -translate-y-1/2",
                                 locale === "ar" ? "left-0 -translate-x-1/2" : "right-0 translate-x-1/2",
                               )}
+                              quality={90}
                             />
                           )}
                         </div>
@@ -475,7 +497,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                   <Button variant={"black"} className="min-w-[100px] xl:min-w-[120px] 2xl:min-w-[160px] mx-auto" disabled={initialData?.stock == 0} asChild>
 
                     <Link href={"/"}>
-                      <Image src={"/images/icon-cart.svg"} alt={"icon-cart"} width={15} height={15} className="w-[15px]" />
+                      <Image src={"/images/icon-cart.svg"} alt={"icon-cart"} width={15} height={15} className="w-[15px]"  quality={90} />
                       Add to Cart
                     </Link>
 

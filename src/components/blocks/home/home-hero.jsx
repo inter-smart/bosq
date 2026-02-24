@@ -168,6 +168,7 @@ export default function HomeHero({ data, locale }) {
                       placeholder="blur"
                       blurDataURL="/images/placeholder.jpg"
                       priority={index === 0}
+                      quality={90}
                     />
                   </picture>
                 )}
@@ -232,6 +233,7 @@ export default function HomeHero({ data, locale }) {
                 alt="arrow prev"
                 width={16}
                 height={32}
+                quality={90}
               />
             </PrevButton>
             <NextButton
@@ -244,6 +246,7 @@ export default function HomeHero({ data, locale }) {
                 alt="arrow next"
                 width={16}
                 height={32}
+                quality={90}
               />
             </NextButton>
           </div>

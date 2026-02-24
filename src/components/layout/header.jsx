@@ -222,6 +222,7 @@ export default function Header({ navigationData, locale, data }) {
                     width={12}
                     height={12}
                     className="w-[15px] 2xl:w-[18px] aspect-square rounded-full block border-black border-1"
+                    quality={90}
                   />
                   {t("english")}
                 </Button>
@@ -240,6 +241,7 @@ export default function Header({ navigationData, locale, data }) {
                     width={12}
                     height={12}
                     className="w-[15px] 2xl:w-[18px] aspect-square rounded-full block border-black border-1"
+                    quality={90}
                   />
                   {t("arabic")}
                 </Button>

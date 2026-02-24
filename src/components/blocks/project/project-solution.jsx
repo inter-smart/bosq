@@ -24,6 +24,7 @@ export default function ProjectSolution({ locale, data }) {
               width={768}
               height={468}
               className="w-full h-full object-cover hover:scale-105 transition duration-300"
+              quality={90}
             />
           </div>
             <Heading

@@ -117,6 +117,7 @@ export default function CartCard({ product, isEn }) {
               width={168}
               height={168}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              quality={90}
             />
           )}
         </div>
@@ -172,7 +173,7 @@ export default function CartCard({ product, isEn }) {
               }
             >
               {isRemoving ? `${t("removing")}...` : tCommon("remove")}
-              <Image src={"/images/icon-delete.svg"} alt="icon-delete" width={8} height={8} className="w-2 sm:w-3 block" />
+              <Image src={"/images/icon-delete.svg"} alt="icon-delete" width={8} height={8} className="w-2 sm:w-3 block"  quality={90} />
             </Button>
           </div>
         </div>

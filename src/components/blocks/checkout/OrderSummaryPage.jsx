@@ -1,8 +1,8 @@
 import { checkoutData } from "@/lib/api/checkOut/checkOutApi";
 import OrderSummary from "./OrderSummary";
 
-const OrderSummaryPage = async ({ locale }) => {
-  const { data, error } = await checkoutData.getCartSummary();
+const OrderSummaryPage = async ({ locale, type }) => {
+  const { data, error } = await checkoutData.getCartSummary(type);
 
   if (error) {
     console.error("Cart summary fetch failed:", error);
@@ -26,6 +26,7 @@ const OrderSummaryPage = async ({ locale }) => {
       totalItems={totalItems}
       couponStatus={couponStatus}
       locale={locale}
+      type={type}
     />
   );
 };

@@ -213,6 +213,7 @@ const ProductChooseDesign = ({
                             width={75}
                             height={85}
                             className="w-[40px] xl:w-[45px] 2xl:w-[70px] aspect-[75/85] mx-auto mb-1 block"
+                            quality={90}
                           />
                           <div className="text-[8px] 2xl:text-[12px] text-center">{isEn ? item.title : item.title_ar}</div>
                         </div>

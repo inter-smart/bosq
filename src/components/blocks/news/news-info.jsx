@@ -118,6 +118,7 @@ export default function NewsInfo({
                     placeholder="blur"
                     blurDataURL="/images/placeholder.jpg"
                     priority
+                    quality={90}
                   />
                 </picture>
               </div>
@@ -298,6 +299,7 @@ export default function NewsInfo({
                                 width={583}
                                 height={290}
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                quality={90}
                               />
                             </Link>
                             <div

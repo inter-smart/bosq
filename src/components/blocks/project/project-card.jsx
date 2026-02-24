@@ -21,6 +21,7 @@ export default function ProjectCard({ data, locale }) {
             width={600}
             height={600}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-80"
+            quality={90}
           />
         </Link>
         <Text

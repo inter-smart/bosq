@@ -108,6 +108,7 @@ export default function AccountCoupons({ locale, couponData }) {
                             width={10}
                             height={10}
                             className="w-2 xl:w-2.5 hover:scale-105 transition duration-300"
+                            quality={90}
                           />
                           {t("copy")}
                         </div>

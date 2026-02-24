@@ -45,6 +45,7 @@ export default function CustomizationInfo({
               className="-z-2 object-cover"
               placeholder="blur"
               blurDataURL="/images/placeholder.jpg"
+              quality={90}
             />
           </picture>
         )}
@@ -94,6 +95,7 @@ export default function CustomizationInfo({
                       width={45}
                       height={45}
                       className="w-[30px] lg:w-[45px] 2xl:w-[65px] mx-auto hover:scale-105 transition duration-300 mb-2 xl:mb-3 2xl:mb-4"
+                      quality={90}
                     />
                     <Heading
                       as="h4"
@@ -137,6 +139,7 @@ export default function CustomizationInfo({
                 width={768}
                 height={468}
                 className="w-full h-full object-cover hover:scale-105 transition duration-300 "
+                quality={90}
               />
             </div>
             {(customizationProcess?.title ||
@@ -269,6 +272,7 @@ export default function CustomizationInfo({
                   width={768}
                   height={468}
                   className="w-full h-full object-cover hover:scale-105 transition duration-300 "
+                  quality={90}
                 />
               </div>
               {(item?.title || item?.title_ar) && (
@@ -378,6 +382,7 @@ export default function CustomizationInfo({
                   width={768}
                   height={520}
                   className="w-full h-full object-cover hover:scale-105 transition duration-300"
+                  quality={90}
                 />
               </div>
             </div>

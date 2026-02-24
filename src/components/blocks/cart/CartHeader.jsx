@@ -7,7 +7,7 @@ import { Text } from "@/components/utils/text";
 import { useSelector } from "react-redux";
 import { selectCartCount } from "@/store/selectors/cart/selectors";
 
-const CartHeader = ({ data, locale }) => {
+const CartHeader = ({ data, locale, type }) => {
   const itemsCount = useSelector(selectCartCount);
 
   return (
@@ -15,7 +15,7 @@ const CartHeader = ({ data, locale }) => {
       {(locale === "en" ? data?.title : data?.title_ar) && (
         <Heading as="h2" size="heading6" className="line-clamp-2 text-black">
           {parse(locale === "en" ? (data?.title ?? "") : (data?.title_ar ?? ""))}{" "}
-          {itemsCount > 0 && (
+          {!type && itemsCount > 0 && (
             <Text as="span" size="text2" className="text-[#28282a]">
               {" "}
               ({itemsCount} items){" "}

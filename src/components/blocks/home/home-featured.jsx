@@ -81,6 +81,7 @@ export default function HomeFeatured({ data, locale }) {
                           width={308}
                           height={517}
                           className="w-full h-full object-cover hover:scale-110 transition duration-300"
+                          quality={90}
                         />
                       </div>
                       <div className="w-full">

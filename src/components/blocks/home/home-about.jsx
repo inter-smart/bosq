@@ -21,6 +21,7 @@ export default function HomeAbout({ data, locale, dropdownData, state }) {
         fill
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 80vw"
         className="w-full h-full absolute -z-1 inset-0 object-cover pointer-events-none"
+        quality={90}
       />
 
       <div className="container">
@@ -34,6 +35,7 @@ export default function HomeAbout({ data, locale, dropdownData, state }) {
                   width={308}
                   height={517}
                   className="w-full h-full object-contain group-hover:-translate-y-2 transition duration-300"
+                  quality={90}
                 />
                 <div className="w-full aspect-6/1 rounded-full bg-black absolute z-[-1] bottom-0 left-0 right-0 blur-2xl opacity-0 group-hover:opacity-40 group-hover:scale-80 transition duration-300" />
               </div>

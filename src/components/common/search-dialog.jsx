@@ -166,6 +166,7 @@ export default function SearchDialog({ children, locale }) {
                             width={6}
                             height={4}
                             className={cn("w-1 xl:w-1.5", locale === "ar" && "rotate-180")}
+                            quality={90}
                           />
 
                           <DialogClose asChild>
@@ -224,6 +225,7 @@ export default function SearchDialog({ children, locale }) {
                                 width={550}
                                 height={440}
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                quality={90}
                               />
                               {item?.hoverMedia?.path && (
                                 <Image

@@ -1,7 +1,7 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import CartHeader from "./CartHeader";
 
-export default function CartHero({ data, locale, slug, itemsCount }) {
+export default function CartHero({ data, locale, slug, type }) {
   return (
     <section className="w-full pt-[calc(var(--header-y)_+_20px)] sm:pt-[calc(var(--header-y)_+_10px)] pb-1 sm:pb-2.5">
       <div className="container">
@@ -21,7 +21,7 @@ export default function CartHero({ data, locale, slug, itemsCount }) {
             )}
           </BreadcrumbList>
         </Breadcrumb>
-        <CartHeader locale={locale} data={data} />
+        <CartHeader locale={locale} data={data} type={type} />
       </div>
     </section>
   );

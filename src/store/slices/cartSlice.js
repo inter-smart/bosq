@@ -1,6 +1,6 @@
 "use client";
 
-import { fetchCartAPI, addToCartAPI, updateCartItemAPI, removeCartItemAPI, clearCartAPI, mergeCartAPI } from "@/lib/api/cart/cartApi";
+import { fetchCartAPI, addToCartAPI, updateCartItemAPI, removeCartItemAPI, clearCartAPI, mergeCartAPI, buyNowAPI } from "@/lib/api/cart/cartApi";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 // Async Thunks
@@ -36,6 +36,25 @@ export const addToCart = createAsyncThunk("cart/addToCart", async ({ product_id,
       error || {
         en: "Failed to add item to cart",
         ar: "فشل في إضافة المنتج إلى السلة",
+      },
+    );
+  }
+});
+
+export const buyNow = createAsyncThunk("cart/buyNow", async ({ product_id, variant_id, quantity = 1 }, { rejectWithValue }) => {
+  try {
+    const data = await buyNowAPI({
+      product_id,
+      variant_id,
+      quantity,
+    });
+
+    return data;
+  } catch (error) {
+    return rejectWithValue(
+      error || {
+        en: "Failed to buy item",
+        ar: "فشل في شراء المنتج",
       },
     );
   }
@@ -184,6 +203,20 @@ const cartSlice = createSlice({
       .addCase(addToCart.rejected, (state, action) => {
         state.isUpdating = false;
         state.error = action.payload || "Failed to add item to cart";
+      })
+
+      // Buy now
+
+      .addCase(buyNow.pending, (state) => {
+        state.isUpdating = true;
+        state.error = null;
+      })
+      .addCase(buyNow.fulfilled, (state, action) => {
+        state.isUpdating = false;
+      })
+      .addCase(buyNow.rejected, (state, action) => {
+        state.isUpdating = false;
+        state.error = action.payload || "Failed to buy item";
       })
 
       // Update cart item

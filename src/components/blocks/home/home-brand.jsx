@@ -63,6 +63,7 @@ export default function HomeBrand({ data, locale, isEN }) {
                       width={160}
                       height={65}
                       className="w-full h-full object-contain block"
+                      quality={90}
                     />
                   </div>
                 </div>

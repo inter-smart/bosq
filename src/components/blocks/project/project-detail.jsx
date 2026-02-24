@@ -54,6 +54,7 @@ export default function ProjectDetail({ data, locale, projectData }) {
               className="-z-2 object-cover"
               placeholder="blur"
               blurDataURL="/images/placeholder.jpg"
+              quality={90}
             />
           </picture>
         </div>
@@ -117,6 +118,7 @@ export default function ProjectDetail({ data, locale, projectData }) {
                     width={976}
                     height={633}
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                    quality={90}
                   />
                 </div>
               </div>

@@ -44,6 +44,7 @@ export default function FrequentlyBoughtCard({ product }) {
             width={550}
             height={440}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            quality={90}
           />
           {product?.hoverMedia && (
             <Image

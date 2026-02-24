@@ -58,7 +58,7 @@ export default function CheckoutResponse({ orderStatus, orderId, locale = "en" }
       <Empty>
         <EmptyHeader>
           <EmptyMedia>
-            <Image src={config.icon} alt={orderStatus} width={100} height={100} className="w-[30px] xl:w-[50px]" />
+            <Image src={config.icon} alt={orderStatus} width={100} height={100} className="w-[30px] xl:w-[50px]"  quality={90} />
           </EmptyMedia>
 
           <EmptyTitle>

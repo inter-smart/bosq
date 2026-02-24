@@ -95,6 +95,7 @@ export default function MatchingProductDialog({ children, locale, data }) {
                               ? "left-0 -translate-x-1/2"
                               : "right-0 translate-x-1/2"
                           )}
+                          quality={90}
                         />
                       )}
                     </div>
@@ -133,6 +134,7 @@ export default function MatchingProductDialog({ children, locale, data }) {
                     width={15}
                     height={15}
                     className="w-[15px]"
+                    quality={90}
                   />
                   Add to Cart
                 </Button>

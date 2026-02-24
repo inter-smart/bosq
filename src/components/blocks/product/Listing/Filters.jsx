@@ -205,6 +205,25 @@ const ProductListFilters = ({ filterData, isEn }) => {
     }));
   }, []);
 
+  // Toggle parent category — also clears its subcategories when deselected
+  const toggleParentCategory = useCallback(
+    (parentId) => {
+      setTempFilters((prev) => {
+        const isSelected = prev.categories.includes(parentId);
+        if (isSelected) {
+          const childIds = filterData?.categories?.filter((c) => c.parent_id === parentId).map((c) => c.id) || [];
+          return {
+            ...prev,
+            categories: prev.categories.filter((id) => id !== parentId),
+            subCategories: prev.subCategories.filter((id) => !childIds.includes(id)),
+          };
+        }
+        return { ...prev, categories: [...prev.categories, parentId] };
+      });
+    },
+    [filterData],
+  );
+
   // Toggle attribute filter
   const toggleTempAttributeFilter = useCallback((attributeId, valueId) => {
     setTempFilters((prev) => {
@@ -372,7 +391,7 @@ const ProductListFilters = ({ filterData, isEn }) => {
           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
               <button className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-none font-medium text-[#282828] flex items-center gap-x-2">
-                <Image src="/images/icon-filter.svg" alt="Filter" width={20} height={20} className="w-[10px] xl:w-[15px] block" />
+                <Image src="/images/icon-filter.svg" alt="Filter" width={20} height={20} className="w-[10px] xl:w-[15px] block"  quality={90} />
                 <span>{isEn ? "Filters" : "المرشحات"}</span>
                 {activeFilterCount > 0 && (
                   <span className="text-[8px] sm:text-[10px] leading-normal bg-black text-white px-2 py-0.5 rounded-full">{activeFilterCount}</span>
@@ -404,7 +423,7 @@ const ProductListFilters = ({ filterData, isEn }) => {
                                   <Checkbox
                                     id={`cat-${cat.id}`}
                                     checked={tempFilters.categories.includes(cat.id)}
-                                    onCheckedChange={() => toggleTempFilter("categories", cat.id)}
+                                    onCheckedChange={() => toggleParentCategory(cat.id)}
                                     className="rounded-none"
                                   />
                                   <Label
@@ -418,31 +437,34 @@ const ProductListFilters = ({ filterData, isEn }) => {
                           </div>
                         </AccordionContent>
                       </AccordionItem>
-                      <AccordionItem value="item-2" className="py-2 sm:py-3">
-                        <AccordionTrigger className={accordionTriggerStyle}>{isEn ? "Sub Categories" : "الاقسام الفرعية"}</AccordionTrigger>
-                        <AccordionContent className="p-2">
-                          <div className="flex flex-col gap-2 sm:gap-4">
-                            {filterData?.categories
-                              ?.filter((cat) => cat.parent_id !== null)
-                              ?.map((subCat) => (
-                                <div key={subCat.id} className="flex items-center gap-2">
-                                  <Checkbox
-                                    id={`subcat-${subCat.id}`}
-                                    checked={tempFilters.subCategories.includes(subCat.id)}
-                                    onCheckedChange={() => toggleTempFilter("subCategories", subCat.id)}
-                                    className="rounded-none"
-                                  />
-                                  <Label
-                                    htmlFor={`subcat-${subCat.id}`}
-                                    className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
-                                  >
-                                    {isEn ? subCat.name : subCat.name_ar}
-                                  </Label>
-                                </div>
-                              ))}
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
+                      {tempFilters.categories.length > 0 &&
+                        filterData?.categories?.some((cat) => cat.parent_id !== null && tempFilters.categories.includes(cat.parent_id)) && (
+                          <AccordionItem value="item-2" className="py-2 sm:py-3">
+                            <AccordionTrigger className={accordionTriggerStyle}>{isEn ? "Sub Categories" : "الاقسام الفرعية"}</AccordionTrigger>
+                            <AccordionContent className="p-2">
+                              <div className="flex flex-col gap-2 sm:gap-4">
+                                {filterData?.categories
+                                  ?.filter((cat) => cat.parent_id !== null && tempFilters.categories.includes(cat.parent_id))
+                                  ?.map((subCat) => (
+                                    <div key={subCat.id} className="flex items-center gap-2">
+                                      <Checkbox
+                                        id={`subcat-${subCat.id}`}
+                                        checked={tempFilters.subCategories.includes(subCat.id)}
+                                        onCheckedChange={() => toggleTempFilter("subCategories", subCat.id)}
+                                        className="rounded-none"
+                                      />
+                                      <Label
+                                        htmlFor={`subcat-${subCat.id}`}
+                                        className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
+                                      >
+                                        {isEn ? subCat.name : subCat.name_ar}
+                                      </Label>
+                                    </div>
+                                  ))}
+                              </div>
+                            </AccordionContent>
+                          </AccordionItem>
+                        )}
                     </>
                   )}
 
@@ -604,7 +626,7 @@ const ProductListFilters = ({ filterData, isEn }) => {
             <SelectTrigger className="text-[10px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-tight font-medium truncate text-black w-[80px] sm:w-[110px] 2xl:w-[130px] border-none bg-transparent p-0 [&>svg]:hidden focus-visible:ring-0 rounded-none shadow-none">
               <SelectValue placeholder="Default" />
               <SelectIcon>
-                <Image src="/images/icon-dropdown.svg" alt="Dropdown" width={20} height={20} className="w-[10px] xl:w-[15px] block" />
+                <Image src="/images/icon-dropdown.svg" alt="Dropdown" width={20} height={20} className="w-[10px] xl:w-[15px] block"  quality={90} />
               </SelectIcon>
             </SelectTrigger>
             <SelectContent>

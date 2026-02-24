@@ -34,6 +34,7 @@ export default function AuthLayout({
           className="w-full h-full block object-cover max-lg:opacity-60"
           placeholder="blur"
           blurDataURL="/images/placeholder.jpg"
+          quality={90}
         />
       </div>
       <div className="container">

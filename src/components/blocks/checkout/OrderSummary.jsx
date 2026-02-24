@@ -59,6 +59,7 @@ const OrderSummary = ({
   totalItems: initialTotalItems,
   couponStatus: initialCouponStatus,
   locale,
+  type,
 }) => {
   const dispatch = useDispatch();
   // Get selected addresses and checkout permission from Redux
@@ -228,6 +229,7 @@ const OrderSummary = ({
       const orderData = await placeOrder({
         address,
         payment_type: selectedPaymentMethod,
+        type: type || "cart",
       }).unwrap();
 
       const orderId = orderData.data?.order_id;
@@ -278,6 +280,7 @@ const OrderSummary = ({
                       width={168}
                       height={168}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      quality={90}
                     />
                   </div>
                   <div className="w-[calc(100%-30px)] sm:w-[calc(100%-35px)] xl:w-[calc(100%-30px)] 2xl:w-[calc(100%-40px)] px-1 sm:px-1 xl:px-1.5 flex justify-between gap-x-1 items-center">

@@ -131,6 +131,7 @@ export default function HomeFind({ data, locale, isEN }) {
                                   width={350}
                                   height={440}
                                   className="w-full h-full object-cover hover:scale-110 transition duration-300"
+                                  quality={90}
                                 />
                               </div>
                             </div>

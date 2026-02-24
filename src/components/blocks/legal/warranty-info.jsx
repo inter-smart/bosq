@@ -31,6 +31,7 @@ export default function WarrantyInfo({ data, locale }) {
                 height={468}
                 priority
                 className="w-full h-full object-cover hover:scale-105 transition duration-300 "
+                quality={90}
               />
             </div>
             {(item?.title || item?.title_ar) && (

@@ -98,6 +98,7 @@ export default function HomeProject({ data, locale, isEN }) {
                         width={308}
                         height={517}
                         className="w-full h-full object-cover hover:scale-110 opacity-80 transition duration-300"
+                        quality={90}
                       />
                       <div
                         className={cn(

@@ -25,6 +25,7 @@ export default function MaterialInfoSection({
             className="-z-2 object-cover"
             placeholder="blur"
             blurDataURL="/images/placeholder.jpg"
+            quality={90}
           />
         </picture>
         <div className="container">
@@ -130,6 +131,7 @@ export default function MaterialInfoSection({
                           width={760}
                           height={630}
                           className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                          quality={90}
                         />
                         {item?.icon && (
                           <div className="w-[40px] xl:w-[70px] 2xl:w-[90px] 3xl:w-[100px] h-auto aspect-square m-[10px] sm:m-[15px] 3xl:m-[20px] overflow-hidden absolute z-1 inset-[0_auto_auto_0] flex items-center justify-center">
@@ -139,6 +141,7 @@ export default function MaterialInfoSection({
                               width={115}
                               height={115}
                               className="w-full h-full object-contain"
+                              quality={90}
                             />
                           </div>
                         )}
@@ -234,6 +237,7 @@ export default function MaterialInfoSection({
                           width={760}
                           height={630}
                           className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                          quality={90}
                         />
                         {item?.icon && (
                           <div className="w-[40px] xl:w-[70px] 2xl:w-[90px] 3xl:w-[100px] h-auto aspect-square m-[10px] sm:m-[15px] 3xl:m-[20px] overflow-hidden absolute z-1 inset-[0_auto_auto_0] flex items-center justify-center">
@@ -243,6 +247,7 @@ export default function MaterialInfoSection({
                               width={115}
                               height={115}
                               className="w-full h-full object-contain"
+                              quality={90}
                             />
                           </div>
                         )}

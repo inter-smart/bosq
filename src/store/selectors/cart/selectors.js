@@ -2,7 +2,7 @@
 export const selectCartItems = (state) => state.cart.items;
 
 // Cart item count (total quantity)
-export const selectCartCount = (state) => state.cart.item_count;
+export const selectCartCount = (state) => state.cart.items.length;
 
 // Checkout page permission
 

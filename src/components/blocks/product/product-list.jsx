@@ -313,7 +313,7 @@ export default function ProductList({ data, locale, filterData }) {
             <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
               <SheetTrigger asChild>
                 <button className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-none font-medium text-[#282828] flex items-center gap-x-2">
-                  <Image src="/images/icon-filter.svg" alt="Filter" width={20} height={20} className="w-[10px] xl:w-[15px] block" />
+                  <Image src="/images/icon-filter.svg" alt="Filter" width={20} height={20} className="w-[10px] xl:w-[15px] block"  quality={90} />
                   <span>{isEn ? "Filters" : "المرشحات"}</span>
                   {activeFilterCount > 0 && (
                     <span className="text-[8px] sm:text-[10px] leading-normal bg-black text-white px-2 py-0.5 rounded-full">{activeFilterCount}</span>
@@ -546,7 +546,7 @@ export default function ProductList({ data, locale, filterData }) {
 
                 {/* Custom Dropdown Icon */}
                 <SelectIcon>
-                  <Image src="/images/icon-dropdown.svg" alt="Dropdown" width={20} height={20} className="w-[10px] xl:w-[15px] block" />
+                  <Image src="/images/icon-dropdown.svg" alt="Dropdown" width={20} height={20} className="w-[10px] xl:w-[15px] block"  quality={90} />
                 </SelectIcon>
               </SelectTrigger>
 

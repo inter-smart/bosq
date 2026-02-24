@@ -18,6 +18,7 @@ export default function ErgonomicChairSection({ data, locale }) {
             className="-z-2 object-cover"
             placeholder="blur"
             blurDataURL="/images/placeholder.jpg"
+            quality={90}
           />
         </picture>
         <div className="container">
@@ -61,6 +62,7 @@ export default function ErgonomicChairSection({ data, locale }) {
                       width={735}
                       height={355}
                       className="w-full h-full object-contain"
+                      quality={90}
                     />
                   </div>
                   <div

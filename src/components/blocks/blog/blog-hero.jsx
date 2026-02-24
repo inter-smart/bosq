@@ -73,6 +73,7 @@ export default function BlogHero({ data, locale, slug }) {
               placeholder="blur"
               blurDataURL="/images/placeholder.jpg"
               priority
+              quality={90}
             />
           </picture>
         )}

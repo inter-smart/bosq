@@ -46,6 +46,7 @@ export default function ProjectHero({ locale, data }) {
               className="-z-2 object-cover"
               placeholder="blur"
               blurDataURL="/images/placeholder.jpg"
+              quality={90}
             />
           </picture>
         )}
