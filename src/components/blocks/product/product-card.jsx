@@ -123,7 +123,9 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
               size="none"
               className="text-[10px] xl:text-[8px] 2xl:text-[10px] 3xl:text-[12px] leading-normal font-light truncate text-[#bbbcbc] mb-0.5"
             >
-              <Link href={productUrl}>{product?.category_name}</Link>
+              <Link href={productUrl}>
+                {isEn ? product?.categories?.[0]?.name : product?.categories?.[0]?.name_ar}
+              </Link>
             </Heading>
             <Heading
               as="div"
