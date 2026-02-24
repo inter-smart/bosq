@@ -27,6 +27,7 @@ export default function ReturnInfo({ data, locale }) {
               height={468}
               loading="lazy"
               className="w-full h-full object-cover hover:scale-105 transition duration-300 "
+              quality={90}
             />
           </div>
           {data?.items?.map((item, index) => (

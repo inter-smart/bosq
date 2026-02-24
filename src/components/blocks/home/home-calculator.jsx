@@ -29,6 +29,7 @@ export default function HomeCalculator({ smartSpaceSection, locale, isEN }) {
                   width={35}
                   height={600}
                   className="w-[20px] xl:w-[25px] aspect-[30/600] absolute z-0 top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 [mask-image:linear-gradient(to_bottom,transparent_0%,white_10%,white_90%,transparent_100%)] pointer-events-none max-sm:hidden"
+                  quality={90}
                 />
                 <div className="xl:max-w-[1040px] 2xl:max-w-[1260px] 3xl:max-w-[1620px] mx-auto">
                   <div className="flex flex-wrap [&>*]:p-[15px_0] sm:[&>*]:p-[20px_40px] xl:[&>*]:p-[25px_60px] 2xl:[&>*]:p-[30px_80px]">
@@ -42,6 +43,7 @@ export default function HomeCalculator({ smartSpaceSection, locale, isEN }) {
                         width={600}
                         height={35}
                         className="w-full aspect-[60/3] [mask-image:linear-gradient(to_left,transparent_0%,white_10%,white_90%,transparent_100%)] pointer-events-none"
+                        quality={90}
                       />
                     </div>
                     <div className="w-full sm:w-1/2">
@@ -84,6 +86,7 @@ function CardComp({ data, variant, locale, isEN }) {
           width={620}
           height={500}
           className="w-full h-full object-contain"
+          quality={90}
         />
       </div>
       <div

@@ -66,6 +66,7 @@ const ProductDetails = ({ data, isEn, setIndexProject, setOpenProject, openProje
                           width={576}
                           height={376}
                           className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                          quality={90}
                         />
                       </div>
                     </div>

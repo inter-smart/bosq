@@ -217,7 +217,7 @@ export default function ProductDetail({ locale, data = local_data }) {
                             index === selectedIndex ? " border-[#282828]" : "border-[#e9e9e9]",
                           )}
                         >
-                          <Image src={item?.thumbnail} alt={item?.alt || "thumb"} width={512} height={512} className="w-full h-full object-cover" />
+                          <Image src={item?.thumbnail} alt={item?.alt || "thumb"} width={512} height={512} className="w-full h-full object-cover"  quality={90} />
                         </button>
                       </div>
                     ))}
@@ -265,6 +265,7 @@ export default function ProductDetail({ locale, data = local_data }) {
                               width={1080}
                               height={1080}
                               className="w-full h-full object-cover"
+                              quality={90}
                             />
                           )}
                         </div>
@@ -321,7 +322,7 @@ export default function ProductDetail({ locale, data = local_data }) {
                     </svg>
                   </button>
                   <button className="w-2.5 2xl:w-3.5 hover:cursor-pointer transition hover:scale-105">
-                    <Image src="/images/icon-share.svg" alt="icon-share" width={12} height={12} className="w-full h-full block" />
+                    <Image src="/images/icon-share.svg" alt="icon-share" width={12} height={12} className="w-full h-full block"  quality={90} />
                   </button>
                 </div>
               </div>
@@ -358,6 +359,7 @@ export default function ProductDetail({ locale, data = local_data }) {
                         width={1080}
                         height={1080}
                         className="w-full h-full object-contain"
+                        quality={90}
                       />
                     </div>
                     <div className="flex-1 flex justify-between gap-2 p-2 xl:p-2.5 2xl:p-[15px] ">
@@ -418,7 +420,7 @@ export default function ProductDetail({ locale, data = local_data }) {
                     <span>Out of Stock</span>
                   ) : (
                     <Link href={"/"}>
-                      <Image src={"/images/icon-cart.svg"} alt={"icon-cart"} width={15} height={15} className="w-[15px]" />
+                      <Image src={"/images/icon-cart.svg"} alt={"icon-cart"} width={15} height={15} className="w-[15px]"  quality={90} />
                       Add to Cart
                     </Link>
                   )}
@@ -500,6 +502,7 @@ export default function ProductDetail({ locale, data = local_data }) {
                                 "absolute top-1/2 -translate-y-1/2",
                                 locale === "ar" ? "left-0 -translate-x-1/2" : "right-0 translate-x-1/2",
                               )}
+                              quality={90}
                             />
                           )}
                         </div>
@@ -533,7 +536,7 @@ export default function ProductDetail({ locale, data = local_data }) {
                       <span>Out of Stock</span>
                     ) : (
                       <Link href={"/"}>
-                        <Image src={"/images/icon-cart.svg"} alt={"icon-cart"} width={15} height={15} className="w-[15px]" />
+                        <Image src={"/images/icon-cart.svg"} alt={"icon-cart"} width={15} height={15} className="w-[15px]"  quality={90} />
                         Add to Cart
                       </Link>
                     )}
@@ -605,6 +608,7 @@ export default function ProductDetail({ locale, data = local_data }) {
                           width={576}
                           height={376}
                           className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                          quality={90}
                         />
                       </div>
                     </div>
@@ -718,6 +722,7 @@ function ChooseDesign({ children, data, locale, onOpenChange }) {
                           width={75}
                           height={85}
                           className="w-[40px] xl:w-[45px] 2xl:w-[70px] aspect-[75/85] mx-auto mb-1 2xl:mb-1.5 block"
+                          quality={90}
                         />
                         <div className="text-[8px] 2xl:text-[12px] leading-normal font-normal text-center text-[#282828] ">{item?.title}</div>
                       </div>

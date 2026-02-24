@@ -69,6 +69,7 @@ export default function ClinetSection({ data, locale }) {
                                                         width={160}
                                                         height={70}
                                                         className="w-full h-full object-contain"
+                                                      quality={90}
                                                     />
                                                 </div>
                                             </div>

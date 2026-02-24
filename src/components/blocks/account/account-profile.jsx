@@ -27,6 +27,7 @@ export default function AccountProfile({ data, locale }) {
             width={100}
             height={100}
             className="w-full h-full object-cover hover:scale-110 transition duration-300"
+            quality={90}
           />
         </div>
         <div className="flex-1 px-3 xl:px-5">

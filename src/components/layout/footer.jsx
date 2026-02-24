@@ -367,6 +367,7 @@ export default function Footer({
                   width={120}
                   height={16}
                   className="w-[160px] lg:w-[100px] xl:w-[120px] 2xl:w-[150px] block"
+                  quality={90}
                 />
               </div>
             ))}

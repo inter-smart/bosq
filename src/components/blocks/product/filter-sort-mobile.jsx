@@ -64,6 +64,7 @@ export function MobileFilterSheet({
             width={20}
             height={20}
             className="w-[14px] block"
+            quality={90}
           />
           <span>Filters</span>
           {activeFilterCount > 0 && (
@@ -317,6 +318,7 @@ export function MobileSortSheet({
             width={20}
             height={20}
             className="w-[10px] block"
+            quality={90}
           />
           <span>Sort by</span>
         </button>

@@ -27,6 +27,7 @@ export default function AboutBannerSection({ data, locale }) {
                             className="-z-2 object-cover"
                             placeholder="blur"
                             blurDataURL="/images/placeholder.jpg"
+                          quality={90}
                         />
                     </picture>
                 ) : (

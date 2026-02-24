@@ -20,6 +20,7 @@ export default function HomeEnquiry({ data, locale, isEN, type = "", projectId =
                 width={810}
                 height={520}
                 className="w-full h-full object-cover hover:scale-110 transition duration-300"
+                quality={90}
               />
             </div>
           </div>

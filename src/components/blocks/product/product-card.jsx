@@ -104,6 +104,7 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
               width={550}
               height={440}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              quality={90}
             />
             {product?.hover_media_path && (
               <Image

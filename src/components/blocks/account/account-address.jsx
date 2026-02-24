@@ -270,6 +270,7 @@ export default function AccountAddress({ data, locale, addressData }) {
                         width={10}
                         height={10}
                         className="w-2 xl:w-2.5"
+                        quality={90}
                       />
                       {c("edit")}
                     </Button>
@@ -287,6 +288,7 @@ export default function AccountAddress({ data, locale, addressData }) {
                         width={10}
                         height={10}
                         className="w-2 xl:w-2.5"
+                        quality={90}
                       />
                       {isDeleting === item?.id ? t("deleting") : c("delete")}
                     </Button>

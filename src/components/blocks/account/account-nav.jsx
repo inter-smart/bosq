@@ -167,6 +167,7 @@ export default function AccountNav({ locale }) {
                     width={12}
                     height={14}
                     className="w-3 xl:w-3 2xl:w-4 aspect-square object-contain hover:scale-105 transition duration-300 invert-0"
+                    quality={90}
                   />
                   <Text as="div" size="text3" className="leading-none text-black">
                     {t(item?.key)}
@@ -193,6 +194,7 @@ export default function AccountNav({ locale }) {
                     "w-3 xl:w-3 2xl:w-4 aspect-square object-contain hover:scale-105 transition duration-300 ",
                     isActive ? "invert-100" : "invert-0",
                   )}
+                  quality={90}
                 />
                 <Text as="div" size="text3" className={cn("leading-none text-black", isActive ? "text-white" : "text-black")}>
                   {t(item?.key)}

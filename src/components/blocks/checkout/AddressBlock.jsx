@@ -204,7 +204,7 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
                         "min-w-[45px] xl:min-w-[50px] 2xl:min-w-[70px] h-[20px] lg:h-[22px] 2xl:h-[24px] 3xl:h-[26px] bg-white gap-1 border border-[#e9e9e9] hover:text-black hover:bg-white hover:border-[#f17423]"
                       }
                     >
-                      <Image src={"/images/icon-edit.svg"} alt={"icon-edit"} width={10} height={10} className="w-2 xl:w-2.5" />
+                      <Image src={"/images/icon-edit.svg"} alt={"icon-edit"} width={10} height={10} className="w-2 xl:w-2.5"  quality={90} />
                       Edit
                     </Button>
                     {!item.is_default && (
@@ -231,7 +231,7 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
                         "min-w-[55px] xl:min-w-[60px] 2xl:min-w-[85px] h-[20px] lg:h-[22px] 2xl:h-[24px] 3xl:h-[26px] bg-white gap-1 border border-[#e9e9e9] hover:text-red-600 hover:bg-white hover:border-red-600"
                       }
                     >
-                      <Image src={"/images/icon-delete.svg"} alt={"icon-delete"} width={10} height={10} className="w-2 xl:w-2.5" />
+                      <Image src={"/images/icon-delete.svg"} alt={"icon-delete"} width={10} height={10} className="w-2 xl:w-2.5"  quality={90} />
                       Delete
                     </Button>
                   </div>

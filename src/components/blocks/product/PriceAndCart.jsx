@@ -85,7 +85,7 @@ const PriceAndCart = ({ stock, price, item, locale }) => {
               t("product.adding")
             ) : (
               <>
-                <Image src={"/images/icon-cart.svg"} alt={"icon-cart"} width={15} height={15} className="w-[15px]" />
+                <Image src={"/images/icon-cart.svg"} alt={"icon-cart"} width={15} height={15} className="w-[15px]"  quality={90} />
                 {t("product.add_to_cart")}
               </>
             )}

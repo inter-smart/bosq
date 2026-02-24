@@ -204,6 +204,7 @@ export default function HeaderNavigation({ locale, isDesktop, pathname, onNaviga
                                     width={450}
                                     height={300}
                                     className="w-full h-full object-cover hover:scale-110 transition"
+                                    quality={90}
                                   />
                                 </div>
                               ) : null;

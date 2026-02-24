@@ -91,6 +91,7 @@ export default function AccountOrders({ data, locale, orders, pagination }) {
                           width={120}
                           height={120}
                           className="w-full h-full object-cover hover:scale-105 transition duration-300"
+                          quality={90}
                         />
                       </div>
                       <div className="w-[calc(100%-80px)] xl:w-[calc(100%-80px)] 2xl:w-[calc(100%-100px)] px-3 xl:px-6 2xl:px-8 *:my-0.5 2xl:*:my-1">
@@ -128,7 +129,7 @@ export default function AccountOrders({ data, locale, orders, pagination }) {
 
                         <Button variant={"link"} className={btnStyle} asChild>
                           <Link href={`/${locale}/`}>
-                            <Image src={"/images/icon-reorder.svg"} alt={"icon-reorder"} width={10} height={10} className="w-2 xl:w-2.5" />
+                            <Image src={"/images/icon-reorder.svg"} alt={"icon-reorder"} width={10} height={10} className="w-2 xl:w-2.5"  quality={90} />
                             {t("reorder")}
                           </Link>
                         </Button>

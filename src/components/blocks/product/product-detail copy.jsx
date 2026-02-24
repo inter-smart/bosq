@@ -166,7 +166,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                             index === selectedIndex ? " border-[#282828]" : "border-[#e9e9e9]",
                           )}
                         >
-                          <Image src={item?.media_path} alt={item?.alt || "thumb"} width={512} height={512} className="w-full h-full object-cover" />
+                          <Image src={item?.media_path} alt={item?.alt || "thumb"} width={512} height={512} className="w-full h-full object-cover"  quality={90} />
                         </button>
                       </div>
                     ))}
@@ -219,6 +219,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                                 width={1080}
                                 height={1080}
                                 className="w-full h-full object-cover"
+                                quality={90}
                               />
                             )}
                           </div>
@@ -286,7 +287,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                         </svg>
                       </button>
                       <button className="w-2.5 2xl:w-3.5 hover:cursor-pointer transition hover:scale-105">
-                        <Image src="/images/icon-share.svg" alt="icon-share" width={12} height={12} className="w-full h-full block" />
+                        <Image src="/images/icon-share.svg" alt="icon-share" width={12} height={12} className="w-full h-full block"  quality={90} />
                       </button>
                     </div>
                   )}
@@ -327,6 +328,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                       width={1080}
                       height={1080}
                       className="w-full h-full object-contain"
+                      quality={90}
                     />
                   </div>
                   <div className="flex-1 flex justify-between gap-2 p-2 xl:p-2.5 2xl:p-[15px] ">
@@ -444,6 +446,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                                 "absolute top-1/2 -translate-y-1/2",
                                 locale === "ar" ? "left-0 -translate-x-1/2" : "right-0 translate-x-1/2",
                               )}
+                              quality={90}
                             />
                           )}
                         </div>
@@ -475,7 +478,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                   <Button variant={"black"} className="min-w-[100px] xl:min-w-[120px] 2xl:min-w-[160px] mx-auto" disabled={initialData?.stock == 0} asChild>
 
                     <Link href={"/"}>
-                      <Image src={"/images/icon-cart.svg"} alt={"icon-cart"} width={15} height={15} className="w-[15px]" />
+                      <Image src={"/images/icon-cart.svg"} alt={"icon-cart"} width={15} height={15} className="w-[15px]"  quality={90} />
                       Add to Cart
                     </Link>
 

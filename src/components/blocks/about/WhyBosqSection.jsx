@@ -54,6 +54,7 @@ export default function WhyBosqSection({ data, locale }) {
                                             width={810}
                                             height={420}
                                             className="w-full h-full object-cover hover:scale-105 transition-all duration-500 ease-in-out"
+                                          quality={90}
                                         />
                                     </div>
                                 </div>
@@ -66,6 +67,7 @@ export default function WhyBosqSection({ data, locale }) {
                                                 width={60}
                                                 height={60}
                                                 className="w-full h-full object-contain"
+                                              quality={90}
                                             />
                                         </div>
                                         <div className="text-[16px] 2xl:text-[20px] 3xl:text-[25px] leading-[1.2] font-normal text-[#282828] mb-2">{isEn? item?.title: item?.title_ar}</div>

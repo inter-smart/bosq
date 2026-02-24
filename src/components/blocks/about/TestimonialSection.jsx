@@ -76,6 +76,7 @@ export default function TestimonialSection({ data, locale }) {
                 width={590}
                 height={610}
                 className="w-full h-full object-contain"
+                quality={90}
               />
             </div>
           </div>

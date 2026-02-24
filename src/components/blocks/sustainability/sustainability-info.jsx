@@ -44,6 +44,7 @@ export default function SustainabilityInfo({
               className="-z-2 object-cover"
               placeholder="blur"
               blurDataURL="/images/placeholder.jpg"
+              quality={90}
             />
           </picture>
         )}
@@ -98,6 +99,7 @@ export default function SustainabilityInfo({
                 width={1780}
                 height={768}
                 className="w-full h-full object-cover hover:scale-105 transition duration-300"
+                quality={90}
               />
             </motion.div>
           </div>
@@ -133,6 +135,7 @@ export default function SustainabilityInfo({
                     width={768}
                     height={468}
                     className="w-full h-full object-cover hover:scale-105 transition duration-300"
+                    quality={90}
                   />
                 </div>
                 {item?.title && (

@@ -86,6 +86,7 @@ export default function JourneySection({ data, locale }) {
                                             width={415}
                                             height={280}
                                             className="w-full h-full object-cover hover:scale-105 transition-all duration-400 ease-in-out"
+                                          quality={90}
                                         />
                                     </div>
                                 ))}
@@ -100,6 +101,7 @@ export default function JourneySection({ data, locale }) {
                                         width={435}
                                         height={580}
                                         className="w-full h-full object-cover hover:scale-105 transition-all duration-400 ease-in-out"
+                                      quality={90}
                                     />
                                 </div>
                             ))}

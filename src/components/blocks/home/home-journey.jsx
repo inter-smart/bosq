@@ -54,6 +54,7 @@ export default function HomeJourney({ data, locale, isEN }) {
             className="-z-2 object-cover opacity-80"
             placeholder="blur"
             blurDataURL="/images/placeholder.jpg"
+            quality={90}
           />
         </picture>
       )}

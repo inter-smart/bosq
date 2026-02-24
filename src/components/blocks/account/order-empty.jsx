@@ -34,6 +34,7 @@ export function OrderEmpty({
             width={100}
             height={90}
             className="w-[60px] xl:w-[80px] 2xl:w-[100px]"
+            quality={90}
           />
         </EmptyMedia>
         <EmptyTitle>

@@ -174,6 +174,7 @@ export function DesktopFilterSheet({
             width={20}
             height={20}
             className="w-[10px] xl:w-[15px] block"
+            quality={90}
           />
           <span>Filters</span>
         </button>
@@ -418,6 +419,7 @@ export function DesktopSortDropdown({ sortBy, setSortBy }) {
               width={20}
               height={20}
               className="w-[10px] xl:w-[15px] block"
+              quality={90}
             />
           </SelectIcon>
         </SelectTrigger>

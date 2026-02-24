@@ -60,6 +60,7 @@ export default function ContactInfo({ locale, data }) {
                   width={864}
                   height={522}
                   className="w-full h-full hover:scale-105 transition"
+                  quality={90}
                 />
               </div>
               <Heading
@@ -176,6 +177,7 @@ export default function ContactInfo({ locale, data }) {
                               width={12}
                               height={12}
                               className="w-3.5 aspect-square hover:scale-110 transition"
+                              quality={90}
                             />
                           </a>
                         </div>

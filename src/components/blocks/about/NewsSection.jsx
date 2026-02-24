@@ -86,6 +86,7 @@ export default function NewsSection({ data, locale }) {
                       width={500}
                       height={440}
                       className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
+                      quality={90}
                     />
                   </div>
                   <div className="w-full h-auto">

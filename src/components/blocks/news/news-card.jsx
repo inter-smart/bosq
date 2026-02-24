@@ -20,6 +20,7 @@ export default function NewsCard({ locale, data, isEn }) {
             width={583}
             height={290}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            quality={90}
           />
         </Link>
         <div className="w-full flex-1 flex flex-col justify-between">

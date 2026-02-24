@@ -20,6 +20,7 @@ export default function DeliveryInfo({ data, deliveryInfo, locale }) {
             className="-z-2 object-cover"
             placeholder="blur"
             blurDataURL="/images/placeholder.jpg"
+            quality={90}
           />
         </picture>
         <div className="container">
@@ -58,6 +59,7 @@ export default function DeliveryInfo({ data, deliveryInfo, locale }) {
                   width={468}
                   height={783}
                   className="w-full h-auto block hover:scale-105 transition duration-300"
+                  quality={90}
                 />
               </div>
             </div>
@@ -106,6 +108,7 @@ export default function DeliveryInfo({ data, deliveryInfo, locale }) {
                         width={45}
                         height={45}
                         className="w-[30px] lg:w-[45px] 2xl:w-[65px] mx-auto hover:scale-105 transition duration-300 mb-1 xl:mb-2 2xl:mb-3"
+                        quality={90}
                       />
                       <Heading
                         as="h4"
@@ -153,6 +156,7 @@ export default function DeliveryInfo({ data, deliveryInfo, locale }) {
                   width={768}
                   height={468}
                   className="w-full h-full object-cover hover:scale-105 transition duration-300 "
+                  quality={90}
                 />
               </div>
               {item?.title && (
