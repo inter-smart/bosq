@@ -59,6 +59,7 @@ const OrderSummary = ({
   totalItems: initialTotalItems,
   couponStatus: initialCouponStatus,
   locale,
+  type,
 }) => {
   const dispatch = useDispatch();
   // Get selected addresses and checkout permission from Redux
@@ -228,6 +229,7 @@ const OrderSummary = ({
       const orderData = await placeOrder({
         address,
         payment_type: selectedPaymentMethod,
+        type: type || "cart",
       }).unwrap();
 
       const orderId = orderData.data?.order_id;

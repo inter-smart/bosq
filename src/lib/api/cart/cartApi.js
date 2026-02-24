@@ -15,6 +15,14 @@ export async function addToCartAPI({ product_id, variant_id, quantity = 1 }) {
   });
 }
 
+// Buy now (add to cart and redirect to checkout)
+export async function buyNowAPI({ product_id, variant_id, quantity = 1 }) {
+  return fetchWithCredentials("/api/frontend/cart/buynow", {
+    method: "POST",
+    body: JSON.stringify({ product_id, variant_id, quantity }),
+  });
+}
+
 // Update cart item quantity
 export async function updateCartItemAPI({ itemId, quantity, variant_id }) {
   return fetchWithCredentials(`/api/frontend/cart/item/${itemId}`, {

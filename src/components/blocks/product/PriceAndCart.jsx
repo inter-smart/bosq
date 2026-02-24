@@ -10,12 +10,11 @@ import { selectCartIsUpdating } from "@/store/selectors/cart/selectors";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 
-const PriceAndCart = ({ stock, price, item, locale }) => {
+const PriceAndCart = ({ stock, price, item, locale, quantity, setQuantity }) => {
   const isEn = locale === "en";
 
   const dispatch = useDispatch();
   const isUpdating = useSelector(selectCartIsUpdating);
-  const [quantity, setQuantity] = useState(1);
   const t = useTranslations();
 
   const handleAddToCart = async () => {
@@ -85,7 +84,7 @@ const PriceAndCart = ({ stock, price, item, locale }) => {
               t("product.adding")
             ) : (
               <>
-                <Image src={"/images/icon-cart.svg"} alt={"icon-cart"} width={15} height={15} className="w-[15px]"  quality={90} />
+                <Image src={"/images/icon-cart.svg"} alt={"icon-cart"} width={15} height={15} className="w-[15px]" quality={90} />
                 {t("product.add_to_cart")}
               </>
             )}

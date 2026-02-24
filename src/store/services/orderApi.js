@@ -9,12 +9,13 @@ export const orderApi = createApi({
   }),
   endpoints: (builder) => ({
     placeOrder: builder.mutation({
-      query: ({ payment_type, address }) => ({
+      query: ({ payment_type, address, type }) => ({
         url: `/api/frontend/orders/place`,
         method: "POST",
         body: {
           payment_type,
           address,
+          type,
         },
       }),
       transformErrorResponse: (response) => {

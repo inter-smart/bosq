@@ -6,7 +6,7 @@ import OrderSummaryPage from "./OrderSummaryPage";
 import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
 import CheckoutResponse from "./checkout-response";
 
-export default function CheckoutList({ locale }) {
+export default function CheckoutList({ locale, type }) {
   return (
     <>
       <section className="w-full block py-[10px_30px] xl:py-[15px_60px] 2xl:py-[20px_100px] relative z-0">
@@ -23,7 +23,7 @@ export default function CheckoutList({ locale }) {
             </div>
 
             {/* Order Summary Sidebar */}
-            <OrderSummaryPage locale={locale} />
+            <OrderSummaryPage locale={locale} type={type} />
           </div>
         </div>
 
