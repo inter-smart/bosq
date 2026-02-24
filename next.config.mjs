@@ -6,6 +6,7 @@ const withNextIntl = createNextIntlPlugin("./src/il8n/request.js");
 const nextConfig = {
   images: {
     dangerouslyAllowLocalIP: true,
+    quality: 90,
     remotePatterns: [
       {
         protocol: "http",
