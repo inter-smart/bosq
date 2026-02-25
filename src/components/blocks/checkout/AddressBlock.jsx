@@ -40,7 +40,9 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
   const [pendingAction, setPendingAction] = useState(null);
 
 
-  const tToast  = useTranslations("toast");
+  const tToast = useTranslations("toast");
+  const t = useTranslations("address");
+  const tCommon = useTranslations("common");
 
   // Get the selected address ID based on variant
   const selectedAddressId = variant === "shipping" ? selectedShippingAddressId : selectedBillingAddressId;
@@ -82,7 +84,6 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
     setPendingAction({
       id,
       kind: "delete",
-      message: "Are you sure you want to delete this address?",
       addressType: type,
     });
   };
@@ -91,7 +92,6 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
     setPendingAction({
       id,
       kind: "setDefault",
-      message: "Set this address as default?",
       addressType: type,
     });
   };
@@ -127,7 +127,7 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
       <div className="w-full h-auto block rounded-[4px] border border-[#e0e0e0] overflow-hidden mb-1 xl:mb-2.5 2xl:mb-4">
         <div className="w-full h-auto bg-black px-3 lg:px-4 xl:px-4 2xl:px-7 py-2.5 lg:py-2 xl:py-4 2xl:py-5 flex justify-between items-center gap-2">
           <Heading as="h4" size="heading4" className="text-white">
-            {variant == "billing" ? "Billing Address" : "Shipping Address"}
+            {variant === "billing" ? t("billing") : t("shipping")}
           </Heading>
 
           {/* Same Address Checkbox */}
@@ -141,7 +141,7 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
               />
               <Label htmlFor={variant === "shipping" ? "sameForBilling" : "sameForShipping"}>
                 <Text as="span" size="text3" className="text-white">
-                  {variant === "shipping" ? "Use Same Address For Billing" : "Use Same Address For Shipping"}
+                  {variant === "shipping" ? t("use_same_for_billing") : t("use_same_for_shipping")}
                 </Text>
               </Label>
             </div>
@@ -153,7 +153,7 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
           {sortedAddresses.length === 0 ? (
             <div className="w-full p-4 text-center">
               <Text as="div" size="text3" className="text-[#808080]">
-                No addresses found. Please add a new address.
+                {t("no_addresses")}
               </Text>
             </div>
           ) : (
@@ -205,7 +205,7 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
                       }
                     >
                       <Image src={"/images/icon-edit.svg"} alt={"icon-edit"} width={10} height={10} className="w-2 xl:w-2.5"  quality={90} />
-                      Edit
+                      {tCommon("edit")}
                     </Button>
                     {!item.is_default && (
                       <Button
@@ -218,7 +218,7 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
                           "min-w-[70px] xl:min-w-[80px] 2xl:min-w-[100px] h-[20px] lg:h-[22px] 2xl:h-[24px] 3xl:h-[26px] bg-white gap-1 border border-[#e9e9e9] hover:text-black hover:bg-white hover:border-[#f17423]"
                         }
                       >
-                        Set Default
+                        {t("set_default")}
                       </Button>
                     )}
                     <Button
@@ -232,7 +232,7 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
                       }
                     >
                       <Image src={"/images/icon-delete.svg"} alt={"icon-delete"} width={10} height={10} className="w-2 xl:w-2.5"  quality={90} />
-                      Delete
+                      {tCommon("delete")}
                     </Button>
                   </div>
                 </div>
@@ -247,9 +247,9 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
         <AlertDialogContent className={"xl:max-w-[768px] 2xl:max-w-[840px] gap-0"}>
           <AlertDialogHeader className={"flex-row items-center justify-between mb-2 2xl:mb-4"}>
             <AlertDialogTitle className="text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-semibold text-[#282828]">
-              Edit Address
+              {t("edit_title")}
             </AlertDialogTitle>
-            <AlertDialogDescription className={"sr-only"}>Edit Address form.</AlertDialogDescription>
+            <AlertDialogDescription className={"sr-only"}>{t("edit_description")}</AlertDialogDescription>
             <AlertDialogCancel className={"h-auto p-0 border-0 hover:bg-transparent"}>
               <X className="size-5 text-black" />
             </AlertDialogCancel>
@@ -271,9 +271,11 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
         <AlertDialogContent size="none" className=" gap-4 p-6">
           <AlertDialogHeader className="space-y-2">
             <AlertDialogTitle className="text-base font-semibold text-gray-900">
-              {pendingAction?.kind === "delete" ? "Delete Address" : "Set Default Address"}
+              {pendingAction?.kind === "delete" ? t("delete_title") : t("set_default_title")}
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-sm text-gray-600">{pendingAction?.message}</AlertDialogDescription>
+            <AlertDialogDescription className="text-sm text-gray-600">
+              {pendingAction?.kind === "delete" ? t("delete_confirm") : t("set_default_confirm")}
+            </AlertDialogDescription>
           </AlertDialogHeader>
 
           <AlertDialogFooter className="flex-row justify-end gap-3 sm:space-x-0">
@@ -281,14 +283,14 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
               className="mt-0 px-4 py-2 h-auto text-sm font-medium border border-gray-300 hover:bg-gray-50"
               onClick={() => setPendingAction(null)}
             >
-              Cancel
+              {tCommon("cancel")}
             </AlertDialogCancel>
             <AlertDialogAction
               className="mt-0 px-4 py-2 h-auto text-sm font-medium bg-red-600 hover:bg-red-700 text-white border-0"
               onClick={confirmAction}
               disabled={isProcessing}
             >
-              {pendingAction?.kind === "delete" ? (isDeletingAddress ? "Deleting..." : "Delete") : isUpdatingDefault ? "Updating..." : "Set Default"}
+              {pendingAction?.kind === "delete" ? (isDeletingAddress ? t("deleting") : tCommon("delete")) : isUpdatingDefault ? tCommon("updating") : t("set_default")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

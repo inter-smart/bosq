@@ -13,13 +13,7 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
-
-// Validation schema
-const formSchema = z.object({
-  email: z.string().email("Please enter a valid email address").max(100, "Email is too long"),
-  password: z.string().min(6, "Password must be at least 6 characters").max(100, "Password is too long"),
-  rememberMe: z.boolean().default(false),
-});
+import { useTranslations } from "next-intl";
 
 // Shared styles
 const labelStyle = cn("text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]");
@@ -33,6 +27,14 @@ const errorStyle = cn("text-[#f17423]");
 export default function SoftLoginForm() {
   const { login } = useAuth();
   const router = useRouter();
+  const tAuth = useTranslations("auth");
+  const tValidation = useTranslations("validation");
+
+  const formSchema = z.object({
+    email: z.string().email(tValidation("email.invalid_format")).max(100, tValidation("email.max")),
+    password: z.string().min(6, tValidation("password.min")).max(100, tValidation("password.max")),
+    rememberMe: z.boolean().default(false),
+  });
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -55,7 +57,7 @@ export default function SoftLoginForm() {
     });
 
     if (!result.success) {
-      setError(result.error || "Invalid email or password. Please try again.");
+      setError(result.error || tAuth("login.error"));
     }
     console.log("REFRESHING");
     router.refresh();
@@ -74,10 +76,10 @@ export default function SoftLoginForm() {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                Email<span className={errorStyle}>*</span>
+                {tAuth("common.email_label")}<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
-                <Input {...field} type="email" className={inputStyle} placeholder="Enter your email" />
+                <Input {...field} type="email" className={inputStyle} placeholder={tAuth("common.email_placeholder")} />
               </FormControl>
               <FormMessage className={errorStyle} />
             </FormItem>
@@ -91,10 +93,10 @@ export default function SoftLoginForm() {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                Password<span className={errorStyle}>*</span>
+                {tAuth("common.password_label")}<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
-                <Input {...field} type="password" className={inputStyle} placeholder="Enter your Password" />
+                <Input {...field} type="password" className={inputStyle} placeholder={tAuth("common.password_placeholder")} />
               </FormControl>
               <FormMessage className={errorStyle} />
             </FormItem>
@@ -111,7 +113,7 @@ export default function SoftLoginForm() {
                 <div className="flex items-center gap-3">
                   <Checkbox id="rememberMe" checked={field.value} onCheckedChange={field.onChange} />
                   <Label htmlFor="rememberMe" className={labelStyle}>
-                    Remember me
+                    {tAuth("common.remember_me")}
                   </Label>
                 </div>
               </FormControl>
@@ -123,7 +125,7 @@ export default function SoftLoginForm() {
         {/* Submit Button */}
         <div className="w-full mt-2 flex">
           <Button type="submit" variant="black" disabled={loading} className="min-w-[120px] 2xl:min-w-40">
-            {loading ? "Logging in..." : "Login"}
+            {loading ? tAuth("login.loading") : tAuth("login.submit")}
           </Button>
         </div>
       </form>

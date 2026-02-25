@@ -187,7 +187,7 @@
     "empty_cta": "See All products Here",
     "continue_shopping": "Continue Shopping",
     "order_summary": "Order Summary",
-    "subtotal": "Subtotal ({count} items)",
+    "subtotal": "Subtotal",
     "coupon_discount": "Coupon Discount",
     "shipping_charge": "Shipping Charge",
     "total_price": "Total Price",
@@ -229,7 +229,8 @@
     "select_shipping_address": "Please select a shipping address",
     "select_billing_address": "Please select a billing address",
     "select_shipping_or_same": "Please select a shipping address or check 'Use Same Address For Shipping' in billing section",
-    "select_billing_or_same": "Please select a billing address or check 'Use Same Address For Billing' in shipping section"
+    "select_billing_or_same": "Please select a billing address or check 'Use Same Address For Billing' in shipping section",
+    "not_you": "Not you?"
   },
   "order": {
     "success_title": "Thank You for the Purchase!",
@@ -260,7 +261,8 @@
     "edit_title": "Edit Address",
     "edit_description": "Edit Address form.",
     "loading": "Loading address...",
-    "address_info": "The following addresses will be used on the checkout page by default"
+    "address_info": "The following addresses will be used on the checkout page by default",
+    "failed_to_load": "Failed to load addresses"
   },
   "auth": {
     "continue_with_google": "Continue with Google",
