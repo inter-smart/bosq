@@ -179,6 +179,9 @@ normalPhoneNumber: () =>
 
   region: () => z.string().min(1, vt("select_region")),
 
+
+  dropdown: ()=> z.string().min(1, vt("select_option")),
+
   message: (field) =>
     z
       .string()

@@ -100,18 +100,18 @@ const isEn = locale === "en";
       });
 
       const data = await res.json();
-      if (!res.ok) {
-        throw new Error(isEn? data?.message?.en: data?.message?.ar || t("submit_error"));
-      }
 
-      console.log(" Enquiry submitted successfully:", data);
-      toast.success(isEn? data?.message?.en: data?.message?.ar || t("success_message"));
-      form.reset();
-      setSuccess(isEn? data?.message?.en: data?.message?.ar || t("success_message"));
+      if (!data.success) {
+        toast.error(isEn? data?.message?.en: data?.message?.ar || t("submit_error"));
+      }
+      else{
+        toast.success(isEn? data?.message?.en: data?.message?.ar || t("success_message"));
+        form.reset();
+        setSuccess(isEn? data?.message?.en: data?.message?.ar || t("success_message"));
+      }
     } catch (err) {
-      console.error(err);
-      setSuccess(err?.message || t("submit_error"));
-      toast.error(err?.message || t("submit_error"));
+      setSuccess(isEn ? err?.en : err?.ar || t("submit_error"));
+      toast.error(isEn ? err?.en : err?.ar || t("submit_error"));
     }
 
     setLoading(false);

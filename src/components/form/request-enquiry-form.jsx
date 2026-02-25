@@ -33,8 +33,6 @@ import { toast } from "sonner";
 import { API_URL } from "@/lib/api/client";
 import { useTranslations } from "next-intl";
 
-
-
 // Shared styles
 const labelStyle = cn(
   "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-[#282828]",
@@ -51,7 +49,6 @@ const textareaStyle = cn(
   "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none",
 );
 
-
 export default function RequestEnquiryForm({
   locale = "en",
   states,
@@ -59,7 +56,7 @@ export default function RequestEnquiryForm({
 }) {
   const { executeRecaptcha } = useGoogleReCaptcha();
 
-  console.log(dropdownData)
+  console.log(dropdownData);
   const isEN = locale === "en";
   const t = useTranslations("form");
 
@@ -67,24 +64,23 @@ export default function RequestEnquiryForm({
 
   setValidationTranslator(tErrors);
 
-
   // Validation schema
-const formSchema = z.object({
-  firstName: commonValidations.name(t("full_name")),
-  lastName: commonValidations.name(t("last_name")),
-  companyName: commonValidations.optionalString(),
-  email: commonValidations.email(),
-  phone: commonValidations.phone(),
-  state: commonValidations.region(),
-  dropdown_id: commonValidations.optionalString(),
-  message: commonValidations.message(t("message")),
-});
+  const formSchema = z.object({
+    firstName: commonValidations.name(t("full_name")),
+    lastName: commonValidations.name(t("last_name")),
+    companyName: commonValidations.optionalString(),
+    email: commonValidations.email(),
+    phone: commonValidations.phone(),
+    state: commonValidations.region(),
+    dropdown_id: commonValidations.dropdown(),
+    message: commonValidations.message(t("message")),
+  });
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       firstName: "",
-    lastName: "",
+      lastName: "",
       companyName: "",
       email: "",
       phone: "",
@@ -109,7 +105,6 @@ const formSchema = z.object({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           recaptcha_token: recaptchaToken,
-          type: "contact",
           first_name: values.firstName,
           last_name: values.lastName,
           state_id: values.state,
@@ -122,16 +117,23 @@ const formSchema = z.object({
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(isEN ? data?.error?.en : data?.error?.ar || "Failed to send enquiry");
 
-
-      form.reset();
-      setLoading(false);
-      toast.success(isEN ? data?.message?.en : data?.message?.ar);
+      if (!data.success) {
+        toast.error(
+          isEN ? data?.message?.en : data?.message?.ar || t("submit_error"),
+        );
+      } else {
+        toast.success(
+          isEN ? data?.message?.en : data?.message?.ar || t("success_message"),
+        );
+        form.reset();
+        setSuccess(
+          isEN ? data?.message?.en : data?.message?.ar || t("success_message"),
+        );
+      }
     } catch (err) {
-      console.error(err);
-      setLoading(false);
-      toast.error(t("submit_error"));
+      setSuccess(isEN ? err?.en : err?.ar || t("submit_error"));
+      toast.error(isEN ? err?.en : err?.ar || t("submit_error"));
     }
 
     setLoading(false);
@@ -152,7 +154,8 @@ const formSchema = z.object({
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                {t("first_name")}<span className={errorStyle}>*</span>
+                {t("first_name")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
@@ -173,7 +176,8 @@ const formSchema = z.object({
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                {t("last_name")}<span className={errorStyle}>*</span>
+                {t("last_name")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
@@ -193,9 +197,7 @@ const formSchema = z.object({
           name="companyName"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel className={labelStyle}>
-                {t("company_name")}
-              </FormLabel>
+              <FormLabel className={labelStyle}>{t("company_name")}</FormLabel>
               <FormControl>
                 <Input
                   {...field}
@@ -215,7 +217,8 @@ const formSchema = z.object({
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                {t("email_id")}<span className={errorStyle}>*</span>
+                {t("email_id")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
@@ -237,7 +240,8 @@ const formSchema = z.object({
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                {t("phone_number")}<span className={errorStyle}>*</span>
+                {t("phone_number")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <PhoneInput
@@ -262,7 +266,8 @@ const formSchema = z.object({
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                {t("location_placeholder")}<span className={errorStyle}>*</span>
+                {t("location_placeholder")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <Select
                 dir={locale === "ar" ? "rtl" : "ltr"}
@@ -297,9 +302,7 @@ const formSchema = z.object({
           name="dropdown_id"
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
-              <FormLabel className={labelStyle}>
-                {t("help_with")}
-              </FormLabel>
+              <FormLabel className={labelStyle}>{t("help_with")}</FormLabel>
               <Select
                 dir={locale === "ar" ? "rtl" : "ltr"}
                 onValueChange={field.onChange}

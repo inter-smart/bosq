@@ -39,26 +39,24 @@ export default function AccountSettings({ data, locale }) {
               {t("personal_info")}
             </Heading>
             <RecaptchaProvider>
-              <PersonalInformationForm data={data} />
-            </RecaptchaProvider>
-            {!isGoogleUser && (
-              <>
-                <Heading
-                  as="h4"
-                  size="heading5"
-                  className="font-normal text-[#282828] mb-3 xl:mb-5 2xl:mb-8 mt-6 xl:mt-10 2xl:mt-12"
-                >
-                  {t("password_change")}
-                </Heading>
-                <div className="flex">
-                  <div className="w-full lg:w-1/2">
-                    <RecaptchaProvider>
+              <PersonalInformationForm data={data} locale={locale} />
+              {!isGoogleUser && (
+                <>
+                  <Heading
+                    as="h4"
+                    size="heading5"
+                    className="font-normal text-[#282828] mb-3 xl:mb-5 2xl:mb-8 mt-6 xl:mt-10 2xl:mt-12"
+                  >
+                    {t("password_change")}
+                  </Heading>
+                  <div className="flex">
+                    <div className="w-full lg:w-1/2">
                       <PasswordChangeForm locale={locale} />
-                    </RecaptchaProvider>
+                    </div>
                   </div>
-                </div>
-              </>
-            )}
+                </>
+              )}
+            </RecaptchaProvider>
           </div>
         </div>
       )}

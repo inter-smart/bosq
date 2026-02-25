@@ -42,8 +42,7 @@ const textareaStyle = cn(
 );
 
 export default function ProjectEnquiryForm({ projectId, locale }) {
-
-  const isEn = locale === "en";
+  const isEN = locale === "en";
 
   const t = useTranslations("form");
   console.log("project id", projectId);
@@ -56,7 +55,7 @@ export default function ProjectEnquiryForm({ projectId, locale }) {
 
   // ✅ Validation schema
   const formSchema = z.object({
-    name: commonValidations.name(t("name")),
+    name: commonValidations.name(t("full_name")),
     email: commonValidations.email(),
     phone: commonValidations.phone(selectedCountry.toUpperCase()),
     additionalDetails: commonValidations.message(t("message")),
@@ -95,18 +94,22 @@ export default function ProjectEnquiryForm({ projectId, locale }) {
           recaptcha_token: recaptchaToken,
         }),
       });
-
       const data = await res.json();
-      if (!res.ok) {
-        throw new Error(isEn? data?.message?.en: data?.message?.ar || t("submit_error"));
+      if (!data.success) {
+        toast.error(
+          isEN ? data?.message?.en : data?.message?.ar || t("submit_error"),
+        );
+      } else {
+        toast.success(
+          isEN ? data?.message?.en : data?.message?.ar || t("success_message"),
+        );
+        form.reset();
+      
+        setLoading(false);
       }
-      toast.success(isEn? data?.message?.en: data?.message?.ar || t("success_message"));
-      form.reset();
     } catch (err) {
-      console.error(err);
-      toast.error(isEn ? err.en : err.ar || t("submit_error"));
+      toast.error(isEN ? err?.en : err?.ar || t("submit_error"));
     }
-
     setLoading(false);
   };
 
