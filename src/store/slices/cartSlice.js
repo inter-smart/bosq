@@ -1,6 +1,15 @@
 "use client";
 
-import { fetchCartAPI, addToCartAPI, updateCartItemAPI, removeCartItemAPI, clearCartAPI, mergeCartAPI, buyNowAPI } from "@/lib/api/cart/cartApi";
+import {
+  fetchCartAPI,
+  addToCartAPI,
+  updateCartItemAPI,
+  removeCartItemAPI,
+  clearCartAPI,
+  mergeCartAPI,
+  buyNowAPI,
+  addToCartTogetherAPI,
+} from "@/lib/api/cart/cartApi";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 // Async Thunks
@@ -36,6 +45,22 @@ export const addToCart = createAsyncThunk("cart/addToCart", async ({ product_id,
       error || {
         en: "Failed to add item to cart",
         ar: "فشل في إضافة المنتج إلى السلة",
+      },
+    );
+  }
+});
+export const addToCartTogether = createAsyncThunk("cart/addToCartTogether", async ({ variant_ids }, { getState, rejectWithValue }) => {
+  try {
+    const data = await addToCartTogetherAPI({
+      variant_ids,
+    });
+
+    return data;
+  } catch (error) {
+    return rejectWithValue(
+      error || {
+        en: "Failed to add items to cart",
+        ar: "فشل في إضافة المنتجات إلى السلة",
       },
     );
   }
@@ -203,6 +228,28 @@ const cartSlice = createSlice({
       .addCase(addToCart.rejected, (state, action) => {
         state.isUpdating = false;
         state.error = action.payload || "Failed to add item to cart";
+      })
+
+      // Add to cart together
+      .addCase(addToCartTogether.pending, (state) => {
+        state.isUpdating = true;
+        state.error = null;
+      })
+      .addCase(addToCartTogether.fulfilled, (state, action) => {
+        state.isUpdating = false;
+        if (action.payload) {
+          state.items = action.payload.items || [];
+          state.subtotal = action.payload.subtotal || "0.00";
+          state.discount_total = action.payload.discount_total || "0.00";
+          state.tax_total = action.payload.tax_total || "0.00";
+          state.grand_total = action.payload.grand_total || "0.00";
+          state.item_count = action.payload.item_count || 0;
+          state.applied_coupon_code = action.payload.applied_coupon_code || null;
+        }
+      })
+      .addCase(addToCartTogether.rejected, (state, action) => {
+        state.isUpdating = false;
+        state.error = action.payload || "Failed to add items to cart";
       })
 
       // Buy now

@@ -15,6 +15,14 @@ export async function addToCartAPI({ product_id, variant_id, quantity = 1 }) {
   });
 }
 
+// Add items to cart
+export async function addToCartTogetherAPI({ variant_ids }) {
+  return fetchWithCredentials("/api/frontend/cart/add-together", {
+    method: "POST",
+    body: JSON.stringify({ variant_ids }),
+  });
+}
+
 // Buy now (add to cart and redirect to checkout)
 export async function buyNowAPI({ product_id, variant_id, quantity = 1 }) {
   return fetchWithCredentials("/api/frontend/cart/buynow", {

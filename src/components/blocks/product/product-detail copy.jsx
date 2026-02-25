@@ -11,7 +11,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
-import { addToCart, buyNow } from "@/store/slices/cartSlice";
+import { buyNow } from "@/store/slices/cartSlice";
 import { toast } from "sonner";
 import { useToggleWishlistMutation } from "@/store/services/wishListApi";
 import { useAuth } from "@/hooks/useAuth";
@@ -31,8 +31,9 @@ import ProductChooseDesign from "./ProductChooseDesign";
 import PriceAndCart from "./PriceAndCart";
 import { useTranslations } from "next-intl";
 import { setIsCheckoutAllowed } from "@/store/slices/checkoutSlice";
+import FrequentBroughtTogether from "./FrequentBroughtTogether";
 
-export default function ProductDetailCopy({ locale, initialData, productData, models, productSlug }) {
+export default function ProductDetailCopy({ locale, initialData, productData, boughtTogetherItems, productSlug }) {
   const router = useRouter();
   const dispatch = useDispatch();
   const t = useTranslations();
@@ -316,7 +317,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                 size="none"
                 className="text-[10px] xl:text-[8px] 2xl:text-[10px] 3xl:text-[12px] leading-normal font-light truncate text-[#bbbcbc] mb-1"
               >
-                {isEn ? productData?.category_name : productData?.category_name_ar}
+                {initialData?.categories?.map((cat) => (isEn ? cat.name : cat.name_ar)).join(", ")}
               </Heading>
               <Heading as="div" size="heading2" className="font-normal text-[#282828] mb-1 2xl:mb-2 max-sm:font-bold">
                 {isEn ? initialData?.title : initialData?.title_ar}
@@ -433,78 +434,18 @@ export default function ProductDetailCopy({ locale, initialData, productData, mo
                 ))}
               </div>
 
-              {/* <hr className="my-3 sm:my-3 2xl:my-5 mx-[-5px]" /> */}
+              {boughtTogetherItems && (
+                <>
+                  <hr className="my-3 sm:my-3 2xl:my-5 mx-[-5px]" />
 
-              {/* <Heading as="div" size="heading5" className="font-normal text-[#282828] mb-3 2xl:mb-4 mt-2.5 2xl:mt-4">
-                Frequently Bought Together
-              </Heading>
-              <div
-                className={cn(
-                  locale === "ar"
-                    ? "max-sm:mask-[linear-gradient(to_left,white_0%,white_98%,transparent_100%)] max-sm:pl-0 max-sm:-ml-4"
-                    : "max-sm:mask-[linear-gradient(to_right,white_0%,white_98%,transparent_100%)] max-sm:pr-0 max-sm:-mr-4",
-                )}
-              >
-                <div className="w-full max-w-full mb-3 sm:mb-4 2xl:mb-6">
-                  <div className="overflow-hidden" ref={frequentlyEmblaRef}>
-                    <div className="flex touch-pan-y touch-pinch-zoom -mx-2 sm:-mx-4 xl:-mx-7 2xl:-mx-8 *:px-2 sm:*:px-4 xl:*:px-7 2xl:*:px-8">
-                      {data?.frequentlyBought?.map((item, index) => (
-                        <div
-                          key={"frequentlyBought" + index}
-                          className="flex-[0_0_176px] sm:flex-[0_0_33.333%] lg:flex-[0_0_50%] min-w-0 select-none relative z-0"
-                        >
-                          <FrequentlyBoughtCard product={item} />
-                          {index !== data?.frequentlyBought?.length - 1 && (
-                            <Image
-                              src={"/images/icon-plus.svg"}
-                              alt={"icon-plus"}
-                              width={12}
-                              height={12}
-                              className={cn(
-                                "w-[8px] xl:w-[10px] 2xl:w-[12px]",
-                                "absolute top-1/2 -translate-y-1/2",
-                                locale === "ar" ? "left-0 -translate-x-1/2" : "right-0 translate-x-1/2",
-                              )}
-                              quality={90}
-                            />
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div> */}
-
-              {/* <hr className="my-2 sm:my-2 2xl:my-3 mx-[-5px]" /> */}
-              {/* <div className="flex justify-between items-center gap-2">
-                <div>
-                  <Heading
-                    as="div"
-                    size="none"
-                    className="text-[10px] xl:text-[8px] 2xl:text-[10px] 3xl:text-[12px] leading-normal font-light truncate text-[#bbbcbc] mb-0.5"
-                  >
-                    Total (3 items)
+                  <Heading as="div" size="heading5" className="font-normal text-[#282828] mb-3 2xl:mb-4 mt-2.5 2xl:mt-4">
+                    Frequently Bought Together
                   </Heading>
-                  <Text
-                    as="div"
-                    size="none"
-                    className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-bold truncate text-[#282828]"
-                  >
-                    AED 667
-                  </Text>
-                </div>
-                <div>
-                  <Button variant={"black"} className="min-w-[100px] xl:min-w-[120px] 2xl:min-w-[160px] mx-auto" disabled={initialData?.stock == 0} asChild>
+                  <FrequentBroughtTogether data={boughtTogetherItems} frequentlyEmblaRef={frequentlyEmblaRef} locale={locale} />
 
-                    <Link href={"/"}>
-                      <Image src={"/images/icon-cart.svg"} alt={"icon-cart"} width={15} height={15} className="w-[15px]"  quality={90} />
-                      Add to Cart
-                    </Link>
-
-                  </Button>
-                </div>
-              </div> */}
-              {/* <hr className="my-2 sm:my-2 2xl:my-3 mx-[-5px]" /> */}
+                  <hr className="my-2 sm:my-2 2xl:my-3 mx-[-5px]" />
+                </>
+              )}
             </div>
           </div>
         </div>
