@@ -172,12 +172,6 @@ const OrderSummary = ({
   const handlePlaceOrder = () => {
     const { shippingId, billingId } = getFinalAddressIds();
 
-    // Validate terms accepted
-    if (!termsAccepted) {
-      toast.error(tToast("accept_terms"));
-      return;
-    }
-
     // Validate shipping address is selected
     if (!shippingId) {
       if (selectedBillingAddressId && !useSameAddressForShipping) {
@@ -237,7 +231,7 @@ const OrderSummary = ({
 
   // Check if order can be placed
   const { shippingId, billingId } = getFinalAddressIds();
-  const canPlaceOrder = shippingId && billingId;
+  const canPlaceOrder = shippingId && billingId && termsAccepted;
 
   return (
     <>

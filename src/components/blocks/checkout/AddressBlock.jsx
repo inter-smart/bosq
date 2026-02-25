@@ -162,7 +162,7 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
                 <div
                   onClick={() => handleAddressSelect(item.id)}
                   className={cn(
-                    "w-full p-2.5 xl:p-3.5 2xl:p-5 transition hover:shadow-sm relative z-0",
+                    "w-full h-full p-2.5 xl:p-3.5 2xl:p-5 transition hover:shadow-sm relative z-0",
                     locale === "ar" ? "pr-10 xl:pr-12 2xl:pr-18" : "pl-10 xl:pl-12 2xl:pl-18",
                     selectedAddressId === item.id ? "bg-[#eaeaea]/60" : "bg-[#eaeaea]/40",
                   )}
