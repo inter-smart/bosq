@@ -1,4 +1,4 @@
-import { isValidPhoneNumber } from "libphonenumber-js";
+import { getCountryCallingCode, isValidPhoneNumber } from "libphonenumber-js";
 import z from "zod";
 
 
@@ -84,33 +84,51 @@ export const commonValidations = {
 
   rememberMe: z.boolean().default(false),
 
-  phone: (country) =>
-    z
-      .string()
-      .trim()
-      .min(1, vt("required", { field: vt("phone_number") }))
 
-    .refine((val) => isValidPhoneNumber(val, country || undefined), {
-      message: vt("invalid_phone"),
+phone: (country) =>
+  z
+    .string()
+    .transform((val) => val.trim())
+    .superRefine((val, ctx) => {
+      // 1️⃣ Empty or "+"
+      if (!val || val === "+") {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: vt("required", { field: vt("phone_number") }),
+        });
+        return;
+      }
+
+      // 2️⃣ Only country code (ex: +971)
+      if (country) {
+        const callingCode = `+${getCountryCallingCode(country)}`;
+        if (val === callingCode) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: vt("required", { field: vt("phone_number") }),
+          });
+          return;
+        }
+      }
+
+      // 3️⃣ Invalid characters
+      if (!/^[0-9+\s()-]+$/.test(val)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: vt("invalid_characters", { field: "Phone" }),
+        });
+        return;
+      }
+
+      // 4️⃣ Real phone validation
+      if (!isValidPhoneNumber(val, country || undefined)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: vt("invalid_phone"),
+        });
+      }
     })
-
-    .refine((val) => /^[0-9+\s()-]+$/.test(val), {
-      message: vt("invalid_characters", { field: "Phone" }),
-    })
-
-    .transform((val) => val.replace(/[\s()-]/g, ""))
-
-    .refine((val) => /^\+?[0-9]+$/.test(val), {
-      message: vt("invalid_phone_format"),
-    })
-
-    .refine(
-      (val) => {
-        const digits = val.replace("+", "");
-        return digits.length >= 8 && digits.length <= 15;
-      },
-      { message: vt("invalid_phone_length") },
-    ),
+    .transform((val) => val.replace(/[\s()-]/g, "")),
 
 normalPhoneNumber: () =>
   z

@@ -94,6 +94,8 @@
     "submit_loading": "جارٍ الإرسال...",
     "submit_error": "حدث خطأ. يرجى المحاولة مرة أخرى لاحقًا.",
     "enquire_now": "استفسر الآن",
+    "recaptcha_not_initialized": "إعادة التحقق غير مهيأ",
+
     "book_a_test_drive": "احجز تجربة القيادة",
     "service_enquiry": "استعلام عن الخدمة",
     "full_name": "الاسم",

@@ -94,6 +94,7 @@
     "submit_loading": "Sending...",
     "submit_error": "An error occurred. Please try again later.",
     "enquire_now": "Enquire Now",
+    "recaptcha_not_initialized": "Recaptcha not initialized",
     "book_a_test_drive": "Book a Test Drive",
     "service_enquiry": "Service Enquiry",
     "full_name": "Name",

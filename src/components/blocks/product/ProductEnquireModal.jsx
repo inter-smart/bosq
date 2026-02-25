@@ -34,7 +34,7 @@ const ProductEnquireModal = ({ children, data, locale, productId }) => {
             {parse(data?.description)}
           </Text>
           <RecaptchaProvider>
-            <ProductEnquiryForm productId={productId} onClose={() => setIsSheetOpen(false)} />
+            <ProductEnquiryForm locale={locale} productId={productId} onClose={() => setIsSheetOpen(false)} />
           </RecaptchaProvider>
         </div>
 

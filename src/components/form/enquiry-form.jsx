@@ -46,6 +46,7 @@ export default function EnquiryForm({ locale }) {
   const t = useTranslations("form");
 
 
+
   const tErrors = useTranslations("errors");
 
   setValidationTranslator(tErrors);
@@ -60,6 +61,8 @@ const formSchema = z.object({
   additionalDetails: commonValidations.message(t("message")),
 });
 
+
+const isEn = locale === "en";
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -98,15 +101,17 @@ const formSchema = z.object({
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data?.message || t("submit_error"));
+        throw new Error(isEn? data?.message?.en: data?.message?.ar || t("submit_error"));
       }
-      toast.success(data?.message || t("success_message"));
+
+      console.log(" Enquiry submitted successfully:", data);
+      toast.success(isEn? data?.message?.en: data?.message?.ar || t("success_message"));
       form.reset();
-      setSuccess(data?.message || t("success_message"));
+      setSuccess(isEn? data?.message?.en: data?.message?.ar || t("success_message"));
     } catch (err) {
       console.error(err);
-      setSuccess(isEn ? err.en : err.ar || t("submit_error"));
-      toast.error(isEn ? err.en : err.ar || t("submit_error"));
+      setSuccess(err?.message || t("submit_error"));
+      toast.error(err?.message || t("submit_error"));
     }
 
     setLoading(false);
@@ -154,7 +159,6 @@ const formSchema = z.object({
                   onChange={(phone, meta) => {
                     field.onChange(phone);
                     setSelectedCountry(meta.country.iso2);
-                    form.trigger("phone");
                   }}
                   defaultCountry="ae"
                   dir={locale === "ar" ? "rtl" : "ltr"}
@@ -222,11 +226,6 @@ const formSchema = z.object({
             {loading ? t("submitting") : t("submit_enquiry")}
           </Button>
         </div>
-
-        {/* Success Message */}
-        {success && !loading && (
-          <p className="text-green-600 mt-1">{success}</p>
-        )}
       </form>
     </Form>
   );

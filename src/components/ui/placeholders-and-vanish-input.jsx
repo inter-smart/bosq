@@ -203,7 +203,7 @@ export function PlaceholdersAndVanishInput({
     setIsSubmitting(true);
     const URL = `${API_URL}/api/frontend/enquiries/news-letter`;
     try {
-      const recaptchaToken = await executeRecaptcha("newsletter_subsription");
+      const recaptchaToken = await executeRecaptcha("newstletter_token");
 
       const res = await fetch(URL, {
         method: "POST",

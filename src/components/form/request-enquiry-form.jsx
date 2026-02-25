@@ -51,13 +51,6 @@ const textareaStyle = cn(
   "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none",
 );
 
-const DEFAULT_OPTIONS = [
-  {
-    id: 0,
-    title: "General Enquiry",
-    title_ar: "استفسار عام",
-  },
-];
 
 export default function RequestEnquiryForm({
   locale = "en",
@@ -91,7 +84,7 @@ const formSchema = z.object({
     resolver: zodResolver(formSchema),
     defaultValues: {
       firstName: "",
-      lastName: "",
+    lastName: "",
       companyName: "",
       email: "",
       phone: "",
@@ -102,13 +95,9 @@ const formSchema = z.object({
   });
 
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(null);
 
   const onSubmit = async (values) => {
     setLoading(true);
-    setSuccess("");
-
-    console.log(values);
     try {
       const recaptchaToken = await executeRecaptcha(
         "customization_enquiry_form",
@@ -133,17 +122,15 @@ const formSchema = z.object({
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(isEn ? data?.error?.en : data?.error?.ar || "Failed to send enquiry");
+      if (!res.ok) throw new Error(isEN ? data?.error?.en : data?.error?.ar || "Failed to send enquiry");
 
 
       form.reset();
       setLoading(false);
-      setSuccess(isEN ? data?.message?.en : data?.message?.ar);
       toast.success(isEN ? data?.message?.en : data?.message?.ar);
     } catch (err) {
       console.error(err);
       setLoading(false);
-      setSuccess(t("submit_error"));
       toast.error(t("submit_error"));
     }
 

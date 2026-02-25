@@ -34,13 +34,15 @@ const errorStyle = cn("text-[#f17423]");
 
 const textareaStyle = cn(inputStyle, "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none");
 
-export default function ProductEnquiryForm({ productId, onClose }) {
+export default function ProductEnquiryForm({ productId, onClose, locale }) {
   const { executeRecaptcha } = useGoogleReCaptcha();
   const [submitProductEnquiry, { isLoading }] = useSubmitProductEnquiryMutation();
   const [errorMessage, setErrorMessage] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("ae");
   // File upload
   const [uploadedFile, setUploadedFile] = useState(null);
+
+  const isEN = locale === "en";
 
   const t = useTranslations("form");
   const tErrors = useTranslations("errors");
@@ -74,7 +76,7 @@ export default function ProductEnquiryForm({ productId, onClose }) {
     setErrorMessage("");
 
     if (!executeRecaptcha) {
-      setErrorMessage("Recaptcha not initialized");
+      toast.error(t("recaptcha_not_initialized"));
       return;
     }
 
@@ -91,15 +93,14 @@ export default function ProductEnquiryForm({ productId, onClose }) {
       formData.append("recaptcha_token", token);
       formData.append("media_path", uploadedFile);
 
-      await submitProductEnquiry(formData).unwrap();
-
+      const data = await submitProductEnquiry(formData).unwrap();
       form.reset();
       setUploadedFile(null);
-      toast.success(t("success_message"));
+      toast.success( isEN ? data.message.en: data.message.ar || t("success_message"));
       onClose?.();
     } catch (error) {
       console.error(error);
-      setErrorMessage(error?.data?.message || tErrors("invalid_content", { field: "form" }));
+      setErrorMessage(tErrors("invalid_content", { field: "form" }));
     }
   };
 
@@ -181,7 +182,6 @@ export default function ProductEnquiryForm({ productId, onClose }) {
                   onChange={(phone, meta) => {
                     field.onChange(phone);
                     setSelectedCountry(meta.country.iso2);
-                    form.trigger("phone");
                   }}
                 />
               </FormControl>
@@ -256,7 +256,6 @@ export default function ProductEnquiryForm({ productId, onClose }) {
           <Button type="submit" variant={"black"} disabled={isLoading} className="min-w-full">
             {isLoading ? t("submitting") : t("submit_enquiry")}
           </Button>
-          {errorMessage && <p className="text-red-600 text-sm mt-1">{errorMessage}</p>}
         </div>
       </form>
     </Form>
