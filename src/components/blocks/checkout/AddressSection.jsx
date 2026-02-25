@@ -2,6 +2,7 @@
 
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -14,6 +15,7 @@ import { cn } from "@/lib/utils";
 
 const AddressSection = ({ locale }) => {
   const dispatch = useDispatch();
+  const t = useTranslations("address");
   const useSameAddressForBilling = useSelector((state) => state.checkout.useSameAddressForBilling);
   const useSameAddressForShipping = useSelector((state) => state.checkout.useSameAddressForShipping);
 
@@ -50,7 +52,7 @@ const AddressSection = ({ locale }) => {
     dispatch(setUseSameAddressForShipping(value));
   };
 
-  if (isError) return <div>Failed to load addresses</div>;
+  if (isError) return <div>{t("failed_to_load")}</div>;
 
   return (
     <>
@@ -111,7 +113,7 @@ const AddressSection = ({ locale }) => {
           onClick={() => setShowShippingAddressForm(true)}
           className="xl:text-[12px] 2xl:text-[14px] font-medium min-w-[120px] xl:min-w-[150px] 2xl:min-w-[190px] bg-white"
         >
-          Add New Address
+          {t("add_new")}
           <Plus className="size-3" />
         </Button>
       </div>

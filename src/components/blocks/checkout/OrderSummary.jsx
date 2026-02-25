@@ -36,18 +36,8 @@ const MediaQuery = dynamic(() => import("react-responsive"), {
 });
 
 const paymentMethods = [
-  {
-    id: 1,
-    slug: "cod",
-    name: "Cash On Delivery (COD)",
-    description: "Pay by card or another accepted payment method",
-  },
-  {
-    id: 2,
-    slug: "online",
-    name: "Pay Online",
-    description: "You will be redirected to payment gateway.",
-  },
+  { id: 1, slug: "cod", nameKey: "cod", descKey: "cod_description" },
+  { id: 2, slug: "online", nameKey: "pay_online", descKey: "pay_online_description" },
 ];
 
 const OrderSummary = ({
@@ -59,7 +49,7 @@ const OrderSummary = ({
   totalItems: initialTotalItems,
   couponStatus: initialCouponStatus,
   locale,
-  type,
+  type = "cart",
 }) => {
   const dispatch = useDispatch();
   // Get selected addresses and checkout permission from Redux
@@ -74,6 +64,8 @@ const OrderSummary = ({
   const [removeCoupon] = useRemoveCouponMutation();
 
   const t = useTranslations("cart");
+  const tCheckout = useTranslations("checkout");
+  const tCommon = useTranslations("common");
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -174,7 +166,7 @@ const OrderSummary = ({
   // Get the selected payment method label
   const getSelectedPaymentLabel = () => {
     const method = paymentMethods.find((m) => m.slug === selectedPaymentMethod);
-    return method?.name || "Unknown";
+    return method ? tCheckout(method.nameKey) : "";
   };
 
   const handlePlaceOrder = () => {
@@ -255,13 +247,13 @@ const OrderSummary = ({
 
           <div className="w-full bg-[#f4f4f4] border border-[#e0e0e0] rounded-[4px] p-3 sm:p-4 xl:px-7 2xl:px-8 xl:py-4 2xl:py-6 mb-2 xl:mb-4">
             <Text as="div" size="text3" className="text-[#808080] mb-1 xl:mb-2 2xl:mb-3">
-              {totalItems} Items
+              {tCommon("items_count", { count: totalItems })}
             </Text>
             <button
               onClick={() => setCheckoutList((prev) => !prev)}
               className="text-[10px] 2xl:text-[12px] leading-none font-light truncate text-black mb-2 xl:mb-2.5 flex hover:underline"
             >
-              Show Details <ChevronDown className={cn("size-3 transition", checkoutList && "rotate-180")} />
+              {tCheckout("show_details")} <ChevronDown className={cn("size-3 transition", checkoutList && "rotate-180")} />
             </button>
 
             {/* Cart Items List */}
@@ -298,7 +290,7 @@ const OrderSummary = ({
                     </div>
                     <div className="w-[50px]">
                       <Text as="div" size="text3" className="font-normal text-[#282828]">
-                        AED {item?.line_total}
+                        {tCommon("aed")} {item?.line_total}
                       </Text>
                     </div>
                   </div>
@@ -312,9 +304,7 @@ const OrderSummary = ({
               size="text3"
               className="font-normal text-[#282828] my-2 xl:my-3 2xl:my-4 [&_span]:font-light [&_span]:text-[#808080] flex justify-between"
             >
-              <span>
-                {t("subtotal")} ({itemsCount})
-              </span>
+              <span>{tCheckout("subtotal", { count: itemsCount })}</span>
               {subTotal}
             </Text>
             <Text
@@ -323,7 +313,7 @@ const OrderSummary = ({
               className="font-normal text-[#282828] my-2 xl:my-3 2xl:my-4 [&_span]:font-light [&_span]:text-[#808080] flex justify-between"
             >
               <span>{t("shipping_charge")}</span>
-              {"Free"}
+              {tCommon("free")}
             </Text>
 
             {/* Coupon Code Section */}
@@ -332,7 +322,7 @@ const OrderSummary = ({
                 <div className="w-full bg-[#eee] p-1 xl:p-2 rounded-[4px] flex gap-1.5">
                   <Input
                     type="text"
-                    placeholder="Have a coupon code?"
+                    placeholder={tCheckout("coupon_placeholder")}
                     value={couponCode}
                     onChange={(e) => setCouponCode(e.target.value)}
                     // disabled={!!appliedCoupon}
@@ -346,19 +336,19 @@ const OrderSummary = ({
                     onClick={handleApplyCoupon}
                     className="min-w-[60px] sm:min-w-[60px] xl:min-w-[80px] 2xl:min-w-[100px] h-[35px] lg:h-[35px] 2xl:h-[45px] 3xl:h-[45px] "
                   >
-                    {"Add"}
+                    {tCommon("add")}
                   </Button>
                 </div>
                 {appliedCoupon && (
                   <div className="flex justify-between gap-2 my-1">
                     <Text as="div" size="none" className="text-[10px] 2xl:text-[12px] leading-normal font-normal text-[#8e8e8e]">
-                      '{appliedCoupon}' Coupon Applied
+                      {tCheckout("coupon_applied", { code: appliedCoupon })}
                     </Text>
                     <button
                       className="text-[10px] 2xl:text-[12px] leading-normal font-normal text-black hover:underline cursor-pointer hover:text-red-600"
                       onClick={handleRemoveCoupon}
                     >
-                      Remove
+                      {tCommon("remove")}
                     </button>
                   </div>
                 )}
@@ -370,7 +360,7 @@ const OrderSummary = ({
               <span>
                 {t("total_price")}
                 <br />
-                <span className="text-[8px] 2xl:text-[10px] font-light text-[#808080]">Inc Tax</span>
+                <span className="text-[8px] 2xl:text-[10px] font-light text-[#808080]">{tCommon("inc_tax")}</span>
               </span>
               {grandTotal}
             </Text>
@@ -392,7 +382,7 @@ const OrderSummary = ({
                       htmlFor={method?.slug}
                       className={"text-[11px] lg:text-[10px] 2xl:text-[14px] 3xl:text-[16px] leading-tight font-light text-[#282828] cursor-pointer"}
                     >
-                      {method?.name}
+                      {tCheckout(method.nameKey)}
                     </Label>
                   </div>
                   <Text
@@ -400,7 +390,7 @@ const OrderSummary = ({
                     size="none"
                     className="text-[8px] lg:text-[9px] 2xl:text-[14px] leading-tight font-light text-[#808080] mt-1 xl:mt-2.5"
                   >
-                    {method?.description}
+                    {tCheckout(method.descKey)}
                   </Text>
                 </div>
               ))}
@@ -409,8 +399,7 @@ const OrderSummary = ({
 
           {/* Privacy Policy */}
           <Text as="div" size="text3" className="leading-tight text-[#808080] [&_a]:underline mb-2 xl:mb-4">
-            Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described
-            in our <Link href="/en/privacy-policy">Privacy Policy</Link>
+            {tCheckout("privacy_notice")} <Link href={`/${locale}/privacy-policy`}>{tCheckout("privacy_policy")}</Link>
           </Text>
 
           {/* Terms and Conditions */}
@@ -418,20 +407,20 @@ const OrderSummary = ({
             <Checkbox id="agree" checked={termsAccepted} onCheckedChange={setTermsAccepted} />
             <Label htmlFor="agree">
               <Text as="span" size="text3" className="leading-tight text-[#282828] [&_a]:underline">
-                I have read and agree to the website <Link href="/en/terms-and-conditions">Terms and Conditions *</Link>
+                {tCheckout("terms_agree")} <Link href={`/${locale}/terms-and-conditions`}>{tCheckout("terms_and_conditions")}</Link>
               </Text>
             </Label>
           </div>
 
           {/* Place Order Button - Desktop */}
           <Button variant={"black"} disabled={!canPlaceOrder} onClick={handlePlaceOrder} className="min-w-full mt-2">
-            {"Place Order"}
+            {tCheckout("place_order")}
           </Button>
         </div>
       ) : (
         <div className="w-full lg:w-[320px] xl:w-[460px] 2xl:w-[540px] 3xl:w-[668px]">
           <Text as="div" size="text3" className="leading-tight text-[#808080] mb-2 xl:mb-4 [&_a]:underline">
-            Your checkout session isn’t available right now. Please review your cart and try again. <Link href="/en/cart">Go back to Cart</Link>
+            {tCheckout("session_unavailable")} <Link href={`/${locale}/cart`}>{tCheckout("go_back_to_cart")}</Link>
           </Text>
         </div>
       )}
@@ -441,10 +430,10 @@ const OrderSummary = ({
         <AlertDialogContent className="xl:max-w-[520px] 2xl:max-w-[600px] gap-0 p-5 xl:p-6 2xl:p-8">
           <AlertDialogHeader className="mb-3 xl:mb-4">
             <AlertDialogTitle className="text-[14px] xl:text-[16px] 2xl:text-[18px] font-semibold text-[#282828]">
-              Confirm Your Order
+              {tCheckout("confirm_title")}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-[11px] xl:text-[12px] 2xl:text-[14px] text-[#808080]">
-              Please review your order details before confirming.
+              {tCheckout("confirm_description")}
             </AlertDialogDescription>
           </AlertDialogHeader>
 
@@ -452,7 +441,7 @@ const OrderSummary = ({
             {/* Payment Method */}
             <div className="bg-[#f4f4f4] rounded-[4px] p-3 xl:p-4">
               <Heading as="div" size="heading5" className="font-medium text-[#282828] mb-1">
-                Payment Method
+                {tCheckout("payment_method")}
               </Heading>
               <Text as="div" size="text3" className="text-[#282828]">
                 {getSelectedPaymentLabel()}
@@ -470,8 +459,8 @@ const OrderSummary = ({
                 <>
                   <div className="bg-[#f4f4f4] rounded-[4px] p-3 xl:p-4">
                     <Heading as="div" size="heading5" className="font-medium text-[#282828] mb-1">
-                      Shipping Address
-                      {isSameAddress && <span className="text-[10px] xl:text-[11px] font-light text-[#808080] ml-2">(Same as Billing)</span>}
+                      {tCheckout("shipping_address")}
+                      {isSameAddress && <span className="text-[10px] xl:text-[11px] font-light text-[#808080] ml-2">{tCheckout("same_as_billing")}</span>}
                     </Heading>
                     {shippingAddr ? (
                       <div>
@@ -488,7 +477,7 @@ const OrderSummary = ({
                       </div>
                     ) : (
                       <Text as="div" size="text3" className="text-[#808080]">
-                        No address selected
+                        {tCheckout("no_address_selected")}
                       </Text>
                     )}
                   </div>
@@ -497,7 +486,7 @@ const OrderSummary = ({
                   {!isSameAddress && (
                     <div className="bg-[#f4f4f4] rounded-[4px] p-3 xl:p-4">
                       <Heading as="div" size="heading5" className="font-medium text-[#282828] mb-1">
-                        Billing Address
+                        {tCheckout("billing_address")}
                       </Heading>
                       {billingAddr ? (
                         <div>
@@ -514,7 +503,7 @@ const OrderSummary = ({
                         </div>
                       ) : (
                         <Text as="div" size="text3" className="text-[#808080]">
-                          No address selected
+                          {tCheckout("no_address_selected")}
                         </Text>
                       )}
                     </div>
@@ -523,7 +512,7 @@ const OrderSummary = ({
                   {/* Order Total */}
                   <div className="flex justify-between items-center pt-2 border-t border-[#e0e0e0]">
                     <Text as="div" size="text3" className="font-medium text-[#282828]">
-                      Total Amount
+                      {tCheckout("total_amount")}
                     </Text>
                     <Text as="div" size="text3" className="font-semibold text-[#282828]">
                       {subTotal}
@@ -536,13 +525,13 @@ const OrderSummary = ({
 
           <AlertDialogFooter className="flex-row justify-end gap-2 sm:space-x-0">
             <AlertDialogCancel className="mt-0 px-4 py-2 h-auto text-sm font-medium border border-gray-300 hover:bg-gray-50">
-              Cancel
+              {tCommon("cancel")}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmPlaceOrder}
               className="mt-0 px-6 py-2 h-auto text-sm font-medium bg-black hover:bg-black/90 text-white border-0"
             >
-              Confirm Order
+              {tCheckout("confirm_order")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
