@@ -133,12 +133,13 @@ const formSchema = z.object({
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data?.message || "Failed to send enquiry");
+      if (!res.ok) throw new Error(isEn ? data?.error?.en : data?.error?.ar || "Failed to send enquiry");
+
 
       form.reset();
       setLoading(false);
-      setSuccess(data?.message);
-      toast.success(data?.message);
+      setSuccess(isEN ? data?.message?.en : data?.message?.ar);
+      toast.success(isEN ? data?.message?.en : data?.message?.ar);
     } catch (err) {
       console.error(err);
       setLoading(false);
@@ -375,20 +376,6 @@ const formSchema = z.object({
             {loading ? t("submitting") : t("enquire_now")}
           </Button>
         </div>
-
-        {/* Success/Error Message */}
-        {success && !loading && (
-          <p
-            className={cn(
-              "text-[10px] mt-1 w-full",
-              success.includes("successfully")
-                ? "text-green-600"
-                : "text-red-600",
-            )}
-          >
-            {success}
-          </p>
-        )}
       </form>
     </Form>
   );

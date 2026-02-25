@@ -17,6 +17,9 @@ export function PlaceholdersAndVanishInput({
 }) {
   const { executeRecaptcha } = useGoogleReCaptcha();
 
+
+  const isEN  = locale === "en";
+
   const activePlaceholders =
     locale === "ar" || locale !== "en"
       ? placeholders_ar || placeholders
@@ -215,9 +218,9 @@ export function PlaceholdersAndVanishInput({
       
       if (!res.ok) {
         
-        throw new Error(data?.error?.message || data?.message || "Failed to send enquiry");}
+        throw new Error("Failed to send enquiry");}
 
-      toast.success(data?.message);
+      toast.success(isEN ? data?.message?.en : data?.message?.ar);
     } catch (error) {
       toast.error(
         error.message || "An error occurred. Please try again later.",

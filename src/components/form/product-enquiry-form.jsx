@@ -37,6 +37,10 @@ const textareaStyle = cn(inputStyle, "leading-tight min-h-[80px] 2xl:min-h-[100p
 export default function ProductEnquiryForm({ productId, onClose }) {
   const { executeRecaptcha } = useGoogleReCaptcha();
   const [submitProductEnquiry, { isLoading }] = useSubmitProductEnquiryMutation();
+  const [errorMessage, setErrorMessage] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState("ae");
+  // File upload
+  const [uploadedFile, setUploadedFile] = useState(null);
 
   const t = useTranslations("form");
   const tErrors = useTranslations("errors");
@@ -48,7 +52,7 @@ export default function ProductEnquiryForm({ productId, onClose }) {
   const formSchema = z.object({
     fullName: commonValidations.name(t("full_name")),
     email: commonValidations.email(),
-    phone: commonValidations.phone(),
+    phone: commonValidations.phone(selectedCountry.toUpperCase()),
     city: commonValidations.text("City").optional(),
     message: commonValidations.message(t("message")),
     attachment: commonValidations.image(),
@@ -65,11 +69,6 @@ export default function ProductEnquiryForm({ productId, onClose }) {
       attachment: null,
     },
   });
-
-  const [errorMessage, setErrorMessage] = useState("");
-
-  // File upload
-  const [uploadedFile, setUploadedFile] = useState(null);
 
   const onSubmit = async (values) => {
     setErrorMessage("");
@@ -179,7 +178,11 @@ export default function ProductEnquiryForm({ productId, onClose }) {
                     "w-full p-0 [&_input]:flex-1  [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px] [--react-international-phone-flag-width:20px] [--react-international-phone-flag-height:20px]",
                   )}
                   placeholder={t("enter_phone")}
-                  onChange={(value) => field.onChange(value)}
+                  onChange={(phone, meta) => {
+                    field.onChange(phone);
+                    setSelectedCountry(meta.country.iso2);
+                    form.trigger("phone");
+                  }}
                 />
               </FormControl>
               <FormMessage />
