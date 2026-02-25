@@ -100,7 +100,7 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
             )}
             <Image
               src={product?.media_path ?? "/images/placeholder.jpg"}
-              alt={isEn ? product?.title : product?.title_ar ?? "test"}
+              alt={isEn ? product?.title : (product?.title_ar ?? "test")}
               width={550}
               height={440}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -123,9 +123,7 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
               size="none"
               className="text-[10px] xl:text-[8px] 2xl:text-[10px] 3xl:text-[12px] leading-normal font-light truncate text-[#bbbcbc] mb-0.5"
             >
-              <Link href={productUrl}>
-                {isEn ? product?.categories?.[0]?.name : product?.categories?.[0]?.name_ar}
-              </Link>
+              <Link href={productUrl}>{product?.categories?.map((cat) => (isEn ? cat.name : cat.name_ar)).join(", ")}</Link>
             </Heading>
             <Heading
               as="div"

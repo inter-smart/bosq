@@ -234,7 +234,7 @@ const OrderSummary = ({
 
       const orderId = orderData.data?.order_id;
 
-      dispatch(resetCart());
+      type === "cart" && dispatch(resetCart());
       setShowConfirmDialog(false);
       router.push(`/${locale}/order/success?orderId=${orderId}`);
     } catch (error) {
