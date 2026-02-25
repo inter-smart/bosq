@@ -21,11 +21,13 @@ import { Eye, EyeOff } from "lucide-react";
 import { fetchFromAPIWithCredentials } from "@/lib/helper";
 import { useTranslations } from "next-intl";
 import { commonValidations } from "@/lib/validations";
+import { toast } from "sonner";
 
 export default function PasswordChangeForm({ locale }) {
-  const t = useTranslations("account");
   const { executeRecaptcha } = useGoogleReCaptcha();
+  const t = useTranslations("account");
 
+  const isEn = locale === "en";
   // Validation schema — defined inside component so messages are translated
   const formSchema = z
     .object({
@@ -67,7 +69,6 @@ export default function PasswordChangeForm({ locale }) {
 
   const onSubmit = async (values) => {
     setLoading(true);
-    setSuccess(null);
 
     const recaptchaToken = await executeRecaptcha("change_password_form");
     try {
@@ -85,14 +86,15 @@ export default function PasswordChangeForm({ locale }) {
       );
 
       if (error) {
-        setSuccess(message);
+        toast.error(isEn ? message?.en : message?.ar);
       }
-
-      form.reset();
-      setSuccess(message);
+      else{
+        form.reset();
+        toast.success((isEn ? message?.en : message?.ar) || t("password_changed_successfully"));
+      }
     } catch (err) {
       console.error(err);
-      setSuccess(err.message);
+      toast.error(isEn ? err?.en : err?.ar );
     } finally {
       setLoading(false);
     }

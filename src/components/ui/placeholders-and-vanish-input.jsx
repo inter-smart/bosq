@@ -17,8 +17,7 @@ export function PlaceholdersAndVanishInput({
 }) {
   const { executeRecaptcha } = useGoogleReCaptcha();
 
-
-  const isEN  = locale === "en";
+  const isEN = locale === "en";
 
   const activePlaceholders =
     locale === "ar" || locale !== "en"
@@ -180,7 +179,7 @@ export function PlaceholdersAndVanishInput({
       animate(maxX);
     }
   };
-  const handleNewsletterSubmit = async (email) => {
+  const handleNewsletterSubmit = async (email, recaptchaToken) => {
     if (isSubmitting) return;
 
     if (!email) {
@@ -195,16 +194,9 @@ export function PlaceholdersAndVanishInput({
       return;
     }
 
-    if (!executeRecaptcha) {
-      toast.error("reCAPTCHA not ready. Please try again.");
-      return;
-    }
-
     setIsSubmitting(true);
     const URL = `${API_URL}/api/frontend/enquiries/news-letter`;
     try {
-      const recaptchaToken = await executeRecaptcha("newsletter_subsription");
-
       const res = await fetch(URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -215,16 +207,19 @@ export function PlaceholdersAndVanishInput({
       });
 
       const data = await res.json();
-      
-      if (!res.ok) {
-        
-        throw new Error("Failed to send enquiry");}
+
+      if (!data?.success) {
+        toast.error(
+          isEN
+            ? data?.message?.en
+            : data?.message?.ar || tErrors("newsletter_failed"),
+        );
+        return;
+      }
 
       toast.success(isEN ? data?.message?.en : data?.message?.ar);
     } catch (error) {
-      toast.error(
-        error.message || "An error occurred. Please try again later.",
-      );
+      toast.error(isEN ? error?.en : error?.ar);
     } finally {
       setIsSubmitting(false);
     }
@@ -232,12 +227,21 @@ export function PlaceholdersAndVanishInput({
   const handleSubmit = async (e) => {
     e.preventDefault();
     // ✅ Success UX only after API success
-    vanishAndSubmit();
-    onSubmit?.(e);
 
     const emailInput = e.target.querySelector('input[type="text"]');
     const email = emailInput?.value?.trim();
-    if (variant !== "search") handleNewsletterSubmit(email);
+    if (variant !== "search") {
+      if (!executeRecaptcha) {
+        toast.error("reCAPTCHA not ready. Please try again.");
+        return;
+      }
+      const recaptchaToken = await executeRecaptcha("newstletter_token");
+      handleNewsletterSubmit(email, recaptchaToken);
+    }
+
+    vanishAndSubmit();
+    onSubmit?.(e);
+
   };
 
   return (

@@ -47,6 +47,8 @@ export default function ContactEnquiryForm({ locale }) {
   const { executeRecaptcha } = useGoogleReCaptcha();
   const tErrors = useTranslations("errors");
 
+  const isEN = locale === "en";
+
   // ✅ inject translator (once per render is fine)
   setValidationTranslator(tErrors);
 
@@ -71,13 +73,11 @@ export default function ContactEnquiryForm({ locale }) {
   });
 
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState("");
 
   const URL = `${API_URL}/api/frontend/enquiries/contact`;
 
   const onSubmit = async (values) => {
     setLoading(true);
-    setSuccess("");
 
     try {
       const recaptchaToken = await executeRecaptcha("contact_enquiry_form");
@@ -96,16 +96,14 @@ export default function ContactEnquiryForm({ locale }) {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data?.message || "Request failed");
+        toast.error(isEN ? data?.message?.en : data?.message?.ar || t("submit_error"));
       }
       form.reset();
 
       console.log(data);
-      setSuccess(data?.message);
-      toast.success(data?.message);
+      toast.success(isEN ? data?.message?.en : data?.message?.ar);
     } catch (err) {
       console.error(err);
-      setSuccess(err.message || t("submit_error"));
       toast.error(err.message || t("submit_error"));
       console.log(err);
     }
@@ -184,7 +182,7 @@ export default function ContactEnquiryForm({ locale }) {
                   onChange={(phone, meta) => {
                     field.onChange(phone);
                     setSelectedCountry(meta.country.iso2);
-                    form.trigger("phone");
+                    // form.trigger("phone");
                   }}
                   defaultCountry="ae"
                   dir={locale === "ar" ? "rtl" : "ltr"}
@@ -253,20 +251,6 @@ export default function ContactEnquiryForm({ locale }) {
             {loading ? t("submitting") : t("submit_now")}
           </Button>
         </div>
-
-        {/* Success/Error Message */}
-        {success && !loading && (
-          <p
-            className={cn(
-              "text-[10px] mt-1 w-full",
-              success.includes("successfully")
-                ? "text-green-600"
-                : "text-red-600",
-            )}
-          >
-            {success}
-          </p>
-        )}
       </form>
     </Form>
   );

@@ -42,6 +42,8 @@ const textareaStyle = cn(
 );
 
 export default function ProjectEnquiryForm({ projectId, locale }) {
+  const isEN = locale === "en";
+
   const t = useTranslations("form");
   console.log("project id", projectId);
 
@@ -53,7 +55,7 @@ export default function ProjectEnquiryForm({ projectId, locale }) {
 
   // ✅ Validation schema
   const formSchema = z.object({
-    name: commonValidations.name(t("name")),
+    name: commonValidations.name(t("full_name")),
     email: commonValidations.email(),
     phone: commonValidations.phone(selectedCountry.toUpperCase()),
     additionalDetails: commonValidations.message(t("message")),
@@ -70,14 +72,12 @@ export default function ProjectEnquiryForm({ projectId, locale }) {
   });
 
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(null);
 
   const { executeRecaptcha } = useGoogleReCaptcha();
   const URL = `${API_URL}/api/frontend/enquiries/project`;
 
   const onSubmit = async (values) => {
     setLoading(true);
-    setSuccess(null);
 
     try {
       const recaptchaToken = await executeRecaptcha("project_enquiry_form");
@@ -94,20 +94,22 @@ export default function ProjectEnquiryForm({ projectId, locale }) {
           recaptcha_token: recaptchaToken,
         }),
       });
-
       const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data?.message || t("submit_error"));
+      if (!data.success) {
+        toast.error(
+          isEN ? data?.message?.en : data?.message?.ar || t("submit_error"),
+        );
+      } else {
+        toast.success(
+          isEN ? data?.message?.en : data?.message?.ar || t("success_message"),
+        );
+        form.reset();
+      
+        setLoading(false);
       }
-      toast.success(data?.message || t("success_message"));
-      form.reset();
-      setSuccess(data?.message || t("success_message"));
     } catch (err) {
-      console.error(err);
-      setSuccess(err.message || t("submit_error"));
-      toast.error(err.message || t("submit_error"));
+      toast.error(isEN ? err?.en : err?.ar || t("submit_error"));
     }
-
     setLoading(false);
   };
 
@@ -155,7 +157,6 @@ export default function ProjectEnquiryForm({ projectId, locale }) {
                   onChange={(phone, meta) => {
                     field.onChange(phone);
                     setSelectedCountry(meta.country.iso2);
-                    form.trigger("phone");
                   }}
                   defaultCountry="ae"
                   dir={locale === "ar" ? "rtl" : "ltr"}
@@ -224,11 +225,6 @@ export default function ProjectEnquiryForm({ projectId, locale }) {
             {loading ? t("submitting") : t("submit_enquiry")}
           </Button>
         </div>
-
-        {/* Success Message */}
-        {success && !loading && (
-          <p className="text-green-600 mt-1">{success}</p>
-        )}
       </form>
     </Form>
   );

@@ -23,6 +23,7 @@ import { fetchFromAPIWithCredentials } from "@/lib/helper";
 import { commonValidations, setValidationTranslator } from "@/lib/validations";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 // Shared styles
 const labelStyle = cn(
@@ -35,12 +36,12 @@ const inputStyle = cn(
 
 const errorStyle = cn("text-[#f17423]");
 
-export default function PersonalInformationForm({ data }) {
+export default function PersonalInformationForm({ data, locale }) {
   const t = useTranslations("account");
+  const tToast = useTranslations("toast");
   const { executeRecaptcha } = useGoogleReCaptcha();
-
   const tErrors = useTranslations("errors");
-
+const isEn = locale === "en";
   // ✅ inject translator (once per render is fine)
   setValidationTranslator(tErrors);
 
@@ -105,14 +106,11 @@ export default function PersonalInformationForm({ data }) {
         },
       );
 
-      if (!result.error) {
-        setSuccess(t("success_info_update"));
-      } else {
-        setSuccess(result.message || t("error_info_update"));
-      }
+        toast.success(isEn ? result?.message?.en : result?.message?.ar);
+      
     } catch (err) {
       console.error(err);
-      setSuccess(err.message || "Something went wrong. Please try again.");
+      toast.error(isEn ? err?.en : err?.ar );
     }
     setLoading(false);
   };
@@ -271,20 +269,6 @@ export default function PersonalInformationForm({ data }) {
             {t("reset")}
           </Button>
         </div>
-
-        {/* Success/Error Message */}
-        {success && !loading && (
-          <p
-            className={cn(
-              "text-[10px] mt-1 w-full",
-              success.includes(t("success_info_update"))
-                ? "text-green-600"
-                : "text-red-600",
-            )}
-          >
-            {success}
-          </p>
-        )}
       </form>
     </Form>
   );
