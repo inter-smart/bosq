@@ -5,14 +5,7 @@ import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import { z } from "zod";
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -28,9 +21,7 @@ import { toast } from "sonner";
 // Validation schema
 
 // Shared styles
-const labelStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]",
-);
+const labelStyle = cn("text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]");
 
 const inputStyle = cn(
   "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1",
@@ -72,12 +63,11 @@ export default function AuthLoginForm({ locale, data }) {
   const redirectTo = searchParams.get("redirect") || `/${locale}`;
   const activity = searchParams.get("activity") || null;
 
-  // Guard: if already logged in (e.g. browser back button), redirect away
   useEffect(() => {
-    if (isAuthenticated) {
-      router.replace(redirectTo);
+    if (isAuthenticated && !isRedirecting) {
+      window.location.href = redirectTo;
     }
-  }, [isAuthenticated, redirectTo, router]);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     if (activity && activity === "wishlist")
@@ -93,7 +83,10 @@ export default function AuthLoginForm({ locale, data }) {
       const result = await login(values);
       if (result?.success) {
         toast.success(tAuth("success"));
-        setIsRedirecting(true);
+        // setIsRedirecting(true);
+        setTimeout(() => {
+          window.location.href = redirectTo; // 👈 explicit, reliable
+        }, 500);
       } else {
         toast.error(isEN ? result.error.en : result.error.ar || tAuth("error"));
       }
@@ -102,33 +95,20 @@ export default function AuthLoginForm({ locale, data }) {
     }
   };
 
-  const toggleStyle = cn(
-    "absolute top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700",
-    locale === "ar" ? "left-3" : "right-3",
-  );
+  const toggleStyle = cn("absolute top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700", locale === "ar" ? "left-3" : "right-3");
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-wrap items-start -mx-4 [&>*]:px-4 [&>*]:py-2"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-wrap items-start -mx-4 [&>*]:px-4 [&>*]:py-2">
         {/* Email */}
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel className={labelStyle}>
-                {tCommon("email_label")}
-              </FormLabel>
+              <FormLabel className={labelStyle}>{tCommon("email_label")}</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  type="email"
-                  className={inputStyle}
-                  placeholder={tCommon("email_placeholder")}
-                />
+                <Input {...field} type="email" className={inputStyle} placeholder={tCommon("email_placeholder")} />
               </FormControl>
               <FormMessage className={errorStyle} />
             </FormItem>
@@ -141,30 +121,17 @@ export default function AuthLoginForm({ locale, data }) {
           name="password"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel className={labelStyle}>
-                {tCommon("password_label")}
-              </FormLabel>
+              <FormLabel className={labelStyle}>{tCommon("password_label")}</FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
                     type={showPassword ? "text" : "password"}
-                    className={cn(
-                      inputStyle,
-                      locale === "ar" ? "pl-10" : "pr-10",
-                    )}
+                    className={cn(inputStyle, locale === "ar" ? "pl-10" : "pr-10")}
                     placeholder={tCommon("password_placeholder")}
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className={cn(toggleStyle)}
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className={cn(toggleStyle)}>
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
               </FormControl>
@@ -181,11 +148,7 @@ export default function AuthLoginForm({ locale, data }) {
             render={({ field }) => (
               <FormItem className="flex items-center gap-2 space-y-0">
                 <FormControl>
-                  <Checkbox
-                    id="rememberMe"
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
+                  <Checkbox id="rememberMe" checked={field.value} onCheckedChange={field.onChange} />
                 </FormControl>
                 <Label htmlFor="rememberMe" className={labelStyle}>
                   {tCommon("remember_me")}
@@ -193,25 +156,14 @@ export default function AuthLoginForm({ locale, data }) {
               </FormItem>
             )}
           />
-          <Button
-            variant="link"
-            className="font-light h-auto! p-0 text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px]"
-            asChild
-          >
-            <Link href={`/${locale}/forgot-password`}>
-              {tAuth("forgot_password")}
-            </Link>
+          <Button variant="link" className="font-light h-auto! p-0 text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px]" asChild>
+            <Link href={`/${locale}/forgot-password`}>{tAuth("forgot_password")}</Link>
           </Button>
         </div>
 
         {/* Submit Button */}
         <div className="w-full mt-1">
-          <Button
-            type="submit"
-            variant="black"
-            disabled={isLoading}
-            className="w-full"
-          >
+          <Button type="submit" variant="black" disabled={isLoading} className="w-full">
             {isLoading ? tAuth("loading") : tAuth("submit")}
           </Button>
         </div>
