@@ -26,6 +26,7 @@ import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 
 import ProductEnquireModal from "./ProductEnquireModal";
+import ProductShareModal from "./ProductShareModal";
 import ProductDetails from "./ProductDetails";
 import ProductChooseDesign from "./ProductChooseDesign";
 import PriceAndCart from "./PriceAndCart";
@@ -100,6 +101,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
 
   const [isChooseDesignOpen, setIsChooseDesignOpen] = useState(false);
 
+  const [isShareOpen, setIsShareOpen] = useState(false);
   const [wishlist, setWishlist] = useState(initialData?.isWishlisted ?? false);
   const [toggleWishlist, { isLoading: isWishlistLoading }] = useToggleWishlistMutation();
   const { isAuthenticated } = useAuth();
@@ -271,6 +273,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
                       />
                     </div>
                   </div>
+                  <ProductShareModal open={isShareOpen} onClose={() => setIsShareOpen(false)} locale={locale} />
                   {initialData?.images?.length > 0 && (
                     <div
                       className={cn(
@@ -299,7 +302,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
                           />
                         </svg>
                       </button>
-                      <button className="w-2.5 2xl:w-3.5 hover:cursor-pointer transition hover:scale-105">
+                      <button onClick={() => setIsShareOpen(true)} className="w-2.5 2xl:w-3.5 hover:cursor-pointer transition hover:scale-105">
                         <Image src="/images/icon-share.svg" alt="icon-share" width={12} height={12} className="w-full h-full block" quality={90} />
                       </button>
                     </div>
