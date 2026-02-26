@@ -173,7 +173,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
                           )}
                         >
                           <Image
-                            src={item?.media_path}
+                            src={item?.media_type === "image" ? item?.media_path : item?.thumbnail_path || "/images/placeholder.png"}
                             alt={item?.alt || "thumb"}
                             width={512}
                             height={512}
