@@ -43,7 +43,7 @@ const AuthBoard = ({ locale }) => {
       await keepCartAsGuestAPI();
       const result = await dispatch(logoutUser()).unwrap();
       if (result) {
-        router.push(`/${locale}`);
+        window.location.reload();
       }
     } catch (err) {
       console.log("LOG OUT ERROR", err);
@@ -87,7 +87,7 @@ const AuthBoard = ({ locale }) => {
         <DialogContent className="sm:max-w-[360px]" showCloseButton={false}>
           <DialogHeader>
             <DialogTitle className="text-[#282828]">Logout</DialogTitle>
-            <DialogDescription>Would you like to keep your cart items for the following session?</DialogDescription>
+            <DialogDescription>{locale == "en" ? "Are you sure you want to log out?" : "هل أنت متأكد أنك تريد تسجيل الخروج؟"}</DialogDescription>
           </DialogHeader>
           <DialogFooter className="flex-col gap-2 sm:flex-col">
             <button
@@ -102,7 +102,7 @@ const AuthBoard = ({ locale }) => {
               disabled={isLoggingOut}
               className="w-full border border-[#e0e0e0] text-[#282828] text-[13px] font-light py-2.5 px-4 rounded-[4px] hover:bg-[#f4f4f4] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              Just Logout
+              {locale === "en" ? "Logout & Clear Cart" : "تسجيل الخروج ومسح السلة"}
             </button>
           </DialogFooter>
         </DialogContent>
