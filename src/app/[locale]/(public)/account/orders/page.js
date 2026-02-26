@@ -535,6 +535,7 @@ export default async function OrdersPage({ params }) {
   const slug = locale === "en" ? "My Orders" : "طلباتي";
   const orders = data?.orders;
   const pagination = data?.pagination;
+  const userName = data?.userName;
 
   if (error) {
     return notFound();
@@ -544,7 +545,7 @@ export default async function OrdersPage({ params }) {
     <>
       <ProductHero locale={locale} data={local_data?.heroData} slug={slug} />
       <AccountLayout locale={locale}>
-        <AccountOrders locale={locale} data={local_data?.orders} orders={orders} pagination={pagination} />
+        <AccountOrders userName={userName} locale={locale} data={local_data?.orders} orders={orders} pagination={pagination} />
       </AccountLayout>
     </>
   );
