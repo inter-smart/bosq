@@ -59,3 +59,10 @@ export async function mergeCartAPI() {
     method: "POST",
   });
 }
+
+// Copy user cart to guest session before logout (so cart persists after logout)
+export async function keepCartAsGuestAPI() {
+  return fetchFromAPIWithCredentials("/api/frontend/cart/keep-as-guest", {
+    method: "POST",
+  });
+}
