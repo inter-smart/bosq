@@ -95,8 +95,12 @@ export default function AuthCreateForm({ locale }) {
         toast.success(tAuth("success"));
         router.replace(`/${locale}/otp-submission`);
       } else {
-        setSuccess(result.error || tAuth("error"));
-        toast.error(result.error || tAuth("error"));
+        const isEN = locale === "en";
+        const errorMsg = typeof result.error === "object"
+          ? (isEN ? result.error?.en : result.error?.ar) ?? tAuth("error")
+          : result.error || tAuth("error");
+        setSuccess(errorMsg);
+        toast.error(errorMsg);
       }
     } catch (err) {
       console.error(err);

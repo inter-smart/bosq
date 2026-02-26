@@ -76,10 +76,11 @@ export const registerUser = createAsyncThunk("auth/register", async (credentials
   try {
     const { data, error, message } = await registerAPI(credentials);
 
-    localStorage.setItem("email", data.email);
     if (error) {
       return rejectWithValue(message);
     }
+
+    localStorage.setItem("email", data.email);
 
     return {
       email: data.email || credentials.email,

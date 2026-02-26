@@ -26,6 +26,7 @@ import { commonValidations, setValidationTranslator } from "@/lib/validations";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 
 // Shared styles
@@ -44,6 +45,7 @@ export default function AuthOtpForm({ locale }) {
   const t = useTranslations("auth.otp");
   const tErrors = useTranslations("errors");
 
+  const isEn = locale === "en";
 
       // ✅ inject translator (once per render is fine)
   setValidationTranslator(tErrors);
@@ -82,10 +84,16 @@ const formSchema = z.object({
 
     if (result.success) {
       setSuccess(t("success"));
+            toast.success(t("success"));
+
       router.push(`/${locale}/create-password`);
     } else {
-      setSuccess(result.error || t("error"));
-    }
+ const isEN = locale === "en";
+        const errorMsg = typeof result.error === "object"
+          ? (isEN ? result.error?.en : result.error?.ar) ?? t("error")
+          : result.error || t("error");
+        setSuccess(errorMsg);
+        toast.error(errorMsg);    }
   };
 
   return (
@@ -143,7 +151,7 @@ const formSchema = z.object({
           <p
             className={cn(
               "text-[10px] mt-1 w-full",
-              success === t("success") || success.includes("successfully")
+              success === t("success")
                 ? "text-green-600"
                 : "text-red-600",
             )}

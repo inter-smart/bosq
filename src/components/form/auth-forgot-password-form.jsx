@@ -26,6 +26,7 @@ import { commonValidations, setValidationTranslator } from "@/lib/validations";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 export default function AuthForgotPasswordForm({ locale, setStep, step }) {
   const t = useTranslations("auth.forgot_password");
@@ -87,7 +88,8 @@ export default function AuthForgotPasswordForm({ locale, setStep, step }) {
     }
   }, [isAuthenticated, locale, router]);
 
-  const [success, setSuccess] = useState("");
+  const isEN = locale === "en";
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -115,53 +117,42 @@ export default function AuthForgotPasswordForm({ locale, setStep, step }) {
   // Step 1: Submit email
   const onSubmitEmail = async (values) => {
     clearAuthError();
-    setSuccess("");
 
     const result = await forgotPassword(values.email);
 
     if (result.success) {
-      setSuccess(t("success_send"));
-      setTimeout(() => {
-        setStep(2);
-        setSuccess("");
-      }, 1500);
+      toast.success(t("success_send"));
+      setTimeout(() => { setStep(2); }, 1500);
     } else {
-      setSuccess(result.error || t("error_send"));
+      toast.error(isEN ? result.error?.en : result.error?.ar || t("error_send"));
     }
   };
 
   // Step 2: Verify OTP
   const onSubmitOtp = async (values) => {
     clearAuthError();
-    setSuccess("");
 
     const result = await verifyResetOtp(values.otp, pendingEmail);
 
     if (result.success) {
-      setSuccess(t("success_verify"));
-      setTimeout(() => {
-        setStep(3);
-        setSuccess("");
-      }, 1500);
+      toast.success(t("success_verify"));
+      setTimeout(() => { setStep(3); }, 1500);
     } else {
-      setSuccess(result.error || t("error_verify"));
+      toast.error(isEN ? result.error?.en : result.error?.ar || t("error_verify"));
     }
   };
 
   // Step 3: Reset password
   const onSubmitPassword = async (values) => {
     clearAuthError();
-    setSuccess("");
 
     const result = await resetPassword(values.password);
 
     if (result.success) {
-      setSuccess(t("success_reset"));
-      setTimeout(() => {
-        window.location.href = `/${locale}/login`;
-      }, 2000);
+      toast.success(t("success_reset"));
+      setTimeout(() => { window.location.href = `/${locale}/login`; }, 2000);
     } else {
-      setSuccess(result.error || t("error_reset"));
+      toast.error(isEN ? result.error?.en : result.error?.ar || t("error_reset"));
     }
   };
 
@@ -211,16 +202,6 @@ export default function AuthForgotPasswordForm({ locale, setStep, step }) {
               </Button>
             </div>
 
-            {success && !isLoading && (
-              <p
-                className={cn(
-                  "text-[10px] mt-1 w-full",
-                  success === t("success_send") ? "text-green-600" : "text-red-600",
-                )}
-              >
-                {success}
-              </p>
-            )}
           </form>
         </Form>
       )}
@@ -276,18 +257,6 @@ export default function AuthForgotPasswordForm({ locale, setStep, step }) {
               </Button>
             </div>
 
-            {success && !isLoading && (
-              <p
-                className={cn(
-                  "text-[10px] mt-1 w-full",
-                  success === t("success_verify")
-                    ? "text-green-600"
-                    : "text-red-600",
-                )}
-              >
-                {success}
-              </p>
-            )}
           </form>
         </Form>
       )}
@@ -386,18 +355,6 @@ export default function AuthForgotPasswordForm({ locale, setStep, step }) {
               </Button>
             </div>
 
-            {success && !isLoading && (
-              <p
-                className={cn(
-                  "text-[10px] mt-1 w-full",
-                  success === t("success_reset")
-                    ? "text-green-600"
-                    : "text-red-600",
-                )}
-              >
-                {success}
-              </p>
-            )}
           </form>
         </Form>
       )}
