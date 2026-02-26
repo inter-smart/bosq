@@ -64,16 +64,19 @@ const PriceAndCart = ({ stock, price, item, locale, quantity, setQuantity }) => 
             onChange={handleChange}
             className="text-[12px] xl:text-[14px] leading-none font-normal text-center text-black w-8/10 overflow-hidden focus:outline-none"
           />
-          <div className="w-4/10 flex flex-col align-center justify-center">
-            <button onClick={handleDecrement} className="transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled={quantity <= 1}>
-              <ChevronUp className="size-3 text-black" />
-            </button>
 
+          <div className="w-4/10 flex flex-col align-center justify-center">
+            {/* ✅ Increment (UP) */}
             <button
               onClick={handleIncrement}
               className="transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={quantity >= stock}
             >
+              <ChevronUp className="size-3 text-black" />
+            </button>
+
+            {/* ✅ Decrement (DOWN) */}
+            <button onClick={handleDecrement} className="transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled={quantity <= 1}>
               <ChevronDown className="size-3 text-black" />
             </button>
           </div>

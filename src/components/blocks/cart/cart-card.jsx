@@ -141,18 +141,22 @@ export default function CartCard({ product, isEn }) {
                 disabled={isUpdating}
                 className="text-[11px] 2xl:text-[12px] leading-none font-normal text-center text-black w-8/10 overflow-hidden focus:outline-none disabled:opacity-50"
               />
+
               <div className="w-4/10 flex flex-col align-center justify-center">
-                <button
-                  onClick={handleDecrement}
-                  className="transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={quantity <= 1 || isUpdating || isProductOutOfStock}
-                >
-                  <ChevronUp className="size-2.5 text-black" />
-                </button>
+                {/* ✅ Increment (UP) */}
                 <button
                   onClick={handleIncrement}
                   className="transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={isUpdating || isProductOutOfStock}
+                >
+                  <ChevronUp className="size-2.5 text-black" />
+                </button>
+
+                {/* ✅ Decrement (DOWN) */}
+                <button
+                  onClick={handleDecrement}
+                  className="transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={quantity <= 1 || isUpdating || isProductOutOfStock}
                 >
                   <ChevronDown className="size-2.5 text-black" />
                 </button>
@@ -173,7 +177,7 @@ export default function CartCard({ product, isEn }) {
               }
             >
               {isRemoving ? `${t("removing")}...` : tCommon("remove")}
-              <Image src={"/images/icon-delete.svg"} alt="icon-delete" width={8} height={8} className="w-2 sm:w-3 block"  quality={90} />
+              <Image src={"/images/icon-delete.svg"} alt="icon-delete" width={8} height={8} className="w-2 sm:w-3 block" quality={90} />
             </Button>
           </div>
         </div>
