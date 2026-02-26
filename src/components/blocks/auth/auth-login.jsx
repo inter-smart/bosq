@@ -2,7 +2,6 @@ import { Text } from "@/components/utils/text";
 import Link from "next/link";
 import AuthLoginForm from "@/components/form/auth-login-form";
 import GoogleLoginButton from "@/components/form/google-login-button";
-import { toast } from "sonner";
 
 export default function AuthLogin({ locale, data }) {
   return (

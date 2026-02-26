@@ -166,7 +166,7 @@ export default function SoftLoginForm({ locale }) {
       </div>
 
       {/* Google Login */}
-      <GoogleLoginButton locale={locale} onSuccess={handleGoogleSuccess} />
+      <GoogleLoginButton locale={locale} onOk={handleGoogleSuccess} />
     </Form>
   );
 }
