@@ -231,7 +231,7 @@ const OrderSummary = ({
 
       const orderId = orderData.data?.order_id;
 
-      type === "cart" && dispatch(resetCart());
+      !type && dispatch(resetCart());
       setShowConfirmDialog(false);
       router.push(`/${locale}/order/success?orderId=${orderId}`);
     } catch (error) {
@@ -465,7 +465,9 @@ const OrderSummary = ({
                   <div className="bg-[#f4f4f4] rounded-[4px] p-3 xl:p-4">
                     <Heading as="div" size="heading5" className="font-medium text-[#282828] mb-1">
                       {tCheckout("shipping_address")}
-                      {isSameAddress && <span className="text-[10px] xl:text-[11px] font-light text-[#808080] ml-2">{tCheckout("same_as_billing")}</span>}
+                      {isSameAddress && (
+                        <span className="text-[10px] xl:text-[11px] font-light text-[#808080] ml-2">{tCheckout("same_as_billing")}</span>
+                      )}
                     </Heading>
                     {shippingAddr ? (
                       <div>

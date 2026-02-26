@@ -342,6 +342,7 @@
     "my_profile": "ملفي الشخصي",
     "my_orders": "طلباتي",
     "cancelled_orders": "الطلبات الملغاة",
+    "cancel_order": "إلغاء الطلب",
     "manage_address": "إدارة العناوين",
     "wishlist": "المفضلة",
     "coupons": "الكوبونات",
@@ -529,7 +530,7 @@
     "pdf_not_allowed": "لا يُسمح بملفات PDF",
     "file_size_exceeded": "يجب ألا يتجاوز حجم الصورة {size} ميجابايت",
     "select_region": "يرجى اختيار المنطقة",
-    "select_option":"اختر خيارًا"
+    "select_option": "اختر خيارًا"
   },
   "toast": {
     "added_to_cart": "تمت إضافة المنتج إلى السلة",
