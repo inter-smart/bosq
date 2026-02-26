@@ -18,8 +18,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useReorderOrderMutation } from "@/store/services/orderApi";
-import { generateInvoiceHTML } from "@/lib/invoice-template";
-import html2canvas from 'html2canvas-pro';
 import { useState } from "react";
 
 const labelStyle = cn("text-[#282828] my-2 xl:my-2.5 2xl:my-4 [&>span]:font-normal flex justify-between");
@@ -42,47 +40,205 @@ export default function OrdersDetailModal({ children, order, locale, userName })
   };
 
   const handleDownloadInvoice = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       const jsPDF = (await import("jspdf")).default;
-      const html = generateInvoiceHTML(order, locale, userName);
+      const doc = new jsPDF({ unit: "mm", format: "a4" });
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const margin = 14;
+      const contentWidth = pageWidth - margin * 2;
+      let y = 18;
 
-      const container = document.createElement("div");
-      container.style.position = "absolute";
-      container.style.left = "-9999px";
-      container.style.top = "0";
-      container.style.width = "700px";
-      container.innerHTML = html;
-      document.body.appendChild(container);
+      const aed = (val) =>
+        `AED ${parseFloat(String(val || 0)).toLocaleString("en-AE", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}`;
 
+      // ── HEADER ──────────────────────────────────────────────────────
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(22);
+      doc.setTextColor(15, 15, 15);
+      doc.text("BOSQ", margin, y);
 
-      const canvas = await html2canvas(container, {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        backgroundColor: "#ffffff",
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+      doc.setTextColor(100, 100, 100);
+      doc.text("Tax Invoice / Receipt", margin, y + 6);
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(10);
+      doc.setTextColor(15, 15, 15);
+      doc.text(`Invoice: ${order?.order_id}`, pageWidth - margin, y, { align: "right" });
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+      doc.setTextColor(100, 100, 100);
+      const orderDate = order?.createdAt
+        ? new Date(order.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })
+        : "";
+      doc.text(`Date: ${orderDate}`, pageWidth - margin, y + 6, { align: "right" });
+      doc.text(`Status: ${(order?.status || "").toUpperCase()}`, pageWidth - margin, y + 11, { align: "right" });
+      y += 18;
+
+      doc.setDrawColor(220, 220, 220);
+      doc.setLineWidth(0.4);
+      doc.line(margin, y, pageWidth - margin, y);
+      y += 8;
+
+      // ── PAYMENT STRIP ────────────────────────────────────────────────
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(8.5);
+      doc.setTextColor(80, 80, 80);
+      const paymentLine = `Payment: ${(order?.payment_status || "").toUpperCase()}${order?.payment_type ? `   |   Method: ${order.payment_type.toUpperCase()}` : ""}`;
+      doc.text(paymentLine, margin, y);
+      y += 8;
+      doc.setDrawColor(220, 220, 220);
+      doc.line(margin, y, pageWidth - margin, y);
+      y += 7;
+
+      // ── ADDRESS SECTION ──────────────────────────────────────────────
+if (order?.billing_address || order?.shipping_address) {
+  if (y > 240) { doc.addPage(); y = 20; }
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8.5);
+  doc.setTextColor(80, 80, 80);
+
+  if (order?.billing_address) doc.text("BILLING ADDRESS", margin, y);
+  if (order?.shipping_address) doc.text("SHIPPING ADDRESS", pageWidth - margin, y, { align: "right" });
+  y += 6;
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8.5);
+  doc.setTextColor(30, 30, 30);
+
+  let billingEndY = y;
+  let shippingEndY = y;
+
+  if (order?.billing_address) {
+    order.billing_address.split(", ").forEach((part) => {
+      doc.text(part, margin, billingEndY);
+      billingEndY += 5;
+    });
+  }
+
+  if (order?.shipping_address) {
+    order.shipping_address.split(", ").forEach((part) => {
+      doc.text(part, pageWidth - margin, shippingEndY, { align: "right" });
+      shippingEndY += 5;
+    });
+  }
+
+  y = Math.max(billingEndY, shippingEndY) + 4;
+  doc.setDrawColor(220, 220, 220);
+  doc.line(margin, y, pageWidth - margin, y);
+  y += 7;
+}
+
+      // ── ITEMS TABLE ──────────────────────────────────────────────────
+      const cols = {
+        product: margin,
+        qty: margin + 100,
+        subtotal: pageWidth - margin,
+      };
+
+      doc.setFillColor(245, 245, 245);
+      doc.rect(margin, y - 4, contentWidth, 8, "F");
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(8);
+      doc.setTextColor(80, 80, 80);
+      doc.text("PRODUCT", cols.product, y);
+      doc.text("QTY", cols.qty, y, { align: "center" });
+      doc.text("SUBTOTAL", cols.subtotal, y, { align: "right" });
+      y += 5;
+      doc.setDrawColor(200, 200, 200);
+      doc.line(margin, y, pageWidth - margin, y);
+      y += 5;
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8.5);
+      doc.setTextColor(20, 20, 20);
+
+      (order?.items ?? []).forEach((item, idx) => {
+        if (idx % 2 === 1) {
+          doc.setFillColor(250, 250, 250);
+          doc.rect(margin, y - 4, contentWidth, 10, "F");
+        }
+        const productTitle = item?.variant?.title ?? "Unknown Product";
+        const sku = item?.variant?.sku ? `SKU: ${item.variant.sku}` : "";
+        const t = productTitle.length > 45 ? productTitle.substring(0, 43) + ".." : productTitle;
+
+        doc.setFont("helvetica", "bold");
+        doc.text(t, cols.product, y);
+        if (sku) {
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(7.5);
+          doc.setTextColor(120, 120, 120);
+          doc.text(sku, cols.product, y + 4);
+          doc.setFontSize(8.5);
+          doc.setTextColor(20, 20, 20);
+        }
+        doc.setFont("helvetica", "normal");
+        doc.text(String(item?.quantity ?? 0), cols.qty, y, { align: "center" });
+        doc.setFont("helvetica", "bold");
+        doc.text(aed(item?.line_total), cols.subtotal, y, { align: "right" });
+        y += 11;
+
+        if (y > 260) {
+          doc.addPage();
+          y = 20;
+        }
       });
 
-      const imgData = canvas.toDataURL("image/jpeg", 0.98);
-      const pdf = new jsPDF({
-        orientation: "portrait",
-        unit: "pt",
-        format: [canvas.width / 2, canvas.height / 2],
-      });
+      doc.setDrawColor(200, 200, 200);
+      doc.line(margin, y, pageWidth - margin, y);
+      y += 8;
 
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
+      // ── FINANCIAL SUMMARY ────────────────────────────────────────────
+      const summaryLabelX = pageWidth - margin - 70;
+      const summaryValueX = pageWidth - margin;
 
-      pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`invoice-${order?.order_id || "BOSQ"}.pdf`);
+      const drawRow = (label, value, bold = false, color = [30, 30, 30]) => {
+        doc.setFont("helvetica", bold ? "bold" : "normal");
+        doc.setFontSize(bold ? 10 : 9);
+        doc.setTextColor(...color);
+        doc.text(label, summaryLabelX, y);
+        doc.text(value, summaryValueX, y, { align: "right" });
+        y += 6;
+      };
 
-      document.body.removeChild(container);
-      setLoading(false)
+      if (order?.subtotal != null) drawRow("Subtotal", aed(order.subtotal));
+      if (order?.tax_total != null) drawRow("Tax", aed(order.tax_total));
+      if (parseFloat(String(order?.discount_total || 0)) > 0) {
+        drawRow("Discount", `- ${aed(order.discount_total)}`, false, [180, 30, 30]);
+      }
+      doc.setDrawColor(80, 80, 80);
+      doc.line(summaryLabelX, y, summaryValueX, y);
+      y += 5;
+      drawRow("Grand Total", aed(order?.grand_total), true);
+
+      // ── FOOTER ───────────────────────────────────────────────────────
+      const pageHeight = doc.internal.pageSize.getHeight();
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8);
+      doc.setTextColor(150, 150, 150);
+      doc.setDrawColor(220, 220, 220);
+      doc.line(margin, pageHeight - 16, pageWidth - margin, pageHeight - 16);
+      doc.text(
+        "Thank you for shopping with BOSQ. For queries, contact support.",
+        pageWidth / 2,
+        pageHeight - 12,
+        { align: "center" }
+      );
+
+      doc.save(`invoice-${order?.order_id || "BOSQ"}.pdf`);
       toast.success("Invoice downloaded successfully");
     } catch (error) {
       console.error("PDF Download Error:", error);
       toast.error("Failed to download invoice. Please try again.");
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
   };
 
