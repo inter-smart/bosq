@@ -27,7 +27,7 @@ import {
 const labelStyle = cn("text-[#282828] my-0.5 2xl:my-1 [&>span]:font-medium");
 const btnStyle = cn("underline underline-offset-1 text-[#282828] h-auto! px-1 xl:px-1.5 gap-0.5");
 
-export default function AccountOrders({ data, locale, orders: initialOrders, pagination, userName }) {
+export default function AccountOrders({ data, locale, orders: initialOrders, pagination }) {
   const isEn = locale === "en";
   const t = useTranslations("account");
   const tCommon = useTranslations("common");
@@ -116,7 +116,7 @@ export default function AccountOrders({ data, locale, orders: initialOrders, pag
                   </Text>
                 </div>
                 <div>
-                  <OrdersDetailModal userName={userName} order={item} locale={locale}>
+                  <OrdersDetailModal order={item} locale={locale}>
                     <Button variant={"black"} disabled={false} className="min-w-[90px] xl:min-w-[100px] 2xl:min-w-[120px]">
                       {t("view_details")}
                     </Button>

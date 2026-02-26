@@ -20,12 +20,17 @@ import {
 import { useReorderOrderMutation } from "@/store/services/orderApi";
 import { useState } from "react";
 
-const labelStyle = cn("text-[#282828] my-2 xl:my-2.5 2xl:my-4 [&>span]:font-normal flex justify-between");
+const labelStyle = cn(
+  "text-[#282828] my-2 xl:my-2.5 2xl:my-4 [&>span]:font-normal flex justify-between",
+);
 
-export default function OrdersDetailModal({ children, order, locale, userName }) {
+export default function OrdersDetailModal({
+  children,
+  order,
+  locale,
+}) {
   const router = useRouter();
   const [reorderOrder, { isLoading: isReordering }] = useReorderOrderMutation();
-
 
   const [Loading, setLoading] = useState(false);
 
@@ -35,7 +40,9 @@ export default function OrdersDetailModal({ children, order, locale, userName })
       toast.success("Items added to cart");
       router.push(`/${locale}/cart`);
     } catch (error) {
-      toast.error(typeof error?.en === "string" ? error.en : "Failed to reorder");
+      toast.error(
+        typeof error?.en === "string" ? error.en : "Failed to reorder",
+      );
     }
   };
 
@@ -69,16 +76,29 @@ export default function OrdersDetailModal({ children, order, locale, userName })
       doc.setFont("helvetica", "bold");
       doc.setFontSize(10);
       doc.setTextColor(15, 15, 15);
-      doc.text(`Invoice: ${order?.order_id}`, pageWidth - margin, y, { align: "right" });
+      doc.text(`Invoice: ${order?.order_id}`, pageWidth - margin, y, {
+        align: "right",
+      });
 
       doc.setFont("helvetica", "normal");
       doc.setFontSize(9);
       doc.setTextColor(100, 100, 100);
       const orderDate = order?.createdAt
-        ? new Date(order.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })
+        ? new Date(order.createdAt).toLocaleDateString("en-IN", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          })
         : "";
-      doc.text(`Date: ${orderDate}`, pageWidth - margin, y + 6, { align: "right" });
-      doc.text(`Status: ${(order?.status || "").toUpperCase()}`, pageWidth - margin, y + 11, { align: "right" });
+      doc.text(`Date: ${orderDate}`, pageWidth - margin, y + 6, {
+        align: "right",
+      });
+      doc.text(
+        `Status: ${(order?.status || "").toUpperCase()}`,
+        pageWidth - margin,
+        y + 11,
+        { align: "right" },
+      );
       y += 18;
 
       doc.setDrawColor(220, 220, 220);
@@ -98,43 +118,51 @@ export default function OrdersDetailModal({ children, order, locale, userName })
       y += 7;
 
       // ── ADDRESS SECTION ──────────────────────────────────────────────
-if (order?.billing_address || order?.shipping_address) {
-  if (y > 240) { doc.addPage(); y = 20; }
+      if (order?.billing_address || order?.shipping_address) {
+        if (y > 240) {
+          doc.addPage();
+          y = 20;
+        }
 
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(8.5);
-  doc.setTextColor(80, 80, 80);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(8.5);
+        doc.setTextColor(80, 80, 80);
 
-  if (order?.billing_address) doc.text("BILLING ADDRESS", margin, y);
-  if (order?.shipping_address) doc.text("SHIPPING ADDRESS", pageWidth - margin, y, { align: "right" });
-  y += 6;
+        if (order?.billing_address) doc.text("BILLING ADDRESS", margin, y);
+        if (order?.shipping_address)
+          doc.text("SHIPPING ADDRESS", pageWidth - margin, y, {
+            align: "right",
+          });
+        y += 6;
 
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(8.5);
-  doc.setTextColor(30, 30, 30);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8.5);
+        doc.setTextColor(30, 30, 30);
 
-  let billingEndY = y;
-  let shippingEndY = y;
+        let billingEndY = y;
+        let shippingEndY = y;
 
-  if (order?.billing_address) {
-    order.billing_address.split(", ").forEach((part) => {
-      doc.text(part, margin, billingEndY);
-      billingEndY += 5;
-    });
-  }
+        if (order?.billing_address) {
+          order.billing_address.split(", ").forEach((part) => {
+            doc.text(part, margin, billingEndY);
+            billingEndY += 5;
+          });
+        }
 
-  if (order?.shipping_address) {
-    order.shipping_address.split(", ").forEach((part) => {
-      doc.text(part, pageWidth - margin, shippingEndY, { align: "right" });
-      shippingEndY += 5;
-    });
-  }
+        if (order?.shipping_address) {
+          order.shipping_address.split(", ").forEach((part) => {
+            doc.text(part, pageWidth - margin, shippingEndY, {
+              align: "right",
+            });
+            shippingEndY += 5;
+          });
+        }
 
-  y = Math.max(billingEndY, shippingEndY) + 4;
-  doc.setDrawColor(220, 220, 220);
-  doc.line(margin, y, pageWidth - margin, y);
-  y += 7;
-}
+        y = Math.max(billingEndY, shippingEndY) + 4;
+        doc.setDrawColor(220, 220, 220);
+        doc.line(margin, y, pageWidth - margin, y);
+        y += 7;
+      }
 
       // ── ITEMS TABLE ──────────────────────────────────────────────────
       const cols = {
@@ -167,7 +195,10 @@ if (order?.billing_address || order?.shipping_address) {
         }
         const productTitle = item?.variant?.title ?? "Unknown Product";
         const sku = item?.variant?.sku ? `SKU: ${item.variant.sku}` : "";
-        const t = productTitle.length > 45 ? productTitle.substring(0, 43) + ".." : productTitle;
+        const t =
+          productTitle.length > 45
+            ? productTitle.substring(0, 43) + ".."
+            : productTitle;
 
         doc.setFont("helvetica", "bold");
         doc.text(t, cols.product, y);
@@ -211,7 +242,12 @@ if (order?.billing_address || order?.shipping_address) {
       if (order?.subtotal != null) drawRow("Subtotal", aed(order.subtotal));
       if (order?.tax_total != null) drawRow("Tax", aed(order.tax_total));
       if (parseFloat(String(order?.discount_total || 0)) > 0) {
-        drawRow("Discount", `- ${aed(order.discount_total)}`, false, [180, 30, 30]);
+        drawRow(
+          "Discount",
+          `- ${aed(order.discount_total)}`,
+          false,
+          [180, 30, 30],
+        );
       }
       doc.setDrawColor(80, 80, 80);
       doc.line(summaryLabelX, y, summaryValueX, y);
@@ -229,7 +265,7 @@ if (order?.billing_address || order?.shipping_address) {
         "Thank you for shopping with BOSQ. For queries, contact support.",
         pageWidth / 2,
         pageHeight - 12,
-        { align: "center" }
+        { align: "center" },
       );
 
       doc.save(`invoice-${order?.order_id || "BOSQ"}.pdf`);
@@ -246,11 +282,15 @@ if (order?.billing_address || order?.shipping_address) {
     <Dialog dir={locale === "ar" ? "rtl" : "ltr"}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className={"xl:max-w-[576px] 2xl:max-w-[840px] gap-0"}>
-        <DialogHeader className={"flex-row items-center justify-between mb-1 2xl:mb-3"}>
+        <DialogHeader
+          className={"flex-row items-center justify-between mb-1 2xl:mb-3"}
+        >
           <DialogTitle className="text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-semibold text-[#282828]">
             Order Details
           </DialogTitle>
-          <DialogDescription className={"sr-only"}>Order Details go here.</DialogDescription>
+          <DialogDescription className={"sr-only"}>
+            Order Details go here.
+          </DialogDescription>
         </DialogHeader>
 
         <div className="w-full max-h-[60vh] xl:max-h-[70vh] mask-[linear-gradient(to_bottom,transparent_0%,white_2%,white_98%,transparent_100%)]">
@@ -305,10 +345,18 @@ if (order?.billing_address || order?.shipping_address) {
                   <div key={"order-item" + index} className="w-full">
                     <div className="w-full flex justify-between">
                       <div className="w-7/10">
-                        <Text as="div" size="text3" className="line-clamp-2 text-[#282828] max-lg:font-medium">
+                        <Text
+                          as="div"
+                          size="text3"
+                          className="line-clamp-2 text-[#282828] max-lg:font-medium"
+                        >
                           {item?.variant?.title}
                         </Text>
-                        <Text as="div" size="text3" className="text-[#282828] mt-0.5 2xl:mt-1">
+                        <Text
+                          as="div"
+                          size="text3"
+                          className="text-[#282828] mt-0.5 2xl:mt-1"
+                        >
                           <span className="text-[90%]">
                             Qty: {""}
                             {item?.quantity}
@@ -316,7 +364,11 @@ if (order?.billing_address || order?.shipping_address) {
                         </Text>
                       </div>
                       <div>
-                        <Text as="div" size="text3" className="font-normal text-[#282828] mt-0.5">
+                        <Text
+                          as="div"
+                          size="text3"
+                          className="font-normal text-[#282828] mt-0.5"
+                        >
                           AED {item?.line_total}{" "}
                         </Text>
                       </div>
@@ -325,7 +377,14 @@ if (order?.billing_address || order?.shipping_address) {
                   </div>
                 ))}
 
-                <Text as="div" size="text3" className={cn(labelStyle, "font-bold mb-1! [&>span]:font-bold")}>
+                <Text
+                  as="div"
+                  size="text3"
+                  className={cn(
+                    labelStyle,
+                    "font-bold mb-1! [&>span]:font-bold",
+                  )}
+                >
                   Total Amount : {""}
                   <span>{order?.grand_total}</span>
                 </Text>
@@ -342,7 +401,11 @@ if (order?.billing_address || order?.shipping_address) {
                   >
                     Billing Address
                   </Heading>
-                  <Text as="div" size="text3" className={cn("m-0!", labelStyle)}>
+                  <Text
+                    as="div"
+                    size="text3"
+                    className={cn("m-0!", labelStyle)}
+                  >
                     {order?.billing_address && parse(order?.billing_address)}
                   </Text>
                 </div>
@@ -359,7 +422,11 @@ if (order?.billing_address || order?.shipping_address) {
                   >
                     Shipping Address
                   </Heading>
-                  <Text as="div" size="text3" className={cn("m-0!", labelStyle)}>
+                  <Text
+                    as="div"
+                    size="text3"
+                    className={cn("m-0!", labelStyle)}
+                  >
                     {order?.shipping_address && parse(order?.shipping_address)}
                   </Text>
                 </div>
