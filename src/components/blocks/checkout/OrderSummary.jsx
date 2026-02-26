@@ -83,8 +83,19 @@ const OrderSummary = ({
   const [totalItems, setTotalItems] = useState(initialTotalItems);
   const [appliedCoupon, setAppliedCoupon] = useState(initialCouponStatus);
 
+  // Sync local state when server props update (e.g. after login → cart merge → navigation)
+  useEffect(() => {
+    setProducts(initialProducts ?? []);
+    setCartId(initialCartId ?? null);
+    setSubTotal(initialSubTotal ?? "0.00");
+    setGrandTotal(initialGrandTotal ?? "0.00");
+    setItemsCount(initialItemsCount ?? 0);
+    setTotalItems(initialTotalItems ?? 0);
+    setAppliedCoupon(initialCouponStatus ?? null);
+  }, [initialProducts, initialCartId, initialSubTotal, initialGrandTotal, initialItemsCount, initialTotalItems, initialCouponStatus]);
+
   const [couponCode, setCouponCode] = useState("");
-  const [checkoutList, setCheckoutList] = useState(false);
+  const [checkoutList, setCheckoutList] = useState(true);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("cod");
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
@@ -172,12 +183,6 @@ const OrderSummary = ({
   const handlePlaceOrder = () => {
     const { shippingId, billingId } = getFinalAddressIds();
 
-    // Validate terms accepted
-    if (!termsAccepted) {
-      toast.error(tToast("accept_terms"));
-      return;
-    }
-
     // Validate shipping address is selected
     if (!shippingId) {
       if (selectedBillingAddressId && !useSameAddressForShipping) {
@@ -237,7 +242,7 @@ const OrderSummary = ({
 
   // Check if order can be placed
   const { shippingId, billingId } = getFinalAddressIds();
-  const canPlaceOrder = shippingId && billingId;
+  const canPlaceOrder = shippingId && billingId && termsAccepted;
 
   return (
     <>

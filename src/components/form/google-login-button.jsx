@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 
-export default function GoogleLoginButton({ locale }) {
+export default function GoogleLoginButton({ locale, onSuccess }) {
   const { googleLogin, isLoading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -21,7 +21,11 @@ export default function GoogleLoginButton({ locale }) {
 
       if (result.success) {
         toast.success(t("google_success"));
-        router.replace(redirectTo);
+        if (onSuccess) {
+          onSuccess();
+        } else {
+          router.replace(redirectTo);
+        }
       } else {
         toast.error(result.error || t("google_error"));
       }

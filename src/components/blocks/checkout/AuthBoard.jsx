@@ -6,7 +6,7 @@ import { Text } from "@/components/utils/text";
 import { logoutUser } from "@/store/slices/authSlice";
 import { resetCart } from "@/store/slices/cartSlice";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslations } from "next-intl";
 
@@ -15,7 +15,6 @@ const AuthBoard = ({ locale }) => {
   const router = useRouter();
   const user = useSelector((state) => state.auth.user);
   const tAccount = useTranslations("account");
-  const tCheckout = useTranslations("checkout");
 
   const logout = async () => {
     try {
@@ -36,19 +35,25 @@ const AuthBoard = ({ locale }) => {
         {tAccount("personal_info")}
       </Heading>
       {!user ? (
-        <SoftLoginForm />
+        <SoftLoginForm locale={locale} />
       ) : (
-        <div>
-          <Text as="div" size="text3" className="font-normal text-[#282828] my-0.5 2xl:my-1 [&_span]:font-light [&_span]:text-[#808080]">
-            {/* <span>Connected as</span> {data?.customer?.first_name + " " + data?.customer?.last_name}. */}
-          </Text>
-          <Text as="div" size="text3" className="font-normal text-[#282828] my-0.5 2xl:my-1 [&_span]:font-light [&_span]:text-[#808080]">
-            <span>{tCheckout("not_you")}</span>{" "}
-            <div className="inline hover:underline cursor-pointer" onClick={logout}>
-              {" "}
-              {tAccount("log_out")}
-            </div>
-          </Text>
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex flex-col gap-1 2xl:gap-1.5">
+            {(user?.first_name || user?.name) && (
+              <Text as="div" size="text3" className="text-[#282828] [&_span]:font-light [&_span]:text-[#808080]">
+                <span>{tAccount("name")}</span>{" "}
+                {user?.first_name ? `${user.first_name} ${user.last_name || ""}`.trim() : user?.name}
+              </Text>
+            )}
+            {user?.email && (
+              <Text as="div" size="text3" className="text-[#282828] [&_span]:font-light [&_span]:text-[#808080]">
+                <span>{tAccount("email")}</span>{" "}{user.email}
+              </Text>
+            )}
+          </div>
+          <div className="hover:underline cursor-pointer text-[12px] 2xl:text-[14px] font-light text-[#808080] shrink-0" onClick={logout}>
+            {tAccount("log_out")}
+          </div>
         </div>
       )}
     </div>

@@ -18,11 +18,12 @@ const AddressSection = ({ locale }) => {
   const t = useTranslations("address");
   const useSameAddressForBilling = useSelector((state) => state.checkout.useSameAddressForBilling);
   const useSameAddressForShipping = useSelector((state) => state.checkout.useSameAddressForShipping);
+  const user = useSelector((state) => state.auth.user);
 
   const [showShippingAddressForm, setShowShippingAddressForm] = React.useState(false);
   const [showBillingAddressForm, setShowBillingAddressForm] = React.useState(false);
 
-  const { data, isLoading, isError } = useGetAddressesQuery();
+  const { data, isLoading, isError } = useGetAddressesQuery(undefined, { skip: !user });
 
   const shippingAddresses = data?.data?.shipping || [];
   const billingAddresses = data?.data?.billing || [];

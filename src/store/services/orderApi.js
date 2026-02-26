@@ -78,7 +78,47 @@ export const orderApi = createApi({
         return message;
       },
     }),
+
+    cancelOrder: builder.mutation({
+      query: ({ orderId }) => ({
+        url: `/api/frontend/orders/${orderId}/cancel`,
+        method: "PUT",
+      }),
+      transformErrorResponse: (response) => {
+        const message = response?.data?.message;
+
+        if (!message) {
+          return { en: "Failed to cancel order", ar: "فشل في إلغاء الطلب" };
+        }
+
+        if (typeof message === "string") {
+          return { en: message, ar: message };
+        }
+
+        return message;
+      },
+    }),
+
+    reorderOrder: builder.mutation({
+      query: ({ orderId }) => ({
+        url: `/api/frontend/orders/${orderId}/reorder`,
+        method: "POST",
+      }),
+      transformErrorResponse: (response) => {
+        const message = response?.data?.message;
+
+        if (!message) {
+          return { en: "Failed to reorder", ar: "فشل في إعادة الطلب" };
+        }
+
+        if (typeof message === "string") {
+          return { en: message, ar: message };
+        }
+
+        return message;
+      },
+    }),
   }),
 });
 
-export const { usePlaceOrderMutation, useApplyCouponMutation, useRemoveCouponMutation } = orderApi;
+export const { usePlaceOrderMutation, useApplyCouponMutation, useRemoveCouponMutation, useCancelOrderMutation, useReorderOrderMutation } = orderApi;

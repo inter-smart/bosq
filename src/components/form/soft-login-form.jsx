@@ -12,8 +12,12 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { useDispatch } from "react-redux";
+import { fetchCart } from "@/store/slices/cartSlice";
+import { fetchUserProfile } from "@/store/slices/authSlice";
+import GoogleLoginButton from "@/components/form/google-login-button";
 
 // Shared styles
 const labelStyle = cn("text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]");
@@ -24,11 +28,15 @@ const inputStyle = cn(
 
 const errorStyle = cn("text-[#f17423]");
 
-export default function SoftLoginForm() {
+export default function SoftLoginForm({ locale }) {
   const { login } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const dispatch = useDispatch();
   const tAuth = useTranslations("auth");
   const tValidation = useTranslations("validation");
+  const tCommon = useTranslations("common");
 
   const formSchema = z.object({
     email: z.string().email(tValidation("email.invalid_format")).max(100, tValidation("email.max")),
@@ -57,18 +65,35 @@ export default function SoftLoginForm() {
     });
 
     if (!result.success) {
-      setError(result.error || tAuth("login.error"));
+      const errMsg = result.error?.message || result.error || tAuth("login.error");
+      setError(typeof errMsg === "string" ? errMsg : tAuth("login.error"));
+      setLoading(false);
+      return;
     }
-    console.log("REFRESHING");
-    router.refresh();
-    console.log("REFRESHING");
+
+    // Fetch full user profile (name, etc.) and sync cart after login
+    dispatch(fetchUserProfile());
+    dispatch(fetchCart());
+
+    // Navigate to the same checkout URL to force server components to re-fetch
+    // the merged cart while preserving the ?flow= param
+    const currentUrl = `${pathname}${searchParams.toString() ? `?${searchParams.toString()}` : ""}`;
+    router.push(currentUrl);
 
     setLoading(false);
+  };
+
+  const handleGoogleSuccess = () => {
+    dispatch(fetchUserProfile());
+    dispatch(fetchCart());
+    const currentUrl = `${pathname}${searchParams.toString() ? `?${searchParams.toString()}` : ""}`;
+    router.push(currentUrl);
   };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-wrap items-start -mx-4 [&>*]:px-4 [&>*]:py-2">
+
         {/* Email */}
         <FormField
           control={form.control}
@@ -123,12 +148,25 @@ export default function SoftLoginForm() {
         />
 
         {/* Submit Button */}
-        <div className="w-full mt-2 flex">
+        <div className="w-full mt-2 flex flex-col items-start gap-2">
           <Button type="submit" variant="black" disabled={loading} className="min-w-[120px] 2xl:min-w-40">
             {loading ? tAuth("login.loading") : tAuth("login.submit")}
           </Button>
+          {error && (
+            <p className="text-[12px] 2xl:text-[14px] font-light text-[#f17423]">{error}</p>
+          )}
         </div>
       </form>
+
+      {/* Divider */}
+      <div className="flex items-center gap-3 my-1 xl:my-2">
+        <div className="flex-1 h-px bg-[#e9e9e9]" />
+        <span className="text-[11px] 2xl:text-[13px] font-light text-[#aeaeae]">{tCommon("or")}</span>
+        <div className="flex-1 h-px bg-[#e9e9e9]" />
+      </div>
+
+      {/* Google Login */}
+      <GoogleLoginButton locale={locale} onSuccess={handleGoogleSuccess} />
     </Form>
   );
 }

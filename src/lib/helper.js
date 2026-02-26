@@ -251,7 +251,7 @@ export async function logout() {
 
 // fetch user profile
 export async function fetchUserProfileAPI() {
-  return fetchFromAPIWithCredentials("/api/frontend/auth/profile", {
+  return fetchFromAPIWithCredentials("/api/frontend/profile/my-profile", {
     method: "GET",
   });
 }
