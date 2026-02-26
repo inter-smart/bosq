@@ -95,7 +95,7 @@ const OrderSummary = ({
   }, [initialProducts, initialCartId, initialSubTotal, initialGrandTotal, initialItemsCount, initialTotalItems, initialCouponStatus]);
 
   const [couponCode, setCouponCode] = useState("");
-  const [checkoutList, setCheckoutList] = useState(false);
+  const [checkoutList, setCheckoutList] = useState(true);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("cod");
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);

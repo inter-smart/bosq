@@ -1,13 +1,15 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/utils/heading";
 import { Text } from "@/components/utils/text";
 
 import { cn } from "@/lib/utils";
 import parse from "html-react-parser";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -15,11 +17,24 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { X } from "lucide-react";
+import { useReorderOrderMutation } from "@/store/services/orderApi";
 
 const labelStyle = cn("text-[#282828] my-2 xl:my-2.5 2xl:my-4 [&>span]:font-normal flex justify-between");
 
 export default function OrdersDetailModal({ children, order, locale }) {
+  const router = useRouter();
+  const [reorderOrder, { isLoading: isReordering }] = useReorderOrderMutation();
+
+  const handleReorder = async () => {
+    try {
+      await reorderOrder({ orderId: order?.id }).unwrap();
+      toast.success("Items added to cart");
+      router.push(`/${locale}/cart`);
+    } catch (error) {
+      toast.error(typeof error?.en === "string" ? error.en : "Failed to reorder");
+    }
+  };
+
   return (
     <Dialog dir={locale === "ar" ? "rtl" : "ltr"}>
       <DialogTrigger asChild>{children}</DialogTrigger>
@@ -152,10 +167,11 @@ export default function OrdersDetailModal({ children, order, locale }) {
           </Button>
           <Button
             variant={"white"}
-            disabled={false}
+            disabled={isReordering}
+            onClick={handleReorder}
             className="min-w-[60px] xl:min-w-[80px] 2xl:min-w-[120px] border border-black hover:border-[#f17423]"
           >
-            Reorder
+            {isReordering ? "Adding..." : "Reorder"}
           </Button>
         </DialogFooter>
       </DialogContent>

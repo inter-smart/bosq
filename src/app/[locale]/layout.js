@@ -84,7 +84,7 @@ export default async function RootLayout({ children, params }) {
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ReduxProvider>
             <NuqsAdapter>{children}</NuqsAdapter>
-            <Toaster position={locale === "ar" ? "bottom-left" : "bottom-right"} richColors closeButton />
+            <Toaster position={locale === "ar" ? "bottom-left" : "bottom-right"} richColors closeButton visibleToasts={1} />
           </ReduxProvider>
         </NextIntlClientProvider>
       </body>
