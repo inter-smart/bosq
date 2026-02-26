@@ -61,7 +61,7 @@ export default function NewsSection({ data, locale }) {
               className="min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-40 mb-0"
               asChild
             >
-              <Link href={"/news"}>
+              <Link href={`/${locale}/news`}>
                 {locale == "ar" ? "قراءة المزيد" : "View All"}
               </Link>
             </Button>

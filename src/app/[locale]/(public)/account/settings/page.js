@@ -39,6 +39,7 @@ export default async function SettingsPage({ params }) {
     return <NotFound />
   }
 
+  console.log(error)
 
 
 

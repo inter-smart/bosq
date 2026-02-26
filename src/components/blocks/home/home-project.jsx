@@ -119,7 +119,7 @@ export default function HomeProject({ data, locale, isEN }) {
                           asChild
                         >
                           <Link
-                            href={`/projects/${item?.slug}` || "/projects/slug"}
+                            href={`/${locale}/projects/${item?.slug}` || "/projects/slug"}
                           >
                             {t("view_projects")}
                           </Link>
