@@ -83,6 +83,17 @@ const OrderSummary = ({
   const [totalItems, setTotalItems] = useState(initialTotalItems);
   const [appliedCoupon, setAppliedCoupon] = useState(initialCouponStatus);
 
+  // Sync local state when server props update (e.g. after login → cart merge → navigation)
+  useEffect(() => {
+    setProducts(initialProducts ?? []);
+    setCartId(initialCartId ?? null);
+    setSubTotal(initialSubTotal ?? "0.00");
+    setGrandTotal(initialGrandTotal ?? "0.00");
+    setItemsCount(initialItemsCount ?? 0);
+    setTotalItems(initialTotalItems ?? 0);
+    setAppliedCoupon(initialCouponStatus ?? null);
+  }, [initialProducts, initialCartId, initialSubTotal, initialGrandTotal, initialItemsCount, initialTotalItems, initialCouponStatus]);
+
   const [couponCode, setCouponCode] = useState("");
   const [checkoutList, setCheckoutList] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("cod");

@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import dynamic from "next/dynamic";
@@ -31,6 +32,7 @@ export default function HeaderNavigation({ locale, isDesktop, pathname, onNaviga
   const [hoveredSubmenu, setHoveredSubmenu] = useState(null);
   const [hoveredSubSubmenu, setHoveredSubSubmenu] = useState(null);
 
+  const router = useRouter();
   const isEN = locale === "en";
   const getNavigationMenuTriggerStyle = (isActive) => {
     const baseStyle =
@@ -76,7 +78,12 @@ export default function HeaderNavigation({ locale, isDesktop, pathname, onNaviga
             <motion.div key={i} variants={itemVariants}>
               {item?.hasSubmenu ? (
                 <NavigationMenuItem value={"toplevel" + i}>
-                  <NavigationMenuTrigger className={cn(getNavigationMenuTriggerStyle(isActive))}>
+                  <NavigationMenuTrigger
+                    className={cn(getNavigationMenuTriggerStyle(isActive))}
+                    onClick={() => {
+                      if (item.slug) router.push(`/${locale}${item.slug}`);
+                    }}
+                  >
                     {isEN ? item?.name : item?.name_ar}
                   </NavigationMenuTrigger>
                   <NavigationMenuContent
