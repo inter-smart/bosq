@@ -18,12 +18,18 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useReorderOrderMutation } from "@/store/services/orderApi";
+import { generateInvoiceHTML } from "@/lib/invoice-template";
+import html2canvas from 'html2canvas-pro';
+import { useState } from "react";
 
 const labelStyle = cn("text-[#282828] my-2 xl:my-2.5 2xl:my-4 [&>span]:font-normal flex justify-between");
 
-export default function OrdersDetailModal({ children, order, locale }) {
+export default function OrdersDetailModal({ children, order, locale, userName }) {
   const router = useRouter();
   const [reorderOrder, { isLoading: isReordering }] = useReorderOrderMutation();
+
+
+  const [Loading, setLoading] = useState(false);
 
   const handleReorder = async () => {
     try {
@@ -32,6 +38,51 @@ export default function OrdersDetailModal({ children, order, locale }) {
       router.push(`/${locale}/cart`);
     } catch (error) {
       toast.error(typeof error?.en === "string" ? error.en : "Failed to reorder");
+    }
+  };
+
+  const handleDownloadInvoice = async () => {
+    setLoading(true)
+    try {
+      const jsPDF = (await import("jspdf")).default;
+      const html = generateInvoiceHTML(order, locale, userName);
+
+      const container = document.createElement("div");
+      container.style.position = "absolute";
+      container.style.left = "-9999px";
+      container.style.top = "0";
+      container.style.width = "700px";
+      container.innerHTML = html;
+      document.body.appendChild(container);
+
+
+      const canvas = await html2canvas(container, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: "#ffffff",
+      });
+
+      const imgData = canvas.toDataURL("image/jpeg", 0.98);
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "pt",
+        format: [canvas.width / 2, canvas.height / 2],
+      });
+
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+
+      pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`invoice-${order?.order_id || "BOSQ"}.pdf`);
+
+      document.body.removeChild(container);
+      setLoading(false)
+      toast.success("Invoice downloaded successfully");
+    } catch (error) {
+      console.error("PDF Download Error:", error);
+      toast.error("Failed to download invoice. Please try again.");
+      setLoading(false)
     }
   };
 
@@ -162,8 +213,13 @@ export default function OrdersDetailModal({ children, order, locale }) {
         </div>
 
         <DialogFooter className={"sm:justify-center mt-2 xl:mt-4 2xl:mt-10"}>
-          <Button variant={"black"} disabled={false} className="min-w-[120px] xl:min-w-[155px] 2xl:min-w-[200px]">
-            Download Invoice
+          <Button
+            variant={"black"}
+            disabled={Loading}
+            onClick={handleDownloadInvoice}
+            className="min-w-[120px] xl:min-w-[155px] 2xl:min-w-[200px]"
+          >
+            {Loading ? "Downloading..." : "Download Invoice"}
           </Button>
           <Button
             variant={"white"}
