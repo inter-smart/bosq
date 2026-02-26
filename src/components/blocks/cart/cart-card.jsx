@@ -90,10 +90,12 @@ export default function CartCard({ product, isEn }) {
   // Get image from product data - handle both old and new data structure
   const productImage = product?.media_path || product?.variant?.media_path || product?.image;
   const productTitle = product?.product?.title || product?.title;
-  const productSlug = product?.product?.slug || product?.slug;
+  const productTitleAr = product?.product?.title_ar || product?.title_ar;
+  const designTitle = product?.design_title || product?.desgin_title;
+  const designTitleAr = product?.design_title_ar || product?.desgin_title_ar;
   const productPrice = product?.price;
   const isProductOutOfStock = product?.is_sold_out;
-  const isMaxQuantity = stock != null && quantity >= stock;
+  const productUrl = `/${isEn ? "en" : "ar"}/products/${product?.base_slug}${product?.query_params}`;
 
   return (
     <Suspense fallback={<CartCardSkeleton />}>
@@ -113,7 +115,7 @@ export default function CartCard({ product, isEn }) {
           {productImage && (
             <Image
               src={productImage}
-              alt={productSlug || "product"}
+              alt={productTitle || "product"}
               width={168}
               height={168}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -123,12 +125,14 @@ export default function CartCard({ product, isEn }) {
         </div>
         <div className="w-full sm:w-[calc(100%-100px)] xl:w-[calc(100%-150px)] 2xl:w-[calc(100%-200px)] sm:px-2.5 xl:px-4 2xl:px-5">
           <Heading as="div" size="heading3" className="truncate text-[#282828] mb-1 xl:mb-2 max-lg:font-medium">
-            <Link href={`/products/${productSlug}`}>{productTitle || productSlug}</Link>
+            <Link href={`${productUrl}`}>{isEn ? productTitle : productTitleAr}</Link>
           </Heading>
-          <Text as="div" size="text3" className="leading-tight truncate text-[#282828] mb-2 xl:mb-4"></Text>
+          <Text as="div" size="text3" className="leading-tight truncate text-[#282828] mb-2 xl:mb-4">
+            {isEn ? designTitle : designTitleAr}
+          </Text>
           <div className="flex justify-between items-center gap-1 mb-2 sm:mb-3 xl:mb-4 2xl:mb-6">
             <Text as="div" size="text3" className="font-normal text-[#282828]">
-              <Link href={`/products/${productSlug}`}>
+              <Link href={`${productUrl}`}>
                 AED {productPrice} <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc]">{tCommon("inc_tax")}</span>
               </Link>
             </Text>
