@@ -212,6 +212,10 @@ export default function AddressForm({
   }, [selectedShippingCountry]);
 
   const onSubmit = async (values) => {
+    if (!executeRecaptcha) {
+      toast.error(t("added_failed"));
+      return;
+    }
     const recaptchaToken = await executeRecaptcha("address_form");
 
     try {

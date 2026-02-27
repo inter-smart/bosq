@@ -25,6 +25,7 @@ import { useDeleteAddressMutation, useUpdateDefaultAddressMutation } from "@/sto
 import { toast } from "sonner";
 import { setSelectedShippingAddress, setSelectedBillingAddress } from "@/store/slices/checkoutSlice";
 import { useTranslations } from "next-intl";
+import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
 
 const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress, disabled = false }) => {
   const dispatch = useDispatch();
@@ -256,7 +257,9 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
           </AlertDialogHeader>
 
           <div className="max-h-[70vh] mask-[linear-gradient(to_bottom,transparent_0%,white_2%,white_98%,transparent_100%)] overflow-y-auto overflow-x-hidden">
-            <UpdateAddressForm locale={locale} addressData={editingAddress} onSuccess={() => setIsEditDialogOpen(false)} />
+            <RecaptchaProvider>
+              <UpdateAddressForm locale={locale} addressData={editingAddress} onSuccess={() => setIsEditDialogOpen(false)} />
+            </RecaptchaProvider>
           </div>
         </AlertDialogContent>
       </AlertDialog>
