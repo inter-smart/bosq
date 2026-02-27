@@ -134,7 +134,7 @@ export default function SearchDialog({ children, locale }) {
             className={cn(
               "py-8 sm:py-8 xl:py-10 2xl:py-12",
               // "lg:h-[calc(100vh-var(--header-y))]",
-              "lg:h-screen",
+              "h-screen",
               "mask-[linear-gradient(to_bottom,transparent_0%,white_4%,white_98%,transparent_100%)] overflow-y-auto",
             )}
           >
@@ -239,15 +239,60 @@ export default function SearchDialog({ children, locale }) {
                           : `Showing ${slicedProducts.length} products`}
                     </Heading>
 
-                    <div className="flex flex-wrap -mx-1 sm:-mx-1.5 xl:-mx-2 2xl:-mx-2.5 [&>*]:p-1 sm:[&>*]:p-1.5 xl:[&>*]:p-2 2xl:[&>*]:p-2.5">
+                    {/* Mobile list */}
+                    <div className="flex flex-col gap-2 sm:hidden">
                       {products?.slice(0, 5)?.map((item) => (
-                        <div
-                          key={item.id}
-                          className="w-full 2xs:w-1/2 sm:w-1/3 md:w-1/3"
-                        >
+                        <DialogClose asChild key={item.id}>
+                          <Link
+                            href={`/${locale}/products/${item?.baseSlug}?sku=${item?.slug}`}
+                            onClick={() => handleAddToLocalStorage(item)}
+                            className="flex items-center gap-3 bg-white rounded-[4px] p-2"
+                          >
+                            <div className="w-14 h-14 shrink-0 overflow-hidden rounded-[4px] bg-[#f4f4f4] relative">
+                              <Image
+                                src={item?.media?.path ?? "/images/placeholder.jpg"}
+                                alt={item?.media?.alt ?? item?.title}
+                                width={56}
+                                height={56}
+                                className="w-full h-full object-cover"
+                                quality={80}
+                              />
+                              {!(item?.stock > 0) && (
+                                <div className="absolute inset-0 bg-white/70 flex items-center justify-center">
+                                  <span className="text-[9px] font-medium text-[#282828]">Out of Stock</span>
+                                </div>
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-[10px] leading-normal font-light truncate text-[#bbbcbc]">
+                                {item?.category?.name}
+                              </p>
+                              <p className="text-[13px] leading-normal font-normal truncate text-[#282828]">
+                                {item?.title}
+                              </p>
+                            </div>
+                          </Link>
+                        </DialogClose>
+                      ))}
+                      {products.length > 5 && (
+                        <DialogClose asChild>
+                          <Link
+                            href={`/${locale}/products`}
+                            className="text-[12px] text-black underline text-center py-1"
+                          >
+                            See All Results ({products.length})
+                          </Link>
+                        </DialogClose>
+                      )}
+                    </div>
+
+                    {/* sm+ grid */}
+                    <div className="hidden sm:flex flex-wrap -mx-1.5 xl:-mx-2 2xl:-mx-2.5 [&>*]:p-1.5 xl:[&>*]:p-2 2xl:[&>*]:p-2.5">
+                      {products?.slice(0, 5)?.map((item) => (
+                        <div key={item.id} className="w-1/3 md:w-1/3">
                           <div className="group w-full block">
                             <div className="w-full aspect-[550/440] overflow-hidden rounded-[4px] border border-white mb-2 2xl:mb-3 bg-white relative z-0">
-                              {!item?.stock > 0 && (
+                              {!(item?.stock > 0) && (
                                 <div className="w-full h-full bg-[#f4f4f4]/90 flex items-center justify-center absolute z-2 inset-0">
                                   <Button
                                     variant={"black"}
@@ -259,9 +304,7 @@ export default function SearchDialog({ children, locale }) {
                                 </div>
                               )}
                               <Image
-                                src={
-                                  item?.media?.path ?? "/images/placeholder.jpg"
-                                }
+                                src={item?.media?.path ?? "/images/placeholder.jpg"}
                                 alt={item?.media?.alt}
                                 width={550}
                                 height={440}
@@ -270,10 +313,7 @@ export default function SearchDialog({ children, locale }) {
                               />
                               {item?.hoverMedia?.path && (
                                 <Image
-                                  src={
-                                    item?.hoverMedia?.path ??
-                                    "/images/placeholder.jpg"
-                                  }
+                                  src={item?.hoverMedia?.path ?? "/images/placeholder.jpg"}
                                   alt={item?.hoverMedia?.alt}
                                   width={550}
                                   height={440}
@@ -288,7 +328,6 @@ export default function SearchDialog({ children, locale }) {
                                 size="none"
                                 className="text-[10px] xl:text-[8px] 2xl:text-[10px] 3xl:text-[12px] leading-normal font-light truncate text-[#bbbcbc] mb-0.5"
                               >
-                                {" "}
                                 {item?.stock > 0 ? (
                                   <DialogClose asChild>
                                     <Link
@@ -298,9 +337,7 @@ export default function SearchDialog({ children, locale }) {
                                     </Link>
                                   </DialogClose>
                                 ) : (
-                                  <span className="opacity-50">
-                                    {item?.category?.name}
-                                  </span>
+                                  <span className="opacity-50">{item?.category?.name}</span>
                                 )}
                               </Heading>
                               <Heading
@@ -311,9 +348,7 @@ export default function SearchDialog({ children, locale }) {
                                 <DialogClose asChild>
                                   <Link
                                     href={`/${locale}/products/${item?.baseSlug}?sku=${item?.slug}`}
-                                    onClick={() =>
-                                      handleAddToLocalStorage(item)
-                                    }
+                                    onClick={() => handleAddToLocalStorage(item)}
                                   >
                                     {item?.title}
                                   </Link>
@@ -324,14 +359,10 @@ export default function SearchDialog({ children, locale }) {
                         </div>
                       ))}
                       {products.length > 5 && (
-                        <div className="w-full 2xs:w-1/2 sm:w-1/3 md:w-1/3">
+                        <div className="w-1/3 md:w-1/3">
                           <div className="group w-full block">
                             <div className="w-full aspect-[550/440] overflow-hidden rounded-[4px] border border-[#e9e9e9] bg-[#f4f4f4] flex items-center justify-center">
-                              <Text
-                                as="div"
-                                size="text3"
-                                className="font-normal text-black hover:underline"
-                              >
+                              <Text as="div" size="text3" className="font-normal text-black hover:underline">
                                 <DialogClose asChild>
                                   <Link href={`/${locale}/products`}>
                                     See All Results ({products.length})
