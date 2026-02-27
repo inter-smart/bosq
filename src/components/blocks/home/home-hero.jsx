@@ -151,26 +151,43 @@ export default function HomeHero({ data, locale }) {
                   >
                     <source src={item?.media?.desktop?.path} type="video/mp4" />
                   </video>
+                ) : item?.media?.mobile?.path ? (
+                  <>
+                    <div className="absolute -z-2 inset-0 sm:hidden">
+                      <Image
+                        src={item.media.mobile.path}
+                        alt={locale === "ar" ? item?.media_alt_ar : item?.media_alt}
+                        fill
+                        sizes="100vw"
+                        className="object-cover"
+                        priority={index === 0}
+                        quality={90}
+                      />
+                    </div>
+                    <div className="absolute -z-2 inset-0 max-sm:hidden">
+                      <Image
+                        src={item.media.desktop.path}
+                        alt={locale === "ar" ? item?.media_alt_ar : item?.media_alt}
+                        fill
+                        sizes="(max-width: 1200px) 100vw, 80vw"
+                        className="object-cover"
+                        priority={index === 0}
+                        quality={90}
+                      />
+                    </div>
+                  </>
                 ) : (
-                  <picture className="absolute -z-2 inset-0">
-                    <source
-                      media="(max-width: 640px)"
-                      srcSet={item?.media?.mobile?.path}
-                    />
+                  <div className="absolute -z-2 inset-0">
                     <Image
                       src={item?.media?.desktop?.path}
-                      alt={
-                        locale === "ar" ? item?.media_alt_ar : item?.media_alt
-                      }
+                      alt={locale === "ar" ? item?.media_alt_ar : item?.media_alt}
                       fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 80vw"
-                      className="-z-2 object-cover"
-                      placeholder="blur"
-                      blurDataURL="/images/placeholder.jpg"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 80vw"
+                      className="object-cover"
                       priority={index === 0}
                       quality={90}
                     />
-                  </picture>
+                  </div>
                 )}
 
                 <div className="container">

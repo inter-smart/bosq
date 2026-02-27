@@ -34,7 +34,7 @@ export default function SearchDialog({ children, locale, data }) {
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent showCloseButton={false} className="inset-0 translate-none rounded-none p-0 max-w-full sm:max-w-full mt-(--header-y) mt-0">
+      <DialogContent showCloseButton={false} style={{ position: "fixed", inset: 0, transform: "none", display: "block" }} className="rounded-none border-none p-0 max-w-full bg-[#f4f4f4] shadow-lg overflow-y-auto">
         <DialogHeader className={"sr-only"}>
           <DialogTitle>Search products</DialogTitle>
           <DialogDescription>Make changes to your profile here. Click save when you&apos;re done.</DialogDescription>
@@ -55,20 +55,7 @@ export default function SearchDialog({ children, locale, data }) {
           </Button>
         </DialogClose>
 
-        <div
-          className={cn(
-            "w-full min-h-10 bg-[#f4f4f4] transition duration-800 shadow-lg",
-            //  "absolute z-10 top-(--header-y) left-0 right-0 "
-          )}
-        >
-          <div
-            className={cn(
-              "py-8 sm:py-8 xl:py-10 2xl:py-12",
-              // "lg:h-[calc(100vh-var(--header-y))]",
-              "lg:h-screen",
-              "mask-[linear-gradient(to_bottom,transparent_0%,white_4%,white_98%,transparent_100%)] overflow-y-auto",
-            )}
-          >
+        <div className="py-8 sm:py-8 xl:py-10 2xl:py-12">
             <div className="container">
               <div className="flex flex-wrap -mx-4 xl:-mx-10 2xl:-mx-16 [&>div]:px-4 xl:[&>div]:px-10 2xl:[&>div]:px-16">
                 <div className="w-full sm:w-[200px] lg:w-[220px] xl:w-[420px] 2xl:w-[468px] 3xl:w-[576px]">
@@ -130,11 +117,11 @@ export default function SearchDialog({ children, locale, data }) {
                 <MediaQuery minWidth={639}>
                   <div className="w-full sm:w-[calc(100%-200px)] lg:w-[calc(100%-220px)] xl:w-[calc(100%-420px)] 2xl:w-[calc(100%-468px)] 3xl:w-[calc(100%-576px)]">
                     <Heading as="div" size="heading4" className="text-[#282828] my-2 xl:my-3 2xl:my-4">
-                      Found {defaultSuggestionData?.no_of_items} results for "Ergonomic"
+                      Found {data?.no_of_items} results for "Ergonomic"
                     </Heading>
 
                     <div className="flex flex-wrap -mx-1 sm:-mx-1.5 xl:-mx-2 2xl:-mx-2.5 [&>*]:p-1 sm:[&>*]:p-1.5 xl:[&>*]:p-2 2xl:[&>*]:p-2.5">
-                      {defaultSuggestionData?.items?.slice(0, 5).map((item) => (
+                      {data?.items?.slice(0, 5).map((item) => (
                         <div key={item.id} className="w-full 2xs:w-1/2 sm:w-1/3 md:w-1/3">
                           <div className="group w-full block">
                             <div className="w-full aspect-[550/440] overflow-hidden rounded-[4px] border border-white mb-2 2xl:mb-3 bg-white relative z-0">
@@ -187,12 +174,12 @@ export default function SearchDialog({ children, locale, data }) {
                           </div>
                         </div>
                       ))}
-                      {defaultSuggestionData?.items?.length > 5 && (
+                      {data?.items?.length > 5 && (
                         <div className="w-full 2xs:w-1/2 sm:w-1/3 md:w-1/3">
                           <div className="group w-full block">
                             <div className="w-full aspect-[550/440] overflow-hidden rounded-[4px] border border-[#e9e9e9] bg-[#f4f4f4] flex items-center justify-center">
                               <Text as="div" size="text3" className="font-normal text-black hover:underline">
-                                <Link href={`${locale}/search-results`}>See All Results ({defaultSuggestionData?.no_of_items})</Link>
+                                <Link href={`${locale}/search-results`}>See All Results ({data?.no_of_items})</Link>
                               </Text>
                             </div>
                           </div>
@@ -203,7 +190,6 @@ export default function SearchDialog({ children, locale, data }) {
                 </MediaQuery>
               </div>
             </div>
-          </div>
         </div>
       </DialogContent>
     </Dialog>

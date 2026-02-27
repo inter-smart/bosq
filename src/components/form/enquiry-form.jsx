@@ -80,6 +80,11 @@ const isEn = locale === "en";
   const URL = `${API_URL}/api/frontend/enquiries/contact`;
 
   const onSubmit = async (values) => {
+    if (!executeRecaptcha) {
+      toast.error(t("submit_error"));
+      return;
+    }
+
     setLoading(true);
     setSuccess(null);
 
@@ -102,16 +107,16 @@ const isEn = locale === "en";
       const data = await res.json();
 
       if (!data.success) {
-        toast.error(isEn? data?.message?.en: data?.message?.ar || t("submit_error"));
-      }
-      else{
-        toast.success(isEn? data?.message?.en: data?.message?.ar || t("success_message"));
+        toast.error((isEn ? data?.message?.en : data?.message?.ar) || t("submit_error"));
+      } else {
+        const msg = (isEn ? data?.message?.en : data?.message?.ar) || t("success_message");
+        toast.success(msg);
         form.reset();
-        setSuccess(isEn? data?.message?.en: data?.message?.ar || t("success_message"));
+        setSuccess(msg);
       }
     } catch (err) {
-      setSuccess(isEn ? err?.en : err?.ar || t("submit_error"));
-      toast.error(isEn ? err?.en : err?.ar || t("submit_error"));
+      const msg = (isEn ? err?.en : err?.ar) || t("submit_error");
+      toast.error(msg);
     }
 
     setLoading(false);

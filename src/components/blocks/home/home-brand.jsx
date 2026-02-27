@@ -46,7 +46,7 @@ export default function HomeBrand({ data, locale, isEN }) {
         )}
       >
         <div className="w-full max-w-full xl:max-w-[1040px] 2xl:max-w-[1260px] 3xl:max-w-[1620px] mx-auto">
-          <div className="overflow-visible" ref={emblaRef}>
+          <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex items-center touch-pan-y touch-pinch-zoom -mx-3 xl:-mx-6 2xl:-mx-8">
               {data?.list?.map((item, index) => (
                 <div

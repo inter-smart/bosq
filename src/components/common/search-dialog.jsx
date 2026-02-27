@@ -96,7 +96,7 @@ export default function SearchDialog({ children, locale }) {
 
   const slicedProducts = products.length < 5 ? products : products.slice(0, 5);
   return (
-    <Dialog>
+    <Dialog onOpenChange={(open) => { if (!open) setSearchQuery(""); }}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent
         showCloseButton={false}
