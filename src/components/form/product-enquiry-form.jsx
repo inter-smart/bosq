@@ -113,6 +113,7 @@ export default function ProductEnquiryForm({ productId, onClose, locale }) {
         );
       }
       form.reset();
+      setSelectedCountry("ae");
       setUploadedFile(null);
       toast.success(isEN ? data.message.en : data.message.ar);
       onClose?.();
@@ -122,9 +123,9 @@ export default function ProductEnquiryForm({ productId, onClose, locale }) {
       toast.error(
         isEN
           ? apiError?.message?.en ||
-              tErrors("invalid_content", { field: "form" })
+          tErrors("invalid_content", { field: "form" })
           : apiError?.message?.ar ||
-              tErrors("invalid_content", { field: "form" }),
+          tErrors("invalid_content", { field: "form" }),
       );
     }
   };
@@ -210,16 +211,27 @@ export default function ProductEnquiryForm({ productId, onClose, locale }) {
               <FormControl>
                 <PhoneInput
                   defaultCountry="ae"
-                  {...field}
+                  value={field.value}
+                  onChange={(phone, meta) => {
+                    const countryIso = meta.country.iso2;
+                    const callingCode = `+${meta.country.callingCode}`;
+
+                    if (phone !== field.value) {
+                      if (!field.value && phone.trim() === callingCode) {
+                        return;
+                      }
+                      field.onChange(phone);
+                    }
+
+                    if (countryIso !== selectedCountry) {
+                      setSelectedCountry(countryIso);
+                    }
+                  }}
                   className={cn(
                     inputStyle,
                     "w-full p-0 [&_input]:flex-1  [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px] [--react-international-phone-flag-width:20px] [--react-international-phone-flag-height:20px]",
                   )}
                   placeholder={t("enter_phone")}
-                  onChange={(phone, meta) => {
-                    field.onChange(phone);
-                    setSelectedCountry(meta.country.iso2);
-                  }}
                 />
               </FormControl>
               <FormMessage />

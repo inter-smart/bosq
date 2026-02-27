@@ -54,15 +54,15 @@ export default function EnquiryForm({ locale }) {
   const [selectedCountry, setSelectedCountry] = useState("ae");
 
   // ✅ Validation schema
-const formSchema = z.object({
-  name: commonValidations.name(t("full_name")),
-  email: commonValidations.email(),
-  phone: commonValidations.phone(selectedCountry.toUpperCase()),
-  additionalDetails: commonValidations.message(t("message")),
-});
+  const formSchema = z.object({
+    name: commonValidations.name(t("full_name")),
+    email: commonValidations.email(),
+    phone: commonValidations.phone(selectedCountry.toUpperCase()),
+    additionalDetails: commonValidations.message(t("message")),
+  });
 
 
-const isEn = locale === "en";
+  const isEn = locale === "en";
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -102,12 +102,13 @@ const isEn = locale === "en";
       const data = await res.json();
 
       if (!data.success) {
-        toast.error(isEn? data?.message?.en: data?.message?.ar || t("submit_error"));
+        toast.error(isEn ? data?.message?.en : data?.message?.ar || t("submit_error"));
       }
-      else{
-        toast.success(isEn? data?.message?.en: data?.message?.ar || t("success_message"));
+      else {
+        toast.success(isEn ? data?.message?.en : data?.message?.ar || t("success_message"));
         form.reset();
-        setSuccess(isEn? data?.message?.en: data?.message?.ar || t("success_message"));
+        setSelectedCountry("ae");
+        setSuccess(isEn ? data?.message?.en : data?.message?.ar || t("success_message"));
       }
     } catch (err) {
       setSuccess(isEn ? err?.en : err?.ar || t("submit_error"));
@@ -157,8 +158,19 @@ const isEn = locale === "en";
                 <PhoneInput
                   value={field.value}
                   onChange={(phone, meta) => {
-                    field.onChange(phone);
-                    setSelectedCountry(meta.country.iso2);
+                    const countryIso = meta.country.iso2;
+                    const callingCode = `+${meta.country.callingCode}`;
+
+                    if (phone !== field.value) {
+                      if (!field.value && phone.trim() === callingCode) {
+                        return;
+                      }
+                      field.onChange(phone);
+                    }
+
+                    if (countryIso !== selectedCountry) {
+                      setSelectedCountry(countryIso);
+                    }
                   }}
                   defaultCountry="ae"
                   dir={locale === "ar" ? "rtl" : "ltr"}
