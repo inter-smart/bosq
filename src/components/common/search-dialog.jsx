@@ -7,12 +7,6 @@ import { PlaceholdersAndVanishInput } from "../ui/placeholders-and-vanish-input"
 import { Heading } from "../utils/heading";
 import { Text } from "../utils/text";
 
-import dynamic from "next/dynamic";
-
-const MediaQuery = dynamic(() => import("react-responsive"), {
-  ssr: false,
-});
-
 import {
   Dialog,
   DialogClose,
@@ -230,7 +224,6 @@ export default function SearchDialog({ children, locale }) {
                   ))}
                 </div>
 
-                <MediaQuery minWidth={639}>
                   <div className="w-full sm:w-[calc(100%-200px)] lg:w-[calc(100%-220px)] xl:w-[calc(100%-420px)] 2xl:w-[calc(100%-468px)] 3xl:w-[calc(100%-576px)]">
                     <Heading
                       as="div"
@@ -351,7 +344,6 @@ export default function SearchDialog({ children, locale }) {
                       )}
                     </div>
                   </div>
-                </MediaQuery>
               </div>
             </div>
           </div>
