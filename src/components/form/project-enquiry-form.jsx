@@ -45,7 +45,6 @@ export default function ProjectEnquiryForm({ projectId, locale }) {
   const isEN = locale === "en";
 
   const t = useTranslations("form");
-  console.log("project id", projectId);
 
   const tErrors = useTranslations("errors");
 
@@ -104,7 +103,7 @@ export default function ProjectEnquiryForm({ projectId, locale }) {
           isEN ? data?.message?.en : data?.message?.ar || t("success_message"),
         );
         form.reset();
-      
+        setSelectedCountry("ae");
         setLoading(false);
       }
     } catch (err) {
@@ -155,8 +154,19 @@ export default function ProjectEnquiryForm({ projectId, locale }) {
                 <PhoneInput
                   value={field.value}
                   onChange={(phone, meta) => {
-                    field.onChange(phone);
-                    setSelectedCountry(meta.country.iso2);
+                    const countryIso = meta.country.iso2;
+                    const callingCode = `+${meta.country.callingCode}`;
+
+                    if (phone !== field.value) {
+                      if (!field.value && phone.trim() === callingCode) {
+                        return;
+                      }
+                      field.onChange(phone);
+                    }
+
+                    if (countryIso !== selectedCountry) {
+                      setSelectedCountry(countryIso);
+                    }
                   }}
                   defaultCountry="ae"
                   dir={locale === "ar" ? "rtl" : "ltr"}

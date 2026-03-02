@@ -56,7 +56,10 @@ export default function RequestEnquiryForm({
 }) {
   const { executeRecaptcha } = useGoogleReCaptcha();
 
-  console.log(dropdownData);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(null);
+  const [selectedCountry, setSelectedCountry] = useState("ae");
+
   const isEN = locale === "en";
   const t = useTranslations("form");
 
@@ -66,34 +69,36 @@ export default function RequestEnquiryForm({
 
   // Validation schema
   const formSchema = z.object({
-    firstName: commonValidations.name(t("full_name")),
+    firstName: commonValidations.name(t("first_name")),
     lastName: commonValidations.name(t("last_name")),
     companyName: commonValidations.optionalString(),
     email: commonValidations.email(),
-    phone: commonValidations.phone(),
+    phone: commonValidations.phone(selectedCountry.toUpperCase()),
     state: commonValidations.region(),
     dropdown_id: commonValidations.dropdown(),
     message: commonValidations.message(t("message")),
   });
 
+  const defaultValues = {
+    firstName: "",
+    lastName: "",
+    companyName: "",
+    email: "",
+    phone: "",
+    state: "",
+    dropdown_id: "",
+    message: "",
+  };
+
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      companyName: "",
-      email: "",
-      phone: "",
-      state: "",
-      dropdown_id: "",
-      message: "",
-    },
+    defaultValues,
   });
 
-  const [loading, setLoading] = useState(false);
 
   const onSubmit = async (values) => {
     setLoading(true);
+    setSuccess(null);
     try {
       const recaptchaToken = await executeRecaptcha(
         "customization_enquiry_form",
@@ -126,7 +131,8 @@ export default function RequestEnquiryForm({
         toast.success(
           isEN ? data?.message?.en : data?.message?.ar || t("success_message"),
         );
-        form.reset();
+        form.reset(defaultValues);
+        setSelectedCountry("ae");
         setSuccess(
           isEN ? data?.message?.en : data?.message?.ar || t("success_message"),
         );
@@ -246,7 +252,23 @@ export default function RequestEnquiryForm({
               <FormControl>
                 <PhoneInput
                   defaultCountry="ae"
-                  {...field}
+                  value={field.value}
+                  onChange={(phone, meta) => {
+                    const countryIso = meta.country.iso2;
+                    const callingCode = `+${meta.country.callingCode}`;
+
+                    if (phone !== field.value) {
+                      // If it's just the prefix being added to an empty field, don't trigger onChange
+                      if (!field.value && phone.trim() === callingCode) {
+                        return;
+                      }
+                      field.onChange(phone);
+                    }
+
+                    if (countryIso !== selectedCountry) {
+                      setSelectedCountry(countryIso);
+                    }
+                  }}
                   className={cn(
                     inputStyle,
                     "w-full p-0 [&_input]:flex-1 [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px] [--react-international-phone-flag-width:20px] [--react-international-phone-flag-height:20px]",

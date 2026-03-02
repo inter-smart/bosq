@@ -48,6 +48,9 @@ const OrderSummary = ({
   itemsCount: initialItemsCount,
   totalItems: initialTotalItems,
   couponStatus: initialCouponStatus,
+  initialDiscountTotal,
+  initialCouponDiscountType,
+  initialCouponDiscountValue,
   locale,
   type = "cart",
 }) => {
@@ -82,6 +85,9 @@ const OrderSummary = ({
   const [itemsCount, setItemsCount] = useState(initialItemsCount);
   const [totalItems, setTotalItems] = useState(initialTotalItems);
   const [appliedCoupon, setAppliedCoupon] = useState(initialCouponStatus);
+  const [discountTotal, setDiscountTotal] = useState(initialDiscountTotal ?? "0.00");
+  const [couponDiscountType, setCouponDiscountType] = useState(initialCouponDiscountType ?? null);
+  const [couponDiscountValue, setCouponDiscountValue] = useState(initialCouponDiscountValue ?? null);
 
   // Sync local state when server props update (e.g. after login → cart merge → navigation)
   useEffect(() => {
@@ -92,7 +98,10 @@ const OrderSummary = ({
     setItemsCount(initialItemsCount ?? 0);
     setTotalItems(initialTotalItems ?? 0);
     setAppliedCoupon(initialCouponStatus ?? null);
-  }, [initialProducts, initialCartId, initialSubTotal, initialGrandTotal, initialItemsCount, initialTotalItems, initialCouponStatus]);
+    setDiscountTotal(initialDiscountTotal ?? "0.00");
+    setCouponDiscountType(initialCouponDiscountType ?? null);
+    setCouponDiscountValue(initialCouponDiscountValue ?? null);
+  }, [initialProducts, initialCartId, initialSubTotal, initialGrandTotal, initialItemsCount, initialTotalItems, initialCouponStatus, initialDiscountTotal, initialCouponDiscountType, initialCouponDiscountValue]);
 
   const [couponCode, setCouponCode] = useState("");
   const [checkoutList, setCheckoutList] = useState(true);
@@ -121,6 +130,9 @@ const OrderSummary = ({
     if (data.id) setCartId(data.id);
     if (data.sub_total !== undefined) setSubTotal(data.sub_total);
     if (data.grand_total !== undefined) setGrandTotal(data.grand_total);
+    if (data.discount_total !== undefined) setDiscountTotal(data.discount_total);
+    if (data.coupon_discount_type !== undefined) setCouponDiscountType(data.coupon_discount_type);
+    if (data.coupon_discount_value !== undefined) setCouponDiscountValue(data.coupon_discount_value);
     if (data.item_count !== undefined) setItemsCount(data.item_count);
     if (data.items) setTotalItems(data.items.length);
     setAppliedCoupon(data.applied_coupon_code || null);
@@ -136,7 +148,7 @@ const OrderSummary = ({
       toast.success(`${tToast("coupon_success")}`);
     } catch (error) {
       console.log("Apply coupon error:", error);
-      toast.error(locale === "en" ? error?.en : error?.ar || "Failed to apply coupon");
+      toast.error(locale === "en" ? (error?.en || "Failed to apply coupon") : (error?.ar || "Failed to apply coupon"));
     }
   };
 
@@ -240,6 +252,17 @@ const OrderSummary = ({
     }
   };
 
+  // Compute display values: for percentage coupons, derive from subTotal
+  const displayDiscountTotal =
+    couponDiscountType === "percentage" && couponDiscountValue
+      ? ((parseFloat(subTotal) * parseFloat(couponDiscountValue)) / 100).toFixed(2)
+      : discountTotal;
+
+  const displayGrandTotal =
+    couponDiscountType === "percentage" && couponDiscountValue
+      ? (parseFloat(subTotal) - (parseFloat(subTotal) * parseFloat(couponDiscountValue)) / 100).toFixed(2)
+      : grandTotal;
+
   // Check if order can be placed
   const { shippingId, billingId } = getFinalAddressIds();
   const canPlaceOrder = shippingId && billingId && termsAccepted;
@@ -321,6 +344,22 @@ const OrderSummary = ({
               {tCommon("free")}
             </Text>
 
+            {appliedCoupon && parseFloat(discountTotal) > 0 && (
+              <Text
+                as="div"
+                size="text3"
+                className="font-normal text-green-600 my-2 xl:my-3 2xl:my-4 [&_span]:font-light [&_span]:text-green-500 flex justify-between"
+              >
+                <span>
+                  {t("coupon_discount")}
+                  {couponDiscountType === "percentage" && couponDiscountValue && (
+                    <span className="ml-1">({parseFloat(couponDiscountValue)}%)</span>
+                  )}
+                </span>
+                - {displayDiscountTotal}
+              </Text>
+            )}
+
             {/* Coupon Code Section */}
             {user && (
               <div className="w-full mb-2 xl:mb-3 2xl:mb-4">
@@ -367,7 +406,7 @@ const OrderSummary = ({
                 <br />
                 <span className="text-[8px] 2xl:text-[10px] font-light text-[#808080]">{tCommon("inc_tax")}</span>
               </span>
-              {grandTotal}
+              {displayGrandTotal}
             </Text>
           </div>
 
@@ -522,7 +561,7 @@ const OrderSummary = ({
                       {tCheckout("total_amount")}
                     </Text>
                     <Text as="div" size="text3" className="font-semibold text-[#282828]">
-                      {subTotal}
+                      {displayGrandTotal}
                     </Text>
                   </div>
                 </>

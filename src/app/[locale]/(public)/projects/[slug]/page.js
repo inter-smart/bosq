@@ -201,7 +201,10 @@ export default async function ProjectDetailPage({ params }) {
 
   const { data, error } = await getProjectDetails({ slug });
 
+
+  
   if (error) {
+    console.log("error", error)
     return <NotFound />;
   }
 
@@ -216,6 +219,9 @@ export default async function ProjectDetailPage({ params }) {
 
   const isEn = locale === "en";
   const slugData = locale === "en" ? "Project" : "تفاصيل المشروع";
+
+
+
 
   return (
     <>

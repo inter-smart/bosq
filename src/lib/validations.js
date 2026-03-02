@@ -85,89 +85,93 @@ export const commonValidations = {
   rememberMe: z.boolean().default(false),
 
 
-phone: (country) =>
-  z
-    .string()
-    .transform((val) => val.trim())
-    .superRefine((val, ctx) => {
-      // 1️⃣ Empty or "+"
-      if (!val || val === "+") {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: vt("required", { field: vt("phone_number") }),
-        });
-        return;
-      }
-
-      // 2️⃣ Only country code (ex: +971)
-      if (country) {
-        const callingCode = `+${getCountryCallingCode(country)}`;
-        if (val === callingCode) {
+  phone: (country) =>
+    z
+      .string()
+      .transform((val) => val.trim())
+      .superRefine((val, ctx) => {
+        // 1️⃣ Empty or "+"
+        if (!val || val === "+") {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: vt("required", { field: vt("phone_number") }),
           });
           return;
         }
-      }
 
-      // 3️⃣ Invalid characters
-      if (!/^[0-9+\s()-]+$/.test(val)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: vt("invalid_characters", { field: "Phone" }),
-        });
-        return;
-      }
+        // 2️⃣ Only country code (ex: +971)
+        if (country) {
+          const callingCode = `+${getCountryCallingCode(country)}`;
+          const valClean = val.replace(/[\s()-]/g, "");
+          if (valClean === callingCode) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: vt("required", { field: vt("phone_number") }),
+            });
+            return;
+          }
+        }
 
-      // 4️⃣ Real phone validation
-      if (!isValidPhoneNumber(val, country || undefined)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: vt("invalid_phone"),
-        });
-      }
-    })
-    .transform((val) => val.replace(/[\s()-]/g, "")),
+        // 3️⃣ Invalid characters
+        if (!/^[0-9+\s()-]+$/.test(val)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: vt("invalid_characters", { field: "Phone" }),
+          });
+          return;
+        }
 
-normalPhoneNumber: () =>
-  z
-    .string()
-    .trim()
-    .min(1, vt("required", { field: vt("phone_number") }))
+        // 4️⃣ Real phone validation
+        const prefixDigits = country ? getCountryCallingCode(country) : "";
+        const valDigits = val.replace(/\D/g, "");
 
-    // Allow digits, spaces, +, parens, dashes
-    .refine((val) => /^[+0-9\s()-]+$/.test(val), {
-      message: vt("invalid_characters", { field: "Phone" }),
-    })
+        if (valDigits.length > prefixDigits.length && !isValidPhoneNumber(val, country || undefined)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: vt("invalid_phone"),
+          });
+        }
+      })
+      .transform((val) => val.replace(/[\s()-]/g, "")),
 
-    // Reject double (or more) leading plus signs
-    .refine((val) => !/^\+{2,}/.test(val), {
-      message: vt("invalid_phone_format"),
-    })
+  normalPhoneNumber: () =>
+    z
+      .string()
+      .trim()
+      .min(1, vt("required", { field: vt("phone_number") }))
 
-    // Remove spaces, parens, dashes
-    .transform((val) => val.replace(/[\s()-]/g, ""))
+      // Allow digits, spaces, +, parens, dashes
+      .refine((val) => /^[+0-9\s()-]+$/.test(val), {
+        message: vt("invalid_characters", { field: "Phone" }),
+      })
 
-    // Must be digits only, with optional single leading +
-    .refine((val) => /^\+?[0-9]+$/.test(val), {
-      message: vt("invalid_phone_format"),
-    })
+      // Reject double (or more) leading plus signs
+      .refine((val) => !/^\+{2,}/.test(val), {
+        message: vt("invalid_phone_format"),
+      })
 
-    // Length check (8–15 digits, excluding +)
-    .refine(
-      (val) => {
-        const digits = val.replace("+", "");
-        return digits.length >= 8 && digits.length <= 15;
-      },
-      { message: vt("invalid_phone_length") }
-    )
+      // Remove spaces, parens, dashes
+      .transform((val) => val.replace(/[\s()-]/g, ""))
 
-    // Reject all zeros
-    .refine(
-      (val) => !/^0+$/.test(val.replace("+", "")),
-      { message: vt("invalid_phone") }
-    ),
+      // Must be digits only, with optional single leading +
+      .refine((val) => /^\+?[0-9]+$/.test(val), {
+        message: vt("invalid_phone_format"),
+      })
+
+      // Length check (8–15 digits, excluding +)
+      .refine(
+        (val) => {
+          const digits = val.replace("+", "");
+          return digits.length >= 8 && digits.length <= 15;
+        },
+        { message: vt("invalid_phone_length") }
+      )
+
+      // Reject all zeros
+      .refine(
+        (val) => !/^0+$/.test(val.replace("+", "")),
+        { message: vt("invalid_phone") }
+      ),
   requiredString: (val) =>
     z.string().min(1, vt("required", { field: val })),
 
@@ -180,7 +184,7 @@ normalPhoneNumber: () =>
   region: () => z.string().min(1, vt("select_region")),
 
 
-  dropdown: ()=> z.string().min(1, vt("select_option")),
+  dropdown: () => z.string().min(1, vt("select_option")),
 
   message: (field) =>
     z
