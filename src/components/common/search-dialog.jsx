@@ -44,7 +44,6 @@ export default function SearchDialog({ children, locale }) {
     keywords: debouncedQuery,
   });
 
-  if (isLoading) return <div>Loading...</div>;
 
   const handleChange = (e) => {
     const value = e.target.value;
