@@ -65,9 +65,9 @@ export default function AuthLoginForm({ locale, data }) {
 
   useEffect(() => {
     if (isAuthenticated && !isRedirecting) {
-      window.location.href = redirectTo;
+      router.push(redirectTo);
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, isRedirecting, redirectTo, router]);
 
   useEffect(() => {
     if (activity && activity === "wishlist")
@@ -83,10 +83,7 @@ export default function AuthLoginForm({ locale, data }) {
       const result = await login(values);
       if (result?.success) {
         toast.success(tAuth("success"));
-        // setIsRedirecting(true);
-        setTimeout(() => {
-          window.location.href = redirectTo; // 👈 explicit, reliable
-        }, 500);
+        router.replace(redirectTo);
       } else {
         toast.error(isEN ? result.error.en : result.error.ar || tAuth("error"));
       }
