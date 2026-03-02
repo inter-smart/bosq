@@ -203,7 +203,7 @@
     "title": "Checkout",
     "show_details": "Show Details",
     "coupon_placeholder": "Have a coupon code?",
-    "coupon_applied": "'{code}' Coupon Applied",
+    "coupon_applied": "{code} Coupon Applied",
     "subtotal": "Subtotal ({count})",
     "shipping_charge": "Shipping Charge",
     "total_price": "Total Price",

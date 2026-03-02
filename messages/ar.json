@@ -203,7 +203,7 @@
     "title": "إتمام الشراء",
     "show_details": "عرض التفاصيل",
     "coupon_placeholder": "هل لديك رمز كوبون؟",
-    "coupon_applied": "تم تطبيق الكوبون '{code}'",
+    "coupon_applied": "تم تطبيق الكوبون {code}",
     "subtotal": "المجموع الفرعي ({count})",
     "shipping_charge": "رسوم الشحن",
     "total_price": "السعر الإجمالي",
