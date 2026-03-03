@@ -23,7 +23,7 @@ const AddressSection = ({ locale }) => {
   const [showShippingAddressForm, setShowShippingAddressForm] = React.useState(false);
   const [showBillingAddressForm, setShowBillingAddressForm] = React.useState(false);
 
-  const { data, isLoading, isError } = useGetAddressesQuery(undefined, { skip: !user });
+  const { data, isLoading, isError } = useGetAddressesQuery();
 
   const shippingAddresses = data?.data?.shipping || [];
   const billingAddresses = data?.data?.billing || [];

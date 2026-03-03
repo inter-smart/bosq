@@ -1,9 +1,15 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { Heading } from "@/components/utils/heading";
 import { Text } from "@/components/utils/text";
 import Image from "next/image";
 import Link from "next/link";
+
+const MAX_RETRIES = 5;
+const POLL_INTERVAL_MS = 3000;
 
 const STATUS_CONFIG = {
   success: {
@@ -45,10 +51,69 @@ const STATUS_CONFIG = {
   },
 };
 
-export default function CheckoutResponse({ orderStatus, orderId, locale = "en" }) {
+export default function CheckoutResponse({ orderStatus: initialStatus = null, orderId: initialOrderId, locale = "en" }) {
+  const needsPolling = !initialStatus;
 
+  const [resolvedStatus, setResolvedStatus] = useState(initialStatus);
+  const [resolvedOrderId, setResolvedOrderId] = useState(initialOrderId);
+  const retryCount = useRef(0);
 
-  const config = STATUS_CONFIG[orderStatus];
+  useEffect(() => {
+    if (!needsPolling) return;
+
+    if (!initialOrderId) {
+      setResolvedStatus("failed");
+      return;
+    }
+
+    const checkStatus = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend/orders/${initialOrderId}/payment-status`,
+          { credentials: "include" }
+        );
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          setResolvedStatus("failed");
+          return;
+        }
+
+        const status = data.data?.payment_status;
+        const returnedOrderCode = data.data?.order_id;
+
+        if (returnedOrderCode) setResolvedOrderId(returnedOrderCode);
+
+        if (status === "paid") {
+          setResolvedStatus("success");
+        } else if (status === "failed") {
+          setResolvedStatus("failed");
+        } else {
+          retryCount.current += 1;
+          if (retryCount.current < MAX_RETRIES) {
+            setTimeout(checkStatus, POLL_INTERVAL_MS);
+          } else {
+            setResolvedStatus("failed");
+          }
+        }
+      } catch {
+        setResolvedStatus("failed");
+      }
+    };
+
+    checkStatus();
+  }, [needsPolling, initialOrderId]);
+
+  if (!resolvedStatus) {
+    return (
+      <div className="w-full py-[60px] flex items-center justify-center">
+        <p className="text-[#808080] text-sm">Verifying your payment...</p>
+      </div>
+    );
+  }
+
+  const config = STATUS_CONFIG[resolvedStatus];
   if (!config) return null;
 
   const text = locale === "ar" ? config.ar : config.en;
@@ -58,7 +123,7 @@ export default function CheckoutResponse({ orderStatus, orderId, locale = "en" }
       <Empty>
         <EmptyHeader>
           <EmptyMedia>
-            <Image src={config.icon} alt={orderStatus} width={100} height={100} className="w-[30px] xl:w-[50px]"  quality={90} />
+            <Image src={config.icon} alt={resolvedStatus} width={100} height={100} className="w-[30px] xl:w-[50px]" quality={90} />
           </EmptyMedia>
 
           <EmptyTitle>
@@ -67,10 +132,10 @@ export default function CheckoutResponse({ orderStatus, orderId, locale = "en" }
             </Heading>
           </EmptyTitle>
 
-          {orderId && (
+          {resolvedOrderId && (
             <EmptyDescription>
               <Text as="p" size="text2" className="font-normal text-[#282828]">
-                {text.orderLabel} #{orderId}
+                {text.orderLabel} #{resolvedOrderId}
               </Text>
             </EmptyDescription>
           )}
