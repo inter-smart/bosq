@@ -25,7 +25,7 @@ import {
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import { Heading } from "@/components/utils/heading";
-import { useApplyCouponMutation, useRemoveCouponMutation, usePlaceOrderMutation } from "@/store/services/orderApi";
+import { useApplyCouponMutation, useRemoveCouponMutation, usePlaceOrderMutation, useInitiatePaymentMutation } from "@/store/services/orderApi";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { resetCart } from "@/store/slices/cartSlice";
@@ -65,6 +65,7 @@ const OrderSummary = ({
   const [placeOrder] = usePlaceOrderMutation();
   const [applyCoupon] = useApplyCouponMutation();
   const [removeCoupon] = useRemoveCouponMutation();
+  const [initiatePayment] = useInitiatePaymentMutation();
 
   const t = useTranslations("cart");
   const tCheckout = useTranslations("checkout");
@@ -227,13 +228,6 @@ const OrderSummary = ({
       shipping: shippingId,
     };
 
-    console.log("Placing order with:", {
-      cartId,
-      shippingAddressId: shippingId,
-      billingAddressId: billingId,
-      paymentMethod: selectedPaymentMethod,
-    });
-
     try {
       const orderData = await placeOrder({
         address,
@@ -241,14 +235,29 @@ const OrderSummary = ({
         type: type || "cart",
       }).unwrap();
 
-      const orderId = orderData.data?.order_id;
+      const internalOrderId = orderData.data?.id;
+      const orderCode = orderData.data?.order_id;
+      const requiresPayment = orderData.data?.requires_payment;
 
       !type && dispatch(resetCart());
       setShowConfirmDialog(false);
-      router.push(`/${locale}/order/success?orderId=${orderId}`);
+
+      if (requiresPayment && selectedPaymentMethod === "online") {
+        // Get payment URL from N-Genius and redirect the user there
+        const paymentData = await initiatePayment({ orderId: internalOrderId, locale }).unwrap();
+        const paymentUrl = paymentData.data?.payment_url;
+        if (paymentUrl) {
+          window.location.href = paymentUrl;
+        } else {
+          toast.error(tToast("order_failed"));
+        }
+      } else {
+        // COD: go straight to success page
+        router.push(`/${locale}/order/success?orderId=${orderCode}`);
+      }
     } catch (error) {
       console.log("error", error);
-      toast.error(error || tToast("order_failed"));
+      toast.error(error?.en || error || tToast("order_failed"));
     }
   };
 

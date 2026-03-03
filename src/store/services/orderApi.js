@@ -118,7 +118,40 @@ export const orderApi = createApi({
         return message;
       },
     }),
+
+    initiatePayment: builder.mutation({
+      query: ({ orderId, locale }) => ({
+        url: `/api/frontend/orders/${orderId}/initiate-payment?locale=${locale || "en"}`,
+        method: "POST",
+      }),
+      transformErrorResponse: (response) => {
+        const message = response?.data?.message;
+        if (!message) return { en: "Failed to initiate payment", ar: "فشل في بدء الدفع" };
+        if (typeof message === "string") return { en: message, ar: message };
+        return message;
+      },
+    }),
+
+    getPaymentStatus: builder.query({
+      query: ({ orderId }) => ({
+        url: `/api/frontend/orders/${orderId}/payment-status`,
+      }),
+      transformErrorResponse: (response) => {
+        const message = response?.data?.message;
+        if (!message) return { en: "Failed to get payment status", ar: "فشل في الحصول على حالة الدفع" };
+        if (typeof message === "string") return { en: message, ar: message };
+        return message;
+      },
+    }),
   }),
 });
 
-export const { usePlaceOrderMutation, useApplyCouponMutation, useRemoveCouponMutation, useCancelOrderMutation, useReorderOrderMutation } = orderApi;
+export const {
+  usePlaceOrderMutation,
+  useApplyCouponMutation,
+  useRemoveCouponMutation,
+  useCancelOrderMutation,
+  useReorderOrderMutation,
+  useInitiatePaymentMutation,
+  useGetPaymentStatusQuery,
+} = orderApi;
