@@ -8,6 +8,8 @@ const OrderSummaryPage = async ({ locale, type }) => {
     console.error("Cart summary fetch failed:", error);
   }
 
+  console.log("DATA", data);
+
   const products = data?.items || [];
   const cartId = data?.id || null;
   const subTotal = data?.sub_total || 0;

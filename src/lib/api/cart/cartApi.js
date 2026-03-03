@@ -66,3 +66,10 @@ export async function keepCartAsGuestAPI() {
     method: "POST",
   });
 }
+
+// Get matching products based on the most repeated category in the cart
+export async function fetchMatchingProductsAPI() {
+  return fetchFromAPIWithCredentials("/api/frontend/cart/matching-products", {
+    method: "GET",
+  });
+}

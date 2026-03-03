@@ -12,7 +12,7 @@ export default function CheckoutList({ locale, type }) {
       <section className="w-full block py-[10px_30px] xl:py-[15px_60px] 2xl:py-[20px_100px] relative z-0">
         <div className="container">
           <div className="flex flex-wrap -mx-2.5 xl:-mx-8 2xl:-mx-10 [&>*]:px-2.5 xl:[&>*]:px-8 2xl:[&>*]:px-10 [&>*]:py-3 xl:[&>*]:py-5 2xl:[&>*]:py-7">
-            {/* <MatchingProduct data={data} locale={locale} /> */}
+            {!type && <MatchingProduct locale={locale} />}
 
             <div className="w-full lg:w-[calc(100%-320px)] xl:w-[calc(100%-460px)] 2xl:w-[calc(100%-540px)] 3xl:w-[calc(100%-668px)]">
               {/* Personal Information */}
