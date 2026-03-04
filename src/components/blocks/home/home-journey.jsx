@@ -88,7 +88,7 @@ export default function HomeJourney({ data, locale, isEN }) {
             className="min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-40"
             asChild
           >
-            <Link href={`/${locale}${data?.button?.link || ""}`}>{t("view_details")}</Link>
+            <Link href={`/${locale}${data?.link || ""}`}>{t("view_details")}</Link>
           </Button>
         </div>
       </div>
