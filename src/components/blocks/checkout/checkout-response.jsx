@@ -67,15 +67,15 @@ export default function CheckoutResponse({ orderRef, locale = "en" }) {
         // ✅ Call your Express verify endpoint with N-Genius ref
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend/payment/verify?ref=${orderRef}`, { credentials: "include" });
 
-        const data = await res.json();
+        const json = await res.json(); // ✅ renamed from data → json
 
         if (!res.ok) {
           setResolvedStatus("failed");
           return;
         }
 
-        const status = data.resolvedStatus; // 'paid' | 'failed' | 'cancelled'
-        const returnedOrderId = data.merchantRef; // your internal order_id
+        const status = json.data?.resolvedStatus; // ✅ was: data.resolvedStatus
+        const returnedOrderId = json.data?.merchantRef;
 
         if (returnedOrderId) setResolvedOrderId(returnedOrderId);
 
