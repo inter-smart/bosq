@@ -1,4 +1,3 @@
-// app/[locale]/order-status/page.js
 import CheckoutResponse from "@/components/blocks/checkout/checkout-response";
 
 export default async function OrderStatus({ params, searchParams }) {
