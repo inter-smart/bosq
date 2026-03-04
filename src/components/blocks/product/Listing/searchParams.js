@@ -3,9 +3,10 @@ import { createSearchParamsCache, parseAsArrayOf, parseAsInteger, parseAsString 
 // Price ranges definition (shared)
 export const PRICE_RANGES = [
   { key: "under-300", label: "Under AED 300", label_ar: "أقل من 300 درهم", min: 0, max: 300 },
-  { key: "300-500", label: "AED 300 - 500", label_ar: "300 - 500 درهم", min: 300, max: 500 },
-  { key: "500-700", label: "AED 500 - 700", label_ar: "500 - 700 درهم", min: 500, max: 700 },
-  { key: "above-700", label: "Above AED 700", label_ar: "أكثر من 700 درهم", min: 700, max: Infinity },
+  { key: "300-500", label: "AED 300 – 500", label_ar: "300 – 500 درهم", min: 300, max: 500 },
+  { key: "500-1000", label: "AED 500 – 1,000", label_ar: "500 – 1,000 درهم", min: 500, max: 1000 },
+  { key: "1000-2000", label: "AED 1,000 – 2,000", label_ar: "1,000 – 2,000 درهم", min: 1000, max: 2000 },
+  { key: "above-2000", label: "Above AED 2,000", label_ar: "أكثر من 2,000 درهم", min: 2000, max: Infinity },
 ];
 
 // Sort options

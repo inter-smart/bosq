@@ -10,9 +10,7 @@ export async function generateMetadata({ params }) {
   const { slug, locale } = await params;
 
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend/news-details?slug=${slug}`,
-    );
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend/news-details?slug=${slug}`);
 
     // Check if response is ok
     if (!response.ok) {
@@ -22,11 +20,8 @@ export async function generateMetadata({ params }) {
     // Parse JSON response
     const data = await response.json();
 
-
     const isEN = locale === "en";
     const metadata = data?.data?.metaData;
-    console.log("data:", metadata);
-
 
     if (!metadata) {
       return {
@@ -35,16 +30,7 @@ export async function generateMetadata({ params }) {
       };
     }
 
-    const {
-      meta_title,
-      meta_description,
-      meta_keywords,
-      other_meta,
-      meta_title_ar,
-      meta_description_ar,
-      meta_keywords_ar,
-      other_meta_ar,
-    } = metadata;
+    const { meta_title, meta_description, meta_keywords, other_meta, meta_title_ar, meta_description_ar, meta_keywords_ar, other_meta_ar } = metadata;
 
     // Select language-specific metadata
     const title = isEN ? meta_title : meta_title_ar;
@@ -106,7 +92,6 @@ export async function generateMetadata({ params }) {
   }
 }
 
-
 export default async function NewsDetailPage({ params }) {
   const resolvedParams = await params;
   const { slug } = resolvedParams;
@@ -122,22 +107,11 @@ export default async function NewsDetailPage({ params }) {
 
   const { heroData, newsData, popularNewsData, relatedNewsData } = data;
 
-
   return (
     <>
       <NewsViewTracker slug={slug} />
-      <ProductHero
-        locale={locale}
-        data={heroData}
-        slug={slugData}
-        link={"/news"}
-      />
-      <NewsInfo
-        locale={locale}
-        data={newsData}
-        popularData={popularNewsData}
-        relatedData={relatedNewsData}
-      />
+      <ProductHero locale={locale} data={heroData} slug={slugData} link={"/news"} />
+      <NewsInfo locale={locale} data={newsData} popularData={popularNewsData} relatedData={relatedNewsData} />
     </>
   );
 }
