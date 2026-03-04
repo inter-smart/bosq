@@ -51,27 +51,21 @@ const STATUS_CONFIG = {
   },
 };
 
-export default function CheckoutResponse({ orderStatus: initialStatus = null, orderId: initialOrderId, locale = "en" }) {
-  const needsPolling = !initialStatus;
-
-  const [resolvedStatus, setResolvedStatus] = useState(initialStatus);
-  const [resolvedOrderId, setResolvedOrderId] = useState(initialOrderId);
+export default function CheckoutResponse({ orderRef, locale = "en" }) {
+  const [resolvedStatus, setResolvedStatus] = useState(null); // always start null
+  const [resolvedOrderId, setResolvedOrderId] = useState(null);
   const retryCount = useRef(0);
 
   useEffect(() => {
-    if (!needsPolling) return;
-
-    if (!initialOrderId) {
+    if (!orderRef) {
       setResolvedStatus("failed");
       return;
     }
 
     const checkStatus = async () => {
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend/orders/${initialOrderId}/payment-status`,
-          { credentials: "include" }
-        );
+        // ✅ Call your Express verify endpoint with N-Genius ref
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend/payment/verify?ref=${orderRef}`, { credentials: "include" });
 
         const data = await res.json();
 
@@ -80,16 +74,17 @@ export default function CheckoutResponse({ orderStatus: initialStatus = null, or
           return;
         }
 
-        const status = data.data?.payment_status;
-        const returnedOrderCode = data.data?.order_id;
+        const status = data.resolvedStatus; // 'paid' | 'failed' | 'cancelled'
+        const returnedOrderId = data.merchantRef; // your internal order_id
 
-        if (returnedOrderCode) setResolvedOrderId(returnedOrderCode);
+        if (returnedOrderId) setResolvedOrderId(returnedOrderId);
 
         if (status === "paid") {
           setResolvedStatus("success");
-        } else if (status === "failed") {
+        } else if (status === "failed" || status === "cancelled") {
           setResolvedStatus("failed");
         } else {
+          // Still pending — retry
           retryCount.current += 1;
           if (retryCount.current < MAX_RETRIES) {
             setTimeout(checkStatus, POLL_INTERVAL_MS);
@@ -103,7 +98,7 @@ export default function CheckoutResponse({ orderStatus: initialStatus = null, or
     };
 
     checkStatus();
-  }, [needsPolling, initialOrderId]);
+  }, [orderRef]);
 
   if (!resolvedStatus) {
     return (
