@@ -23,7 +23,9 @@ export default function GoogleLoginButton({ locale, onOk }) {
         if (onOk) {
           onOk();
         } else {
-          router.push(redirectTo);
+          setTimeout(() => {
+            window.location.href = redirectTo;
+          }, 500);
         }
       } else {
         toast.error(result.error || t("google_error"));
