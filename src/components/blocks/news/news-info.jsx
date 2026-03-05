@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import NewsRelated from "./news-related";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
@@ -31,12 +32,7 @@ const navBtnStyle = cn(
   "text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-white flex items-center gap-0.5 disabled:opacity-50 not-disabled:hover:scale-110 transition cursor-pointer",
 );
 
-export default function NewsInfo({
-  data,
-  popularData,
-  relatedData,
-  locale,
-}) {
+export default function NewsInfo({ data, popularData, relatedData, locale }) {
   const isEn = locale === "en";
 
   const pathname = usePathname();
@@ -85,6 +81,9 @@ export default function NewsInfo({
     },
   ];
 
+    const t = useTranslations("common");
+  
+
   const {
     prevBtnDisabled,
     nextBtnDisabled,
@@ -107,11 +106,23 @@ export default function NewsInfo({
                 <picture className="absolute -z-2 inset-0 opacity-95">
                   <source
                     media="(max-width: 640px)"
-                    srcSet={data?.media?.mobile?.path}
+                    srcSet={
+                      (isEn
+                        ? data?.media?.mobile?.path
+                        : data?.media_ar?.mobile?.path) || "/images/placeholder.jpg"
+                    }
                   />
                   <Image
-                    src={data?.media?.desktop?.path}
-                    alt={data?.media?.desktop?.alt}
+                    src={
+                      (isEn
+                        ? data?.media?.desktop?.path
+                        : data?.media_ar?.desktop?.path) || "/images/placeholder.jpg"
+                    }
+                    alt={
+                      (isEn
+                        ? data?.media?.desktop?.alt
+                        : data?.media?.desktop?.alt_ar) || "/images/placeholder.jpg"
+                    }
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 80vw"
                     className="-z-2 object-cover"
@@ -179,7 +190,7 @@ export default function NewsInfo({
           <div className="flex flex-wrap -mx-3 xl:-mx-7 2xl:-mx-9 [&>*]:p-3 xl:[&>*]:p-7 2xl:[&>*]:p-9">
             <div className="w-full lg:w-[calc(100%-368px)] 2xl:w-[calc(100%-540px)] max-lg:mb-5">
               <div dir={locale === "ar" ? "rtl" : "ltr"} className="typography">
-                {parse(data?.description)}
+                {parse(isEn ? data?.description : data?.description_ar)}
               </div>
               <hr className="my-6 xl:my-7 2xl:my-8" />
               <div className="flex justify-between">
@@ -216,9 +227,7 @@ export default function NewsInfo({
                 <div>
                   <div className="flex gap-4 xl:gap-8">
                     {data?.prevData && (
-                      <Link
-                        href={`/${locale}/news/${data?.prevData}`}
-                      >
+                      <Link href={`/${locale}/news/${data?.prevData}`}>
                         <PrevButton
                           onClick={onPrevButtonClick}
                           disabled={!data?.prevData}
@@ -230,20 +239,18 @@ export default function NewsInfo({
                               locale === "ar" && "rotate-180",
                             )}
                           />
-                          <span className="hidded sm:block">Previous </span>
+                          <span className="hidded sm:block">{t("previous")}</span>
                         </PrevButton>
                       </Link>
                     )}
                     {data?.nextData && (
-                      <Link
-                        href={`/${locale}/news/${data?.nextData}`}
-                      >
+                      <Link href={`/${locale}/news/${data?.nextData}`}>
                         <NextButton
                           onClick={onNextButtonClick}
                           disabled={!data?.nextData}
                           className={cn(navBtnStyle, "text-black")}
                         >
-                          <span className="hidded sm:block">Next </span>
+                          <span className="hidded sm:block">{t("next")}</span>
                           <ChevronRight
                             className={cn(
                               "size-3.5",
@@ -342,9 +349,7 @@ export default function NewsInfo({
                       }
                       asChild
                     >
-                      <Link
-                        href={`/${locale}/news#news-list`}
-                      >
+                      <Link href={`/${locale}/news#news-list`}>
                         {isEn ? "See all" : "شاهد الكل"}
                         <ChevronRight
                           className={cn(

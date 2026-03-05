@@ -32,13 +32,11 @@ const navBtnStyle = cn(
   "text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-white flex items-center gap-0.5 disabled:opacity-50 not-disabled:hover:scale-110 transition cursor-pointer",
 );
 
-
 export default function BlogInfo({ data, popularData, relatedData, locale }) {
   const isEn = locale === "en";
   const pathname = usePathname();
   const blogUrl = `${window.location.origin}${pathname}`;
   const t = useTranslations("common");
-
 
   const [emblaRef, emblaApi] = useEmblaCarousel(
     {
@@ -104,11 +102,23 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
                 <picture className="absolute -z-2 inset-0 opacity-95">
                   <source
                     media="(max-width: 640px)"
-                    srcSet={data?.media?.mobile?.path}
+                    srcSet={
+                      (isEn
+                        ? data?.media?.mobile?.path
+                        : data?.media_ar?.mobile?.path) || "/images/placeholder.jpg"
+                    }
                   />
                   <Image
-                    src={data?.media?.desktop?.path}
-                    alt={data?.media?.desktop?.alt}
+                    src={
+                      (isEn
+                        ? data?.media?.desktop?.path
+                        : data?.media_ar?.desktop?.path) || "/images/placeholder.jpg"
+                    }
+                    alt={
+                      (isEn
+                        ? data?.media?.desktop?.alt
+                        : data?.media?.desktop?.alt_ar) || "/images/placeholder.jpg"
+                    }
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 80vw"
                     className="-z-2 object-cover"
@@ -225,7 +235,9 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
                               locale === "ar" && "rotate-180",
                             )}
                           />
-                          <span className="hidded sm:block">{t("previous")} </span>
+                          <span className="hidded sm:block">
+                            {t("previous")}{" "}
+                          </span>
                         </PrevButton>
                       </Link>
                     )}
@@ -356,7 +368,7 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
             </MediaQuery>
 
             <MediaQuery maxWidth={1023}>
-                <BlogRelated locale={locale} data={popularData} />
+              <BlogRelated locale={locale} data={popularData} />
             </MediaQuery>
           </div>
         </div>
