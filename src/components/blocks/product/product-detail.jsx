@@ -217,7 +217,7 @@ export default function ProductDetail({ locale, data = local_data }) {
                             index === selectedIndex ? " border-[#282828]" : "border-[#e9e9e9]",
                           )}
                         >
-                          <Image src={item?.thumbnail} alt={item?.alt || "thumb"} width={512} height={512} className="w-full h-full object-cover"  quality={90} />
+                          <Image src={item?.thumbnail} alt={item?.alt || "thumb"} width={512} height={512} className="w-full h-full object-cover" quality={90} />
                         </button>
                       </div>
                     ))}
@@ -322,7 +322,7 @@ export default function ProductDetail({ locale, data = local_data }) {
                     </svg>
                   </button>
                   <button className="w-2.5 2xl:w-3.5 hover:cursor-pointer transition hover:scale-105">
-                    <Image src="/images/icon-share.svg" alt="icon-share" width={12} height={12} className="w-full h-full block"  quality={90} />
+                    <Image src="/images/icon-share.svg" alt="icon-share" width={12} height={12} className="w-full h-full block" quality={90} />
                   </button>
                 </div>
               </div>
@@ -420,7 +420,7 @@ export default function ProductDetail({ locale, data = local_data }) {
                     <span>Out of Stock</span>
                   ) : (
                     <Link href={"/"}>
-                      <Image src={"/images/icon-cart.svg"} alt={"icon-cart"} width={15} height={15} className="w-[15px]"  quality={90} />
+                      <Image src={"/images/icon-cart.svg"} alt={"icon-cart"} width={15} height={15} className="w-[15px]" quality={90} />
                       Add to Cart
                     </Link>
                   )}
@@ -536,7 +536,7 @@ export default function ProductDetail({ locale, data = local_data }) {
                       <span>Out of Stock</span>
                     ) : (
                       <Link href={"/"}>
-                        <Image src={"/images/icon-cart.svg"} alt={"icon-cart"} width={15} height={15} className="w-[15px]"  quality={90} />
+                        <Image src={"/images/icon-cart.svg"} alt={"icon-cart"} width={15} height={15} className="w-[15px]" quality={90} />
                         Add to Cart
                       </Link>
                     )}
@@ -731,6 +731,12 @@ function ChooseDesign({ children, data, locale, onOpenChange }) {
                 </div>
               </AccordionContent>
             </AccordionItem>
+            {/* Attributes check (Fallback for static version) */}
+            {CHOOSE_DESIGN_OPTIONS && Object.keys(CHOOSE_DESIGN_OPTIONS).length === 0 && (
+              <div className="text-[12px] xl:text-[14px] leading-normal font-light text-[#808080] py-6 px-4 text-center">
+                No attributes found in choose your design section
+              </div>
+            )}
             {/* Color Option */}
             <AccordionItem value="item-2" className="py-2 sm:py-3">
               <AccordionTrigger className={sheetAccordionTriggerStyle}>Color</AccordionTrigger>

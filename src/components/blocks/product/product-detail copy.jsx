@@ -253,21 +253,21 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
                             slides={productImages?.map((item) =>
                               item.media_type === "video"
                                 ? {
-                                    type: "video",
-                                    width: 1280,
-                                    height: 720,
-                                    poster: item.media_path,
-                                    autoPlay: true,
-                                    sources: [
-                                      {
-                                        src: item.media_path,
-                                        type: "video/mp4",
-                                      },
-                                    ],
-                                  }
+                                  type: "video",
+                                  width: 1280,
+                                  height: 720,
+                                  poster: item.media_path,
+                                  autoPlay: true,
+                                  sources: [
+                                    {
+                                      src: item.media_path,
+                                      type: "video/mp4",
+                                    },
+                                  ],
+                                }
                                 : {
-                                    src: item.media_path,
-                                  },
+                                  src: item.media_path,
+                                },
                             )}
                             animation={{ fade: 10 }}
                             controller={{
@@ -321,7 +321,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
                       )}
                     </>
 
-                    {}
+                    { }
                   </div>
                 </div>
               </div>
