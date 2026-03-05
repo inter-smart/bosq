@@ -92,17 +92,17 @@ function buildApiParamsWithAttributes(parsedParams, rawSearchParams, filterData)
   filterData?.categories
     ?.filter((cat) => cat.parent_id === null)
     ?.forEach((cat) => {
-      categorySlugToId[slugify(cat.name)] = cat.id;
+      categorySlugToId[slugify(cat.slug)] = cat.id;
     });
 
   filterData?.categories
     ?.filter((cat) => cat.parent_id !== null)
     ?.forEach((cat) => {
-      subcategorySlugToId[slugify(cat.name)] = cat.id;
+      subcategorySlugToId[slugify(cat.slug)] = cat.id;
     });
 
   filterData?.sectors?.forEach((s) => {
-    sectorSlugToId[slugify(s.name)] = s.id;
+    sectorSlugToId[slugify(s.slug)] = s.id;
   });
 
   // Convert slugs to IDs
