@@ -37,7 +37,7 @@ const MediaQuery = dynamic(() => import("react-responsive"), {
 
 const paymentMethods = [
   { id: 1, slug: "cod", nameKey: "cod", descKey: "cod_description" },
-  { id: 2, slug: "online", nameKey: "pay_online", descKey: "pay_online_description" },
+  // { id: 2, slug: "online", nameKey: "pay_online", descKey: "pay_online_description" },
 ];
 
 const OrderSummary = ({
@@ -102,7 +102,18 @@ const OrderSummary = ({
     setDiscountTotal(initialDiscountTotal ?? "0.00");
     setCouponDiscountType(initialCouponDiscountType ?? null);
     setCouponDiscountValue(initialCouponDiscountValue ?? null);
-  }, [initialProducts, initialCartId, initialSubTotal, initialGrandTotal, initialItemsCount, initialTotalItems, initialCouponStatus, initialDiscountTotal, initialCouponDiscountType, initialCouponDiscountValue]);
+  }, [
+    initialProducts,
+    initialCartId,
+    initialSubTotal,
+    initialGrandTotal,
+    initialItemsCount,
+    initialTotalItems,
+    initialCouponStatus,
+    initialDiscountTotal,
+    initialCouponDiscountType,
+    initialCouponDiscountValue,
+  ]);
 
   const [couponCode, setCouponCode] = useState("");
   const [checkoutList, setCheckoutList] = useState(true);
@@ -149,7 +160,7 @@ const OrderSummary = ({
       toast.success(`${tToast("coupon_success")}`);
     } catch (error) {
       console.log("Apply coupon error:", error);
-      toast.error(locale === "en" ? (error?.en || "Failed to apply coupon") : (error?.ar || "Failed to apply coupon"));
+      toast.error(locale === "en" ? error?.en || "Failed to apply coupon" : error?.ar || "Failed to apply coupon");
     }
   };
 
@@ -361,9 +372,7 @@ const OrderSummary = ({
               >
                 <span>
                   {t("coupon_discount")}
-                  {couponDiscountType === "percentage" && couponDiscountValue && (
-                    <span className="ml-1">({parseFloat(couponDiscountValue)}%)</span>
-                  )}
+                  {couponDiscountType === "percentage" && couponDiscountValue && <span className="ml-1">({parseFloat(couponDiscountValue)}%)</span>}
                 </span>
                 - {displayDiscountTotal}
               </Text>
