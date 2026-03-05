@@ -62,10 +62,10 @@ export default function NewsHero({ data, locale, slug }) {
           <picture className="absolute -z-2 inset-0">
             <source
               media="(max-width: 640px)"
-              srcSet={data?.media?.mobile?.path}
+              srcSet={isEn ? data?.media?.mobile?.path: data?.media_ar?.mobile?.path}
             />
             <Image
-              src={data?.media?.desktop?.path}
+              src={isEn ? data?.media?.desktop?.path: data?.media_ar?.desktop?.path}
               alt={isEn ? data?.media?.desktop?.alt : data?.media?.desktop?.alt_ar}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 80vw"
