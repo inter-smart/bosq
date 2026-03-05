@@ -73,34 +73,29 @@ const ProductListFilters = ({ filterData, isEn }) => {
     filterData?.categories
       ?.filter((cat) => cat.parent_id === null)
       ?.forEach((cat) => {
-        const slug = slugify(cat.name);
-        maps.categorySlugToId[slug] = cat.id;
-        maps.categoryIdToSlug[cat.id] = slug;
+        maps.categorySlugToId[cat.slug] = cat.id;
+        maps.categoryIdToSlug[cat.id] = cat.slug;
       });
 
     filterData?.categories
       ?.filter((cat) => cat.parent_id !== null)
       ?.forEach((cat) => {
-        const slug = slugify(cat.name);
-        maps.subcategorySlugToId[slug] = cat.id;
-        maps.subcategoryIdToSlug[cat.id] = slug;
+        maps.subcategorySlugToId[cat.slug] = cat.id;
+        maps.subcategoryIdToSlug[cat.id] = cat.slug;
       });
 
     filterData?.sectors?.forEach((s) => {
-      const slug = slugify(s.name);
-      maps.sectorSlugToId[slug] = s.id;
-      maps.sectorIdToSlug[s.id] = slug;
+      maps.sectorSlugToId[s.slug] = s.id;
+      maps.sectorIdToSlug[s.id] = s.slug;
     });
 
     filterData?.attributes?.forEach((attr) => {
-      const attrSlug = slugify(attr.name);
-      maps.attributeSlugToId[attrSlug] = { attrId: attr.id, values: {} };
-      maps.attributeIdToSlug[attr.id] = { name: attrSlug, values: {} };
+      maps.attributeSlugToId[attr.slug] = { attrId: attr.id, values: {} };
+      maps.attributeIdToSlug[attr.id] = { name: attr.slug, values: {} };
 
       attr.values?.forEach((val) => {
-        const valSlug = slugify(val.value);
-        maps.attributeSlugToId[attrSlug].values[valSlug] = val.id;
-        maps.attributeIdToSlug[attr.id].values[val.id] = valSlug;
+        maps.attributeSlugToId[attr.slug].values[val.slug] = val.id;
+        maps.attributeIdToSlug[attr.id].values[val.id] = val.slug;
       });
     });
 
@@ -122,7 +117,7 @@ const ProductListFilters = ({ filterData, isEn }) => {
       // Convert URL slugs to IDs for temp filters
       const attributesFromUrl = {};
       filterData?.attributes?.forEach((attr) => {
-        const attrSlug = slugify(attr.name);
+        const attrSlug = attr.slug;
         const valueSlugs = getAttributeValuesFromUrl(attrSlug);
         if (valueSlugs.length > 0) {
           const valueIds = valueSlugs.map((valSlug) => slugMaps.attributeSlugToId[attrSlug]?.values[valSlug]).filter(Boolean);
@@ -177,8 +172,8 @@ const ProductListFilters = ({ filterData, isEn }) => {
 
   const getAttributeValueLabel = useCallback(
     (attrSlug, valSlug) => {
-      const attr = filterData?.attributes?.find((a) => slugify(a.name) === attrSlug);
-      const val = attr?.values?.find((v) => slugify(v.value) === valSlug);
+      const attr = filterData?.attributes?.find((a) => a.slug === attrSlug);
+      const val = attr?.values?.find((v) => v.slug === valSlug);
       return val ? (isEn ? val.value : val.value_ar) : valSlug;
     },
     [filterData, isEn],
@@ -293,8 +288,7 @@ const ProductListFilters = ({ filterData, isEn }) => {
 
     // Count attribute filters from URL
     filterData?.attributes?.forEach((attr) => {
-      const attrSlug = slugify(attr.name);
-      const values = getAttributeValuesFromUrl(attrSlug);
+      const values = getAttributeValuesFromUrl(attr.slug);
       count += values.length;
     });
 
@@ -305,8 +299,7 @@ const ProductListFilters = ({ filterData, isEn }) => {
   const activeAttributeFilters = useMemo(() => {
     const filters = [];
     filterData?.attributes?.forEach((attr) => {
-      const attrSlug = slugify(attr.name);
-      const values = getAttributeValuesFromUrl(attrSlug);
+      const values = getAttributeValuesFromUrl(attr.slug);
       values.forEach((valSlug) => {
         filters.push({
           attrSlug,
