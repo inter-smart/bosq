@@ -9,9 +9,9 @@ export default function ErgonomicChairSection({ data, locale }) {
     <section className="w-full h-auto py-[10px_40px] sm:py-[10px_50px] lg:py-[20px_70px] 2xl:py-[30px_90px] block">
       <div className="w-full aspect-6/5 sm:aspect-1920/740 overflow-hidden flex items-center relative z-0">
         <picture className="absolute -z-2 inset-0 opacity-95">
-          <source media="(max-width: 640px)" srcSet={data?.media?.mobile?.path} />
+          <source media="(max-width: 640px)" srcSet={isEn ? data?.media?.mobile?.path: data?.media_ar?.mobile?.path} />
           <Image
-            src={data?.media?.desktop?.path}
+            src={isEn ? data?.media?.desktop?.path: data?.media_ar?.desktop?.path}
             alt={isEn ? data?.media?.desktop?.alt: data?.media?.desktop?.alt_ar}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 80vw"

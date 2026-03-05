@@ -65,7 +65,8 @@ export default function AuthLoginForm({ locale, data }) {
 
   useEffect(() => {
     if (isAuthenticated && !isRedirecting) {
-      window.location.href = redirectTo;
+      // window.location.href = redirectTo;
+      router.replace(redirectTo);
     }
   }, [isAuthenticated]);
 
@@ -85,7 +86,8 @@ export default function AuthLoginForm({ locale, data }) {
         toast.success(tAuth("success"));
         // setIsRedirecting(true);
         setTimeout(() => {
-          window.location.href = redirectTo; // 👈 explicit, reliable
+          // window.location.href = redirectTo; // 👈 explicit, reliable
+          router.replace(redirectTo);
         }, 500);
       } else {
         toast.error(isEN ? result.error.en : result.error.ar || tAuth("error"));

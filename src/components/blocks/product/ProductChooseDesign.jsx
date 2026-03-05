@@ -225,6 +225,11 @@ const ProductChooseDesign = ({
             </AccordionItem>
 
             {/* Attributes */}
+            {designOptions?.length === 0 && !isModelLoading && (
+              <div className="text-[12px] xl:text-[14px] leading-normal font-light text-[#808080] py-6 px-4 text-center">
+                No attributes found in choose your design section
+              </div>
+            )}
             {designOptions?.map((attribute, index) => (
               <AccordionItem key={attribute.id} value={`item-${index + 2}`} className="py-2 sm:py-3">
                 <AccordionTrigger className={sheetAccordionTriggerStyle}>{locale === "ar" ? attribute.name_ar : attribute.name}</AccordionTrigger>

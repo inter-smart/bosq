@@ -15,15 +15,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { useGetAddressesQuery } from "@/store/services/addressApi";
 import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogFooter,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogCancel,
-  AlertDialogAction,
-} from "@/components/ui/alert-dialog";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { Heading } from "@/components/utils/heading";
 import { useApplyCouponMutation, useRemoveCouponMutation, usePlaceOrderMutation, useInitiatePaymentMutation } from "@/store/services/orderApi";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -509,16 +507,16 @@ const OrderSummary = ({
       )}
 
       {/* Order Confirmation Dialog */}
-      <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-        <AlertDialogContent className="xl:max-w-[520px] 2xl:max-w-[600px] gap-0 p-5 xl:p-6 2xl:p-8">
-          <AlertDialogHeader className="mb-3 xl:mb-4">
-            <AlertDialogTitle className="text-[14px] xl:text-[16px] 2xl:text-[18px] font-semibold text-[#282828]">
+      <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <DialogContent showCloseButton={false} className="xl:max-w-[520px] 2xl:max-w-[600px] gap-0 p-5 xl:p-6 2xl:p-8">
+          <DialogHeader className="mb-3 xl:mb-4">
+            <DialogTitle className="text-[14px] xl:text-[16px] 2xl:text-[18px] font-semibold text-[#282828]">
               {tCheckout("confirm_title")}
-            </AlertDialogTitle>
-            <AlertDialogDescription className="text-[11px] xl:text-[12px] 2xl:text-[14px] text-[#808080]">
+            </DialogTitle>
+            <DialogDescription className="text-[11px] xl:text-[12px] 2xl:text-[14px] text-[#808080]">
               {tCheckout("confirm_description")}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
+            </DialogDescription>
+          </DialogHeader>
 
           <div className="space-y-3 xl:space-y-4 mb-4 xl:mb-5">
             {/* Payment Method */}
@@ -608,19 +606,23 @@ const OrderSummary = ({
             })()}
           </div>
 
-          <AlertDialogFooter className="flex-row justify-end gap-2 sm:space-x-0">
-            <AlertDialogCancel className="mt-0 px-4 py-2 h-auto text-sm font-medium border border-gray-300 hover:bg-gray-50">
+          <DialogFooter className="flex-row justify-end gap-2 sm:space-x-0">
+            <Button
+              variant="outline"
+              onClick={() => setShowConfirmDialog(false)}
+              className="mt-0 px-4 py-2 h-auto text-sm font-medium border border-gray-300 hover:bg-gray-50 bg-white text-black"
+            >
               {tCommon("cancel")}
-            </AlertDialogCancel>
-            <AlertDialogAction
+            </Button>
+            <Button
               onClick={confirmPlaceOrder}
               className="mt-0 px-6 py-2 h-auto text-sm font-medium bg-black hover:bg-black/90 text-white border-0"
             >
               {tCheckout("confirm_order")}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

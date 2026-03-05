@@ -102,7 +102,7 @@ export default function HeaderNavigation({ locale, isDesktop, pathname, onNaviga
                             setHoveredSubSubmenu(null);
                           }}
                         >
-                          {item?.items?.slice(0, 5).map((subItem) => {
+                          {item?.items?.slice(0, 8).map((subItem) => {
                             const isSubActive = pathname === subItem.slug;
                             const hasSubSubItems = subItem?.items && subItem.items.length > 0;
                             const isSubHovered = hoveredSubmenu?.id === subItem.id;
@@ -169,7 +169,7 @@ export default function HeaderNavigation({ locale, isDesktop, pathname, onNaviga
                               </li>
                             );
                           })}
-                          {item?.items?.length > 5 && (
+                          {item?.items?.length > 8 && (
                             <li>
                               <NavigationMenuLink asChild>
                                 <Link

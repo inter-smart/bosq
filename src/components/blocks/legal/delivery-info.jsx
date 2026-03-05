@@ -11,9 +11,9 @@ export default function DeliveryInfo({ data, deliveryInfo, locale }) {
     <section className="w-full block py-[10px] sm:py-[15px] xl:py-[20px] 2xl:py-[30px]">
       <div className="w-full aspect-6/4 sm:aspect-1920/740 overflow-hidden flex items-center relative z-0">
         <picture className="absolute -z-2 inset-0 opacity-95">
-          <source media="(max-width: 640px)" srcSet={data?.media?.mobilePath} />
+          <source media="(max-width: 640px)" srcSet={isEn ? data?.media?.mobilePath : data?.media?.mobilePath_ar} />
           <Image
-            src={data?.media?.desktopPath}
+            src={isEn ? data?.media?.desktopPath: data?.media?.desktopPath_ar}
             alt={isEn ? data?.media?.media_alt : data?.media?.media_alt_ar}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 80vw"
