@@ -256,6 +256,7 @@
     "set_default": "Set Default",
     "delete_title": "Delete Address",
     "delete_confirm": "Are you sure you want to delete this address?",
+    "delete_billing_warning": "Note: Deleting this billing address will also delete its linked shipping address.",
     "set_default_title": "Set Default Address",
     "set_default_confirm": "Set this address as default?",
     "deleting": "Deleting...",

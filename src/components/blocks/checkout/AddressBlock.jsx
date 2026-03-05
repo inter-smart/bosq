@@ -27,7 +27,7 @@ import { setSelectedShippingAddress, setSelectedBillingAddress } from "@/store/s
 import { useTranslations } from "next-intl";
 import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
 
-const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress, disabled = false }) => {
+const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress }) => {
   const dispatch = useDispatch();
   const selectedShippingAddressId = useSelector((state) => state.checkout.selectedShippingAddressId);
   const selectedBillingAddressId = useSelector((state) => state.checkout.selectedBillingAddressId);
@@ -39,6 +39,7 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
   const [editingAddress, setEditingAddress] = useState(null);
 
   const [pendingAction, setPendingAction] = useState(null);
+  const [isActionDialogOpen, setIsActionDialogOpen] = useState(false);
 
 
   const tToast = useTranslations("toast");
@@ -59,13 +60,18 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
 
   const isProcessing = (pendingAction?.kind === "delete" && isDeletingAddress) || (pendingAction?.kind === "setDefault" && isUpdatingDefault);
 
-  // Set initial selected address to default or first available
+  // Stable key: re-run only when the set of address IDs changes
+  const addressIdKey = sortedAddresses.map((a) => a.id).join(",");
+
+  // Auto-select when:
+  // 1. No address is selected yet, OR
+  // 2. The selected ID no longer exists in this address list (stale/cross-type reference)
   useEffect(() => {
-    if (sortedAddresses.length > 0 && !selectedAddressId) {
-      // Try to find default address, otherwise use the first one
+    if (sortedAddresses.length === 0) return;
+    const selectedExistsInList = sortedAddresses.some((a) => a.id === selectedAddressId);
+    if (!selectedAddressId || !selectedExistsInList) {
       const defaultAddress = sortedAddresses.find((addr) => addr.is_default);
       const addressToSelect = defaultAddress || sortedAddresses[0];
-
       if (addressToSelect) {
         if (variant === "shipping") {
           dispatch(setSelectedShippingAddress(addressToSelect.id));
@@ -74,7 +80,8 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
         }
       }
     }
-  }, [sortedAddresses, selectedAddressId, variant, dispatch]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [addressIdKey, selectedAddressId, variant, dispatch]);
 
   const handleEditClick = (address) => {
     setEditingAddress(address);
@@ -82,23 +89,18 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
   };
 
   const handleDelete = (id, type) => {
-    setPendingAction({
-      id,
-      kind: "delete",
-      addressType: type,
-    });
+    setPendingAction({ id, kind: "delete", addressType: type });
+    setIsActionDialogOpen(true);
   };
 
   const handleUpdateDefault = (id, type) => {
-    setPendingAction({
-      id,
-      kind: "setDefault",
-      addressType: type,
-    });
+    setPendingAction({ id, kind: "setDefault", addressType: type });
+    setIsActionDialogOpen(true);
   };
 
   const confirmAction = async () => {
     if (!pendingAction) return;
+    setIsActionDialogOpen(false);
 
     try {
       if (pendingAction.kind === "delete") {
@@ -106,7 +108,7 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
         toast.success(`${tToast("delete_address")}`);
       } else {
         await updateDefaultAddress({ id: pendingAction.id, addressType: pendingAction.addressType }).unwrap();
-        toast.success(`${tToast("update_address")}`);
+        toast.success(`${tToast("default_address")}`);
       }
     } catch (error) {
       toast.error(`${tToast("something_went_wrong")}`);
@@ -269,9 +271,12 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
 
       <AlertDialog
         dir={locale === "ar" ? "rtl" : "ltr"}
-        open={!!pendingAction}
+        open={isActionDialogOpen}
         onOpenChange={(open) => {
-          if (!open) setPendingAction(null);
+          if (!open) {
+            setIsActionDialogOpen(false);
+            setPendingAction(null);
+          }
         }}
       >
         <AlertDialogContent size="none" className=" gap-4 p-6">
@@ -282,18 +287,27 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
             <AlertDialogDescription className="text-sm text-gray-600">
               {pendingAction?.kind === "delete" ? t("delete_confirm") : t("set_default_confirm")}
             </AlertDialogDescription>
+            {pendingAction?.kind === "delete" && pendingAction?.addressType === "billing" && (
+              <p className="text-sm text-red-600 font-medium">{t("delete_billing_warning")}</p>
+            )}
           </AlertDialogHeader>
 
           <AlertDialogFooter className="flex-row justify-end gap-3 sm:space-x-0">
             <AlertDialogCancel
               className="mt-0 px-4 py-2 h-auto text-sm font-medium border border-gray-300 hover:bg-gray-50"
-              onClick={() => setPendingAction(null)}
+              onClick={() => {
+                setIsActionDialogOpen(false);
+                setPendingAction(null);
+              }}
             >
               {tCommon("cancel")}
             </AlertDialogCancel>
             <AlertDialogAction
               className="mt-0 px-4 py-2 h-auto text-sm font-medium bg-red-600 hover:bg-red-700 text-white border-0"
-              onClick={confirmAction}
+              onClick={(e) => {
+                e.preventDefault();
+                confirmAction();
+              }}
               disabled={isProcessing}
             >
               {pendingAction?.kind === "delete" ? (isDeletingAddress ? t("deleting") : tCommon("delete")) : isUpdatingDefault ? tCommon("updating") : t("set_default")}
