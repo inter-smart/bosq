@@ -16,9 +16,12 @@ export default function MaterialInfoSection({
     <section className="w-full h-auto pt-2.5 sm:pt-3.75 xl:pt-5 2xl:pt-7.5 block">
       <div className="w-full aspect-6/5 sm:aspect-1920/740 overflow-hidden flex items-center relative z-0">
         <picture className="absolute -z-2 inset-0 opacity-95">
-          <source media="(max-width: 640px)" srcSet={data?.media?.mobilePath} />
+          <source
+            media="(max-width: 640px)"
+            srcSet={isEn ? data?.media?.mobilePath : data?.media?.mobilePath_ar}
+          />
           <Image
-            src={data?.media?.desktopPath}
+            src={isEn ? data?.media?.desktopPath : data?.media?.desktopPath_ar}
             alt={isEn ? data?.media?.media_alt : data?.media?.media_alt_ar}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 80vw"

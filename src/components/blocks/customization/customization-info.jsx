@@ -29,16 +29,16 @@ export default function CustomizationInfo({
             playsInline
             className="w-full h-full object-cover absolute z-0 inset-0"
           >
-            <source src={data?.media?.desktopPath} type="video/mp4" />
+            <source src={isEn ? data?.media?.desktopPath : data?.media?.desktopPath_ar} type="video/mp4" />
           </video>
         ) : (
           <picture className="absolute -z-2 inset-0 opacity-95">
             <source
               media="(max-width: 640px)"
-              srcSet={data?.media?.mobilePath}
+              srcSet={isEn ? data?.media?.mobilePath : data?.media?.mobilePath_ar}
             />
             <Image
-              src={data?.media?.desktopPath}
+              src={isEn ? data?.media?.desktopPath : data?.media?.desktopPath_ar}
               alt={isEn ? data?.media?.media_alt : data?.media?.media_alt_ar}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 80vw"
