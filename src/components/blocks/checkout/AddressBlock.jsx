@@ -163,20 +163,23 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
                 <div
                   onClick={() => handleAddressSelect(item.id)}
                   className={cn(
-                    "w-full h-full p-2.5 xl:p-3.5 2xl:p-5 transition hover:shadow-sm relative z-0",
+                    "w-full h-full p-2.5 xl:p-3.5 2xl:p-5 transition relative z-0 cursor-pointer",
                     locale === "ar" ? "pr-10 xl:pr-12 2xl:pr-18" : "pl-10 xl:pl-12 2xl:pl-18",
-                    selectedAddressId === item.id ? "bg-[#eaeaea]/60" : "bg-[#eaeaea]/40",
+                    selectedAddressId === item.id ? "bg-[#eaeaea]/60" : "bg-[#eaeaea]/40 hover:bg-[#eaeaea]/60",
                   )}
                 >
                   {/* Selection Indicator */}
                   <div
                     className={cn(
-                      "w-4 xl:w-4 2xl:w-5 aspect-square rounded-full border-3 bg-transparent absolute top-2.5 xl:top-3.5 2xl:top-5 transition-colors",
+                      "w-4 xl:w-4 2xl:w-5 aspect-square rounded-full border-2 bg-transparent absolute top-2.5 xl:top-3.5 2xl:top-5 transition-colors flex items-center justify-center",
                       locale === "ar" ? "right-3.5 xl:right-3.5 2xl:right-5" : "left-3.5 xl:left-3.5 2xl:left-5",
-                      selectedAddressId === item.id ? "border-[#f17423]" : "border-[#a1a1a1]",
-                      item.is_default && "border-black",
+                      selectedAddressId === item.id ? "border-[#f17423]" : item.is_default ? "border-black" : "border-[#a1a1a1]",
                     )}
-                  />
+                  >
+                    {selectedAddressId === item.id && (
+                      <span className="w-2 h-2 2xl:w-2.5 2xl:h-2.5 rounded-full bg-[#f17423]" />
+                    )}
+                  </div>
 
                   <Heading as="div" size="heading5" className="font-medium text-[#282828] mb-1 xl:mb-2">
                     {item?.full_name || item?.name}

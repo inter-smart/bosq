@@ -10,7 +10,12 @@ import AddAddressBlock from "./AddAddressBlock";
 import AddressBlock from "./AddressBlock";
 import { useGetAddressesQuery } from "@/store/services/addressApi";
 import { AddressListSkeletonCompact } from "@/components/skeletons/AddressBoxSkeleton";
-import { setUseSameAddressForBilling, setUseSameAddressForShipping } from "@/store/slices/checkoutSlice";
+import {
+  setUseSameAddressForBilling,
+  setUseSameAddressForShipping,
+  setSelectedShippingAddress,
+  setSelectedBillingAddress,
+} from "@/store/slices/checkoutSlice";
 import { cn } from "@/lib/utils";
 
 const AddressSection = ({ locale }) => {
@@ -18,6 +23,8 @@ const AddressSection = ({ locale }) => {
   const t = useTranslations("address");
   const useSameAddressForBilling = useSelector((state) => state.checkout.useSameAddressForBilling);
   const useSameAddressForShipping = useSelector((state) => state.checkout.useSameAddressForShipping);
+  const selectedShippingAddressId = useSelector((state) => state.checkout.selectedShippingAddressId);
+  const selectedBillingAddressId = useSelector((state) => state.checkout.selectedBillingAddressId);
   const user = useSelector((state) => state.auth.user);
 
   const [showShippingAddressForm, setShowShippingAddressForm] = React.useState(false);
@@ -47,10 +54,22 @@ const AddressSection = ({ locale }) => {
 
   const handleUseSameForBillingChange = (value) => {
     dispatch(setUseSameAddressForBilling(value));
+    // Auto-select first shipping address if none is selected
+    if (value && shippingAddresses.length > 0) {
+      const sorted = [...shippingAddresses].sort((a, b) => (b.is_default ? 1 : 0) - (a.is_default ? 1 : 0));
+      dispatch(setSelectedShippingAddress((sorted.find((a) => a.is_default) || sorted[0]).id));
+    }
   };
 
   const handleUseSameForShippingChange = (value) => {
     dispatch(setUseSameAddressForShipping(value));
+
+    // Auto-select first billing address if none is selected
+    if (value && billingAddresses.length > 0) {
+      const sorted = [...billingAddresses].sort((a, b) => (b.is_default ? 1 : 0) - (a.is_default ? 1 : 0));
+
+      dispatch(setSelectedBillingAddress((sorted.find((a) => a.is_default) || sorted[0]).id));
+    }
   };
 
   if (isError) return <div>{t("failed_to_load")}</div>;

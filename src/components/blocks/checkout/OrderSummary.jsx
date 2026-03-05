@@ -180,17 +180,19 @@ const OrderSummary = ({
   const getFinalAddressIds = () => {
     let shippingId = selectedShippingAddressId;
     let billingId = selectedBillingAddressId;
+    let isDifferent = !useSameAddressForBilling && !useSameAddressForShipping; // If either is true, addresses are the same
 
     // If "use same for billing" is checked, billing = shipping
     if (useSameAddressForBilling && selectedShippingAddressId) {
       billingId = selectedShippingAddressId;
+      type = "billing";
     }
     // If "use same for shipping" is checked, shipping = billing
     if (useSameAddressForShipping && selectedBillingAddressId) {
       shippingId = selectedBillingAddressId;
     }
 
-    return { shippingId, billingId };
+    return { shippingId, billingId, isDifferent };
   };
 
   // Find address details by ID from both lists
@@ -205,7 +207,16 @@ const OrderSummary = ({
   };
 
   const handlePlaceOrder = () => {
-    const { shippingId, billingId } = getFinalAddressIds();
+    const { shippingId, billingId, isDifferent } = getFinalAddressIds();
+
+    console.log("ADDRESS", shippingId);
+    console.log("ADDRESS", billingId);
+    console.log("ADDRESS", isDifferent);
+
+    if (isDifferent && shippingId == billingId) {
+      toast.error(tToast("address_conflict"));
+      return;
+    }
 
     // Validate shipping address is selected
     if (!shippingId) {
@@ -227,12 +238,22 @@ const OrderSummary = ({
       return;
     }
 
+    // Validate terms accepted
+    if (!termsAccepted) {
+      toast.error(tToast("accept_terms"));
+      return;
+    }
+
     // Show confirmation dialog
     setShowConfirmDialog(true);
   };
 
   const confirmPlaceOrder = async () => {
-    const { shippingId, billingId } = getFinalAddressIds();
+    const { shippingId, billingId, isDifferent } = getFinalAddressIds();
+
+    console.log("ADDRESS", shippingId, billingId, isDifferent);
+
+    return;
 
     const address = {
       billing: billingId,
@@ -475,7 +496,7 @@ const OrderSummary = ({
           </div>
 
           {/* Place Order Button - Desktop */}
-          <Button variant={"black"} disabled={!canPlaceOrder} onClick={handlePlaceOrder} className="min-w-full mt-2">
+          <Button variant={"black"} onClick={handlePlaceOrder} className="min-w-full mt-2">
             {tCheckout("place_order")}
           </Button>
         </div>
