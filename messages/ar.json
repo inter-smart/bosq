@@ -178,6 +178,7 @@
   "common": {
     "home": "الرئيسية",
     "products": "المنتجات",
+    "all_products": "جميع المنتجات",
     "cancel": "إلغاء",
     "delete": "حذف",
     "edit": "تعديل",

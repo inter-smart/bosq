@@ -160,6 +160,7 @@
   "common": {
     "home": "Home",
     "products": "Products",
+    "all_products": "All Products",
     "cancel": "Cancel",
     "delete": "Delete",
     "edit": "Edit",

@@ -2,7 +2,7 @@ import ProductHero from "@/components/blocks/product/product-hero";
 import { getMetaData } from "@/lib/api/metaApi";
 import { ProductData } from "@/lib/api/products/ResourcesApi";
 import ProductList from "@/components/blocks/product/Listing/ProductList";
-import { searchParamsCache, buildApiParams, slugify, PRICE_RANGES } from "@/components/blocks/product/Listing/searchParams";
+import { searchParamsCache, slugify, PRICE_RANGES } from "@/components/blocks/product/Listing/searchParams";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -22,8 +22,8 @@ export async function generateMetadata({ params }) {
 
 const local_data = {
   heroData: {
-    title: "Office Chairs",
-    title_ar: "مقاعد المكتب",
+    title: "All Products",
+    title_ar: "جميع المنتجات",
     description: null,
   },
 };
