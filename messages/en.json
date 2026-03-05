@@ -160,6 +160,7 @@
   "common": {
     "home": "Home",
     "products": "Products",
+    "all_products": "All Products",
     "cancel": "Cancel",
     "delete": "Delete",
     "edit": "Edit",
@@ -255,6 +256,7 @@
     "set_default": "Set Default",
     "delete_title": "Delete Address",
     "delete_confirm": "Are you sure you want to delete this address?",
+    "delete_billing_warning": "Note: Deleting this billing address will also delete its linked shipping address.",
     "set_default_title": "Set Default Address",
     "set_default_confirm": "Set this address as default?",
     "deleting": "Deleting...",
@@ -466,6 +468,7 @@
     "logout_failed": "Failed to log out",
     "accept_terms": "Please accept the Terms and Conditions to proceed",
     "order_failed": "Failed to place order",
+    "address_conflict": "Make sure to select different addresses for shipping and billing or check 'Use Same Address' option",
     "select_shipping_address": "Please select a shipping address",
     "select_billing_address": "Please select a billing address",
     "select_shipping_or_same": "Please select a shipping address or check 'Use Same Address For Shipping' in billing section",

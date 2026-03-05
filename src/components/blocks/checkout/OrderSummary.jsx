@@ -35,7 +35,7 @@ const MediaQuery = dynamic(() => import("react-responsive"), {
 
 const paymentMethods = [
   { id: 1, slug: "cod", nameKey: "cod", descKey: "cod_description" },
-  { id: 2, slug: "online", nameKey: "pay_online", descKey: "pay_online_description" },
+  // { id: 2, slug: "online", nameKey: "pay_online", descKey: "pay_online_description" },
 ];
 
 const OrderSummary = ({
@@ -100,7 +100,18 @@ const OrderSummary = ({
     setDiscountTotal(initialDiscountTotal ?? "0.00");
     setCouponDiscountType(initialCouponDiscountType ?? null);
     setCouponDiscountValue(initialCouponDiscountValue ?? null);
-  }, [initialProducts, initialCartId, initialSubTotal, initialGrandTotal, initialItemsCount, initialTotalItems, initialCouponStatus, initialDiscountTotal, initialCouponDiscountType, initialCouponDiscountValue]);
+  }, [
+    initialProducts,
+    initialCartId,
+    initialSubTotal,
+    initialGrandTotal,
+    initialItemsCount,
+    initialTotalItems,
+    initialCouponStatus,
+    initialDiscountTotal,
+    initialCouponDiscountType,
+    initialCouponDiscountValue,
+  ]);
 
   const [couponCode, setCouponCode] = useState("");
   const [checkoutList, setCheckoutList] = useState(true);
@@ -147,7 +158,7 @@ const OrderSummary = ({
       toast.success(`${tToast("coupon_success")}`);
     } catch (error) {
       console.log("Apply coupon error:", error);
-      toast.error(locale === "en" ? (error?.en || "Failed to apply coupon") : (error?.ar || "Failed to apply coupon"));
+      toast.error(locale === "en" ? error?.en || "Failed to apply coupon" : error?.ar || "Failed to apply coupon");
     }
   };
 
@@ -167,17 +178,19 @@ const OrderSummary = ({
   const getFinalAddressIds = () => {
     let shippingId = selectedShippingAddressId;
     let billingId = selectedBillingAddressId;
+    let isDifferent = !useSameAddressForBilling && !useSameAddressForShipping; // If either is true, addresses are the same
 
     // If "use same for billing" is checked, billing = shipping
     if (useSameAddressForBilling && selectedShippingAddressId) {
       billingId = selectedShippingAddressId;
+      type = "billing";
     }
     // If "use same for shipping" is checked, shipping = billing
     if (useSameAddressForShipping && selectedBillingAddressId) {
       shippingId = selectedBillingAddressId;
     }
 
-    return { shippingId, billingId };
+    return { shippingId, billingId, isDifferent };
   };
 
   // Find address details by ID from both lists
@@ -192,7 +205,16 @@ const OrderSummary = ({
   };
 
   const handlePlaceOrder = () => {
-    const { shippingId, billingId } = getFinalAddressIds();
+    const { shippingId, billingId, isDifferent } = getFinalAddressIds();
+
+    if (!shippingId || !billingId) {
+      toast.error(tToast("no_address_selected"));
+    }
+
+    if (isDifferent && shippingId == billingId) {
+      toast.error(tToast("address_conflict"));
+      return;
+    }
 
     // Validate shipping address is selected
     if (!shippingId) {
@@ -214,12 +236,22 @@ const OrderSummary = ({
       return;
     }
 
+    // Validate terms accepted
+    if (!termsAccepted) {
+      toast.error(tToast("accept_terms"));
+      return;
+    }
+
     // Show confirmation dialog
     setShowConfirmDialog(true);
   };
 
   const confirmPlaceOrder = async () => {
-    const { shippingId, billingId } = getFinalAddressIds();
+    const { shippingId, billingId, isDifferent } = getFinalAddressIds();
+
+    console.log("ADDRESS", shippingId, billingId, isDifferent);
+
+    return;
 
     const address = {
       billing: billingId,
@@ -359,9 +391,7 @@ const OrderSummary = ({
               >
                 <span>
                   {t("coupon_discount")}
-                  {couponDiscountType === "percentage" && couponDiscountValue && (
-                    <span className="ml-1">({parseFloat(couponDiscountValue)}%)</span>
-                  )}
+                  {couponDiscountType === "percentage" && couponDiscountValue && <span className="ml-1">({parseFloat(couponDiscountValue)}%)</span>}
                 </span>
                 - {displayDiscountTotal}
               </Text>
@@ -464,7 +494,7 @@ const OrderSummary = ({
           </div>
 
           {/* Place Order Button - Desktop */}
-          <Button variant={"black"} disabled={!canPlaceOrder} onClick={handlePlaceOrder} className="min-w-full mt-2">
+          <Button variant={"black"} onClick={handlePlaceOrder} className="min-w-full mt-2">
             {tCheckout("place_order")}
           </Button>
         </div>

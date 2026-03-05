@@ -98,10 +98,12 @@ export default function AccountOrders({ data, locale, orders: initialOrders, pag
                     {t("total")} {""}
                     <span>{tCommon("aed")} {item?.grand_total}</span> <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc]">{tCommon("inc_tax")}</span>
                   </Text>
-                  <Text as="div" size="text3" className={cn(labelStyle, "w-full sm:w-1/3")}>
-                    {t("est_delivery")} {""}
-                    <span>{item?.est_delivery_details}</span>
-                  </Text>
+                  {item?.est_delivery_details && (
+                    <Text as="div" size="text3" className={cn(labelStyle, "w-full sm:w-1/3")}>
+                      {t("est_delivery")} {""}
+                      <span>{item?.est_delivery_details}</span>
+                    </Text>
+                  )}
                   <Text as="div" size="text3" className={cn(labelStyle, "w-full sm:w-1/3")}>
                     {t("order_date")} {""}
                     <span>{item?.createdAt}</span>

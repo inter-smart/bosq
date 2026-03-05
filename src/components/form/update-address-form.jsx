@@ -216,7 +216,7 @@ export default function UpdateAddressForm({ locale, addressData, onSuccess }) {
         values: {
           ...values,
           recaptcha_token: recaptchaToken,
-          addressType: addressData?.addressType,
+          addressType: addressData?.address_type,
         },
       }).unwrap();
 

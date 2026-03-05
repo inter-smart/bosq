@@ -12,18 +12,6 @@ export const ProductData = {
     }
   },
 
-  getProductInitialListing: async () => {
-    const endpoint = `/api/frontend/products/initial-product-list`;
-
-    try {
-      const data = await fetchApi(endpoint, {}, false);
-
-      return sendSuccess(data?.data);
-    } catch (error) {
-      return sendError(error);
-    }
-  },
-
   getProductList: async (params) => {
     const endpoint = `/api/frontend/products/product-listing?${params}`;
 

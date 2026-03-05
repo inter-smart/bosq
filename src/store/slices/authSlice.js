@@ -31,10 +31,13 @@ export const loginUser = createAsyncThunk("auth/login", async (credentials, { re
       console.error("Cart merge failed:", mergeError);
     }
 
-    return {
-      accessToken: data.accessToken,
-      user: data.user || null,
-    };
+    const user = data.user || null;
+    if (typeof window !== "undefined" && "BroadcastChannel" in window) {
+      const bc = new BroadcastChannel("bosq_auth");
+      bc.postMessage({ type: "LOGIN", user });
+      bc.close();
+    }
+    return { accessToken: data.accessToken, user };
   } catch (error) {
     return rejectWithValue(error.message || "Login failed");
   }
@@ -55,10 +58,13 @@ export const googleLoginUser = createAsyncThunk("auth/googleLogin", async (token
       console.error("Cart merge failed:", mergeError);
     }
 
-    return {
-      accessToken: data.accessToken,
-      user: data.user || null,
-    };
+    const user = data.user || null;
+    if (typeof window !== "undefined" && "BroadcastChannel" in window) {
+      const bc = new BroadcastChannel("bosq_auth");
+      bc.postMessage({ type: "LOGIN", user });
+      bc.close();
+    }
+    return { accessToken: data.accessToken, user };
   } catch (error) {
     return rejectWithValue(error.message || "Google login failed");
   }
@@ -68,6 +74,11 @@ export const googleLoginUser = createAsyncThunk("auth/googleLogin", async (token
 export const logoutUser = createAsyncThunk("auth/logout", async () => {
   // Call server to clear HTTP-only cookie (cookie sent automatically via credentials: include)
   await logoutAPI();
+  if (typeof window !== "undefined" && "BroadcastChannel" in window) {
+    const bc = new BroadcastChannel("bosq_auth");
+    bc.postMessage({ type: "LOGOUT" });
+    bc.close();
+  }
   return true;
 });
 
