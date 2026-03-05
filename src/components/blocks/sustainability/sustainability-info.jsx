@@ -14,6 +14,16 @@ export default function SustainabilityInfo({
 }) {
   const isEn = locale === "en";
 
+  const desktopBannerSrc =
+    !isEn && bannerData?.desktop?.path_ar
+      ? bannerData.desktop.path_ar
+      : bannerData?.desktop?.path;
+
+  const mobileBannerSrc =
+    !isEn && bannerData?.mobile?.path_ar
+      ? bannerData.mobile.path_ar
+      : bannerData?.mobile?.path;
+
   return (
     <section className="w-full block">
       <div className="w-full aspect-6/4 sm:aspect-1920/740 overflow-hidden flex items-center mt-[10px] sm:mt-[15px] xl:mt-[20px] 2xl:mt-[30px] relative z-0">
@@ -32,10 +42,10 @@ export default function SustainabilityInfo({
           <picture className="absolute -z-2 inset-0 opacity-95">
             <source
               media="(max-width: 640px)"
-              srcSet={bannerData?.mobile?.path}
+              srcSet={mobileBannerSrc}
             />
             <Image
-              src={bannerData?.desktop?.path}
+              src={desktopBannerSrc}
               alt={
                 isEn ? bannerData?.desktop?.alt : bannerData?.desktop?.alt_ar
               }
