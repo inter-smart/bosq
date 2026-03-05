@@ -14,14 +14,7 @@ import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { useGetAddressesQuery } from "@/store/services/addressApi";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogFooter,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Heading } from "@/components/utils/heading";
 import { useApplyCouponMutation, useRemoveCouponMutation, usePlaceOrderMutation, useInitiatePaymentMutation } from "@/store/services/orderApi";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -248,10 +241,6 @@ const OrderSummary = ({
 
   const confirmPlaceOrder = async () => {
     const { shippingId, billingId, isDifferent } = getFinalAddressIds();
-
-    console.log("ADDRESS", shippingId, billingId, isDifferent);
-
-    return;
 
     const address = {
       billing: billingId,
@@ -614,10 +603,7 @@ const OrderSummary = ({
             >
               {tCommon("cancel")}
             </Button>
-            <Button
-              onClick={confirmPlaceOrder}
-              className="mt-0 px-6 py-2 h-auto text-sm font-medium bg-black hover:bg-black/90 text-white border-0"
-            >
+            <Button onClick={confirmPlaceOrder} className="mt-0 px-6 py-2 h-auto text-sm font-medium bg-black hover:bg-black/90 text-white border-0">
               {tCheckout("confirm_order")}
             </Button>
           </DialogFooter>
