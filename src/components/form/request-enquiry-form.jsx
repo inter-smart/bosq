@@ -95,7 +95,6 @@ export default function RequestEnquiryForm({
     defaultValues,
   });
 
-
   const onSubmit = async (values) => {
     setLoading(true);
     setSuccess(null);
@@ -324,7 +323,10 @@ export default function RequestEnquiryForm({
           name="dropdown_id"
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
-              <FormLabel className={labelStyle}>{t("help_with")}</FormLabel>
+              <FormLabel className={labelStyle}>
+                {t("help_with")}
+                <span className={errorStyle}>*</span>
+              </FormLabel>
               <Select
                 dir={locale === "ar" ? "rtl" : "ltr"}
                 onValueChange={field.onChange}

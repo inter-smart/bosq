@@ -178,8 +178,8 @@ export const commonValidations = {
   optionalBoolean: () => z.boolean().optional(),
   optionalString: () => z.string().optional(),
 
-  text: (val) =>
-    z.string().trim().min(1, vt("required", { field: val })),
+  text: () =>
+    z.string().trim().optional(),
 
   region: () => z.string().min(1, vt("select_region")),
 

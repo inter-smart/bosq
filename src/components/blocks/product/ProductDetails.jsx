@@ -19,7 +19,6 @@ const accordionTriggerStyle = cn(
 const ProductDetails = ({ data, isEn, setIndexProject, setOpenProject, openProject, indexProject }) => {
 
 
-   console.log("product data: ", data)
 
   const t = useTranslations();
   const faqs = data?.faqs || [];
@@ -27,6 +26,8 @@ const ProductDetails = ({ data, isEn, setIndexProject, setOpenProject, openProje
   const additionalInfo = data?.additional_details || "";
   const additionalInfoAr = data?.additional_details_ar || "";
   const details = data?.details || "";
+
+  console.log("additionalInfo: ", parse(additionalInfo));
 
   return (
     <div className="w-full mt-10 xl:mt-20">
@@ -92,6 +93,8 @@ const ProductDetails = ({ data, isEn, setIndexProject, setOpenProject, openProje
             <hr />
           </>
         )}
+         
+         {(additionalInfo  ||  additionalInfo) && (
         <AccordionItem value="item-3">
           <AccordionTrigger className={accordionTriggerStyle}>{t("product.additional_info")}</AccordionTrigger>
           <AccordionContent className="sm:p-2">
@@ -100,9 +103,10 @@ const ProductDetails = ({ data, isEn, setIndexProject, setOpenProject, openProje
             </div>
           </AccordionContent>
         </AccordionItem>
+)} 
         {faqs.length > 0 && (
           <>
-            <hr />
+        <hr />
             <AccordionItem value="item-4">
               <AccordionTrigger className={accordionTriggerStyle}>{t("product.faq")}</AccordionTrigger>
               <AccordionContent className="sm:p-2">

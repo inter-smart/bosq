@@ -67,7 +67,7 @@ export default function ProductEnquiryForm({ productId, onClose, locale }) {
     fullName: commonValidations.name(t("full_name")),
     email: commonValidations.email(),
     phone: commonValidations.phone(selectedCountry.toUpperCase()),
-    city: commonValidations.text("City").optional(),
+    city: commonValidations.message(t("city")),
     message: commonValidations.message(t("message")),
     attachment: commonValidations.image(),
   });
