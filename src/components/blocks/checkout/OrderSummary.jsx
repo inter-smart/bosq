@@ -240,7 +240,7 @@ const OrderSummary = ({
   };
 
   const confirmPlaceOrder = async () => {
-    const { shippingId, billingId, isDifferent } = getFinalAddressIds();
+    const { shippingId, billingId } = getFinalAddressIds();
 
     const address = {
       billing: billingId,

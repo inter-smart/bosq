@@ -3,6 +3,7 @@ import AccountOrders from "@/components/blocks/account/account-orders";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getMetaData } from "@/lib/api/metaApi";
 import { ProfileData } from "@/lib/api/profile/profileApi";
+import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -526,11 +527,13 @@ const local_data = {
   ],
 };
 
-export default async function OrdersPage({ params }) {
+export default async function OrdersPage({ params, searchParams }) {
   const resolvedParams = await params;
+  const resolvedSearch = await searchParams;
   const { locale } = resolvedParams;
+  const page = parseInt(resolvedSearch?.page) || 1;
 
-  const { data, error } = await ProfileData.getOrders();
+  const { data, error } = await ProfileData.getOrders(page, 12);
 
   const slug = locale === "en" ? "My Orders" : "طلباتي";
   const orders = data?.orders;
@@ -544,7 +547,7 @@ export default async function OrdersPage({ params }) {
     <>
       <ProductHero locale={locale} data={local_data?.heroData} slug={slug} />
       <AccountLayout locale={locale}>
-        <AccountOrders locale={locale} data={local_data?.orders} orders={orders} pagination={pagination} />
+        <AccountOrders locale={locale} orders={orders} pagination={pagination} />
       </AccountLayout>
     </>
   );

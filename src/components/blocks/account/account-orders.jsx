@@ -11,6 +11,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import OrdersDetailModal from "./orders-detail-modal";
+import ProductListPagination from "@/components/blocks/product/Listing/Pagination";
 import { OrderEmpty } from "./order-empty";
 import { useCancelOrderMutation, useReorderOrderMutation } from "@/store/services/orderApi";
 import {
@@ -27,13 +28,13 @@ import {
 const labelStyle = cn("text-[#282828] my-0.5 2xl:my-1 [&>span]:font-medium");
 const btnStyle = cn("underline underline-offset-1 text-[#282828] h-auto! px-1 xl:px-1.5 gap-0.5");
 
-export default function AccountOrders({ locale, orders: initialOrders }) {
+export default function AccountOrders({ locale, orders: initialOrders, pagination }) {
   const isEn = locale === "en";
   const t = useTranslations("account");
   const tCommon = useTranslations("common");
   const router = useRouter();
 
-  const [orders, setOrders] = useState(initialOrders ?? []);
+  const orders = initialOrders ?? [];
   const [cancelTargetId, setCancelTargetId] = useState(null);
 
   const [cancelOrder, { isLoading: isCancelling }] = useCancelOrderMutation();
@@ -43,8 +44,8 @@ export default function AccountOrders({ locale, orders: initialOrders }) {
     if (!cancelTargetId) return;
     try {
       await cancelOrder({ orderId: cancelTargetId }).unwrap();
-      setOrders((prev) => prev.map((o) => (o.id === cancelTargetId ? { ...o, status: "Cancelled" } : o)));
       toast.success("Order cancelled successfully");
+      router.refresh();
     } catch (error) {
       toast.error(typeof error?.en === "string" ? error.en : "Failed to cancel order");
     } finally {
@@ -162,7 +163,7 @@ export default function AccountOrders({ locale, orders: initialOrders }) {
                           <Link href={`/${locale}/`}>{t("track_order")}</Link>
                         </Button>
 
-                        {item?.status?.toLowerCase() === "pending" && (
+                        {item?.status?.toLowerCase() === "pending" && item?.showCancelButton && (
                           <Button
                             variant={"link"}
                             className={cn(btnStyle, "text-red-600 hover:text-red-700")}
@@ -184,6 +185,15 @@ export default function AccountOrders({ locale, orders: initialOrders }) {
               </div>
             </div>
           ))}
+
+          {pagination?.total_pages > 1 && (
+            <ProductListPagination
+              pagination={{ total: pagination.total, totalPages: pagination.total_pages, limit: pagination.limit }}
+              isEn={locale === "en"}
+              label="orders"
+              labelAr="طلب"
+            />
+          )}
         </div>
       )}
 
