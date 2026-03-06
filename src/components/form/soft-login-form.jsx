@@ -77,8 +77,7 @@ export default function SoftLoginForm({ locale }) {
 
     // Navigate to the same checkout URL to force server components to re-fetch
     // the merged cart while preserving the ?flow= param
-    const currentUrl = `${pathname}${searchParams.toString() ? `?${searchParams.toString()}` : ""}`;
-    router.push(currentUrl);
+    window.location.reload();
 
     setLoading(false);
   };
@@ -86,8 +85,7 @@ export default function SoftLoginForm({ locale }) {
   const handleGoogleSuccess = () => {
     dispatch(fetchUserProfile());
     dispatch(fetchCart());
-    const currentUrl = `${pathname}${searchParams.toString() ? `?${searchParams.toString()}` : ""}`;
-    router.push(currentUrl);
+    window.location.reload();
   };
 
   return (
