@@ -18,10 +18,10 @@ export const ProfileData = {
     }
   },
 
-  getOrders: async () => {
+  getOrders: async (page = 1, limit = 6) => {
     try {
       const data = await fetchApi(
-        `/api/frontend/orders`,
+        `/api/frontend/orders?page=${page}&limit=${limit}`,
         {
           credentials: "include",
         },

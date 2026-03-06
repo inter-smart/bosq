@@ -3,12 +3,16 @@ export const API_URL = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL ||
 export async function apiClient(endpoint, options = {}) {
   const url = `${API_URL}${endpoint}`;
 
+  const { next, cache, ...restOptions } = options;
   const config = {
     headers: {
       "Content-Type": "application/json",
-      ...options.headers,
+      ...restOptions.headers,
     },
-    ...options,
+    ...restOptions,
+
+    ...(next && { next }),
+    ...(cache && { cache }),
   };
 
   try {

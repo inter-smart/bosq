@@ -15,7 +15,7 @@ import {
 
 const ITEMS_PER_PAGE = 12;
 
-const ProductListPagination = ({ pagination, isEn }) => {
+const ProductListPagination = ({ pagination, isEn, label = "products", labelAr = "منتج" }) => {
   const [isPending, startTransition] = useTransition();
 
   // Use nuqs for page state - synced with URL
@@ -30,8 +30,9 @@ const ProductListPagination = ({ pagination, isEn }) => {
 
   const totalPages = pagination?.totalPages || 1;
   const total = pagination?.total || 0;
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, total);
+  const limit = pagination?.limit || ITEMS_PER_PAGE;
+  const startIndex = (currentPage - 1) * limit;
+  const endIndex = Math.min(startIndex + limit, total);
 
   // Pagination helpers
   const goToPage = useCallback(
@@ -96,8 +97,8 @@ const ProductListPagination = ({ pagination, isEn }) => {
     <div className={cn("w-full flex flex-col sm:flex-row sm:justify-between items-center gap-4 mt-5 xl:mt-10 2xl:mt-16", isPending && "opacity-50 pointer-events-none")}>
       <div className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-normal text-[#bbb]">
         {isEn
-          ? `Showing ${startIndex + 1}-${Math.min(endIndex, total)} of ${total} products`
-          : `عرض ${startIndex + 1}-${Math.min(endIndex, total)} من ${total} منتج`}
+          ? `Showing ${startIndex + 1}-${Math.min(endIndex, total)} of ${total} ${label}`
+          : `عرض ${startIndex + 1}-${Math.min(endIndex, total)} من ${total} ${labelAr}`}
       </div>
       {totalPages > 1 && (
         <div>
