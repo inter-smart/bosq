@@ -27,7 +27,7 @@ import {
 const labelStyle = cn("text-[#282828] my-0.5 2xl:my-1 [&>span]:font-medium");
 const btnStyle = cn("underline underline-offset-1 text-[#282828] h-auto! px-1 xl:px-1.5 gap-0.5");
 
-export default function AccountOrders({ data, locale, orders: initialOrders, pagination }) {
+export default function AccountOrders({ locale, orders: initialOrders }) {
   const isEn = locale === "en";
   const t = useTranslations("account");
   const tCommon = useTranslations("common");
@@ -43,9 +43,7 @@ export default function AccountOrders({ data, locale, orders: initialOrders, pag
     if (!cancelTargetId) return;
     try {
       await cancelOrder({ orderId: cancelTargetId }).unwrap();
-      setOrders((prev) =>
-        prev.map((o) => (o.id === cancelTargetId ? { ...o, status: "Cancelled" } : o))
-      );
+      setOrders((prev) => prev.map((o) => (o.id === cancelTargetId ? { ...o, status: "Cancelled" } : o)));
       toast.success("Order cancelled successfully");
     } catch (error) {
       toast.error(typeof error?.en === "string" ? error.en : "Failed to cancel order");
@@ -68,10 +66,7 @@ export default function AccountOrders({ data, locale, orders: initialOrders, pag
     <>
       {orders?.length === 0 ? (
         <div className="w-full border border-[#e9e9e9] sm:rounded-e-lg py-3 xl:py-6 3xl:py-9 px-3 xl:px-4 3xl:px-5">
-          <OrderEmpty
-            title={t("no_orders_title")}
-            description={t("no_orders_description")}
-          />
+          <OrderEmpty title={t("no_orders_title")} description={t("no_orders_description")} />
         </div>
       ) : (
         <div className="w-full border border-[#e9e9e9] sm:rounded-e-lg py-3 xl:py-6 3xl:py-9 px-3 xl:px-4 3xl:px-5">
@@ -96,7 +91,10 @@ export default function AccountOrders({ data, locale, orders: initialOrders, pag
                   </Text>
                   <Text as="div" size="text3" className={cn(labelStyle, "w-full sm:w-1/3")}>
                     {t("total")} {""}
-                    <span>{tCommon("aed")} {item?.grand_total}</span> <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc]">{tCommon("inc_tax")}</span>
+                    <span>
+                      {tCommon("aed")} {item?.grand_total}
+                    </span>{" "}
+                    <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc]">{tCommon("inc_tax")}</span>
                   </Text>
                   {item?.est_delivery_details && (
                     <Text as="div" size="text3" className={cn(labelStyle, "w-full sm:w-1/3")}>
@@ -154,7 +152,8 @@ export default function AccountOrders({ data, locale, orders: initialOrders, pag
                           {orderItem?.quantity}
                         </Text>
                         <Text as="div" size="text3" className="font-normal text-[#282828] mt-2 xl:mt-3">
-                          {tCommon("aed")} {orderItem?.line_total} <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc]">{tCommon("inc_tax")}</span>
+                          {tCommon("aed")} {orderItem?.line_total}{" "}
+                          <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc]">{tCommon("inc_tax")}</span>
                         </Text>
                       </div>
 
@@ -174,12 +173,7 @@ export default function AccountOrders({ data, locale, orders: initialOrders, pag
                           </Button>
                         )}
 
-                        <Button
-                          variant={"link"}
-                          className={btnStyle}
-                          onClick={() => handleReorder(item.id)}
-                          disabled={isReordering}
-                        >
+                        <Button variant={"link"} className={btnStyle} onClick={() => handleReorder(item.id)} disabled={isReordering}>
                           <Image src={"/images/icon-reorder.svg"} alt={"icon-reorder"} width={10} height={10} className="w-2 xl:w-2.5" quality={90} />
                           {t("reorder")}
                         </Button>
@@ -198,16 +192,11 @@ export default function AccountOrders({ data, locale, orders: initialOrders, pag
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Cancel Order</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to cancel this order? This action cannot be undone.
-            </AlertDialogDescription>
+            <AlertDialogDescription>Are you sure you want to cancel this order? This action cannot be undone.</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Keep Order</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleCancelConfirm}
-              className="bg-red-600 hover:bg-red-700 text-white border-0"
-            >
+            <AlertDialogAction onClick={handleCancelConfirm} className="bg-red-600 hover:bg-red-700 text-white border-0">
               {isCancelling ? "Cancelling..." : "Yes, Cancel"}
             </AlertDialogAction>
           </AlertDialogFooter>
