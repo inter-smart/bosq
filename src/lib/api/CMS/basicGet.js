@@ -48,7 +48,9 @@ export const getMaterialData = async () => {
 
 export const getSiteData = async () => {
   try {
-    const data = await apiClient(`/api/frontend/site-settings`);
+    const data = await apiClient(`/api/frontend/site-settings`, {
+      next: { revalidate: Number(process.env.NEXT_PUBLIC_CACHE_TTL) || 3600 },
+    });
     return sendSuccess(data?.data);
   } catch (error) {
     return sendError(error);
