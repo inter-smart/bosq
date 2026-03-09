@@ -27,7 +27,7 @@ import { setSelectedShippingAddress, setSelectedBillingAddress } from "@/store/s
 import { useTranslations } from "next-intl";
 import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
 
-const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress }) => {
+const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress, isFromCheckout }) => {
   const dispatch = useDispatch();
   const selectedShippingAddressId = useSelector((state) => state.checkout.selectedShippingAddressId);
   const selectedBillingAddressId = useSelector((state) => state.checkout.selectedBillingAddressId);
@@ -263,7 +263,7 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
 
           <div className="max-h-[70vh] mask-[linear-gradient(to_bottom,transparent_0%,white_2%,white_98%,transparent_100%)] overflow-y-auto overflow-x-hidden">
             <RecaptchaProvider>
-              <UpdateAddressForm locale={locale} addressData={editingAddress} onSuccess={() => setIsEditDialogOpen(false)} />
+              <UpdateAddressForm isFromCheckout={isFromCheckout} locale={locale} addressData={editingAddress} onSuccess={() => setIsEditDialogOpen(false)} />
             </RecaptchaProvider>
           </div>
         </AlertDialogContent>

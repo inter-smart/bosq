@@ -50,7 +50,7 @@ export default function FrequentlyBoughtCard({ product, locale, selected = true,
             size="none"
             className="text-[8px] xl:text-[8px] 2xl:text-[10px] 3xl:text-[12px] leading-normal font-light truncate text-[#bbbcbc] mb-0.5"
           >
-            <Link href={product?.query_params ? `/${locale}/product?.query_params` : "#"}>
+            <Link href={product?.query_params ? `/${locale}/products/${product?.base_slug}${product?.query_params}` : "#"}>
               {" "}
               {product?.categories?.map((cat) => (locale === "en" ? cat.name : cat.name_ar)).join(", ")}
             </Link>
