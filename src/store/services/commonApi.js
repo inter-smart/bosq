@@ -1,12 +1,9 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithReauth } from "@/lib/api/baseQueryWithReauth";
 
 export const commonApi = createApi({
   reducerPath: "commonApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
-    credentials: "include",
-    prepareHeaders: (headers) => headers,
-  }),
+  baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     validateCart: builder.mutation({
       query: () => "/api/frontend/checkout/validate-checkout",

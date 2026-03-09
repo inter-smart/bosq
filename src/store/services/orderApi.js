@@ -1,12 +1,9 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithReauth } from "@/lib/api/baseQueryWithReauth";
 
 export const orderApi = createApi({
   reducerPath: "orderApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
-    credentials: "include",
-    prepareHeaders: (headers) => headers,
-  }),
+  baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     placeOrder: builder.mutation({
       query: ({ payment_type, address, type }) => ({
