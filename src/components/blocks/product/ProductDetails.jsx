@@ -38,6 +38,19 @@ const ProductDetails = ({ data, isEn, setIndexProject, setOpenProject, openProje
                 {details?.details_points && parse(isEn ? details?.details_points : details?.details_points_ar)}
               </div>
             </div>
+            {data?.brochure && (
+              <div className="mt-4">
+                <a
+                  href={data.brochure}
+                  download
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-[12px] 2xl:text-[14px] 3xl:text-[18px] border border-[#282828] px-4 py-2 rounded hover:bg-[#282828] hover:text-white transition-colors"
+                >
+                  {t("product.download_brochure")}
+                </a>
+              </div>
+            )}
           </AccordionContent>
         </AccordionItem>
         <hr />
@@ -109,7 +122,7 @@ const ProductDetails = ({ data, isEn, setIndexProject, setOpenProject, openProje
                     <h6>
                       Q{index}: {isEn ? faq?.question : faq?.question_ar}
                     </h6>
-                    <p>{isEn ? faq?.answer : faq?.answer_ar}</p>
+                    <p>{parse(isEn ? faq?.answer : faq?.answer_ar)}</p>
                   </div>
                 ))}
               </AccordionContent>
