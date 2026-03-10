@@ -36,8 +36,15 @@ export function middleware(request) {
 
   const token = request.cookies.get("access_token")?.value;
 
-  // 🔴 Not logged in → block protected pages
+  // 🔴 Not logged in → try silent refresh first, then block protected pages
   if (isProtected && !token) {
+    const refreshToken = request.cookies.get("refresh_token")?.value;
+    if (refreshToken) {
+      const refreshUrl = new URL(`/api/refresh-and-redirect`, request.url);
+      refreshUrl.searchParams.set("redirect", pathname + request.nextUrl.search);
+      refreshUrl.searchParams.set("locale", locale);
+      return NextResponse.redirect(refreshUrl);
+    }
     const loginUrl = new URL(`/${locale}/login`, request.url);
     loginUrl.searchParams.set("redirect", pathname + request.nextUrl.search);
     return NextResponse.redirect(loginUrl);

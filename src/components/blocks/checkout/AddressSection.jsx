@@ -35,6 +35,9 @@ const AddressSection = ({ locale }) => {
   const shippingAddresses = data?.data?.shipping || [];
   const billingAddresses = data?.data?.billing || [];
 
+
+
+
   // Auto-enable "use same address" checkbox when only one type is available
   useEffect(() => {
     if (isLoading) return;
@@ -85,6 +88,7 @@ const AddressSection = ({ locale }) => {
             <AddressBlock
               locale={locale}
               variant={"shipping"}
+              isFromCheckout={true}
               data={shippingAddresses}
               useSameAddress={useSameAddressForBilling}
               setUseSameAddress={handleUseSameForBillingChange}

@@ -99,9 +99,17 @@ export async function fetchFromAPIWithCredentials(endpoint, options = {}) {
   };
 
   try {
-    const response = await fetch(url, defaultOptions);
+    let response = await fetch(url, defaultOptions);
+    let data = await response.json();
 
-    const data = await response.json();
+    // Attempt silent token refresh on 401 and retry once
+    if (response.status === 401) {
+      const refreshed = await attemptTokenRefresh();
+      if (refreshed) {
+        response = await fetch(url, defaultOptions);
+        data = await response.json();
+      }
+    }
 
     if (!response.ok) {
       return {
@@ -123,6 +131,30 @@ export async function fetchFromAPIWithCredentials(endpoint, options = {}) {
       message: error?.message || "Network error. Please check your connection.",
     };
   }
+}
+
+let _refreshPromise = null;
+
+export async function attemptTokenRefresh() {
+  // Deduplicate concurrent refresh calls
+  if (_refreshPromise) return _refreshPromise;
+
+  _refreshPromise = (async () => {
+    try {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+      const response = await fetch(`${API_BASE_URL}/api/frontend/auth/refresh-token`, {
+        method: "POST",
+        credentials: "include",
+      });
+      return response.ok;
+    } catch {
+      return false;
+    } finally {
+      _refreshPromise = null;
+    }
+  })();
+
+  return _refreshPromise;
 }
 
 export async function fetchWithCredentials(endpoint, options = {}) {

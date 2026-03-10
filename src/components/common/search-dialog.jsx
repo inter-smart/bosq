@@ -77,7 +77,6 @@ export default function SearchDialog({ children, locale }) {
   const products = initialData?.data || [];
   const hasResults = products.length > 0;
 
-  console.log(categories);
   const handleAddToLocalStorage = (item) => {
     saveVariantToStorage({
       label: item?.title,
@@ -85,7 +84,6 @@ export default function SearchDialog({ children, locale }) {
       STORAGE_KEY: "recently_viewed",
     });
 
-    console.log(item?.category);
     saveVariantToStorage({
       label: item?.category?.name,
       url: `/${locale}/products?${item?.category?.parent_id ? `category=${item?.category?.slug}` : `sub_category=${item?.category?.slug}`}`,

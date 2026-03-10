@@ -1,12 +1,10 @@
 // services/addressApi.js
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithReauth } from "@/lib/api/baseQueryWithReauth";
 
 export const addressApi = createApi({
   reducerPath: "addressApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
-    credentials: "include",
-  }),
+  baseQuery: baseQueryWithReauth,
   tagTypes: ["Address"],
   endpoints: (builder) => ({
     getAddresses: builder.query({

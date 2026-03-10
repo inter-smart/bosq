@@ -36,7 +36,7 @@ const textareaStyle = cn(inputStyle, "leading-tight min-h-[80px] 2xl:min-h-[100p
 
 import { useTranslations } from "next-intl";
 
-export default function UpdateAddressForm({ locale, addressData, onSuccess }) {
+export default function UpdateAddressForm({ locale, addressData, onSuccess, isFromCheckout=false }) {
   const t = useTranslations("form");
   const { executeRecaptcha } = useGoogleReCaptcha();
 
@@ -442,6 +442,10 @@ export default function UpdateAddressForm({ locale, addressData, onSuccess }) {
         />
 
         {/* Ship to Different Address Checkbox */}
+
+
+        {
+          !isFromCheckout &&
         <FormField
           control={form.control}
           name="shipToDifferentAddress"
@@ -459,6 +463,7 @@ export default function UpdateAddressForm({ locale, addressData, onSuccess }) {
             </FormItem>
           )}
         />
+        }
 
         {/* Shipping Address Section - Shows when checkbox is checked */}
         {shipToDifferent && (
