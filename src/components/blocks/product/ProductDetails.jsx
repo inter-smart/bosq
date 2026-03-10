@@ -17,17 +17,11 @@ const accordionTriggerStyle = cn(
 );
 
 const ProductDetails = ({ data, isEn, setIndexProject, setOpenProject, openProject, indexProject }) => {
-
-
-
   const t = useTranslations();
   const faqs = data?.faqs || [];
   const projects = data?.project_images || [];
   const additionalInfo = data?.additional_details || "";
-  const additionalInfoAr = data?.additional_details_ar || "";
   const details = data?.details || "";
-
-  console.log("additionalInfo: ", parse(additionalInfo));
 
   return (
     <div className="w-full mt-10 xl:mt-20">
@@ -37,7 +31,9 @@ const ProductDetails = ({ data, isEn, setIndexProject, setOpenProject, openProje
           <AccordionTrigger className={accordionTriggerStyle}>{t("product.product_details")}</AccordionTrigger>
           <AccordionContent className="sm:px-2">
             <div dir={!isEn ? "rtl" : "ltr"} className="typography flex flex-wrap justify-between">
-              <div className="xl:max-w-[540px] 2xl:max-w-[650px] 3xl:max-w-[820px]">{isEn ? details?.details && parse(details?.details) : details?.details_ar && parse(details?.details_ar)}</div>
+              <div className="xl:max-w-[540px] 2xl:max-w-[650px] 3xl:max-w-[820px]">
+                {isEn ? details?.details && parse(details?.details) : details?.details_ar && parse(details?.details_ar)}
+              </div>
               <div className="xl:max-w-[468px] 2xl:max-w-[576px] 3xl:max-w-[700px] border border-[#e9e9e9] rounded-lg px-2.5 xl:px-5 2xl:px-7.5 py-1 xl:py-2.5 2xl:py-4">
                 {details?.details_points && parse(isEn ? details?.details_points : details?.details_points_ar)}
               </div>
@@ -93,20 +89,18 @@ const ProductDetails = ({ data, isEn, setIndexProject, setOpenProject, openProje
             <hr />
           </>
         )}
-         
-         {(additionalInfo  ||  additionalInfo) && (
+
         <AccordionItem value="item-3">
           <AccordionTrigger className={accordionTriggerStyle}>{t("product.additional_info")}</AccordionTrigger>
           <AccordionContent className="sm:p-2">
             <div dir={!isEn ? "rtl" : "ltr"} className="typography">
-              {parse(additionalInfo) || (additionalInfoAr && parse(isEn ? additionalInfo : additionalInfoAr))}
+              {parse(isEn ? additionalInfo?.additional_details_en : additionalInfo?.additional_details_ar)}
             </div>
           </AccordionContent>
         </AccordionItem>
-)} 
         {faqs.length > 0 && (
           <>
-        <hr />
+            <hr />
             <AccordionItem value="item-4">
               <AccordionTrigger className={accordionTriggerStyle}>{t("product.faq")}</AccordionTrigger>
               <AccordionContent className="sm:p-2">

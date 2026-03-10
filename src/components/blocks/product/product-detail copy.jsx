@@ -253,21 +253,21 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
                             slides={productImages?.map((item) =>
                               item.media_type === "video"
                                 ? {
-                                  type: "video",
-                                  width: 1280,
-                                  height: 720,
-                                  poster: item.media_path,
-                                  autoPlay: true,
-                                  sources: [
-                                    {
-                                      src: item.media_path,
-                                      type: "video/mp4",
-                                    },
-                                  ],
-                                }
+                                    type: "video",
+                                    width: 1280,
+                                    height: 720,
+                                    poster: item.media_path,
+                                    autoPlay: true,
+                                    sources: [
+                                      {
+                                        src: item.media_path,
+                                        type: "video/mp4",
+                                      },
+                                    ],
+                                  }
                                 : {
-                                  src: item.media_path,
-                                },
+                                    src: item.media_path,
+                                  },
                             )}
                             animation={{ fade: 10 }}
                             controller={{
@@ -321,7 +321,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
                       )}
                     </>
 
-                    { }
+                    {}
                   </div>
                 </div>
               </div>
@@ -334,11 +334,13 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
                   >
                     {initialData?.categories?.map((cat) => (isEn ? cat.name : cat.name_ar)).join(", ")}
                   </Heading>
+
                   <Heading as="div" size="heading2" className="font-normal text-[#282828] mb-1 2xl:mb-2 max-sm:font-bold">
-                    {isEn ? initialData?.title : initialData?.title_ar}
+                    {isEn ? initialData?.title?.title : initialData?.title?.title_ar}
                   </Heading>
+
                   <Text as="div" size="text3" className="text-[#282828] mb-2 2xl:mb-4">
-                    {parse(isEn ? productData?.description : productData?.description_ar)}
+                    {parse(isEn ? initialData?.description?.description : initialData?.description?.description_ar)}
                   </Text>
 
                   <hr className="my-3 sm:my-3 2xl:my-5 mx-[-5px]" />
@@ -387,7 +389,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
                     size="none"
                     className="text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#808080] mb-2 xl:mb-3 2xl:mb-5"
                   >
-                    {isEn ? initialData?.design_title : initialData?.design_title_ar}
+                    {isEn ? initialData?.design_title?.design_title : initialData?.design_title?.design_title_ar}
                   </Heading>
                   <hr className="my-3 sm:my-3 2xl:my-5 mx-[-5px]" />
                   <Heading
@@ -411,7 +413,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
                   <div className="flex flex-wrap items-center justify-between gap-4 2xl:gap-6 mb-2 xl:mb-3 2xl:mb-5 max-lg:flex-wrap-reverse">
                     <div className="flex lg:flex-1">
                       <Text as="div" size="text3" className="text-[#282828] max-w-[95%]">
-                        {isEn ? productData?.enhance_title : productData?.enhance_title_ar}
+                        {isEn ? initialData?.enhance?.enhance : initialData?.enhance?.enhance_ar}
                       </Text>
                     </div>
                     <Button variant={"link"} className={"font-normal underline h-auto "} disabled={initialData?.stock == 0} onClick={handleBuyNow}>
@@ -467,7 +469,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
           </>
         )}
         <ProductDetails
-          data={productData}
+          data={initialData}
           isEn={isEn}
           setIndexProject={setIndexProduct}
           setOpenProject={setOpenProduct}
