@@ -65,13 +65,7 @@ export default function HomeFeatured({ data, locale }) {
                 >
                   <Suspense fallback={<FeaturedCard />}>
                     <Link
-                      href={{
-                        pathname: `/${locale}/products`,
-                        query:
-                          item?.parent_id !== null
-                            ? { subcategory: item.slug, page: 1 }
-                            : { category: item.slug, page: 1 },
-                      }}
+                      href={`/products/${item?.base_slug}${item?.queryParams}`}
                       className="group w-full h-auto block"
                     >
                       <div className="w-full aspect-440/576 overflow-hidden mb-1 xl:mb-3 2xl:mb-5">
