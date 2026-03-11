@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Text } from "@/components/utils/text";
 import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import dynamic from "next/dynamic";
@@ -126,6 +126,10 @@ const OrderSummary = ({
   const allShippingAddresses = addressData?.data?.shipping || [];
   const allBillingAddresses = addressData?.data?.billing || [];
 
+  const isAddressPresent = useMemo(() => {
+    return allShippingAddresses.length > 0 || allBillingAddresses.length > 0;
+  }, [allShippingAddresses, allBillingAddresses]);
+
   // Update order summary state from mutation response data
   const updateSummaryFromResponse = (data) => {
     if (!data) return;
@@ -200,9 +204,7 @@ const OrderSummary = ({
   const handlePlaceOrder = () => {
     const { shippingId, billingId, isDifferent } = getFinalAddressIds();
 
-    console.log(shippingId, billingId, isDifferent);
-
-    if (!shippingId || !billingId) {
+    if (!shippingId || !billingId || !isAddressPresent) {
       toast.error(tToast("no_address_selected"));
       return;
     }
@@ -486,7 +488,7 @@ const OrderSummary = ({
           </div>
 
           {/* Place Order Button - Desktop */}
-          <Button variant={"black"} onClick={handlePlaceOrder} className="min-w-full mt-2">
+          <Button variant={"black"} onClick={handlePlaceOrder} disabled={!canPlaceOrder} className="min-w-full mt-2">
             {tCheckout("place_order")}
           </Button>
         </div>
