@@ -1,18 +1,32 @@
 "use client";
 import { useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { FacebookIcon, InstagramIcon, LinkedInIcon, WhatsAppIcon } from "@/components/common/socialMediaIcons";
-
+import {
+  FacebookIcon,
+  InstagramIcon,
+  LinkedInIcon,
+  WhatsAppIcon,
+} from "@/components/common/socialMediaIcons";
 
 export default function ProductShareModal({ open, onClose, locale }) {
   const pathname = usePathname();
-  const [copied, setCopied] = useState(false);
+  const searchParams = useSearchParams();
 
-  const pageUrl = typeof window !== "undefined" ? `${window.location.origin}${pathname}` : "";
-  const encodedUrl = encodeURIComponent(pageUrl);
+  const [copied, setCopied] = useState(false);
+  const fullUrl =
+    typeof window !== "undefined"
+      ? `${window.location.origin}${pathname}${searchParams.toString() ? `?${searchParams.toString()}` : ""}`
+      : "";
+
+  const encodedUrl = encodeURIComponent(fullUrl);
   const isEn = locale !== "ar";
 
   const shareLinks = [
@@ -40,7 +54,7 @@ export default function ProductShareModal({ open, onClose, locale }) {
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(pageUrl);
+      await navigator.clipboard.writeText(fullUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
@@ -76,27 +90,35 @@ export default function ProductShareModal({ open, onClose, locale }) {
                 ) : item.id === "linkedin" ? (
                   <LinkedInIcon />
                 ) : (
-                  <Image src={item.icon} alt={item.label} width={22} height={22} unoptimized />
+                  <Image
+                    src={item.icon}
+                    alt={item.label}
+                    width={22}
+                    height={22}
+                    unoptimized
+                  />
                 )}
               </span>
-              <span className="text-[10px] xl:text-[11px] text-[#282828] font-light">{item.label}</span>
+              <span className="text-[10px] xl:text-[11px] text-[#282828] font-light">
+                {item.label}
+              </span>
             </a>
           ))}
         </div>
 
-        <div className="flex items-center gap-2 border border-[#dedede] rounded-[4px] px-3 py-2 bg-[#f8f8f8]">
-          <span className="flex-1 text-[9px] xl:text-[10px] text-[#808080] truncate">{pageUrl}</span>
-          <Button
-            variant="black"
-            className="text-[9px] xl:text-[10px] h-6 px-2.5 rounded-[2px] shrink-0"
-            onClick={handleCopy}
-          >
-            {copied ? (isEn ? "Copied!" : "تم النسخ!") : (isEn ? "Copy" : "نسخ")}
-          </Button>
-        </div>
+      <div className="flex items-center gap-2 border border-[#dedede] rounded-[4px] bg-[#f8f8f8] overflow-hidden">
+  <span className="flex-1 min-w-0 text-[9px] xl:text-[10px] text-[#808080] truncate px-3 py-2">
+    {fullUrl}
+  </span>
+  <Button
+    variant="black"
+    className="text-[9px] xl:text-[10px] h-full px-4 rounded-none shrink-0"
+    onClick={handleCopy}
+  >
+    {copied ? (isEn ? "Copied!" : "تم النسخ!") : (isEn ? "Copy" : "نسخ")}
+  </Button>
+</div>
       </DialogContent>
     </Dialog>
   );
 }
-
-
