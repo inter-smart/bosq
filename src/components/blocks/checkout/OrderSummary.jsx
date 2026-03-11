@@ -200,8 +200,11 @@ const OrderSummary = ({
   const handlePlaceOrder = () => {
     const { shippingId, billingId, isDifferent } = getFinalAddressIds();
 
+    console.log(shippingId, billingId, isDifferent);
+
     if (!shippingId || !billingId) {
       toast.error(tToast("no_address_selected"));
+      return;
     }
 
     if (isDifferent && shippingId == billingId) {
