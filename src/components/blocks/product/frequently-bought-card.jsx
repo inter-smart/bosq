@@ -11,6 +11,8 @@ import { cn } from "@/lib/utils";
 
 export default function FrequentlyBoughtCard({ product, locale, selected = true, onToggle }) {
   const productUrl = product?.query_params ? `/${locale}/products/${product?.base_slug}${product?.query_params}` : "#";
+  const title = product?.title?.title || product?.title;
+  const title_ar = product?.title?.title_ar || product?.title_ar;
 
   return (
     <Suspense fallback={<FrequentlyBoughtCardSkelton />}>
@@ -27,7 +29,7 @@ export default function FrequentlyBoughtCard({ product, locale, selected = true,
 
           <Image
             src={product?.variant_image}
-            alt={locale === "ar" ? product?.title_ar : product?.title}
+            alt={locale === "ar" ? title_ar : title}
             width={550}
             height={440}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -36,7 +38,7 @@ export default function FrequentlyBoughtCard({ product, locale, selected = true,
           {product?.hover_image && (
             <Image
               src={product?.hover_image}
-              alt={locale === "ar" ? product?.title_ar : product?.title}
+              alt={locale === "ar" ? title_ar : title}
               width={550}
               height={440}
               quality={100}
@@ -60,7 +62,7 @@ export default function FrequentlyBoughtCard({ product, locale, selected = true,
             size="none"
             className="text-[10px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-normal truncate text-[#282828] mb-0.5"
           >
-            <Link href={productUrl}>{locale == "ar" ? product?.title_ar : product?.title}</Link>
+            <Link href={productUrl}>{locale == "ar" ? title_ar : title}</Link>
           </Heading>
           <Text
             as="div"

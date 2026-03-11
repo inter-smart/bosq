@@ -466,16 +466,16 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
                 </div>
               </div>
             </div>
+            <ProductDetails
+              data={initialData}
+              isEn={isEn}
+              setIndexProject={setIndexProduct}
+              setOpenProject={setOpenProduct}
+              openProject={openProduct}
+              indexProject={indexProduct}
+            />
           </>
         )}
-        <ProductDetails
-          data={initialData}
-          isEn={isEn}
-          setIndexProject={setIndexProduct}
-          setOpenProject={setOpenProduct}
-          openProject={openProduct}
-          indexProject={indexProduct}
-        />
       </div>
     </section>
   );
