@@ -41,6 +41,11 @@ export default async function ProductDetailPage({ params, searchParams }) {
 
   const { data, error } = await ProductData.getProductDetailsBySlug(slug, variantSku, model, attributeFilters);
 
+console.log("error: ",error)
+
+console.log("Data: ",data)
+
+
   return (
     <>
       <ProductHero locale={locale} data={data?.heroData} slug={slug} type="product" />
