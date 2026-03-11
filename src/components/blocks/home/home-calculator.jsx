@@ -68,7 +68,6 @@ export default function HomeCalculator({ smartSpaceSection, locale, isEN }) {
 }
 
 function CardComp({ data, variant, locale, isEN }) {
-  console.log("calculator: ", data);
 
   return (
     <div

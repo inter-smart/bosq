@@ -10,7 +10,6 @@ export default function MaterialInfoSection({
   isEn,
 }) {
   const itemcount = data.items.length;
-  console.log("count", itemcount);
 
   return (
     <section className="w-full h-auto pt-2.5 sm:pt-3.75 xl:pt-5 2xl:pt-7.5 block">
