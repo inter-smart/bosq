@@ -33,6 +33,8 @@ const baseFiltersParser = {
 };
 
 const ProductListFilters = ({ filterData, isEn }) => {
+  console.log(filterData);
+
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -302,10 +304,10 @@ const ProductListFilters = ({ filterData, isEn }) => {
       const values = getAttributeValuesFromUrl(attr.slug);
       values.forEach((valSlug) => {
         filters.push({
-          attrSlug,
+          attrSlug: attr.slug,
           valSlug,
           attrName: isEn ? attr.name : attr.name_ar,
-          valLabel: getAttributeValueLabel(attrSlug, valSlug),
+          valLabel: getAttributeValueLabel(attr.slug, valSlug),
         });
       });
     });
@@ -384,7 +386,7 @@ const ProductListFilters = ({ filterData, isEn }) => {
           <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
             <SheetTrigger asChild>
               <button className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-none font-medium text-[#282828] flex items-center gap-x-2">
-                <Image src="/images/icon-filter.svg" alt="Filter" width={20} height={20} className="w-[10px] xl:w-[15px] block"  quality={90} />
+                <Image src="/images/icon-filter.svg" alt="Filter" width={20} height={20} className="w-[10px] xl:w-[15px] block" quality={90} />
                 <span>{isEn ? "Filters" : "المرشحات"}</span>
                 {activeFilterCount > 0 && (
                   <span className="text-[8px] sm:text-[10px] leading-normal bg-black text-white px-2 py-0.5 rounded-full">{activeFilterCount}</span>
@@ -619,7 +621,7 @@ const ProductListFilters = ({ filterData, isEn }) => {
             <SelectTrigger className="text-[10px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-tight font-medium truncate text-black w-[80px] sm:w-[110px] 2xl:w-[130px] border-none bg-transparent p-0 [&>svg]:hidden focus-visible:ring-0 rounded-none shadow-none">
               <SelectValue placeholder="Default" />
               <SelectIcon>
-                <Image src="/images/icon-dropdown.svg" alt="Dropdown" width={20} height={20} className="w-[10px] xl:w-[15px] block"  quality={90} />
+                <Image src="/images/icon-dropdown.svg" alt="Dropdown" width={20} height={20} className="w-[10px] xl:w-[15px] block" quality={90} />
               </SelectIcon>
             </SelectTrigger>
             <SelectContent>
