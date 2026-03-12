@@ -5,14 +5,7 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { z } from "zod";
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -26,9 +19,7 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 // Shared styles
-const labelStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-[#282828]",
-);
+const labelStyle = cn("text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-[#282828]");
 
 const inputStyle = cn(
   "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1",
@@ -36,12 +27,12 @@ const inputStyle = cn(
 
 const errorStyle = cn("text-[#f17423]");
 
-export default function PersonalInformationForm({ data, locale }) {
+export default function PersonalInformationForm({ data, locale, isGoogleUser }) {
   const t = useTranslations("account");
   const tToast = useTranslations("toast");
   const { executeRecaptcha } = useGoogleReCaptcha();
   const tErrors = useTranslations("errors");
-const isEn = locale === "en";
+  const isEn = locale === "en";
   // ✅ inject translator (once per render is fine)
   setValidationTranslator(tErrors);
 
@@ -76,9 +67,7 @@ const isEn = locale === "en";
     try {
       // Parse phone number to extract country code and mobile
       const parsedPhone = parsePhoneNumberFromString(values.phone);
-      const countryCode = parsedPhone?.countryCallingCode
-        ? `+${parsedPhone.countryCallingCode}`
-        : "";
+      const countryCode = parsedPhone?.countryCallingCode ? `+${parsedPhone.countryCallingCode}` : "";
       const mobile = parsedPhone?.nationalNumber || values.phone;
 
       // Map form fields to backend expected format
@@ -91,26 +80,20 @@ const isEn = locale === "en";
         mobile: mobile,
       };
 
-      const recaptchaToken = await executeRecaptcha(
-        "personal_information_form",
-      );
+      const recaptchaToken = await executeRecaptcha("personal_information_form");
 
-      const result = await fetchFromAPIWithCredentials(
-        "/api/frontend/profile/edit-profile",
-        {
-          method: "PUT",
-          body: JSON.stringify({
-            recaptcha_token: recaptchaToken,
-            ...profileData,
-          }),
-        },
-      );
+      const result = await fetchFromAPIWithCredentials("/api/frontend/profile/edit-profile", {
+        method: "PUT",
+        body: JSON.stringify({
+          recaptcha_token: recaptchaToken,
+          ...profileData,
+        }),
+      });
 
-        toast.success(isEn ? result?.message?.en : result?.message?.ar);
-      
+      toast.success(isEn ? result?.message?.en : result?.message?.ar);
     } catch (err) {
       console.error(err);
-      toast.error(isEn ? err?.en : err?.ar );
+      toast.error(isEn ? err?.en : err?.ar);
     }
     setLoading(false);
   };
@@ -128,10 +111,7 @@ const isEn = locale === "en";
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-wrap items-start -mx-4 [&>*]:px-4 [&>*]:py-2"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-wrap items-start -mx-4 [&>*]:px-4 [&>*]:py-2">
         {/* First Name */}
         <FormField
           control={form.control}
@@ -143,11 +123,7 @@ const isEn = locale === "en";
                 <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  className={inputStyle}
-                  placeholder={t("enter_first_name")}
-                />
+                <Input {...field} className={inputStyle} placeholder={t("enter_first_name")} />
               </FormControl>
               <FormMessage className={errorStyle} />
             </FormItem>
@@ -165,11 +141,7 @@ const isEn = locale === "en";
                 <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  className={inputStyle}
-                  placeholder={t("enter_last_name")}
-                />
+                <Input {...field} className={inputStyle} placeholder={t("enter_last_name")} />
               </FormControl>
               <FormMessage className={errorStyle} />
             </FormItem>
@@ -187,11 +159,7 @@ const isEn = locale === "en";
                 <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  className={inputStyle}
-                  placeholder={t("display_name_desc")}
-                />
+                <Input {...field} className={inputStyle} placeholder={t("display_name_desc")} />
               </FormControl>
               <FormMessage className={errorStyle} />
             </FormItem>
@@ -209,13 +177,7 @@ const isEn = locale === "en";
                 <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  type="email"
-                  className={inputStyle}
-                  disabled={true}
-                  placeholder={t("enter_email")}
-                />
+                <Input {...field} type="email" className={inputStyle} disabled={true} placeholder={t("enter_email")} />
               </FormControl>
               <FormMessage className={errorStyle} />
             </FormItem>
@@ -251,12 +213,7 @@ const isEn = locale === "en";
 
         {/* Submit and Reset Buttons */}
         <div className="w-full mt-2 flex gap-2.5">
-          <Button
-            type="submit"
-            variant="black"
-            disabled={loading}
-            className="min-w-[120px] 2xl:min-w-40"
-          >
+          <Button type="submit" variant="black" disabled={loading} className="min-w-[120px] 2xl:min-w-40">
             {loading ? t("saving") : t("save_changes")}
           </Button>
 

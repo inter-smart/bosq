@@ -31,6 +31,92 @@ const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
 });
 
+function ShippingCard({ item, onEdit, t, c }) {
+  return (
+    <div className="w-full sm:w-1/2 lg:w-1/3 flex">
+      <div className="w-full bg-white border border-[#dedede] p-2.5 xl:p-3.5 2xl:p-5 transition hover:shadow-sm relative flex flex-col">
+        <Heading as="div" size="heading5" className="font-medium text-[#282828] mb-1 xl:mb-2">
+          {item?.shippingFullName}
+        </Heading>
+        <Text as="div" size="text3" className="text-[#282828] mb-2 xl:mb-2.5 flex-1">
+          {item?.shipping_address && parse(item?.shipping_address)}
+        </Text>
+        <div className="flex gap-0.5 xl:gap-1 flex-wrap mt-auto">
+          <Button
+            variant={"white"}
+            onClick={() => onEdit(item)}
+            className="min-w-[45px] xl:min-w-[50px] 2xl:min-w-[70px] h-[20px] lg:h-[22px] 2xl:h-[24px] 3xl:h-[26px] bg-white gap-1 border border-[#e9e9e9] hover:text-black hover:bg-white hover:border-[#f17423]"
+          >
+            <Image src={"/images/icon-edit.svg"} alt={"icon-edit"} width={10} height={10} className="w-2 xl:w-2.5" quality={90} />
+            {c("edit")}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AddressCard({ item, isDeleting, onEdit, onSetDefault, onDelete, t, c }) {
+  return (
+    <div className="w-full sm:w-1/2 lg:w-1/3 flex">
+      <div
+        className={cn(
+          "w-full bg-white border p-2.5 xl:p-3.5 2xl:p-5 transition hover:shadow-sm relative flex flex-col",
+          item.is_default ? "border-[#f17423]" : "border-[#dedede]",
+        )}
+      >
+        <Heading as="div" size="heading5" className="font-medium text-[#282828] mb-1 xl:mb-2">
+          {item?.fullName}
+        </Heading>
+        <Text as="div" size="text3" className="text-[#282828] mb-1 xl:mb-2">
+          {item?.streetAddress && parse(item?.streetAddress)}
+        </Text>
+        <Text as="div" size="text3" className="font-medium text-[#282828] mb-2 xl:mb-2.5 flex-1">
+          <a href={`tel:${item?.phone}`} target="_blank" rel="noopener noreferrer">
+            {item?.phone}
+          </a>
+        </Text>
+        <div className="flex gap-0.5 xl:gap-1 flex-wrap mt-auto">
+          <Button
+            variant={"white"}
+            onClick={() => onEdit(item)}
+            className="min-w-[45px] xl:min-w-[50px] 2xl:min-w-[70px] h-[20px] lg:h-[22px] 2xl:h-[24px] 3xl:h-[26px] bg-white gap-1 border border-[#e9e9e9] hover:text-black hover:bg-white hover:border-[#f17423]"
+          >
+            <Image src={"/images/icon-edit.svg"} alt={"icon-edit"} width={10} height={10} className="w-2 xl:w-2.5" quality={90} />
+            {c("edit")}
+          </Button>
+          {item.is_default ? (
+            <Button
+              variant={"white"}
+              disabled={true}
+              className="min-w-[50px] xl:min-w-[60px] 2xl:min-w-[80px] h-[20px] lg:h-[22px] 2xl:h-[24px] 3xl:h-[26px] gap-1 border border-[#e9e9e9] text-white bg-[#f17423] border-[#f17423] disabled:opacity-100"
+            >
+              {t("default")}
+            </Button>
+          ) : (
+            <Button
+              variant={"white"}
+              onClick={() => onSetDefault(item.id)}
+              className="min-w-[70px] xl:min-w-[80px] 2xl:min-w-[100px] h-[20px] lg:h-[22px] 2xl:h-[24px] 3xl:h-[26px] bg-white gap-1 border border-[#e9e9e9] hover:text-black hover:bg-white hover:border-[#f17423]"
+            >
+              {t("set_default")}
+            </Button>
+          )}
+          <Button
+            variant={"white"}
+            onClick={() => onDelete(item?.id)}
+            disabled={isDeleting === item?.id}
+            className="min-w-[55px] xl:min-w-[60px] 2xl:min-w-[85px] h-[20px] lg:h-[22px] 2xl:h-[24px] 3xl:h-[26px] bg-white gap-1 border border-[#e9e9e9] hover:text-red-600 hover:bg-white hover:border-red-600"
+          >
+            <Image src={"/images/icon-delete.svg"} alt={"icon-delete"} width={10} height={10} className="w-2 xl:w-2.5" quality={90} />
+            {isDeleting === item?.id ? t("deleting") : c("delete")}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function AccountAddress({ data, locale, addressData }) {
   const t = useTranslations("address");
   const a = useTranslations("account");
@@ -46,13 +132,19 @@ export default function AccountAddress({ data, locale, addressData }) {
 
 
 
-  // Sort addresses: default address first
-  const sortedAddresses = addressData
-    ? [...addressData].sort((a, b) => {
+  const sortByDefault = (arr) =>
+    [...arr].sort((a, b) => {
       if (a.is_default && !b.is_default) return -1;
       if (!a.is_default && b.is_default) return 1;
       return 0;
-    })
+    });
+
+  // All records from the API are billing addresses; shipping is embedded inside each
+  const billingAddresses = addressData ? sortByDefault(addressData) : [];
+
+  // Shipping entries are those billing records that have an embedded shipping_address
+  const shippingAddresses = addressData
+    ? addressData.filter((a) => a.shipping_address)
     : [];
 
   const handleEditClick = async (address) => {
@@ -186,139 +278,48 @@ export default function AccountAddress({ data, locale, addressData }) {
             </MediaQuery>
           </div>
 
-          <div className="flex flex-wrap -mx-2 xl:-mx-7 2xl:-mx-10 [&>*]:px-2 [&>*]:py-1 xl:[&>*]:px-7 xl:[&>*]:py-1.5 2xl:[&>*]:px-10 2xl:[&>*]:py-2 mb-5 xl:mb-10 2xl:mb-12">
-            {sortedAddresses.map((item, index) => (
-              <div
-                key={"shippingAddress-item" + index}
-                className="w-full sm:w-1/2 lg:w-1/3"
-              >
-                <div
-                  className={cn(
-                    "w-full bg-white border p-2.5 xl:p-3.5 2xl:p-5 transition hover:shadow-sm relative",
-                    item.is_default ? "border-[#f17423]" : "border-[#dedede]",
-                  )}
-                >
-                  <Heading
-                    as="div"
-                    size="heading5"
-                    className="font-medium text-[#282828] mb-1 xl:mb-2"
-                  >
-                    {item?.fullName}
-                  </Heading>
-                  <Text
-                    as="div"
-                    size="text3"
-                    className="text-[#282828] mb-1 xl:mb-2"
-                  >
-                    {item?.streetAddress && parse(item?.streetAddress)}
-                  </Text>
-                  <Text
-                    as="div"
-                    size="text3"
-                    className="font-medium text-[#282828] mb-2 xl:mb-2.5"
-                  >
-                    <a
-                      href={`tel:${item?.phone}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {item?.phone}
-                    </a>
-                  </Text>
-
-                  {
-                    // display shipping address if it is a shipping address
-                    item?.shipping_address && (
-                      <>
-                        <Heading
-                          as="div"
-                          size="heading4"
-                          className="font-medium text-[#282828] mb-1 xl:mb-2"
-                        >
-                          {t("shipping")}
-                        </Heading>
-                        <Heading
-                          as="div"
-                          size="heading5"
-                          className="font-medium text-[#282828] mb-1 xl:mb-2"
-                        >
-                          {item?.shippingFullName}
-                        </Heading>
-                        <Text
-                          as="div"
-                          size="text3"
-                          className="text-[#282828] mb-1 xl:mb-2"
-                        >
-                          {item?.shipping_address &&
-                            parse(item?.shipping_address)}
-                        </Text>
-                      </>
-                    )
-                  }
-
-                  <div className="flex gap-0.5 xl:gap-1 flex-wrap">
-                    <Button
-                      variant={"white"}
-                      onClick={() => handleEditClick(item)}
-                      className={
-                        "min-w-[45px] xl:min-w-[50px] 2xl:min-w-[70px] h-[20px] lg:h-[22px] 2xl:h-[24px] 3xl:h-[26px] bg-white gap-1 border border-[#e9e9e9] hover:text-black hover:bg-white hover:border-[#f17423]"
-                      }
-                    >
-                      <Image
-                        src={"/images/icon-edit.svg"}
-                        alt={"icon-edit"}
-                        width={10}
-                        height={10}
-                        className="w-2 xl:w-2.5"
-                        quality={90}
-                      />
-                      {c("edit")}
-                    </Button>
-                    <Button
-                      variant={"white"}
-                      onClick={() => handleDelete(item?.id)}
-                      disabled={isDeleting === item?.id}
-                      className={
-                        "min-w-[55px] xl:min-w-[60px] 2xl:min-w-[85px] h-[20px] lg:h-[22px] 2xl:h-[24px] 3xl:h-[26px] bg-white gap-1 border border-[#e9e9e9] hover:text-black hover:bg-white hover:border-[#f17423]"
-                      }
-                    >
-                      <Image
-                        src={"/images/icon-delete.svg"}
-                        alt={"icon-delete"}
-                        width={10}
-                        height={10}
-                        className="w-2 xl:w-2.5"
-                        quality={90}
-                      />
-                      {isDeleting === item?.id ? t("deleting") : c("delete")}
-                    </Button>
-
-                    {item.is_default ? (
-                      <Button
-                        variant={"white"}
-                        disabled={true}
-                        className={
-                          "min-w-[50px] xl:min-w-[60px] 2xl:min-w-[80px] h-[20px] lg:h-[22px] 2xl:h-[24px] 3xl:h-[26px] gap-1 border border-[#e9e9e9] text-white bg-[#f17423] border-[#f17423] disabled:opacity-100"
-                        }
-                      >
-                        {t("default")}
-                      </Button>
-                    ) : (
-                      <Button
-                        variant={"white"}
-                        onClick={() => handleSetDefault(item.id)}
-                        className={
-                          "min-w-[70px] xl:min-w-[80px] 2xl:min-w-[100px] h-[20px] lg:h-[22px] 2xl:h-[24px] 3xl:h-[26px] bg-white gap-1 border border-[#e9e9e9] hover:text-black hover:bg-white hover:border-[#f17423]"
-                        }
-                      >
-                        {t("set_default")}
-                      </Button>
-                    )}
-                  </div>
-                </div>
+          {/* Billing Address Section */}
+          {billingAddresses.length > 0 && (
+            <div className="mb-5 xl:mb-7 2xl:mb-10">
+              <Heading as="h3" size="heading5" className="font-semibold text-[#282828] mb-2 xl:mb-3">
+                {t("billing")}
+              </Heading>
+              <div className="flex flex-wrap -mx-2 xl:-mx-3 2xl:-mx-4 [&>*]:px-2 [&>*]:py-1 xl:[&>*]:px-3 xl:[&>*]:py-1.5 2xl:[&>*]:px-4 2xl:[&>*]:py-2">
+                {billingAddresses.map((item, index) => (
+                  <AddressCard
+                    key={"billing-item-" + index}
+                    item={item}
+                    isDeleting={isDeleting}
+                    onEdit={handleEditClick}
+                    onSetDefault={handleSetDefault}
+                    onDelete={handleDelete}
+                    t={t}
+                    c={c}
+                  />
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          )}
+
+          {/* Shipping Address Section */}
+          {shippingAddresses.length > 0 && (
+            <div className="mb-5 xl:mb-7 2xl:mb-10">
+              <Heading as="h3" size="heading5" className="font-semibold text-[#282828] mb-2 xl:mb-3">
+                {t("shipping")}
+              </Heading>
+              <div className="flex flex-wrap -mx-2 xl:-mx-3 2xl:-mx-4 [&>*]:px-2 [&>*]:py-1 xl:[&>*]:px-3 xl:[&>*]:py-1.5 2xl:[&>*]:px-4 2xl:[&>*]:py-2">
+                {shippingAddresses.map((item, index) => (
+                  <ShippingCard
+                    key={"shipping-item-" + index}
+                    item={item}
+                    onEdit={handleEditClick}
+                    t={t}
+                    c={c}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
 
           <MediaQuery maxWidth={640}>
             <div className="w-full flex mb-3 ">
