@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 const Lightbox = dynamic(() => import("yet-another-react-lightbox"));
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
-import { cn } from "@/lib/utils";
+import { cn, getLocalizedContent } from "@/lib/utils";
 import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 import parse from "html-react-parser";
@@ -20,27 +20,27 @@ const ProductDetails = ({ data, isEn, setIndexProject, setOpenProject, openProje
   const t = useTranslations();
   const faqs = data?.faqs || [];
   const projects = data?.project_images || [];
-  const additionalInfo = data?.additional_details || "";
-  const details = data?.details || "";
+
+  const additionalContent = getLocalizedContent(isEn, data?.additional_details_en, data?.additional_details_ar);
+  const detailsContent = getLocalizedContent(isEn, data?.details, data?.details_ar);
+  const detailsPointsContent = getLocalizedContent(isEn, data?.details_points, data?.details_points_ar);
 
   return (
     <div className="w-full mt-10 xl:mt-20">
       <Accordion type="single" collapsible className="w-full" defaultValue="item-1">
         <hr />
-        {(details?.details?.trim() || details?.details_ar?.trim() || details?.details_points?.trim() || details?.details_points_ar?.trim()) && (
-          <>
+        <>
+          {detailsContent && (
             <AccordionItem value="item-1">
               <AccordionTrigger className={accordionTriggerStyle}>{t("product.product_details")}</AccordionTrigger>
 
               <AccordionContent className="sm:px-2">
                 <div dir={!isEn ? "rtl" : "ltr"} className="typography flex flex-wrap justify-between">
-                  {(isEn ? details?.details?.trim() : details?.details_ar?.trim()) && (
-                    <div className="xl:max-w-[540px] 2xl:max-w-[650px] 3xl:max-w-[820px]">{parse(isEn ? details?.details : details?.details_ar)}</div>
-                  )}
+                  {detailsContent && <div className="xl:max-w-[540px] 2xl:max-w-[650px] 3xl:max-w-[820px]">{parse(detailsContent)}</div>}
 
-                  {(isEn ? details?.details_points : details?.details_points_ar) && (
+                  {detailsPointsContent && (
                     <div className="xl:max-w-[468px] 2xl:max-w-[576px] 3xl:max-w-[700px] border border-[#e9e9e9] rounded-lg px-2.5 xl:px-5 2xl:px-7.5 py-1 xl:py-2.5 2xl:py-4">
-                      {parse(isEn ? details?.details_points : details?.details_points_ar)}
+                      {parse(detailsPointsContent)}
                     </div>
                   )}
                 </div>
@@ -59,9 +59,9 @@ const ProductDetails = ({ data, isEn, setIndexProject, setOpenProject, openProje
                 )}
               </AccordionContent>
             </AccordionItem>
-            <hr />
-          </>
-        )}
+          )}
+          <hr />
+        </>
         {projects?.length > 0 && (
           <>
             <AccordionItem value="item-2">
@@ -111,12 +111,12 @@ const ProductDetails = ({ data, isEn, setIndexProject, setOpenProject, openProje
           </>
         )}
 
-        {(additionalInfo?.additional_details_en || additionalInfo?.additional_details_ar) && (
+        {additionalContent && (
           <AccordionItem value="item-3">
             <AccordionTrigger className={accordionTriggerStyle}>{t("product.additional_info")}</AccordionTrigger>
             <AccordionContent className="sm:p-2">
               <div dir={!isEn ? "rtl" : "ltr"} className="typography">
-                {parse(isEn ? additionalInfo?.additional_details_en : additionalInfo?.additional_details_ar)}
+                {parse(additionalContent)}
               </div>
             </AccordionContent>
           </AccordionItem>

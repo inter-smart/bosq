@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
 import Fade from "embla-carousel-fade";
-import { cn } from "@/lib/utils";
+import { cn, getLocalizedContent } from "@/lib/utils";
 import Image from "next/image";
 import parse from "html-react-parser";
 import { Heading } from "@/components/utils/heading";
@@ -44,7 +44,12 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
   const [quantity, setQuantity] = useState(1);
   const isEn = locale === "en";
 
-  const description = isEn ? initialData?.description?.description : initialData?.description?.description_ar;
+  const title = getLocalizedContent(isEn, initialData?.title, initialData?.title_ar);
+  const enhanced = getLocalizedContent(isEn, initialData?.enhance, initialData?.enhance_ar);
+  const description = getLocalizedContent(isEn, initialData?.description, initialData?.description_ar);
+  const design_title = getLocalizedContent(isEn, initialData?.design_title, initialData?.design_title_ar);
+
+  console.log("eee", enhanced);
 
   const enq = {
     title: t("product.enquire_now"),
@@ -328,12 +333,13 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
                   >
                     {initialData?.categories?.map((cat) => (isEn ? cat.name : cat.name_ar)).join(", ")}
                   </Heading>
+                  {title && (
+                    <Heading as="div" size="heading2" className="font-normal text-[#282828] mb-1 2xl:mb-2 max-sm:font-bold">
+                      {title}
+                    </Heading>
+                  )}
 
-                  <Heading as="div" size="heading2" className="font-normal text-[#282828] mb-1 2xl:mb-2 max-sm:font-bold">
-                    {isEn ? initialData?.title?.title : initialData?.title?.title_ar}
-                  </Heading>
-
-                  {description?.trim() && (
+                  {description && (
                     <Text as="div" size="text3" className="text-[#282828] mb-2 2xl:mb-4">
                       {parse(description)}
                     </Text>
@@ -380,13 +386,16 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
                     </div>
                   </div>
 
-                  <Heading
-                    as="div"
-                    size="none"
-                    className="text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#808080] mb-2 xl:mb-3 2xl:mb-5"
-                  >
-                    {isEn ? initialData?.design_title?.design_title : initialData?.design_title?.design_title_ar}
-                  </Heading>
+                  {design_title && (
+                    <Heading
+                      as="div"
+                      size="none"
+                      className="text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#808080] mb-2 xl:mb-3 2xl:mb-5"
+                    >
+                      {design_title}
+                    </Heading>
+                  )}
+
                   <hr className="my-3 sm:my-3 2xl:my-5 mx-[-5px]" />
                   <Heading
                     as="div"
@@ -407,11 +416,13 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
                   )}
 
                   <div className="flex flex-wrap items-center justify-between gap-4 2xl:gap-6 mb-2 xl:mb-3 2xl:mb-5 max-lg:flex-wrap-reverse">
-                    <div className="flex lg:flex-1">
-                      <Text as="div" size="text3" className="text-[#282828] max-w-[95%]">
-                        {isEn ? initialData?.enhance?.enhance : initialData?.enhance?.enhance_ar}
-                      </Text>
-                    </div>
+                    {enhanced && (
+                      <div className="flex lg:flex-1">
+                        <Text as="div" size="text3" className="text-[#282828] max-w-[95%]">
+                          {enhanced}
+                        </Text>
+                      </div>
+                    )}
                     <Button variant={"link"} className={"font-normal underline h-auto "} disabled={initialData?.stock == 0} onClick={handleBuyNow}>
                       {t("product.buy_now")}
                     </Button>

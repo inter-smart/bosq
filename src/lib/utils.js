@@ -5,13 +5,11 @@ export function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 
-
 export const saveVariantToStorage = ({ label, url, STORAGE_KEY }) => {
   if (typeof window === "undefined") return;
 
-
-  console.log(label)
-  console.log(url)
+  console.log(label);
+  console.log(url);
 
   // Basic validation (prevent bad writes)
   if (!label || !url) return;
@@ -56,3 +54,5 @@ export const getStoredVariants = (STORAGE_KEY) => {
     return [];
   }
 };
+
+export const getLocalizedContent = (isEn, enValue, arValue) => (isEn ? enValue : arValue) || (isEn ? arValue : enValue) || null;
