@@ -434,11 +434,17 @@
   },
   "search": {
     "title": "ابحث الآن",
-    "placeholder": "البحث حسب الفئة",
+    "placeholder_1": "البحث حسب الفئة",
+    "placeholder_2": "كراسي مريحة",
+    "placeholder_3": "كراسي المكتب",
     "suggestions": "اقتراحات",
-    "category": "الفئة",
+    "categories": "الفئات",
     "results_for": "تم العثور على {count} نتائج لـ \"{query}\"",
-    "see_all_results": "عرض جميع النتائج ({count})"
+    "no_results": "لا توجد نتائج",
+    "showing_products": "عرض {count} منتجات",
+    "see_all_results": "عرض جميع النتائج ({count})",
+    "dialog_title": "البحث عن المنتجات",
+    "dialog_description": "ابحث عن المنتجات في كتالوجنا"
   },
   "toast": {
     "added_to_cart": "تمت إضافة المنتج إلى السلة",

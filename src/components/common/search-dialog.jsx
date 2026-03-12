@@ -19,22 +19,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  useGetSearchQuery,
-  useLazyGetSearchQuery,
-} from "@/store/services/searchApi";
+import { useGetSearchQuery, useLazyGetSearchQuery } from "@/store/services/searchApi";
 import { useState } from "react";
 import { useDebouncedValue } from "@/hooks/use-debounce";
 import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
-
-const placeholders = [
-  "Search by Category",
-  "Ergonomic Chairs",
-  "Office Chairs",
-];
+import { useTranslations } from "next-intl";
 
 export default function SearchDialog({ children, locale }) {
-  const isEn = locale == "en"
+  const isEn = locale === "en";
+  const t = useTranslations("search");
+  const c = useTranslations("common");
+
+  const placeholders = [t("placeholder_1"), t("placeholder_2"), t("placeholder_3")];
   const [searchQuery, setSearchQuery] = useState("");
   const [showAllSuggestions, setShowAllSuggestions] = useState(false);
   const debouncedQuery = useDebouncedValue(searchQuery, 500);
@@ -44,9 +40,6 @@ export default function SearchDialog({ children, locale }) {
   const { data: initialData, isLoading } = useGetSearchQuery({
     keywords: debouncedQuery,
   });
-
-  console.log("data", initialData)
-
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -62,17 +55,15 @@ export default function SearchDialog({ children, locale }) {
   const suggestedData = getStoredVariants("recently_viewed");
   const categories = getStoredVariants("categories");
 
-  const visibleSuggestions = showAllSuggestions
-    ? suggestedData
-    : suggestedData?.slice(0, 5);
+  const visibleSuggestions = showAllSuggestions ? suggestedData : suggestedData?.slice(0, 5);
 
   const suggestedItems = [
     {
-      title: "Suggessions",
+      title: t("suggestions"),
       items: visibleSuggestions,
     },
     {
-      title: "Categories",
+      title: t("categories"),
       items: categories,
     },
   ];
@@ -82,13 +73,13 @@ export default function SearchDialog({ children, locale }) {
 
   const handleAddToLocalStorage = (item) => {
     saveVariantToStorage({
-      label: item?.title,
+      label: isEn ? item?.title : (item?.title_ar || item?.title),
       url: `/${locale}/products/${item?.baseSlug}?sku=${item?.slug}`,
       STORAGE_KEY: "recently_viewed",
     });
 
     saveVariantToStorage({
-      label: item?.category?.name,
+      label: isEn ? item?.category?.name : (item?.category?.name_ar || item?.category?.name),
       url: `/${locale}/products?${item?.category?.parent_id ? `category=${item?.category?.slug}` : `sub_category=${item?.category?.slug}`}`,
       STORAGE_KEY: "categories",
     });
@@ -96,17 +87,16 @@ export default function SearchDialog({ children, locale }) {
 
   const slicedProducts = products.length < 5 ? products : products.slice(0, 5);
   return (
-    <Dialog onOpenChange={(open) => { if (!open) setSearchQuery(""); }}>
+    <Dialog
+      onOpenChange={(open) => {
+        if (!open) setSearchQuery("");
+      }}
+    >
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent
-        showCloseButton={false}
-        className="inset-0 translate-none rounded-none p-0 max-w-full sm:max-w-full mt-(--header-y) mt-0"
-      >
+      <DialogContent showCloseButton={false} className="inset-0 translate-none rounded-none p-0 max-w-full sm:max-w-full mt-(--header-y) mt-0">
         <DialogHeader className={"sr-only"}>
-          <DialogTitle>Search products</DialogTitle>
-          <DialogDescription>
-            Make changes to your profile here. Click save when you&apos;re done.
-          </DialogDescription>
+          <DialogTitle>{t("dialog_title")}</DialogTitle>
+          <DialogDescription>{t("dialog_description")}</DialogDescription>
         </DialogHeader>
 
         <DialogClose asChild>
@@ -141,18 +131,12 @@ export default function SearchDialog({ children, locale }) {
             <div className="container">
               <div className="flex flex-wrap -mx-4 xl:-mx-10 2xl:-mx-16 [&>div]:px-4 xl:[&>div]:px-10 2xl:[&>div]:px-16">
                 <div className="w-full sm:w-[200px] lg:w-[220px] xl:w-[420px] 2xl:w-[468px] 3xl:w-[576px]">
-                  <Heading
-                    as="div"
-                    size="heading6"
-                    className="text-[#282828] mb-2 xl:mb-3 2xl:mb-6"
-                  >
-                    Search Now
+                  <Heading as="div" size="heading6" className="text-[#282828] mb-2 xl:mb-3 2xl:mb-6">
+                    {t("title")}
                     <span
                       className={cn(
                         "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
-                        locale === "ar"
-                          ? "-translate-x-1 xl:-translate-x-2 "
-                          : "translate-x-1 xl:translate-x-2 ",
+                        locale === "ar" ? "-translate-x-1 xl:-translate-x-2 " : "translate-x-1 xl:translate-x-2 ",
                       )}
                     />
                   </Heading>
@@ -169,35 +153,20 @@ export default function SearchDialog({ children, locale }) {
                   {/* </RecaptchaProvider> */}
 
                   {suggestedItems?.map((item, index) => (
-                    <div
-                      className="w-full mt-4 sm:mt-3 xl:mt-4 2xl:mt-8"
-                      key={index}
-                    >
+                    <div className="w-full mt-4 sm:mt-3 xl:mt-4 2xl:mt-8" key={index}>
                       {item?.items.length > 0 && (
-                        <Heading
-                          as="div"
-                          size="heading4"
-                          className="text-[#282828] mb-2 xl:mb-3 2xl:mb-4"
-                        >
+                        <Heading as="div" size="heading4" className="text-[#282828] mb-2 xl:mb-3 2xl:mb-4">
                           {item?.title}
                         </Heading>
                       )}
                       {item?.items?.map((item, idx) => (
-                        <Text
-                          key={"suggesions-item-" + idx}
-                          as="div"
-                          size="text3"
-                          className="text-black flex items-center gap-1 my-1 xl:my-1.5"
-                        >
+                        <Text key={"suggesions-item-" + idx} as="div" size="text3" className="text-black flex items-center gap-1 my-1 xl:my-1.5">
                           <Image
                             src={"/images/search-right.svg"}
                             alt={"search-right"}
                             width={6}
                             height={4}
-                            className={cn(
-                              "w-1 xl:w-1.5",
-                              locale === "ar" && "rotate-180",
-                            )}
+                            className={cn("w-1 xl:w-1.5", locale === "ar" && "rotate-180")}
                             quality={90}
                           />
 
@@ -215,8 +184,7 @@ export default function SearchDialog({ children, locale }) {
                           onClick={() => setShowAllSuggestions(true)}
                         >
                           <Link href={"/products"}>
-                            <Plus className="size-2 xl:size-2 inline-block" />{" "}
-                            See More
+                            <Plus className="size-2 xl:size-2 inline-block" /> {c("see_more")}
                           </Link>
                         </Text>
                       )}
@@ -225,18 +193,14 @@ export default function SearchDialog({ children, locale }) {
                 </div>
 
                 <div className="w-full sm:w-[calc(100%-200px)] lg:w-[calc(100%-220px)] xl:w-[calc(100%-420px)] 2xl:w-[calc(100%-468px)] 3xl:w-[calc(100%-576px)]">
-                  <Heading
-                    as="div"
-                    size="heading4"
-                    className="text-[#282828] my-2 xl:my-3 2xl:my-4"
-                  >
+                  <Heading as="div" size="heading4" className="text-[#282828] my-2 xl:my-3 2xl:my-4">
                     {isLoading
-                      ? "Loading..."
+                      ? c("loading")
                       : searchQuery
                         ? hasResults
-                          ? `Found ${products.length} results for "${searchQuery}"`
-                          : "No results found"
-                        : `Showing ${slicedProducts.length} products`}
+                          ? t("results_for", { count: products.length, query: searchQuery })
+                          : t("no_results")
+                        : t("showing_products", { count: slicedProducts.length })}
                   </Heading>
 
                   {/* Mobile list */}
@@ -245,7 +209,7 @@ export default function SearchDialog({ children, locale }) {
                       <DialogClose asChild key={item.id}>
                         <Link
                           href={`/${locale}/products/${item?.baseSlug}${item?.query_params}`}
-                          // onClick={() => handleAddToLocalStorage(item)}
+                          onClick={() => handleAddToLocalStorage(item)}
                           className="flex items-center gap-3 bg-white rounded-[4px] p-2"
                         >
                           <div className="w-14 h-14 shrink-0 overflow-hidden rounded-[4px] bg-[#f4f4f4] relative">
@@ -259,7 +223,7 @@ export default function SearchDialog({ children, locale }) {
                             />
                             {!(item?.stock > 0) && (
                               <div className="absolute inset-0 bg-white/70 flex items-center justify-center">
-                                <span className="text-[9px] font-medium text-[#282828]">Out of Stock</span>
+                                <span className="text-[9px] font-medium text-[#282828]">{c("out_of_stock")}</span>
                               </div>
                             )}
                           </div>
@@ -267,20 +231,15 @@ export default function SearchDialog({ children, locale }) {
                             <p className="text-[10px] leading-normal font-light truncate text-[#bbbcbc]">
                               {item?.categories?.map((cat) => (isEn ? cat.name : cat.name_ar)).join(", ")}
                             </p>
-                            <p className="text-[13px] leading-normal font-normal truncate text-[#282828]">
-                              {item?.title}
-                            </p>
+                            <p className="text-[13px] leading-normal font-normal truncate text-[#282828]">{isEn ? item?.title : (item?.title_ar || item?.title)}</p>
                           </div>
                         </Link>
                       </DialogClose>
                     ))}
                     {products.length > 5 && (
                       <DialogClose asChild>
-                        <Link
-                          href={`/${locale}/products`}
-                          className="text-[12px] text-black underline text-center py-1"
-                        >
-                          See All Results ({products.length})
+                        <Link href={`/${locale}/products`} className="text-[12px] text-black underline text-center py-1">
+                          {t("see_all_results", { count: products.length })}
                         </Link>
                       </DialogClose>
                     )}
@@ -304,7 +263,7 @@ export default function SearchDialog({ children, locale }) {
                                     disabled
                                     className="min-w-[100px] xl:min-w-[120px] 2xl:min-w-[200px] disabled:opacity-100 rounded-[2px]"
                                   >
-                                    Out of Stock
+                                    {c("out_of_stock")}
                                   </Button>
                                 </div>
                               )}
@@ -334,15 +293,11 @@ export default function SearchDialog({ children, locale }) {
                               size="none"
                               className="text-[10px] xl:text-[8px] 2xl:text-[10px] 3xl:text-[12px] leading-normal font-light truncate text-[#bbbcbc] mb-0.5"
                             >
-
                               <DialogClose asChild>
-                                <Link
-                                  href={`/${locale}/products/${item?.baseSlug}${item?.query_params}`}
-                                >
+                                <Link href={`/${locale}/products/${item?.baseSlug}${item?.query_params}`}>
                                   {item?.categories?.map((cat) => (isEn ? cat.name : cat.name_ar)).join(", ")}
                                 </Link>
                               </DialogClose>
-
                             </Heading>
                             <Heading
                               as="div"
@@ -354,7 +309,7 @@ export default function SearchDialog({ children, locale }) {
                                   href={`/${locale}/products/${item?.baseSlug}${item?.query_params}`}
                                   onClick={() => handleAddToLocalStorage(item)}
                                 >
-                                  {item?.title}
+                                  {isEn ? item?.title : (item?.title_ar || item?.title)}
                                 </Link>
                               </DialogClose>
                             </Heading>
@@ -368,9 +323,7 @@ export default function SearchDialog({ children, locale }) {
                           <div className="w-full aspect-[550/440] overflow-hidden rounded-[4px] border border-[#e9e9e9] bg-[#f4f4f4] flex items-center justify-center">
                             <Text as="div" size="text3" className="font-normal text-black hover:underline">
                               <DialogClose asChild>
-                                <Link href={`/${locale}/products`}>
-                                  See All Results ({products.length})
-                                </Link>
+                                <Link href={`/${locale}/products`}>{t("see_all_results", { count: products.length })}</Link>
                               </DialogClose>
                             </Text>
                           </div>

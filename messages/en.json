@@ -433,11 +433,17 @@
   },
   "search": {
     "title": "Search Now",
-    "placeholder": "Search by Category",
+    "placeholder_1": "Search by Category",
+    "placeholder_2": "Ergonomic Chairs",
+    "placeholder_3": "Office Chairs",
     "suggestions": "Suggestions",
-    "category": "Category",
+    "categories": "Categories",
     "results_for": "Found {count} results for \"{query}\"",
-    "see_all_results": "See All Results ({count})"
+    "no_results": "No results found",
+    "showing_products": "Showing {count} products",
+    "see_all_results": "See All Results ({count})",
+    "dialog_title": "Search products",
+    "dialog_description": "Search for products in our catalog"
   },
   "toast": {
     "added_to_cart": "Item added to cart",
