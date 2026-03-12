@@ -279,46 +279,38 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
                         </div>
                       </div>
                       <ProductShareModal open={isShareOpen} onClose={() => setIsShareOpen(false)} locale={locale} />
-                      {initialData?.images?.length > 0 && (
-                        <div
-                          className={cn(
-                            "flex gap-3 2xl:gap-4 absolute z-2 top-2 xl:top-4",
-                            locale === "ar" ? "left-2 xl:left-4 2xl:left-5" : "right-2 xl:right-4 2xl:right-5",
-                          )}
+
+                      <div
+                        className={cn(
+                          "flex gap-3 2xl:gap-4 absolute z-2 top-2 xl:top-4",
+                          locale === "ar" ? "left-2 xl:left-4 2xl:left-5" : "right-2 xl:right-4 2xl:right-5",
+                        )}
+                      >
+                        <button
+                          onClick={handleWishlistToggle}
+                          disabled={isWishlistLoading}
+                          className="w-3 2xl:w-4.5 hover:cursor-pointer transition hover:scale-105 disabled:opacity-60 disabled:scale-100"
                         >
-                          <button
-                            onClick={handleWishlistToggle}
-                            disabled={isWishlistLoading}
-                            className="w-3 2xl:w-4.5 hover:cursor-pointer transition hover:scale-105 disabled:opacity-60 disabled:scale-100"
+                          <svg
+                            width="15"
+                            height="15"
+                            viewBox="0 0 15 15"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="w-full h-full block"
                           >
-                            <svg
-                              width="15"
-                              height="15"
-                              viewBox="0 0 15 15"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="w-full h-full block"
-                            >
-                              <path
-                                d="M7.39062 2.03027C8.85818 0.419111 10.5094 0.0894194 11.749 0.544922C12.9908 1.00129 13.9263 2.28275 13.8955 4.12402C13.8676 5.78912 12.7686 7.51198 11.3096 9.04004C9.9379 10.4766 8.3011 11.6826 7.12598 12.4326C5.95106 11.6827 4.3155 10.4769 2.94434 9.04102C1.48523 7.51297 0.385558 5.78917 0.357422 4.12402C0.326449 2.28301 1.26218 1.00146 2.50391 0.544922C3.74349 0.0891915 5.39453 0.418918 6.8623 2.03027L7.12695 2.32031L7.39062 2.03027Z"
-                                fill={wishlist ? "black" : "none"}
-                                stroke="#282828"
-                                strokeWidth="1"
-                              />
-                            </svg>
-                          </button>
-                          <button onClick={() => setIsShareOpen(true)} className="w-2.5 2xl:w-3.5 hover:cursor-pointer transition hover:scale-105">
-                            <Image
-                              src="/images/icon-share.svg"
-                              alt="icon-share"
-                              width={12}
-                              height={12}
-                              className="w-full h-full block"
-                              quality={90}
+                            <path
+                              d="M7.39062 2.03027C8.85818 0.419111 10.5094 0.0894194 11.749 0.544922C12.9908 1.00129 13.9263 2.28275 13.8955 4.12402C13.8676 5.78912 12.7686 7.51198 11.3096 9.04004C9.9379 10.4766 8.3011 11.6826 7.12598 12.4326C5.95106 11.6827 4.3155 10.4769 2.94434 9.04102C1.48523 7.51297 0.385558 5.78917 0.357422 4.12402C0.326449 2.28301 1.26218 1.00146 2.50391 0.544922C3.74349 0.0891915 5.39453 0.418918 6.8623 2.03027L7.12695 2.32031L7.39062 2.03027Z"
+                              fill={wishlist ? "black" : "none"}
+                              stroke="#282828"
+                              strokeWidth="1"
                             />
-                          </button>
-                        </div>
-                      )}
+                          </svg>
+                        </button>
+                        <button onClick={() => setIsShareOpen(true)} className="w-2.5 2xl:w-3.5 hover:cursor-pointer transition hover:scale-105">
+                          <Image src="/images/icon-share.svg" alt="icon-share" width={12} height={12} className="w-full h-full block" quality={90} />
+                        </button>
+                      </div>
                     </>
 
                     {}

@@ -102,7 +102,7 @@ const AddressSection = ({ locale }) => {
       {showShippingAddressForm && (
         <AddAddressBlock
           locale={locale}
-          variant="shipping"
+          variant="billing"
           onCancel={() => setShowShippingAddressForm(false)}
           onSuccess={() => setShowShippingAddressForm(false)}
         />
