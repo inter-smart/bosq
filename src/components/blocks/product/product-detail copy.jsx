@@ -44,6 +44,8 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
   const [quantity, setQuantity] = useState(1);
   const isEn = locale === "en";
 
+  const description = isEn ? initialData?.description?.description : initialData?.description?.description_ar;
+
   const enq = {
     title: t("product.enquire_now"),
     subtitle: t("product.enquire_subtitle"),
@@ -331,9 +333,11 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
                     {isEn ? initialData?.title?.title : initialData?.title?.title_ar}
                   </Heading>
 
-                  <Text as="div" size="text3" className="text-[#282828] mb-2 2xl:mb-4">
-                    {parse(isEn ? initialData?.description?.description : initialData?.description?.description_ar)}
-                  </Text>
+                  {description?.trim() && (
+                    <Text as="div" size="text3" className="text-[#282828] mb-2 2xl:mb-4">
+                      {parse(description)}
+                    </Text>
+                  )}
 
                   <hr className="my-3 sm:my-3 2xl:my-5 mx-[-5px]" />
 

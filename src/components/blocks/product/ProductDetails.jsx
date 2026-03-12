@@ -27,33 +27,41 @@ const ProductDetails = ({ data, isEn, setIndexProject, setOpenProject, openProje
     <div className="w-full mt-10 xl:mt-20">
       <Accordion type="single" collapsible className="w-full" defaultValue="item-1">
         <hr />
-        <AccordionItem value="item-1">
-          <AccordionTrigger className={accordionTriggerStyle}>{t("product.product_details")}</AccordionTrigger>
-          <AccordionContent className="sm:px-2">
-            <div dir={!isEn ? "rtl" : "ltr"} className="typography flex flex-wrap justify-between">
-              <div className="xl:max-w-[540px] 2xl:max-w-[650px] 3xl:max-w-[820px]">
-                {isEn ? details?.details && parse(details?.details) : details?.details_ar && parse(details?.details_ar)}
-              </div>
-              <div className="xl:max-w-[468px] 2xl:max-w-[576px] 3xl:max-w-[700px] border border-[#e9e9e9] rounded-lg px-2.5 xl:px-5 2xl:px-7.5 py-1 xl:py-2.5 2xl:py-4">
-                {details?.details_points && parse(isEn ? details?.details_points : details?.details_points_ar)}
-              </div>
-            </div>
-            {data?.brochure && (
-              <div className="mt-4">
-                <a
-                  href={data.brochure}
-                  download
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-[12px] 2xl:text-[14px] 3xl:text-[18px] border border-[#282828] px-4 py-2 rounded hover:bg-[#282828] hover:text-white transition-colors"
-                >
-                  {t("product.download_brochure")}
-                </a>
-              </div>
-            )}
-          </AccordionContent>
-        </AccordionItem>
-        <hr />
+        {(details?.details?.trim() || details?.details_ar?.trim() || details?.details_points?.trim() || details?.details_points_ar?.trim()) && (
+          <>
+            <AccordionItem value="item-1">
+              <AccordionTrigger className={accordionTriggerStyle}>{t("product.product_details")}</AccordionTrigger>
+
+              <AccordionContent className="sm:px-2">
+                <div dir={!isEn ? "rtl" : "ltr"} className="typography flex flex-wrap justify-between">
+                  {(isEn ? details?.details?.trim() : details?.details_ar?.trim()) && (
+                    <div className="xl:max-w-[540px] 2xl:max-w-[650px] 3xl:max-w-[820px]">{parse(isEn ? details?.details : details?.details_ar)}</div>
+                  )}
+
+                  {(isEn ? details?.details_points : details?.details_points_ar) && (
+                    <div className="xl:max-w-[468px] 2xl:max-w-[576px] 3xl:max-w-[700px] border border-[#e9e9e9] rounded-lg px-2.5 xl:px-5 2xl:px-7.5 py-1 xl:py-2.5 2xl:py-4">
+                      {parse(isEn ? details?.details_points : details?.details_points_ar)}
+                    </div>
+                  )}
+                </div>
+                {data?.brochure && (
+                  <div className="mt-4">
+                    <a
+                      href={data.brochure}
+                      download
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-[12px] 2xl:text-[14px] 3xl:text-[18px] border border-[#282828] px-4 py-2 rounded hover:bg-[#282828] hover:text-white transition-colors"
+                    >
+                      {t("product.download_brochure")}
+                    </a>
+                  </div>
+                )}
+              </AccordionContent>
+            </AccordionItem>
+            <hr />
+          </>
+        )}
         {projects?.length > 0 && (
           <>
             <AccordionItem value="item-2">
@@ -103,14 +111,16 @@ const ProductDetails = ({ data, isEn, setIndexProject, setOpenProject, openProje
           </>
         )}
 
-        <AccordionItem value="item-3">
-          <AccordionTrigger className={accordionTriggerStyle}>{t("product.additional_info")}</AccordionTrigger>
-          <AccordionContent className="sm:p-2">
-            <div dir={!isEn ? "rtl" : "ltr"} className="typography">
-              {parse(isEn ? additionalInfo?.additional_details_en : additionalInfo?.additional_details_ar)}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
+        {(additionalInfo?.additional_details_en || additionalInfo?.additional_details_ar) && (
+          <AccordionItem value="item-3">
+            <AccordionTrigger className={accordionTriggerStyle}>{t("product.additional_info")}</AccordionTrigger>
+            <AccordionContent className="sm:p-2">
+              <div dir={!isEn ? "rtl" : "ltr"} className="typography">
+                {parse(isEn ? additionalInfo?.additional_details_en : additionalInfo?.additional_details_ar)}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        )}
         {faqs.length > 0 && (
           <>
             <hr />
