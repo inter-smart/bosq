@@ -34,6 +34,7 @@ const placeholders = [
 ];
 
 export default function SearchDialog({ children, locale }) {
+  const isEn = locale == "en"
   const [searchQuery, setSearchQuery] = useState("");
   const [showAllSuggestions, setShowAllSuggestions] = useState(false);
   const debouncedQuery = useDebouncedValue(searchQuery, 500);
@@ -43,6 +44,8 @@ export default function SearchDialog({ children, locale }) {
   const { data: initialData, isLoading } = useGetSearchQuery({
     keywords: debouncedQuery,
   });
+
+  console.log("data", initialData)
 
 
   const handleChange = (e) => {
@@ -154,15 +157,15 @@ export default function SearchDialog({ children, locale }) {
                     />
                   </Heading>
                   {/* <RecaptchaProvider> */}
-                    <PlaceholdersAndVanishInput
-                      placeholders={placeholders}
-                      onChange={handleChange}
-                      onSubmit={onSubmit}
-                      autoFocus
-                      locale={locale}
-                      className="max-w-full"
-                      variant="search"
-                    />
+                  <PlaceholdersAndVanishInput
+                    placeholders={placeholders}
+                    onChange={handleChange}
+                    onSubmit={onSubmit}
+                    autoFocus
+                    locale={locale}
+                    className="max-w-full"
+                    variant="search"
+                  />
                   {/* </RecaptchaProvider> */}
 
                   {suggestedItems?.map((item, index) => (
@@ -221,80 +224,85 @@ export default function SearchDialog({ children, locale }) {
                   ))}
                 </div>
 
-                  <div className="w-full sm:w-[calc(100%-200px)] lg:w-[calc(100%-220px)] xl:w-[calc(100%-420px)] 2xl:w-[calc(100%-468px)] 3xl:w-[calc(100%-576px)]">
-                    <Heading
-                      as="div"
-                      size="heading4"
-                      className="text-[#282828] my-2 xl:my-3 2xl:my-4"
-                    >
-                      {isLoading
-                        ? "Loading..."
-                        : searchQuery
-                          ? hasResults
-                            ? `Found ${products.length} results for "${searchQuery}"`
-                            : "No results found"
-                          : `Showing ${slicedProducts.length} products`}
-                    </Heading>
+                <div className="w-full sm:w-[calc(100%-200px)] lg:w-[calc(100%-220px)] xl:w-[calc(100%-420px)] 2xl:w-[calc(100%-468px)] 3xl:w-[calc(100%-576px)]">
+                  <Heading
+                    as="div"
+                    size="heading4"
+                    className="text-[#282828] my-2 xl:my-3 2xl:my-4"
+                  >
+                    {isLoading
+                      ? "Loading..."
+                      : searchQuery
+                        ? hasResults
+                          ? `Found ${products.length} results for "${searchQuery}"`
+                          : "No results found"
+                        : `Showing ${slicedProducts.length} products`}
+                  </Heading>
 
-                    {/* Mobile list */}
-                    <div className="flex flex-col gap-2 sm:hidden">
-                      {products?.slice(0, 5)?.map((item) => (
-                        <DialogClose asChild key={item.id}>
-                          <Link
-                            href={`/${locale}/products/${item?.baseSlug}?sku=${item?.slug}`}
-                            onClick={() => handleAddToLocalStorage(item)}
-                            className="flex items-center gap-3 bg-white rounded-[4px] p-2"
-                          >
-                            <div className="w-14 h-14 shrink-0 overflow-hidden rounded-[4px] bg-[#f4f4f4] relative">
-                              <Image
-                                src={item?.media?.path ?? "/images/placeholder.jpg"}
-                                alt={item?.media?.alt ?? item?.title}
-                                width={56}
-                                height={56}
-                                className="w-full h-full object-cover"
-                                quality={80}
-                              />
-                              {!(item?.stock > 0) && (
-                                <div className="absolute inset-0 bg-white/70 flex items-center justify-center">
-                                  <span className="text-[9px] font-medium text-[#282828]">Out of Stock</span>
-                                </div>
-                              )}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-[10px] leading-normal font-light truncate text-[#bbbcbc]">
-                                {item?.category?.name}
-                              </p>
-                              <p className="text-[13px] leading-normal font-normal truncate text-[#282828]">
-                                {item?.title}
-                              </p>
-                            </div>
-                          </Link>
-                        </DialogClose>
-                      ))}
-                      {products.length > 5 && (
-                        <DialogClose asChild>
-                          <Link
-                            href={`/${locale}/products`}
-                            className="text-[12px] text-black underline text-center py-1"
-                          >
-                            See All Results ({products.length})
-                          </Link>
-                        </DialogClose>
-                      )}
-                    </div>
+                  {/* Mobile list */}
+                  <div className="flex flex-col gap-2 sm:hidden">
+                    {products?.slice(0, 5)?.map((item) => (
+                      <DialogClose asChild key={item.id}>
+                        <Link
+                          href={`/${locale}/products/${item?.baseSlug}${item?.query_params}`}
+                          // onClick={() => handleAddToLocalStorage(item)}
+                          className="flex items-center gap-3 bg-white rounded-[4px] p-2"
+                        >
+                          <div className="w-14 h-14 shrink-0 overflow-hidden rounded-[4px] bg-[#f4f4f4] relative">
+                            <Image
+                              src={item?.media?.path ?? "/images/placeholder.jpg"}
+                              alt={item?.media?.alt ?? item?.title}
+                              width={56}
+                              height={56}
+                              className="w-full h-full object-cover"
+                              quality={80}
+                            />
+                            {!(item?.stock > 0) && (
+                              <div className="absolute inset-0 bg-white/70 flex items-center justify-center">
+                                <span className="text-[9px] font-medium text-[#282828]">Out of Stock</span>
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-[10px] leading-normal font-light truncate text-[#bbbcbc]">
+                              {item?.categories?.map((cat) => (isEn ? cat.name : cat.name_ar)).join(", ")}
+                            </p>
+                            <p className="text-[13px] leading-normal font-normal truncate text-[#282828]">
+                              {item?.title}
+                            </p>
+                          </div>
+                        </Link>
+                      </DialogClose>
+                    ))}
+                    {products.length > 5 && (
+                      <DialogClose asChild>
+                        <Link
+                          href={`/${locale}/products`}
+                          className="text-[12px] text-black underline text-center py-1"
+                        >
+                          See All Results ({products.length})
+                        </Link>
+                      </DialogClose>
+                    )}
+                  </div>
 
-                    {/* sm+ grid */}
-                    <div className="hidden sm:flex flex-wrap -mx-1.5 xl:-mx-2 2xl:-mx-2.5 [&>*]:p-1.5 xl:[&>*]:p-2 2xl:[&>*]:p-2.5">
-                      {products?.slice(0, 5)?.map((item) => (
-                        <div key={item.id} className="w-1/3 md:w-1/3">
-                          <div className="group w-full block">
-                            <div className="w-full aspect-[550/440] overflow-hidden rounded-[4px] border border-white mb-2 2xl:mb-3 bg-white relative z-0">
+                  {/* sm+ grid */}
+                  <div className="hidden sm:flex flex-wrap -mx-1.5 xl:-mx-2 2xl:-mx-2.5 [&>*]:p-1.5 xl:[&>*]:p-2 2xl:[&>*]:p-2.5">
+                    {products?.slice(0, 5)?.map((item) => (
+                      <div key={item.id} className="w-1/3 md:w-1/3">
+                        <div className="group w-full block">
+                          <DialogClose asChild>
+                            <Link
+                              href={`/${locale}/products/${item?.baseSlug}${item?.query_params}`}
+                              onClick={() => handleAddToLocalStorage(item)}
+                              className="w-full aspect-[550/440] overflow-hidden rounded-[4px] border border-white mb-2 2xl:mb-3 bg-white relative z-0 block"
+                            >
                               {!(item?.stock > 0) && (
-                                <div className="w-full h-full bg-[#f4f4f4]/90 flex items-center justify-center absolute z-2 inset-0">
+                                <div className="absolute inset-0 z-2 bg-[#f4f4f4]/90 flex items-center justify-center p-4">
                                   <Button
-                                    variant={"black"}
-                                    disabled={true}
-                                    className="min-w-[100px] xl:min-w-[120px] 2xl:min-w-[200px] disabled:opacity-100 rounded-[2px] m-auto"
+                                    variant="black"
+                                    disabled
+                                    className="min-w-[100px] xl:min-w-[120px] 2xl:min-w-[200px] disabled:opacity-100 rounded-[2px]"
                                   >
                                     Out of Stock
                                   </Button>
@@ -302,7 +310,7 @@ export default function SearchDialog({ children, locale }) {
                               )}
                               <Image
                                 src={item?.media?.path ?? "/images/placeholder.jpg"}
-                                alt={item?.media?.alt}
+                                alt={item?.media?.alt || item?.title}
                                 width={550}
                                 height={440}
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -311,67 +319,66 @@ export default function SearchDialog({ children, locale }) {
                               {item?.hoverMedia?.path && (
                                 <Image
                                   src={item?.hoverMedia?.path ?? "/images/placeholder.jpg"}
-                                  alt={item?.hoverMedia?.alt}
+                                  alt={item?.hoverMedia?.alt || item?.title}
                                   width={550}
                                   height={440}
                                   quality={100}
                                   className="w-full h-full object-cover absolute z-1 inset-0 opacity-0 group-hover:opacity-100 group-hover:scale-105 transition duration-300"
                                 />
                               )}
-                            </div>
-                            <div>
-                              <Heading
-                                as="div"
-                                size="none"
-                                className="text-[10px] xl:text-[8px] 2xl:text-[10px] 3xl:text-[12px] leading-normal font-light truncate text-[#bbbcbc] mb-0.5"
-                              >
-                                {item?.stock > 0 ? (
-                                  <DialogClose asChild>
-                                    <Link
-                                      href={`/${locale}/products?${item?.category?.parent_id ? `category=${item?.category?.slug}` : `sub_category=${item?.category?.slug}`}`}
-                                    >
-                                      {item?.category?.name}
-                                    </Link>
-                                  </DialogClose>
-                                ) : (
-                                  <span className="opacity-50">{item?.category?.name}</span>
-                                )}
-                              </Heading>
-                              <Heading
-                                as="div"
-                                size="none"
-                                className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-normal truncate text-[#282828] mb-0.5"
-                              >
-                                <DialogClose asChild>
-                                  <Link
-                                    href={`/${locale}/products/${item?.baseSlug}?sku=${item?.slug}`}
-                                    onClick={() => handleAddToLocalStorage(item)}
-                                  >
-                                    {item?.title}
-                                  </Link>
-                                </DialogClose>
-                              </Heading>
-                            </div>
+                            </Link>
+                          </DialogClose>
+                          <div>
+                            <Heading
+                              as="div"
+                              size="none"
+                              className="text-[10px] xl:text-[8px] 2xl:text-[10px] 3xl:text-[12px] leading-normal font-light truncate text-[#bbbcbc] mb-0.5"
+                            >
+
+                              <DialogClose asChild>
+                                <Link
+                                  href={`/${locale}/products/${item?.baseSlug}${item?.query_params}`}
+                                >
+                                  {item?.categories?.map((cat) => (isEn ? cat.name : cat.name_ar)).join(", ")}
+                                </Link>
+                              </DialogClose>
+
+                            </Heading>
+                            <Heading
+                              as="div"
+                              size="none"
+                              className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-normal truncate text-[#282828] mb-0.5"
+                            >
+                              <DialogClose asChild>
+                                <Link
+                                  href={`/${locale}/products/${item?.baseSlug}${item?.query_params}`}
+                                  onClick={() => handleAddToLocalStorage(item)}
+                                >
+                                  {item?.title}
+                                </Link>
+                              </DialogClose>
+                            </Heading>
                           </div>
                         </div>
-                      ))}
-                      {products.length > 5 && (
-                        <div className="w-1/3 md:w-1/3">
-                          <div className="group w-full block">
-                            <div className="w-full aspect-[550/440] overflow-hidden rounded-[4px] border border-[#e9e9e9] bg-[#f4f4f4] flex items-center justify-center">
-                              <Text as="div" size="text3" className="font-normal text-black hover:underline">
-                                <DialogClose asChild>
-                                  <Link href={`/${locale}/products`}>
-                                    See All Results ({products.length})
-                                  </Link>
-                                </DialogClose>
-                              </Text>
-                            </div>
+                      </div>
+                    ))}
+                    {products.length > 5 && (
+                      <div className="w-1/3 md:w-1/3">
+                        <div className="group w-full block">
+                          <div className="w-full aspect-[550/440] overflow-hidden rounded-[4px] border border-[#e9e9e9] bg-[#f4f4f4] flex items-center justify-center">
+                            <Text as="div" size="text3" className="font-normal text-black hover:underline">
+                              <DialogClose asChild>
+                                <Link href={`/${locale}/products`}>
+                                  See All Results ({products.length})
+                                </Link>
+                              </DialogClose>
+                            </Text>
                           </div>
                         </div>
-                      )}
-                    </div>
+                      </div>
+                    )}
                   </div>
+                </div>
               </div>
             </div>
           </div>
