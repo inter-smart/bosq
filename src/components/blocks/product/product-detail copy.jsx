@@ -49,8 +49,6 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
   const description = getLocalizedContent(isEn, initialData?.description, initialData?.description_ar);
   const design_title = getLocalizedContent(isEn, initialData?.design_title, initialData?.design_title_ar);
 
-  console.log("eee", enhanced);
-
   const enq = {
     title: t("product.enquire_now"),
     subtitle: t("product.enquire_subtitle"),
@@ -355,7 +353,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
                     <div className="w-full max-w-[468px] bg-[#f2f2f2] border border-[#dedede] flex items-center p-1 rounded-[4px]">
                       <div className="w-[40px] xl:w-[45px] 2xl:w-[55px] aspect-square rounded-[4px] overflow-hidden bg-white">
                         <Image
-                          src={initialData?.model_media}
+                          src={initialData?.model_media || "/images/placeholder.png"}
                           alt={initialData?.alt || "design"}
                           width={1080}
                           height={1080}
