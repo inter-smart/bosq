@@ -1,13 +1,21 @@
 "use client";
 
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
-import { clearAuth, setUser } from "@/store/slices/authSlice";
+import { clearAuth, setUser, fetchUserProfile } from "@/store/slices/authSlice";
 
 export default function AuthSyncProvider() {
   const dispatch = useDispatch();
   const router = useRouter();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
+  // On mount, validate persisted session against the server to detect stale cookies
+  useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(fetchUserProfile());
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!("BroadcastChannel" in window)) return;

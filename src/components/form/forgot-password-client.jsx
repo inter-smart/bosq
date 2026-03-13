@@ -7,8 +7,6 @@ import AuthForgotPasswordForm from "./auth-forgot-password-form";
 function ForgotPasswordClient({ locale, forgotPasswordData }) {
   const [step, setStep] = useState(1);
 
-  console.log("data: ", forgotPasswordData);
-
   let recoverData;
 
   switch (step) {

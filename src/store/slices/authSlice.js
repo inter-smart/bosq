@@ -72,8 +72,12 @@ export const googleLoginUser = createAsyncThunk("auth/googleLogin", async (token
 
 // Logout user
 export const logoutUser = createAsyncThunk("auth/logout", async () => {
-  // Call server to clear HTTP-only cookie (cookie sent automatically via credentials: include)
-  await logoutAPI();
+  // Call server to clear HTTP-only cookie — always clear local state even if API fails
+  try {
+    await logoutAPI();
+  } catch (e) {
+    // ignore network/server errors
+  }
   if (typeof window !== "undefined" && "BroadcastChannel" in window) {
     const bc = new BroadcastChannel("bosq_auth");
     bc.postMessage({ type: "LOGOUT" });
