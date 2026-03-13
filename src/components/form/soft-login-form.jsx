@@ -77,7 +77,10 @@ export default function SoftLoginForm({ locale }) {
 
     // Navigate to the same checkout URL to force server components to re-fetch
     // the merged cart while preserving the ?flow= param
-    window.location.reload();
+    const url = new URL(window.location.href);
+    url.searchParams.delete("type");
+
+    window.location.replace(url.pathname + (url.search ? url.search : ""));
 
     setLoading(false);
   };
@@ -85,13 +88,15 @@ export default function SoftLoginForm({ locale }) {
   const handleGoogleSuccess = () => {
     dispatch(fetchUserProfile());
     dispatch(fetchCart());
-    window.location.reload();
+    const url = new URL(window.location.href);
+    url.searchParams.delete("type");
+
+    window.location.replace(url.pathname + (url.search ? url.search : ""));
   };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-wrap items-start -mx-4 [&>*]:px-4 [&>*]:py-2">
-
         {/* Email */}
         <FormField
           control={form.control}
@@ -99,7 +104,8 @@ export default function SoftLoginForm({ locale }) {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                {tAuth("common.email_label")}<span className={errorStyle}>*</span>
+                {tAuth("common.email_label")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input {...field} type="email" className={inputStyle} placeholder={tAuth("common.email_placeholder")} />
@@ -116,7 +122,8 @@ export default function SoftLoginForm({ locale }) {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                {tAuth("common.password_label")}<span className={errorStyle}>*</span>
+                {tAuth("common.password_label")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input {...field} type="password" className={inputStyle} placeholder={tAuth("common.password_placeholder")} />
@@ -150,9 +157,7 @@ export default function SoftLoginForm({ locale }) {
           <Button type="submit" variant="black" disabled={loading} className="min-w-[120px] 2xl:min-w-40">
             {loading ? tAuth("login.loading") : tAuth("login.submit")}
           </Button>
-          {error && (
-            <p className="text-[12px] 2xl:text-[14px] font-light text-[#f17423]">{error}</p>
-          )}
+          {error && <p className="text-[12px] 2xl:text-[14px] font-light text-[#f17423]">{error}</p>}
         </div>
       </form>
 
