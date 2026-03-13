@@ -249,7 +249,7 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
       </div>
 
       {/* Edit Address Dialog */}
-      <AlertDialog dir={locale === "ar" ? "rtl" : "ltr"} open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+      <AlertDialog dir={locale === "ar" ? "rtl" : "ltr"} open={isEditDialogOpen} onOpenChange={(open) => { setIsEditDialogOpen(open); if (!open) setEditingAddress(null); }}>
         <AlertDialogContent className={"xl:max-w-[768px] 2xl:max-w-[840px] gap-0"}>
           <AlertDialogHeader className={"flex-row items-center justify-between mb-2 2xl:mb-4"}>
             <AlertDialogTitle className="text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-semibold text-[#282828]">
@@ -263,7 +263,7 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
 
           <div className="max-h-[70vh] mask-[linear-gradient(to_bottom,transparent_0%,white_2%,white_98%,transparent_100%)] overflow-y-auto overflow-x-hidden">
             <RecaptchaProvider>
-              <UpdateAddressForm isFromCheckout={isFromCheckout} locale={locale} addressData={editingAddress} onSuccess={() => setIsEditDialogOpen(false)} />
+              <UpdateAddressForm isFromCheckout={isFromCheckout} locale={locale} addressData={editingAddress} onSuccess={() => { setIsEditDialogOpen(false); setEditingAddress(null); }} />
             </RecaptchaProvider>
           </div>
         </AlertDialogContent>
