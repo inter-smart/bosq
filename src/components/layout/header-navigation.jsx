@@ -130,7 +130,7 @@ export default function HeaderNavigation({ locale, isDesktop, pathname, onNaviga
                                 {hasSubSubItems && (
                                   <div
                                     className={cn(
-                                      "w-full lg:w-[320px] xl:w-[420px] 2xl:w-[500px] 3xl:w-[576px] lg:absolute top-0 left-full transition-opacity duration-200",
+                                      "w-full h-full lg:w-[320px] xl:w-[420px] 2xl:w-[500px] 3xl:w-[576px] lg:absolute top-0 left-full transition-opacity duration-200",
                                       hoveredSubmenu?.id === subItem.id
                                         ? "opacity-100 pointer-events-auto max-h-auto"
                                         : "opacity-0 pointer-events-none max-h-0",
