@@ -433,7 +433,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
 
                   <hr className="my-3 sm:my-3 2xl:my-5 mx-[-5px]" />
 
-                  <div className="flex flex-wrap sm:justify-between gap-1 sm:gap-2.5 2xl:gap-5">
+                  <div className="flex flex-wrap gap-1 sm:gap-2.5 2xl:gap-5">
                     {productData?.selling_points.map((item, index) => (
                       <div key={"features" + index}>
                         <Text
