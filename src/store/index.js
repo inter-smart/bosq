@@ -35,7 +35,7 @@ const storage = typeof window !== "undefined" ? createWebStorage("local") : crea
 const authPersistConfig = {
   key: "auth",
   storage,
-  whitelist: ["user", "isAuthenticated", "pendingEmail", "isGoogleUser"],
+  whitelist: ["user", "isAuthenticated", "isGoogleUser"],
 };
 
 const rootReducer = combineReducers({

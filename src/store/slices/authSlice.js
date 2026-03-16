@@ -110,7 +110,7 @@ export const registerUser = createAsyncThunk("auth/register", async (credentials
 export const verifyOtpThunk = createAsyncThunk("auth/verifyOtp", async ({ otp, email }, { rejectWithValue, getState }) => {
   try {
     const state = getState();
-    const verifyEmail = email || state.auth.pendingEmail || localStorage.setItem("email");
+    const verifyEmail = email || state.auth.pendingEmail || localStorage.getItem("email");
 
     const { data, error, message } = await verifyOtpAPI({
       otp,
@@ -275,6 +275,10 @@ const authSlice = createSlice({
     setUser: (state, action) => {
       state.user = action.payload;
     },
+    loginFromBroadcast: (state, action) => {
+      state.user = action.payload;
+      state.isAuthenticated = true;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -433,6 +437,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearError, clearAuth, setTempToken, setResetToken, setPendingEmail, setUser } = authSlice.actions;
+export const { clearError, clearAuth, setTempToken, setResetToken, setPendingEmail, setUser, loginFromBroadcast } = authSlice.actions;
 
 export default authSlice.reducer;

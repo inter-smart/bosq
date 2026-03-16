@@ -16,9 +16,10 @@ export async function GET(request) {
 
     if (refreshResponse.ok) {
       const response = NextResponse.redirect(new URL(redirectTo, request.url));
-      const setCookie = refreshResponse.headers.get("set-cookie");
-      if (setCookie) {
-        response.headers.set("set-cookie", setCookie);
+      const cookies = refreshResponse.headers.getSetCookie?.()
+        ?? [refreshResponse.headers.get("set-cookie")].filter(Boolean);
+      for (const cookie of cookies) {
+        response.headers.append("set-cookie", cookie);
       }
       return response;
     }

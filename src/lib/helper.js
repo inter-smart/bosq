@@ -214,18 +214,6 @@ export async function verifyOtp(credentials) {
   });
 }
 
-export async function createPassword(password) {
-  const token = localStorage.getItem("auth-token");
-  return fetchFromAPI("/api/frontend/auth/create-password", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ password }),
-  });
-}
-
 // login
 export async function login(credentials) {
   return fetchFromAPIWithCredentials("/api/frontend/auth/login", {
@@ -245,24 +233,9 @@ export async function forgotPassword(email) {
 // verifyResetPasswordOtp
 
 export async function verifyResetPasswordOtp({ otp, email }) {
-  console.log(otp, email);
   return fetchFromAPI("/api/frontend/auth/verify-reset-password-otp", {
     method: "POST",
     body: JSON.stringify({ otp, email }),
-  });
-}
-
-// reset password
-export async function resetPassword({ password }) {
-  const resetToken = localStorage.getItem("reset_token");
-  return fetchFromAPI("/api/frontend/auth/reset-password", {
-    credentials: "include",
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${resetToken}`,
-    },
-    body: JSON.stringify({ password }),
   });
 }
 

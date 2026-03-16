@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
-import { clearAuth, setUser, fetchUserProfile } from "@/store/slices/authSlice";
+import { clearAuth, loginFromBroadcast, fetchUserProfile } from "@/store/slices/authSlice";
 
 export default function AuthSyncProvider() {
   const dispatch = useDispatch();
@@ -27,7 +27,7 @@ export default function AuthSyncProvider() {
         dispatch(clearAuth());
         router.refresh();
       } else if (e.data.type === "LOGIN") {
-        dispatch(setUser(e.data.user));
+        dispatch(loginFromBroadcast(e.data.user));
         router.refresh();
       }
     };
