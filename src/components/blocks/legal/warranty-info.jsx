@@ -5,6 +5,9 @@ import { Heading } from "@/components/utils/heading";
 import Image from "next/image";
 
 export default function WarrantyInfo({ data, locale }) {
+
+  const isEn = locale === "en";
+
   return (
     <section className="w-full h-auto block pb-[30px] sm:pb-[40px] xl:pb-[60px] 2xl:pb-[100px]">
       <div className="container">
@@ -23,19 +26,21 @@ export default function WarrantyInfo({ data, locale }) {
             >
               <Image
                 src={item?.media?.media_path}
-                alt={item?.media?.media_alt}
+                alt={isEn ? item?.media?.media_alt : item?.media?.media_alt_ar}
                 width={768}
                 height={468}
+                priority
                 className="w-full h-full object-cover hover:scale-105 transition duration-300 "
+                quality={90}
               />
             </div>
-            {item?.title && (
+            {(item?.title || item?.title_ar) && (
               <Heading
                 as="h2"
                 size="heading1"
                 className="text-[#282828] mb-2 xl:mb-3 2xl:mb-5"
               >
-                {parse(item?.title)}
+                {parse(isEn ? item?.title : item?.title_ar)}
                 <span
                   className={cn(
                     "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
@@ -47,12 +52,12 @@ export default function WarrantyInfo({ data, locale }) {
                 &nbsp;
               </Heading>
             )}
-            {item?.description && (
+            {(item?.description || item?.description_ar) && (
               <div
                 dir={locale === "ar" ? "rtl" : "ltr"}
                 className={cn("typography", "[--text-color:#282828]")}
               >
-                {parse(item?.description)}
+                {parse(isEn ? item?.description : item?.description_ar)}
               </div>
             )}
             <div className="clear-both" />

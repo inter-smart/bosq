@@ -11,25 +11,44 @@ import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useState } from "react";
+import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
+import { useTranslations } from "next-intl";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
 });
 
-export default function Footer({ footerData, socialLinkData, locale }) {
+export default function Footer({
+  footerData,
+  socialLinkData,
+  locale,
+  data,
+  paymentCards,
+}) {
+  const isEn = locale === "en";
+
   const placeholders = [
     "Enter Your Email",
     "Enter Your Email Address",
     "Subscribe to our newsletter",
   ];
 
+  const placeholders_ar = [
+  "أدخل بريدك الإلكتروني",
+  "أدخل عنوان بريدك الإلكتروني",
+  "اشترك في نشرتنا الإخبارية",
+];
+
+
   const handleChange = (e) => {
     console.log(e.target.value);
   };
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log("submitted");
   };
+
+  const t = useTranslations("footer");
+
   return (
     <footer className="w-full py-[20px_10px] xl:py-[40px_10px] 2xl:py-[60px_15px] bg-[#282828] overflow-hidden relative z-0">
       <div className="container">
@@ -40,8 +59,8 @@ export default function Footer({ footerData, socialLinkData, locale }) {
               className="w-[90px] xl:w-[100px] 2xl:w-[140px] block mb-3 xl:mb-4 2xl:mb-6"
             >
               <Image
-                src={footerData?.logoWhiteUrl}
-                alt={footerData?.name}
+                src={data?.media?.path}
+                alt={isEn ? data?.media?.alt : data?.media?.alt_ar}
                 width={114}
                 height={37}
                 unoptimized
@@ -54,7 +73,11 @@ export default function Footer({ footerData, socialLinkData, locale }) {
               size="text3"
               className="text-white mb-4 xl:mb-5 2xl:mb-7"
             >
-              {parse(footerData?.address)}
+              {parse(
+                isEn
+                  ? data?.address_block?.address
+                  : data?.address_block?.address_ar,
+              )}
             </Text>
 
             <div className="flex flex-wrap items-center gap-x-[15px] xl:gap-x-[20px]">
@@ -63,8 +86,8 @@ export default function Footer({ footerData, socialLinkData, locale }) {
                   <Button variant="link" size="none" asChild>
                     <a href={item?.link || "#"} target="_blank">
                       <Image
-                        src={item?.media?.media_path}
-                        alt={item?.media?.media_alt}
+                        src={item?.media?.path}
+                        alt={isEn ? item?.media?.alt : item?.media?.alt_ar}
                         width={10}
                         height={10}
                         unoptimized
@@ -85,7 +108,7 @@ export default function Footer({ footerData, socialLinkData, locale }) {
                   size="none"
                   className="text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-normal text-white mb-4 xl:mb-7 2xl:mb-10"
                 >
-                  Shop
+                  {t("shop")}
                 </Heading>
                 {footerData?.shop_navigation?.map((item, index) => (
                   <div key={"shop_navigation" + index}>
@@ -95,7 +118,7 @@ export default function Footer({ footerData, socialLinkData, locale }) {
                       className="text-white transition [&>a]:hover:text-[#f17423] mb-1 xl:mb-3"
                     >
                       <Link href={`/${locale}${item?.link}`}>
-                        {item?.label}
+                        {isEn ? item?.label : item?.label_ar}
                       </Link>
                     </Text>
                   </div>
@@ -103,7 +126,7 @@ export default function Footer({ footerData, socialLinkData, locale }) {
               </div>
             </MediaQuery>
             <MediaQuery maxWidth={1023}>
-              <AccordionItem title="Shop" section="shop">
+              <AccordionItem title={t("shop")} section="shop">
                 {footerData?.shop_navigation?.map((item, index) => (
                   <div key={"shop_navigation" + index}>
                     <Text
@@ -112,7 +135,7 @@ export default function Footer({ footerData, socialLinkData, locale }) {
                       className="text-white transition [&>a]:hover:text-[#f17423] mb-2"
                     >
                       <Link href={`/${locale}${item?.link}`}>
-                        {item?.label}
+                        {isEn ? item?.label : item?.label_ar}
                       </Link>
                     </Text>
                   </div>
@@ -129,7 +152,7 @@ export default function Footer({ footerData, socialLinkData, locale }) {
                   size="none"
                   className="text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-normal text-white mb-4 xl:mb-7 2xl:mb-10"
                 >
-                  Quick links
+                  {t("quickLinks")}
                 </Heading>
                 {footerData?.quick_link_navigation?.map((item, index) => (
                   <div key={"quick_link_navigation" + index}>
@@ -139,7 +162,7 @@ export default function Footer({ footerData, socialLinkData, locale }) {
                       className="text-white transition [&>a]:hover:text-[#f17423] mb-1 xl:mb-3"
                     >
                       <Link href={`/${locale}${item?.link}`}>
-                        {item?.label}
+                        {isEn ? item?.label : item?.label_ar}
                       </Link>
                     </Text>
                   </div>
@@ -147,7 +170,7 @@ export default function Footer({ footerData, socialLinkData, locale }) {
               </div>
             </MediaQuery>
             <MediaQuery maxWidth={1023}>
-              <AccordionItem title="Quick links" section="quick">
+              <AccordionItem title={t("quickLinks")} section="quick">
                 {footerData?.quick_link_navigation?.map((item, index) => (
                   <div key={"quick_link_navigation" + index}>
                     <Text
@@ -156,7 +179,7 @@ export default function Footer({ footerData, socialLinkData, locale }) {
                       className="text-white transition [&>a]:hover:text-[#f17423] mb-2"
                     >
                       <Link href={`/${locale}${item?.link}`}>
-                        {item?.label}
+                        {isEn ? item?.label : item?.label_ar}
                       </Link>
                     </Text>
                   </div>
@@ -173,7 +196,7 @@ export default function Footer({ footerData, socialLinkData, locale }) {
                   size="none"
                   className="text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-normal text-white mb-4 xl:mb-7 2xl:mb-10"
                 >
-                  Other links
+                  {t("other_links")}
                 </Heading>
                 <div className="flex flex-wrap">
                   {footerData?.other_link_navigation?.map((item, index) => (
@@ -187,7 +210,7 @@ export default function Footer({ footerData, socialLinkData, locale }) {
                         className="text-white transition [&>a]:hover:text-[#f17423] mb-1 xl:mb-3"
                       >
                         <Link href={`/${locale}${item?.link}`}>
-                          {item?.label}
+                          {isEn ? item?.label : item?.label_ar}
                         </Link>
                       </Text>
                     </div>
@@ -196,7 +219,7 @@ export default function Footer({ footerData, socialLinkData, locale }) {
               </div>
             </MediaQuery>
             <MediaQuery maxWidth={1023}>
-              <AccordionItem title="Other links" section="other">
+              <AccordionItem title={t("other_links")} section="other">
                 <div className="flex flex-wrap">
                   {footerData?.other_link_navigation?.map((item, index) => (
                     <div
@@ -209,7 +232,7 @@ export default function Footer({ footerData, socialLinkData, locale }) {
                         className="text-white transition [&>a]:hover:text-[#f17423] mb-2"
                       >
                         <Link href={`/${locale}${item?.link}`}>
-                          {item?.label}
+                          {isEn ? item?.label : item?.label_ar}
                         </Link>
                       </Text>
                     </div>
@@ -224,70 +247,82 @@ export default function Footer({ footerData, socialLinkData, locale }) {
 
         <div className="flex flex-wrap items-center -mx-[10px] [&>*]:p-[10px] ">
           <div className="w-full lg:w-[36%]">
-            {footerData?.sale_enquiry && (
+            {data?.sale_enquiry && (
               <Text
                 as="div"
                 size="text3"
                 className="text-white [&_span]:text-normal mb-1 [&_a]:hover:text-[#f47123]"
               >
-                <span>{footerData.sale_enquiry.title} :</span>&nbsp;
-                {footerData.sale_enquiry.phone && (
+                <span>
+                  {isEn
+                    ? data?.sale_enquiry.title
+                    : data?.sale_enquiry.title_ar}{" "}
+                  :
+                </span>
+                &nbsp;
+                {data?.sale_enquiry.phone && (
                   <>
-                    Ph:{" "}
+                    {t("ph")}:{" "}
                     <a
-                      href={`tel:${footerData.sale_enquiry.phone}`}
+                      href={`tel:${data?.sale_enquiry.phone}`}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      {footerData.sale_enquiry.phone}
+                      {data?.sale_enquiry.phone}
                     </a>
                     &nbsp;
                   </>
                 )}
-                {footerData.sale_enquiry.email && (
+                {data?.sale_enquiry.email && (
                   <>
-                    Email:{" "}
+                    {t("email")}:{" "}
                     <a
-                      href={`mailto:${footerData.sale_enquiry.email}`}
+                      href={`mailto:${data?.sale_enquiry.email}`}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      {footerData.sale_enquiry.email}
+                      {data?.sale_enquiry.email}
                     </a>
                   </>
                 )}
               </Text>
             )}
 
-            {footerData?.support_enquiry && (
+            {data?.support_enquiry && (
               <Text
                 as="div"
                 size="text3"
                 className="text-white [&_span]:text-normal [&_a]:hover:text-[#f47123]"
               >
-                <span>{footerData.support_enquiry.title} :</span>&nbsp;
-                {footerData.support_enquiry.phone && (
+                <span>
+                  {isEn
+                    ? data?.support_enquiry.title
+                    : data?.support_enquiry.title_ar}{" "}
+                  :
+                </span>
+                &nbsp;
+                {/* {data?.support_enquiry.phone && (
                   <>
                     Ph:{" "}
                     <a
-                      href={`tel:${footerData.support_enquiry.phone}`}
+                      href={`tel:${data?.support_enquiry.phone}`}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      {footerData.support_enquiry.phone}
+                      {data?.support_enquiry.phone}
                     </a>
                     &nbsp;
                   </>
-                )}
-                {footerData.support_enquiry.email && (
+                )} */}
+                {data?.support_enquiry.email && (
                   <>
-                    Email:{" "}
+                    {t("email")}:{" "}
                     <a
-                      href={`mailto:${footerData.support_enquiry.email}`}
+                      href={`mailto:${data?.support_enquiry.email}`}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      {footerData.support_enquiry.email}
+                      {data?.support_enquiry.email}
                     </a>
                   </>
                 )}
@@ -302,31 +337,37 @@ export default function Footer({ footerData, socialLinkData, locale }) {
                 size="text3"
                 className="text-white w-full sm:w-[40%] pr-[15px] xl:pr-[30px] max-sm:mb-4"
               >
-                {parse(footerData?.subscription_title)}
+                {parse(
+                  isEn ? data?.newsletter?.title : data?.newsletter?.title_ar,
+                )}
               </Text>
               <div className="w-full sm:w-[60%]">
-                <PlaceholdersAndVanishInput
-                  placeholders={placeholders}
-                  onChange={handleChange}
-                  onSubmit={onSubmit}
-                  locale={locale}
-                />
+                <RecaptchaProvider>
+                  <PlaceholdersAndVanishInput
+                    placeholders={placeholders}
+                    placeholders_ar={placeholders_ar}
+                    onChange={handleChange}
+                    onSubmit={onSubmit}
+                    locale={locale}
+                  />
+                </RecaptchaProvider>
               </div>
             </div>
           </div>
 
           <div className="w-full lg:w-[20%] flex flex-wrap">
-            {footerData?.card?.map((item, index) => (
+            {paymentCards?.map((item, index) => (
               <div
                 key={"card" + index}
                 className={cn(locale === "ar" ? "mr-auto" : "ml-auto")}
               >
                 <Image
-                  src={item?.media?.media_path}
-                  alt={item?.media?.media_alt}
+                  src={item?.media?.path}
+                  alt={isEn ? item?.media?.alt : item?.media?.alt_ar}
                   width={120}
                   height={16}
                   className="w-[160px] lg:w-[100px] xl:w-[120px] 2xl:w-[150px] block"
+                  quality={90}
                 />
               </div>
             ))}
@@ -337,14 +378,14 @@ export default function Footer({ footerData, socialLinkData, locale }) {
 
         <div className="flex flex-wrap justify-center sm:justify-between -mx-[5px] lg:-mx-[10px] [&>*]:p-[5px] lg:[&>*]:p-[10px]">
           <Text as="div" size="text3" className="text-white">
-            {parse(footerData?.copyright)}
+            {t("copyright")}
           </Text>
           <Text
             as="div"
             size="text3"
             className="whitespace-nowrap text-end text-white flex"
           >
-            Designed By:{" "}
+            {t("designedBy")}{" "}
             <a href="https://www.intersmartsolution.com/" target="_blank">
               <Image
                 src="/images/icon-intersmart.svg"
@@ -387,14 +428,14 @@ function AccordionItem({ title, children, section }) {
         <ChevronDown
           className={cn(
             "w-4 h-4 text-white transition-transform duration-200",
-            isOpen && "rotate-180"
+            isOpen && "rotate-180",
           )}
         />
       </button>
       <div
         className={cn(
           "overflow-hidden transition-all duration-300",
-          isOpen ? "max-h-[500px] mt-5" : "max-h-0"
+          isOpen ? "max-h-[500px] mt-5" : "max-h-0",
         )}
       >
         {children}

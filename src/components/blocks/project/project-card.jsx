@@ -5,20 +5,23 @@ import { Suspense } from "react";
 import { Skeleton } from "../../ui/skeleton";
 import { Text } from "@/components/utils/text";
 
-export default function ProjectCard({ data }) {
+export default function ProjectCard({ data, locale }) {
+  const isEN = locale === "en";
+
   return (
     <Suspense fallback={<ProjectSkeleton />}>
       <div className="group w-full h-full flex flex-col justify-between">
         <Link
-          href={data?.slug}
+          href={`/projects/${data?.slug}`}
           className="w-full block aspect-square overflow-hidden border border-gray-100 bg-black mb-1.5 sm:mb-3 xl:mb-4"
         >
           <Image
             src={data?.media?.media_path || "/images/placeholder.jpg"}
-            alt={data?.media?.media_alt}
+            alt={isEN ? data?.media_alt : data?.media_alt_ar}
             width={600}
             height={600}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-80"
+            quality={90}
           />
         </Link>
         <Text
@@ -26,7 +29,9 @@ export default function ProjectCard({ data }) {
           size="text3"
           className="font-normal turncate text-[#282828] hover:underline"
         >
-          <Link href={data?.slug}>{data?.title}</Link>
+          <Link href={`/projects/${data?.slug}`}>
+            {isEN ? data?.title : data?.title_ar}
+          </Link>
         </Text>
       </div>
     </Suspense>

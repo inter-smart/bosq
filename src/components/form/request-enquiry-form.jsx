@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,106 +27,124 @@ import { cn } from "@/lib/utils";
 
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
-
-// Validation schema
-const formSchema = z.object({
-  firstName: z
-    .string()
-    .min(2, "First name must be at least 2 characters")
-    .max(50, "First name cannot exceed 50 characters"),
-  lastName: z
-    .string()
-    .min(2, "Last name must be at least 2 characters")
-    .max(50, "Last name cannot exceed 50 characters"),
-  companyName: z.string().optional(),
-  email: z.string().email("Invalid email address"),
-  phone: z
-    .string()
-    .min(10, "Phone number is required")
-    .max(20, "Phone number is too long"),
-  region: z.string().min(1, "Please select a region"),
-  helpWith: z.string().optional(),
-  message: z.string().optional(),
-});
+import { commonValidations, setValidationTranslator } from "@/lib/validations";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { toast } from "sonner";
+import { API_URL } from "@/lib/api/client";
+import { useTranslations } from "next-intl";
 
 // Shared styles
 const labelStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-[#282828]"
+  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-[#282828]",
 );
 
 const inputStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] data-[size=default]:h-[35px] 2xl:data-[size=default]:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1"
+  "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] data-[size=default]:h-[35px] 2xl:data-[size=default]:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1",
 );
 
 const errorStyle = cn("text-[#f17423]");
 
 const textareaStyle = cn(
   inputStyle,
-  "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none"
+  "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none",
 );
 
-export default function RequestEnquiryForm({ locale = "en" }) {
-  const form = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      companyName: "",
-      email: "",
-      phone: "",
-      region: "",
-      helpWith: "",
-      message: "",
-    },
-  });
+export default function RequestEnquiryForm({
+  locale = "en",
+  states,
+  dropdownData,
+}) {
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(null);
+  const [selectedCountry, setSelectedCountry] = useState("ae");
 
-  const regions = [
-    "Dubai",
-    "Sharjah",
-    "Jiddah",
-    "Abu Dhabi",
-    "Ras Al Khaimah",
-    "Umm Al Quwain",
-  ];
+  const isEN = locale === "en";
+  const t = useTranslations("form");
 
-  const helpWithOptions = [
-    "Discuss a current project",
-    "Request a quote",
-    "Technical support",
-    "General inquiry",
-  ];
+  const tErrors = useTranslations("errors");
+
+  setValidationTranslator(tErrors);
+
+  // Validation schema
+  const formSchema = z.object({
+    firstName: commonValidations.name(t("first_name")),
+    lastName: commonValidations.name(t("last_name")),
+    companyName: commonValidations.optionalString(),
+    email: commonValidations.email(),
+    phone: commonValidations.phone(selectedCountry.toUpperCase()),
+    state: commonValidations.region(),
+    dropdown_id: commonValidations.dropdown(),
+    message: commonValidations.message(t("message")),
+  });
+
+  const defaultValues = {
+    firstName: "",
+    lastName: "",
+    companyName: "",
+    email: "",
+    phone: "",
+    state: "",
+    dropdown_id: "",
+    message: "",
+  };
+
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues,
+  });
 
   const onSubmit = async (values) => {
     setLoading(true);
     setSuccess(null);
+    try {
+      const recaptchaToken = await executeRecaptcha(
+        "customization_enquiry_form",
+      );
+      const URL = `${API_URL}/api/frontend/enquiries/customization`;
 
-    // Simulate API call for local testing
-    setTimeout(() => {
-      console.log("Request Enquiry:", values);
-      form.reset();
-      setSuccess("Enquiry submitted successfully!");
-      setLoading(false);
-    }, 1000);
+      const res = await fetch(URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          recaptcha_token: recaptchaToken,
+          first_name: values.firstName,
+          last_name: values.lastName,
+          state_id: values.state,
+          company_name: values.companyName,
+          dropdown_id: values.dropdown_id
+            ? Number(values.dropdown_id)
+            : undefined,
+          ...values,
+        }),
+      });
 
-    // TODO: Connect to API when ready
-    // try {
-    //   const res = await fetch("http://localhost:1337/api/enquiry", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({ data: values }),
-    //   });
-    //   if (!res.ok) throw new Error("Failed to send enquiry");
-    //   form.reset();
-    //   setSuccess("Enquiry submitted successfully!");
-    // } catch (err) {
-    //   console.error(err);
-    //   setSuccess("Something went wrong. Please try again.");
-    // }
-    // setLoading(false);
+      const data = await res.json();
+
+      if (!data.success) {
+        toast.error(
+          isEN ? data?.message?.en : data?.message?.ar || t("submit_error"),
+        );
+      } else {
+        toast.success(
+          isEN ? data?.message?.en : data?.message?.ar || t("success_message"),
+        );
+        form.reset(defaultValues);
+        setSelectedCountry("ae");
+        setSuccess(
+          isEN ? data?.message?.en : data?.message?.ar || t("success_message"),
+        );
+      }
+    } catch (err) {
+      setSuccess(isEN ? err?.en : err?.ar || t("submit_error"));
+      toast.error(isEN ? err?.en : err?.ar || t("submit_error"));
+    }
+
+    setLoading(false);
   };
+
+  const hasData = Array.isArray(dropdownData) && dropdownData.length > 0;
 
   return (
     <Form {...form}>
@@ -143,13 +159,14 @@ export default function RequestEnquiryForm({ locale = "en" }) {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                First Name<span className={errorStyle}>*</span>
+                {t("first_name")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   className={inputStyle}
-                  placeholder="Enter your first name"
+                  placeholder={t("enter_first_name")}
                 />
               </FormControl>
               <FormMessage className={errorStyle} />
@@ -164,13 +181,14 @@ export default function RequestEnquiryForm({ locale = "en" }) {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                Last Name<span className={errorStyle}>*</span>
+                {t("last_name")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   className={inputStyle}
-                  placeholder="Enter your last name"
+                  placeholder={t("enter_last_name")}
                 />
               </FormControl>
               <FormMessage className={errorStyle} />
@@ -184,14 +202,12 @@ export default function RequestEnquiryForm({ locale = "en" }) {
           name="companyName"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel className={labelStyle}>
-                Company Name (Optional)
-              </FormLabel>
+              <FormLabel className={labelStyle}>{t("company_name")}</FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   className={inputStyle}
-                  placeholder="Enter your company name"
+                  placeholder={t("enter_company_name")}
                 />
               </FormControl>
               <FormMessage className={errorStyle} />
@@ -206,14 +222,15 @@ export default function RequestEnquiryForm({ locale = "en" }) {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                Email Address<span className={errorStyle}>*</span>
+                {t("email_id")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   type="email"
                   className={inputStyle}
-                  placeholder="Enter email address"
+                  placeholder={t("enter_email_id")}
                 />
               </FormControl>
               <FormMessage className={errorStyle} />
@@ -228,17 +245,34 @@ export default function RequestEnquiryForm({ locale = "en" }) {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                Phone<span className={errorStyle}>*</span>
+                {t("phone_number")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <PhoneInput
                   defaultCountry="ae"
-                  {...field}
+                  value={field.value}
+                  onChange={(phone, meta) => {
+                    const countryIso = meta.country.iso2;
+                    const callingCode = `+${meta.country.callingCode}`;
+
+                    if (phone !== field.value) {
+                      // If it's just the prefix being added to an empty field, don't trigger onChange
+                      if (!field.value && phone.trim() === callingCode) {
+                        return;
+                      }
+                      field.onChange(phone);
+                    }
+
+                    if (countryIso !== selectedCountry) {
+                      setSelectedCountry(countryIso);
+                    }
+                  }}
                   className={cn(
                     inputStyle,
-                    "w-full p-0 [&_input]:flex-1 [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px] [--react-international-phone-flag-width:20px] [--react-international-phone-flag-height:20px]"
+                    "w-full p-0 [&_input]:flex-1 [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px] [--react-international-phone-flag-width:20px] [--react-international-phone-flag-height:20px]",
                   )}
-                  placeholder="Enter your mobile number"
+                  placeholder={t("enter_mobile")}
                 />
               </FormControl>
               <FormMessage className={errorStyle} />
@@ -249,11 +283,12 @@ export default function RequestEnquiryForm({ locale = "en" }) {
         {/* Region */}
         <FormField
           control={form.control}
-          name="region"
+          name="state"
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                State / Region<span className={errorStyle}>*</span>
+                {t("location_placeholder")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <Select
                 dir={locale === "ar" ? "rtl" : "ltr"}
@@ -262,13 +297,17 @@ export default function RequestEnquiryForm({ locale = "en" }) {
               >
                 <FormControl>
                   <SelectTrigger className={cn(inputStyle, "w-full")}>
-                    <SelectValue placeholder="Select region" />
+                    <SelectValue placeholder={t("select_state")} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {regions.map((item, index) => (
-                    <SelectItem key={index} value={item} className={labelStyle}>
-                      {item}
+                  {states?.map((item, index) => (
+                    <SelectItem
+                      key={index}
+                      value={item.id.toString()}
+                      className={labelStyle}
+                    >
+                      {item?.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -281,11 +320,12 @@ export default function RequestEnquiryForm({ locale = "en" }) {
         {/* What can we help with */}
         <FormField
           control={form.control}
-          name="helpWith"
+          name="dropdown_id"
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                What Can We Help With?
+                {t("help_with")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <Select
                 dir={locale === "ar" ? "rtl" : "ltr"}
@@ -294,15 +334,25 @@ export default function RequestEnquiryForm({ locale = "en" }) {
               >
                 <FormControl>
                   <SelectTrigger className={cn(inputStyle, "w-full")}>
-                    <SelectValue placeholder="Select an option" />
+                    <SelectValue placeholder={t("select_option")} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {helpWithOptions.map((item, index) => (
-                    <SelectItem key={index} value={item} className={labelStyle}>
-                      {item}
-                    </SelectItem>
-                  ))}
+                  {hasData ? (
+                    dropdownData.map((item) => (
+                      <SelectItem
+                        key={item.id}
+                        value={item.id.toString()}
+                        className={labelStyle}
+                      >
+                        {isEN ? item.title : item.title_ar}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <div className="px-3 py-2 text-sm text-muted-foreground text-center">
+                      {t("no_data")}
+                    </div>
+                  )}
                 </SelectContent>
               </Select>
               <FormMessage className={errorStyle} />
@@ -316,12 +366,12 @@ export default function RequestEnquiryForm({ locale = "en" }) {
           name="message"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel className={labelStyle}>Message</FormLabel>
+              <FormLabel className={labelStyle}>{t("message")}</FormLabel>
               <FormControl>
                 <Textarea
                   {...field}
                   className={textareaStyle}
-                  placeholder="Tell us more about your inquiry"
+                  placeholder={t("form_placeholder_inquiry")}
                 />
               </FormControl>
               <FormMessage className={errorStyle} />
@@ -337,23 +387,9 @@ export default function RequestEnquiryForm({ locale = "en" }) {
             disabled={loading}
             className="min-w-[120px] 2xl:min-w-40"
           >
-            {loading ? "Submitting..." : "Enquire Now"}
+            {loading ? t("submitting") : t("enquire_now")}
           </Button>
         </div>
-
-        {/* Success/Error Message */}
-        {success && !loading && (
-          <p
-            className={cn(
-              "text-[10px] mt-1 w-full",
-              success.includes("successfully")
-                ? "text-green-600"
-                : "text-red-600"
-            )}
-          >
-            {success}
-          </p>
-        )}
       </form>
     </Form>
   );

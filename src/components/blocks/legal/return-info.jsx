@@ -5,6 +5,9 @@ import { Heading } from "@/components/utils/heading";
 import Image from "next/image";
 
 export default function ReturnInfo({ data, locale }) {
+
+  const isEN = locale === "en";
+
   return (
     <section className="w-full h-auto block pb-[30px] sm:pb-[40px] xl:pb-[60px] 2xl:pb-[100px]">
       <div className="container">
@@ -19,21 +22,23 @@ export default function ReturnInfo({ data, locale }) {
           >
             <Image
               src={data?.media?.media_path}
-              alt={data?.media?.media_alt}
+              alt={isEN ? data?.media?.media_alt : data?.media?.media_alt_ar}
               width={768}
               height={468}
+              loading="lazy"
               className="w-full h-full object-cover hover:scale-105 transition duration-300 "
+              quality={90}
             />
           </div>
           {data?.items?.map((item, index) => (
             <div key={"return-info-" + index}>
-              {item?.title && (
+              {(item?.title || item?.title_ar) && (
                 <Heading
                   as="h2"
                   size="heading1"
                   className="text-[#282828] mb-2 xl:mb-3 2xl:mb-5"
                 >
-                  {parse(item?.title)}
+                  {parse(isEN ? item?.title : item?.title_ar)}
                   <span
                     className={cn(
                       "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
@@ -45,12 +50,12 @@ export default function ReturnInfo({ data, locale }) {
                   &nbsp;
                 </Heading>
               )}
-              {item?.description && (
+              {(item?.description || item?.description_ar) && (
                 <div
                   dir={locale === "ar" ? "rtl" : "ltr"}
                   className={cn("typography", "[--text-color:#282828]")}
                 >
-                  {parse(item?.description)}
+                  {parse(isEN ? item?.description : item?.description_ar)}
                 </div>
               )}
             </div>

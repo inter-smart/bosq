@@ -1,5 +1,22 @@
 import ProductHero from "@/components/blocks/product/product-hero";
 import SearchListing from "@/components/blocks/search/search-listing";
+import { getMetaData } from "@/lib/api/metaApi";
+
+export async function generateMetadata({ params }) {
+  const resolvedParams = await params;
+  const locale = resolvedParams.locale;
+  const { title, description, keywords, twitter, openGraph, alternates, other } = await getMetaData("search", locale, "search-results");
+
+  return {
+    title,
+    description,
+    keywords,
+    twitter,
+    openGraph,
+    alternates,
+    other,
+  };
+}
 
 const local_data = {
   heroData: {

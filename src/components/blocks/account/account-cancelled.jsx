@@ -1,18 +1,34 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/utils/heading";
 import { Text } from "@/components/utils/text";
 import Image from "next/image";
 import parse from "html-react-parser";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
-import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { OrderEmpty } from "./order-empty";
+import { useReorderOrderMutation } from "@/store/services/orderApi";
 
 const btnStyle = cn(
   "underline underline-offset-1 text-[#282828] h-auto! px-1 xl:px-1.5 gap-0.5",
 );
 
 export default function AccountCancelled({ data, locale }) {
+  const router = useRouter();
+  const [reorderOrder, { isLoading: isReordering }] = useReorderOrderMutation();
+
+  const handleReorder = async (orderId) => {
+    try {
+      await reorderOrder({ orderId }).unwrap();
+      toast.success("Items added to cart");
+      router.push(`/${locale}/cart`);
+    } catch (error) {
+      toast.error(typeof error?.en === "string" ? error.en : "Failed to reorder");
+    }
+  };
+
   return (
     <>
       {data?.length === 0 ? (
@@ -45,6 +61,7 @@ export default function AccountCancelled({ data, locale }) {
                       width={120}
                       height={120}
                       className="w-full h-full object-cover hover:scale-105 transition duration-300"
+                      quality={90}
                     />
                   </div>
                   <div className="w-[calc(100%-80px)] xl:w-[calc(100%-80px)] 2xl:w-[calc(100%-100px)] px-3 xl:px-6 2xl:px-8 *:my-0.5 2xl:*:my-1">
@@ -83,27 +100,33 @@ export default function AccountCancelled({ data, locale }) {
                       <Text as="div" size="text3" className="text-[#8d8d8d]">
                         Cancelled on {item?.formatted_cancelled_date}
                       </Text>
-                      <Text
-                        as="div"
-                        size="text3"
-                        className="font-normal text-[#282828]"
-                      >
-                        {parse(item?.cancelledReason)}
-                      </Text>
+                      {item?.cancelledReason && (
+                        <Text
+                          as="div"
+                          size="text3"
+                          className="font-normal text-[#282828]"
+                        >
+                          {parse(item?.cancelledReason)}
+                        </Text>
+                      )}
                     </div>
                     <div>
                       {item?.actions?.can_reorder && (
-                        <Button variant={"link"} className={btnStyle} asChild>
-                          <Link href={"/"}>
-                            <Image
-                              src={"/images/icon-reorder.svg"}
-                              alt={"icon-reorder"}
-                              width={10}
-                              height={10}
-                              className="w-2 xl:w-2.5"
-                            />
-                            Reorder
-                          </Link>
+                        <Button
+                          variant={"link"}
+                          className={btnStyle}
+                          onClick={() => handleReorder(item.order_id)}
+                          disabled={isReordering}
+                        >
+                          <Image
+                            src={"/images/icon-reorder.svg"}
+                            alt={"icon-reorder"}
+                            width={10}
+                            height={10}
+                            className="w-2 xl:w-2.5"
+                            quality={90}
+                          />
+                          Reorder
                         </Button>
                       )}
                     </div>

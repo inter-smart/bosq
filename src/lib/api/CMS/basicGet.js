@@ -1,0 +1,87 @@
+import { apiClient } from "../client";
+import { sendError, sendSuccess } from "../api";
+
+export const getSustainabilityData = async () => {
+  try {
+    const data = await apiClient(`/api/frontend/sustainability`);
+    return sendSuccess(data?.data);
+  } catch (error) {
+    return sendError(error);
+  }
+};
+
+export const getErgonomicChairData = async () => {
+  try {
+    const data = await apiClient(`/api/frontend/ergonomic-chair`);
+    return sendSuccess(data?.data);
+  } catch (error) {
+    return sendError(error);
+  }
+};
+
+export const getFaqData = async () => {
+  try {
+    const data = await apiClient(`/api/frontend/faq`);
+    return sendSuccess(data?.data);
+  } catch (error) {
+    return sendError(error);
+  }
+};
+
+export const getAuthData = async () => {
+  try {
+    const data = await apiClient(`/api/frontend/auth-cms`);
+    return sendSuccess(data?.data);
+  } catch (error) {
+    return sendError(error);
+  }
+};
+
+export const getMaterialData = async () => {
+  try {
+    const data = await apiClient(`/api/frontend/materials-guide`);
+    return sendSuccess(data?.data);
+  } catch (error) {
+    return sendError(error);
+  }
+};
+
+export const getSiteData = async () => {
+  try {
+    const data = await apiClient(`/api/frontend/site-settings`, {
+      next: { revalidate: Number(process.env.NEXT_PUBLIC_CACHE_TTL) || 3600 },
+    });
+    return sendSuccess(data?.data);
+  } catch (error) {
+    return sendError(error);
+  }
+};
+
+// projects
+export const getProjectData = async () => {
+  try {
+    const data = await apiClient(`/api/frontend/projects`);
+    return sendSuccess(data?.data);
+  } catch (error) {
+    return sendError(error);
+  }
+};
+
+// lib/api/CMS/basicGet.js
+export const getProjectListBySlug = async ({ slug, limit = 6 }) => {
+  try {
+    const data = await apiClient(`/api/frontend/projects/project-list?slug=${slug}&limit=${limit}`);
+    return sendSuccess(data?.data);
+  } catch (error) {
+    return sendError(error);
+  }
+};
+
+export const getProjectDetails = async ({ slug }) => {
+  try {
+    const data = await apiClient(`/api/frontend/projects/project-details?slug=${slug}`);
+    return sendSuccess(data?.data);
+  } catch (error) {
+    return sendError(error);
+  }
+};

@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { z } from "zod";
 
 import {
@@ -17,19 +17,15 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
+import { commonValidations } from "@/lib/validations";
+import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
 
 // Validation schema
 const formSchema = z
   .object({
-    password: z
-      .string()
-      .min(8, "Password must be at least 8 characters")
-      .max(100, "Password cannot exceed 100 characters")
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-        "Password must contain at least one uppercase letter, one lowercase letter, and one number"
-      ),
-    confirmPassword: z.string(),
+    password: commonValidations.password(),
+    confirmPassword: commonValidations.password(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -45,52 +41,48 @@ export default function AuthPasswordForm({ locale }) {
     },
   });
 
-  const [loading, setLoading] = useState(false);
+  const { createPassword, tempToken, isAuthenticated, isLoading, clearAuthError } = useAuth();
   const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const router = useRouter();
+
+  // Guard: if already logged in redirect home; if no flow state redirect to signup
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.replace(`/${locale}`);
+    } else if (!tempToken) {
+      router.replace(`/${locale}/signup`);
+    }
+  }, [isAuthenticated, tempToken, locale, router]);
 
   const onSubmit = async (values) => {
-    setLoading(true);
+    clearAuthError();
     setSuccess("");
 
-    try {
-      const res = await fetch(
-        "http://localhost:1337/api/auth/create-password",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ data: { password: values.password } }),
-        }
-      );
+    const result = await createPassword(values.password);
 
-      if (!res.ok) throw new Error("Failed to create password");
-
+    if (result.success) {
       setSuccess("Password created successfully!");
-
-      // Redirect to login or dashboard
-      // window.location.href = "/login";
-    } catch (err) {
-      console.error(err);
-      setSuccess("Something went wrong. Please try again.");
+      router.push(`/${locale}/login`);
+    } else {
+      setSuccess(result.error || "Something went wrong. Please try again.");
     }
-
-    setLoading(false);
   };
 
   // Shared styles
   const labelStyle = cn(
-    "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]"
+    "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]",
   );
 
   const inputStyle = cn(
     "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1",
-    locale === "ar" ? "pl-10" : "pr-10"
+    locale === "ar" ? "pl-10" : "pr-10",
   );
 
   const toggleStyle = cn(
     "absolute top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700",
-    locale === "ar" ? "left-3" : "right-3"
+    locale === "ar" ? "left-3" : "right-3",
   );
 
   const errorStyle = cn("text-[#f17423]");
@@ -176,21 +168,21 @@ export default function AuthPasswordForm({ locale }) {
           <Button
             type="submit"
             variant="black"
-            disabled={loading}
+            disabled={isLoading}
             className="w-full"
           >
-            {loading ? "Creating..." : "Create Password"}
+            {isLoading ? "Creating..." : "Create Password"}
           </Button>
         </div>
 
         {/* Success/Error Message */}
-        {success && !loading && (
+        {success && !isLoading && (
           <p
             className={cn(
               "text-[10px] mt-1 w-full",
               success.includes("successfully")
                 ? "text-green-600"
-                : "text-red-600"
+                : "text-red-600",
             )}
           >
             {success}

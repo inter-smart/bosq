@@ -1,13 +1,24 @@
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin("./src/il8n/request.js");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    qualities: [100],
     dangerouslyAllowLocalIP: true,
+    qualities: [100],
     remotePatterns: [
       {
-        protocol: "http", // Use 'http' for localhost during development
+        protocol: "http",
         hostname: "localhost",
-        port: "4000", // Specify the exact port your local image server is running on
-        pathname: "/**", // Use '/**' to allow any path
+        port: "4000",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "crm.intersmarthosting.in",
+        pathname: "/**",
       },
       {
         protocol: "https",
@@ -21,6 +32,27 @@ const nextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: "/api/proxy/:path*",
+        destination: "https://crm.intersmarthosting.in/bosq/:path*",
+      },
+    ];
+  },
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          {
+            key: "Cross-Origin-Opener-Policy",
+            value: "same-origin-allow-popups",
+          },
+        ],
+      },
+    ];
+  },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

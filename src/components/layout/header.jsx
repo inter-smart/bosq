@@ -1,25 +1,12 @@
 "use client";
 
-import { useTransition, useEffect, useState } from "react";
-import {
-  motion,
-  AnimatePresence,
-  useScroll,
-  useMotionValueEvent,
-} from "motion/react";
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "../ui/button";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 import dynamic from "next/dynamic";
@@ -27,6 +14,8 @@ import { Menu, X } from "lucide-react";
 import SearchDialog from "../common/search-dialog";
 import HeaderNavigation from "./header-navigation";
 import MobileHeaderNavigation from "./mobile-header-navigation";
+import CartIcon from "./Header/CartIcon";
+import { useTranslations } from "next-intl";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
@@ -47,17 +36,15 @@ const itemVariants = {
   exit: { opacity: 0, x: -20, transition: { duration: 0.2 } },
 };
 
-export default function Header({ headerData, navigationData, locale }) {
+export default function Header({ navigationData, locale, data }) {
+  const t = useTranslations("header");
   const { scrollYProgress } = useScroll();
   const [visible, setVisible] = useState(true);
   const [bg, setBg] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(true);
-  const [isPending, startTransition] = useTransition();
   const [headerHover, setHeaderHover] = useState(true);
 
   const pathname = usePathname();
-
-  const router = useRouter();
 
   // Close mobile menu on route change
   useEffect(() => setSheetOpen(false), [pathname]);
@@ -80,16 +67,13 @@ export default function Header({ headerData, navigationData, locale }) {
     // Remove current locale from pathname and add new one
     const segments = pathname.split("/").filter(Boolean);
     segments[0] = newLocale; // Replace locale segment
-    const newPath = `/${segments.join("/")}`;
+    const newPath = `/${segments.join("/")}${window.location.search}`;
 
     // Set cookie for persistence
     document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000`;
 
-    // Use transition for smooth loading state
-    startTransition(() => {
-      router.push(newPath);
-      setIsOpen(false);
-    });
+    // Hard navigation to ensure server re-renders with new locale messages
+    window.location.href = newPath;
   };
 
   const showDarkHeader = headerHover === true || pathname !== `/${locale}`;
@@ -104,9 +88,7 @@ export default function Header({ headerData, navigationData, locale }) {
         onMouseLeave={() => setHeaderHover(false)}
         className={cn(
           "w-full h-(--header-y) z-10 top-0 inset-x-0 flex items-center bg-linear-to-b from-black/20 to-transparent transition-background duration-300",
-          bg
-            ? "border-b border-white/10 shadow-[0px_10px_4px_0px_rgba(0,0,0,0.1)] backdrop-blur-sm fixed"
-            : "absolute",
+          bg ? "border-b border-white/10 shadow-[0px_10px_4px_0px_rgba(0,0,0,0.1)] backdrop-blur-sm fixed" : "absolute",
           // bg && (pathname === `/${locale}` ? "bg-black/90" : "bg-white/90"),
           // pathname === `/${locale}`
           //   ? "bg-linear-to-b from-black/20 to-transparent"
@@ -114,12 +96,12 @@ export default function Header({ headerData, navigationData, locale }) {
           headerHover
             ? "bg-white from-white to-white"
             : bg
-            ? showDarkHeader
-              ? "bg-white/90"
-              : "bg-black/90"
-            : showDarkHeader
-            ? "bg-linear-to-b from-white/20 to-white"
-            : "bg-linear-to-b from-black/20 to-transparent"
+              ? showDarkHeader
+                ? "bg-white/90"
+                : "bg-black/90"
+              : showDarkHeader
+                ? "bg-linear-to-b from-white/20 to-white"
+                : "bg-linear-to-b from-black/20 to-transparent",
         )}
       >
         <div className="container">
@@ -127,53 +109,25 @@ export default function Header({ headerData, navigationData, locale }) {
             <MediaQuery maxWidth={1023}>
               <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
                 <SheetTrigger className="flex items-center gap-x-1.5 2xs:gap-x-2">
-                  <Menu
-                    size={18}
-                    strokeWidth={1}
-                    className={cn(
-                      "size-5",
-                      showDarkHeader ? "text-[#282828]" : "text-white"
-                    )}
-                  />
-                  <div
-                    className={cn(
-                      "w-[1px] h-5 2xs:h-6",
-                      showDarkHeader ? "bg-[#282828]/10" : "bg-white/10"
-                    )}
-                  />
+                  <Menu size={18} strokeWidth={1} className={cn("size-5", showDarkHeader ? "text-[#282828]" : "text-white")} />
+                  <div className={cn("w-[1px] h-5 2xs:h-6", showDarkHeader ? "bg-[#282828]/10" : "bg-white/10")} />
                 </SheetTrigger>
-                <SheetContent
-                  className="max-w-[320px] sm:max-w-[320px] bg-white"
-                  side={locale === "ar" ? "right" : "left"}
-                >
+                <SheetContent className="max-w-[320px] sm:max-w-[320px] bg-white" side={locale === "ar" ? "right" : "left"}>
                   <SheetHeader className="sr-only">
-                    <SheetTitle>Navigation</SheetTitle>
-                    <SheetDescription>Navigation</SheetDescription>
+                    <SheetTitle>{t("navigation")}</SheetTitle>
+                    <SheetDescription>{t("navigation")}</SheetDescription>
                   </SheetHeader>
                   <Link
                     href={`/${locale}/login`}
                     className="text-[14px] leading-none font-light text-white min-h-(--header-y) h-(--header-y) bg-black flex items-center gap-x-2 px-4"
                   >
-                    <Image
-                      src="/images/icon-user.svg"
-                      alt="user"
-                      width={12}
-                      height={12}
-                      unoptimized
-                      className="w-[15px]"
-                    />
-                    Login/Sign Up
+                    <Image src="/images/icon-user.svg" alt={t("user_alt")} width={12} height={12} unoptimized className="w-[15px]" />
+                    {t("login_signup")}
                   </Link>
                   <div className="w-full h-[calc(100%_-_var(--header-y)} overflow-y-auto">
                     <AnimatePresence mode="wait">
                       {sheetOpen && (
-                        <motion.div
-                          key="menu-anim"
-                          variants={containerVariants}
-                          initial="hidden"
-                          animate="show"
-                          exit="exit"
-                        >
+                        <motion.div key="menu-anim" variants={containerVariants} initial="hidden" animate="show" exit="exit">
                           <MobileHeaderNavigation
                             locale={locale}
                             pathname={pathname}
@@ -187,7 +141,7 @@ export default function Header({ headerData, navigationData, locale }) {
                   <SheetClose
                     className={cn(
                       "w-14 h-(--header-y) bg-[#121212] absolute z-1 top-0 rounded-none! flex items-center justify-center",
-                      locale === "ar" ? "left-0" : "right-0"
+                      locale === "ar" ? "left-0" : "right-0",
                     )}
                     asChild
                   >
@@ -201,14 +155,10 @@ export default function Header({ headerData, navigationData, locale }) {
 
             {/* Brand Logo */}
             <div className="w-[80px] 2xs:w-[90px] sm:w-[100px] xl:w-[120px] 2xl:w-[140px] 3xl:w-[176px]">
-              <Link href={`/${locale}${headerData?.slug}`}>
+              <Link href={"/"}>
                 <Image
-                  src={
-                    showDarkHeader
-                      ? headerData?.logoUrl
-                      : headerData?.logoWhiteUrl
-                  }
-                  alt={headerData?.name}
+                  src={showDarkHeader ? data?.primary_media?.path : data?.secondary_media?.path}
+                  alt={data?.primary_media?.alt}
                   width={176}
                   height={57}
                   unoptimized
@@ -220,7 +170,7 @@ export default function Header({ headerData, navigationData, locale }) {
 
             <div
               className={cn(
-                "flex-1 flex items-center justify-end lg:justify-between transition gap-x-[15px] 2xs:gap-x-[20px] sm:gap-sm-[30px] lg:gap-x-[30px] 2xl:gap-x-[40px]"
+                "flex-1 flex items-center justify-end lg:justify-between transition gap-x-[15px] 2xs:gap-x-[20px] sm:gap-sm-[30px] lg:gap-x-[30px] 2xl:gap-x-[40px]",
               )}
             >
               <MediaQuery minWidth={1024}>
@@ -235,12 +185,8 @@ export default function Header({ headerData, navigationData, locale }) {
               <SearchDialog locale={locale}>
                 <Button variant="none" size="none">
                   <Image
-                    src={
-                      showDarkHeader
-                        ? "/images/icon-search-dark.svg"
-                        : "/images/icon-search.svg"
-                    }
-                    alt="search"
+                    src={showDarkHeader ? "/images/icon-search-dark.svg" : "/images/icon-search.svg"}
+                    alt={t("search_alt")}
                     width={12}
                     height={12}
                     unoptimized
@@ -248,31 +194,12 @@ export default function Header({ headerData, navigationData, locale }) {
                   />
                 </Button>
               </SearchDialog>
-              <Button variant="none" size="none" asChild>
-                <Link href={`/${locale}/cart`}>
-                  <Image
-                    src={
-                      showDarkHeader
-                        ? "/images/icon-bag-dark.svg"
-                        : "/images/icon-bag.svg"
-                    }
-                    alt="bag"
-                    width={12}
-                    height={12}
-                    unoptimized
-                    className="w-[15px] 2xl:w-[18px]"
-                  />
-                </Link>
-              </Button>
+              <CartIcon showDarkHeader={showDarkHeader} locale={locale} />
               <Button variant="none" size="none" asChild>
                 <Link href={`/${locale}/account/profile`}>
                   <Image
-                    src={
-                      showDarkHeader
-                        ? "/images/icon-user-dark.svg"
-                        : "/images/icon-user.svg"
-                    }
-                    alt="user"
+                    src={showDarkHeader ? "/images/icon-user-dark.svg" : "/images/icon-user.svg"}
+                    alt={t("user_alt")}
                     width={12}
                     height={12}
                     unoptimized
@@ -283,10 +210,10 @@ export default function Header({ headerData, navigationData, locale }) {
               {locale == "ar" ? (
                 <Button
                   variant="link"
-                  onClick={() => switchLocale("ar")}
+                  onClick={() => switchLocale("en")}
                   className={cn(
                     "text-[12px] leading-none font-normal font-cairo text-white min-w-[60px] sm:min-w-[60px] lg:min-w-[80px] 2xl:min-w-[100px] gap-1",
-                    showDarkHeader ? "text-[#282828]" : "text-white"
+                    showDarkHeader ? "text-[#282828]" : "text-white",
                   )}
                 >
                   <Image
@@ -295,16 +222,17 @@ export default function Header({ headerData, navigationData, locale }) {
                     width={12}
                     height={12}
                     className="w-[15px] 2xl:w-[18px] aspect-square rounded-full block border-black border-1"
+                    quality={90}
                   />
-                  English
+                  {t("english")}
                 </Button>
               ) : (
                 <Button
                   variant="link"
-                  onClick={() => switchLocale("en")}
+                  onClick={() => switchLocale("ar")}
                   className={cn(
                     "text-[12px] leading-none font-normal font-cairo min-w-[60px] sm:min-w-[60px] lg:min-w-[80px] 2xl:min-w-[100px] gap-1",
-                    showDarkHeader ? "text-[#282828]" : "text-white"
+                    showDarkHeader ? "text-[#282828]" : "text-white",
                   )}
                 >
                   <Image
@@ -313,8 +241,9 @@ export default function Header({ headerData, navigationData, locale }) {
                     width={12}
                     height={12}
                     className="w-[15px] 2xl:w-[18px] aspect-square rounded-full block border-black border-1"
+                    quality={90}
                   />
-                  العربية
+                  {t("arabic")}
                 </Button>
               )}
             </div>

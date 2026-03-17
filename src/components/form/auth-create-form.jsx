@@ -2,8 +2,9 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { z } from "zod";
+import { useRouter } from "next/navigation";
 
 import {
   Form,
@@ -19,16 +20,15 @@ import { cn } from "@/lib/utils";
 
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
+import { commonValidations, setValidationTranslator } from "@/lib/validations";
+import { parsePhoneNumberFromString } from "libphonenumber-js";
+import { useAuth } from "@/hooks/useAuth";
+import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
-// Validation schema
-const formSchema = z.object({
-  fullName: z
-    .string()
-    .min(2, "Full name must be at least 2 characters")
-    .max(50, "Full name cannot exceed 50 characters"),
-  email: z.string().email("Invalid email address"),
-  phone: z.string().min(8, "Phone number is required"),
-});
+
+
+
 
 // Shared styles
 const labelStyle = cn(
@@ -41,7 +41,17 @@ const inputStyle = cn(
 
 const errorStyle = cn("text-[#f17423]");
 
-export default function AuthCreateForm() {
+export default function AuthCreateForm({ locale }) {
+  const tAuth = useTranslations("auth.signup");
+  const tCommon = useTranslations("auth.common");
+ 
+
+   const formSchema = z.object({
+    fullName: commonValidations.name(`${tCommon("name_label")}`),
+    email: commonValidations.email(),
+    phone: commonValidations.phone(),
+  });
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -51,29 +61,51 @@ export default function AuthCreateForm() {
     },
   });
 
-  const [loading, setLoading] = useState(false);
+  const { register, isAuthenticated, isLoading, clearAuthError } = useAuth();
   const [success, setSuccess] = useState("");
 
+  const router = useRouter();
+
+  // Guard: if already logged in (e.g. browser back button), redirect to home
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.replace(`/${locale}`);
+    }
+  }, [isAuthenticated, locale, router]);
+
   const onSubmit = async (values) => {
-    setLoading(true);
+    clearAuthError();
     setSuccess("");
 
     try {
-      const res = await fetch("http://localhost:1337/api/auth/send-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: values }),
-      });
+      const phoneNumber = parsePhoneNumberFromString(values.phone);
 
-      if (!res.ok) throw new Error("Failed to send OTP");
 
-      setSuccess("OTP sent successfully!");
+      const payload = {
+        name: values.fullName,
+        email: values.email,
+        countryCode: `+${phoneNumber.countryCallingCode}`,
+        mobile: phoneNumber.nationalNumber,
+      };
+
+      const result = await register(payload);
+
+      if (result.success) {
+        setSuccess(tAuth("success"));
+        toast.success(tAuth("success"));
+        router.replace(`/${locale}/otp-submission`);
+      } else {
+        const isEN = locale === "en";
+        const errorMsg = typeof result.error === "object"
+          ? (isEN ? result.error?.en : result.error?.ar) ?? tAuth("error")
+          : result.error || tAuth("error");
+        setSuccess(errorMsg);
+        toast.error(errorMsg);
+      }
     } catch (err) {
       console.error(err);
-      setSuccess("Something went wrong. Please try again.");
+      setSuccess(err.message);
     }
-
-    setLoading(false);
   };
 
   return (
@@ -89,13 +121,13 @@ export default function AuthCreateForm() {
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                Name<span className={errorStyle}>*</span>
+                {tCommon("name_label")}<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   className={inputStyle}
-                  placeholder="Enter your name"
+                  placeholder={tCommon("name_placeholder")}
                 />
               </FormControl>
               <FormMessage className={errorStyle} />
@@ -110,7 +142,7 @@ export default function AuthCreateForm() {
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                Mobile<span className={errorStyle}>*</span>
+                {tCommon("mobile_label")}<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <PhoneInput
@@ -120,7 +152,7 @@ export default function AuthCreateForm() {
                     inputStyle,
                     "w-full p-0 [&_input]:flex-1 [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px] [--react-international-phone-flag-width:20px] [--react-international-phone-flag-height:20px]",
                   )}
-                  placeholder="Enter your mobile number"
+                  placeholder={tCommon("mobile_placeholder")}
                 />
               </FormControl>
               <FormMessage className={errorStyle} />
@@ -135,14 +167,14 @@ export default function AuthCreateForm() {
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                Email<span className={errorStyle}>*</span>
+                {tCommon("email_label")}<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   type="email"
                   className={inputStyle}
-                  placeholder="Enter your email"
+                  placeholder={tCommon("email_placeholder")}
                 />
               </FormControl>
               <FormMessage className={errorStyle} />
@@ -155,19 +187,19 @@ export default function AuthCreateForm() {
           <Button
             type="submit"
             variant="black"
-            disabled={loading}
+            disabled={isLoading}
             className="w-full"
           >
-            {loading ? "Sending..." : "Send OTP"}
+            {isLoading ? tAuth("loading") : tAuth("submit")}
           </Button>
         </div>
 
         {/* Success/Error Message */}
-        {success && !loading && (
+        {success && !isLoading && (
           <p
             className={cn(
               "text-[10px] mt-1 w-full",
-              success.includes("successfully")
+              success === tAuth("success") || success.includes("successfully")
                 ? "text-green-600"
                 : "text-red-600",
             )}

@@ -5,116 +5,104 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { z } from "zod";
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-
-// Validation schema
-const formSchema = z.object({
-  username: z
-    .string()
-    .min(3, "Username or email must be at least 3 characters")
-    .max(100, "Username or email is too long"),
-  password: z
-    .string()
-    .min(6, "Password must be at least 6 characters")
-    .max(100, "Password is too long"),
-  rememberMe: z.boolean().default(false),
-});
+import { useAuth } from "@/hooks/useAuth";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useDispatch } from "react-redux";
+import { fetchCart } from "@/store/slices/cartSlice";
+import { fetchUserProfile } from "@/store/slices/authSlice";
+import GoogleLoginButton from "@/components/form/google-login-button";
 
 // Shared styles
-const labelStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]"
-);
+const labelStyle = cn("text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]");
 
 const inputStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1"
+  "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1",
 );
 
 const errorStyle = cn("text-[#f17423]");
 
-export default function SoftLoginForm({ setIsAuth }) {
+export default function SoftLoginForm({ locale }) {
+  const { login } = useAuth();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const dispatch = useDispatch();
+  const tAuth = useTranslations("auth");
+  const tValidation = useTranslations("validation");
+  const tCommon = useTranslations("common");
+
+  const formSchema = z.object({
+    email: z.string().email(tValidation("email.invalid_format")).max(100, tValidation("email.max")),
+    password: z.string().min(6, tValidation("password.min")).max(100, tValidation("password.max")),
+    rememberMe: z.boolean().default(false),
+  });
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
-      rememberMe: false,
     },
   });
 
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(null);
+  const [error, setError] = useState(null);
 
   const onSubmit = async (values) => {
     setLoading(true);
-    setSuccess(null);
+    setError(null);
 
-    // try {
-    //   const res = await fetch("http://localhost:1337/api/auth/local", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({
-    //       identifier: values.username,
-    //       password: values.password,
-    //     }),
-    //   });
+    const result = await login({
+      email: values.email,
+      password: values.password,
+    });
 
-    //   if (!res.ok) throw new Error("Login failed");
+    if (!result.success) {
+      const errMsg = result.error?.message || result.error || tAuth("login.error");
+      setError(typeof errMsg === "string" ? errMsg : tAuth("login.error"));
+      setLoading(false);
+      return;
+    }
 
-    //   const data = await res.json();
+    // Fetch full user profile (name, etc.) and sync cart after login
+    dispatch(fetchUserProfile());
+    dispatch(fetchCart());
 
-    //   // Store token if remember me is checked
-    //   if (values.rememberMe) {
-    //     localStorage.setItem("token", data.jwt);
-    //   }
-
-    //   setSuccess("Login successful!");
-
-    //   // Redirect or handle successful login here
-    //   // window.location.href = "/dashboard";
-    // } catch (err) {
-    //   console.error(err);
-    //   setSuccess("Invalid username or password. Please try again.");
-    // }
-
-    setIsAuth(true);
+    // Navigate to the same checkout URL to force server components to re-fetch
+    // the merged cart while preserving the ?flow= param
+    window.location.reload();
 
     setLoading(false);
   };
 
+  const handleGoogleSuccess = () => {
+    dispatch(fetchUserProfile());
+    dispatch(fetchCart());
+    window.location.reload();
+  };
+
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-wrap items-start -mx-4 [&>*]:px-4 [&>*]:py-2"
-      >
-        {/* Username */}
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-wrap items-start -mx-4 [&>*]:px-4 [&>*]:py-2">
+
+        {/* Email */}
         <FormField
           control={form.control}
-          name="username"
+          name="email"
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                Username or Email<span className={errorStyle}>*</span>
+                {tAuth("common.email_label")}<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  type="text"
-                  className={inputStyle}
-                  placeholder="Username or Email"
-                />
+                <Input {...field} type="email" className={inputStyle} placeholder={tAuth("common.email_placeholder")} />
               </FormControl>
               <FormMessage className={errorStyle} />
             </FormItem>
@@ -128,15 +116,10 @@ export default function SoftLoginForm({ setIsAuth }) {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                Password<span className={errorStyle}>*</span>
+                {tAuth("common.password_label")}<span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  type="password"
-                  className={inputStyle}
-                  placeholder="Enter your Password"
-                />
+                <Input {...field} type="password" className={inputStyle} placeholder={tAuth("common.password_placeholder")} />
               </FormControl>
               <FormMessage className={errorStyle} />
             </FormItem>
@@ -151,13 +134,9 @@ export default function SoftLoginForm({ setIsAuth }) {
             <FormItem className="w-full">
               <FormControl>
                 <div className="flex items-center gap-3">
-                  <Checkbox
-                    id="rememberMe"
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
+                  <Checkbox id="rememberMe" checked={field.value} onCheckedChange={field.onChange} />
                   <Label htmlFor="rememberMe" className={labelStyle}>
-                    Remember me
+                    {tAuth("common.remember_me")}
                   </Label>
                 </div>
               </FormControl>
@@ -167,29 +146,25 @@ export default function SoftLoginForm({ setIsAuth }) {
         />
 
         {/* Submit Button */}
-        <div className="w-full mt-2 flex">
-          <Button
-            type="submit"
-            variant="black"
-            disabled={loading}
-            className="min-w-[120px] 2xl:min-w-40"
-          >
-            {loading ? "Logging in..." : "Login"}
+        <div className="w-full mt-2 flex flex-col items-start gap-2">
+          <Button type="submit" variant="black" disabled={loading} className="min-w-[120px] 2xl:min-w-40">
+            {loading ? tAuth("login.loading") : tAuth("login.submit")}
           </Button>
+          {error && (
+            <p className="text-[12px] 2xl:text-[14px] font-light text-[#f17423]">{error}</p>
+          )}
         </div>
-
-        {/* Success/Error Message */}
-        {success && !loading && (
-          <p
-            className={cn(
-              "text-[10px] mt-1 w-full",
-              success.includes("successful") ? "text-green-600" : "text-red-600"
-            )}
-          >
-            {success}
-          </p>
-        )}
       </form>
+
+      {/* Divider */}
+      <div className="flex items-center gap-3 my-1 xl:my-2">
+        <div className="flex-1 h-px bg-[#e9e9e9]" />
+        <span className="text-[11px] 2xl:text-[13px] font-light text-[#aeaeae]">{tCommon("or")}</span>
+        <div className="flex-1 h-px bg-[#e9e9e9]" />
+      </div>
+
+      {/* Google Login */}
+      <GoogleLoginButton locale={locale} onOk={handleGoogleSuccess} />
     </Form>
   );
 }

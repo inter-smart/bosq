@@ -1,5 +1,6 @@
 "use client";
 
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
@@ -20,39 +21,51 @@ import { cn } from "@/lib/utils";
 
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
-
-// Validation schema
-const formSchema = z.object({
-  fullName: z
-    .string()
-    .min(2, "Full name must be at least 2 characters")
-    .max(50, "Full name cannot exceed 50 characters"),
-  email: z.string().email("Invalid email address"),
-  phone: z.string().min(8, "Phone number is required"),
-  message: z.string().optional(),
-});
+import { toast } from "sonner";
+import { API_URL } from "@/lib/api/client";
+import { useTranslations } from "next-intl";
+import { commonValidations, setValidationTranslator } from "@/lib/validations";
 
 // Shared styles
 const labelStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]"
+  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]",
 );
 
 const inputStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1"
+  "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1",
 );
 
 const errorStyle = cn("text-[#f17423]");
 
 const textareaStyle = cn(
   inputStyle,
-  "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none"
+  "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none",
 );
 
 export default function ContactEnquiryForm({ locale }) {
+  const t = useTranslations("form");
+  const { executeRecaptcha } = useGoogleReCaptcha();
+  const tErrors = useTranslations("errors");
+
+  const isEN = locale === "en";
+
+  // ✅ inject translator (once per render is fine)
+  setValidationTranslator(tErrors);
+
+  const [selectedCountry, setSelectedCountry] = useState("ae");
+
+  // Validation schema
+  const formSchema = z.object({
+    name: commonValidations.name(t("full_name")),
+    email: commonValidations.email(),
+    phone: commonValidations.phone(selectedCountry.toUpperCase()),
+    message: commonValidations.message(t("message")),
+  });
   const form = useForm({
     resolver: zodResolver(formSchema),
+    reValidateMode: "onChange",
     defaultValues: {
-      fullName: "",
+      name: "",
       email: "",
       phone: "",
       message: "",
@@ -60,26 +73,39 @@ export default function ContactEnquiryForm({ locale }) {
   });
 
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState("");
+
+  const URL = `${API_URL}/api/frontend/enquiries/contact`;
 
   const onSubmit = async (values) => {
     setLoading(true);
-    setSuccess("");
 
     try {
-      const res = await fetch("http://localhost:1337/api/enquiry", {
+      const recaptchaToken = await executeRecaptcha("contact_enquiry_form");
+      const normalizedPhone = values.phone.replace(/[^\d+]/g, "");
+
+      const res = await fetch(URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: values }),
+        body: JSON.stringify({
+          recaptcha_token: recaptchaToken,
+          type: "contact",
+          phone: normalizedPhone,
+          ...values,
+        }),
       });
+      const data = await res.json();
 
-      if (!res.ok) throw new Error("Failed to send enquiry");
-
+      if (!res.ok) {
+        toast.error(isEN ? data?.message?.en : data?.message?.ar || t("submit_error"));
+      }
       form.reset();
-      setSuccess("Message sent successfully!");
+
+      console.log(data);
+      toast.success(isEN ? data?.message?.en : data?.message?.ar);
     } catch (err) {
       console.error(err);
-      setSuccess("Something went wrong. Please try again.");
+      toast.error(err.message || t("submit_error"));
+      console.log(err);
     }
 
     setLoading(false);
@@ -94,17 +120,18 @@ export default function ContactEnquiryForm({ locale }) {
         {/* Full Name */}
         <FormField
           control={form.control}
-          name="fullName"
+          name="name"
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                Name<span className={errorStyle}>*</span>
+                {t("full_name")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   className={inputStyle}
-                  placeholder="Enter your name"
+                  placeholder={t("enter_name")}
                 />
               </FormControl>
               <FormMessage className={errorStyle} />
@@ -113,13 +140,14 @@ export default function ContactEnquiryForm({ locale }) {
         />
 
         {/* Phone */}
-        <FormField
+        {/* <FormField
           control={form.control}
           name="phone"
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                Phone Number<span className={errorStyle}>*</span>
+                {t("phone_number")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <PhoneInput
@@ -128,16 +156,48 @@ export default function ContactEnquiryForm({ locale }) {
                   {...field}
                   className={cn(
                     inputStyle,
-                    "w-full p-0 [&_input]:flex-1 [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px] [--react-international-phone-flag-width:20px] [--react-international-phone-flag-height:20px]"
+                    "w-full p-0 [&_input]:flex-1 [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px] [--react-international-phone-flag-width:20px] [--react-international-phone-flag-height:20px]",
                   )}
-                  placeholder="Enter your mobile number"
+                  placeholder={t("enter_mobile")}
                 />
               </FormControl>
               <FormMessage className={errorStyle} />
             </FormItem>
           )}
-        />
+        /> */}
 
+        <FormField
+          control={form.control}
+          name="phone"
+          render={({ field }) => (
+            <FormItem className="w-full">
+              <FormLabel className={labelStyle}>
+                {t("phone_number")}
+                <span className={errorStyle}>*</span>
+              </FormLabel>
+
+              <FormControl>
+                <PhoneInput
+                  value={field.value}
+                  onChange={(phone, meta) => {
+                    field.onChange(phone);
+                    setSelectedCountry(meta.country.iso2);
+                    // form.trigger("phone");
+                  }}
+                  defaultCountry="ae"
+                  dir={locale === "ar" ? "rtl" : "ltr"}
+                  className={cn(
+                    inputStyle,
+                    "w-full p-0 [&_input]:flex-1 [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px]"
+                  )}
+                  placeholder={t("enter_mobile")}
+                />
+              </FormControl>
+
+              <FormMessage className={errorStyle} />
+            </FormItem>
+          )}
+        />
         {/* Email */}
         <FormField
           control={form.control}
@@ -145,14 +205,15 @@ export default function ContactEnquiryForm({ locale }) {
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                Email ID<span className={errorStyle}>*</span>
+                {t("email_id")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   type="email"
                   className={inputStyle}
-                  placeholder="Enter email ID"
+                  placeholder={t("enter_email_id")}
                 />
               </FormControl>
               <FormMessage className={errorStyle} />
@@ -166,12 +227,12 @@ export default function ContactEnquiryForm({ locale }) {
           name="message"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel className={labelStyle}>Tell Us More</FormLabel>
+              <FormLabel className={labelStyle}>{t("tell_us_more")}</FormLabel>
               <FormControl>
                 <Textarea
                   {...field}
                   className={textareaStyle}
-                  placeholder="Please provide a brief overview of your project, including any specific requirements or ideas you have in mind."
+                  placeholder={t("form_placeholder_project")}
                 />
               </FormControl>
               <FormMessage className={errorStyle} />
@@ -187,23 +248,9 @@ export default function ContactEnquiryForm({ locale }) {
             disabled={loading}
             className="min-w-[130px] 2xl:min-w-[200px]"
           >
-            {loading ? "Sending..." : "Submit Now"}
+            {loading ? t("submitting") : t("submit_now")}
           </Button>
         </div>
-
-        {/* Success/Error Message */}
-        {success && !loading && (
-          <p
-            className={cn(
-              "text-[10px] mt-1 w-full",
-              success.includes("successfully")
-                ? "text-green-600"
-                : "text-red-600"
-            )}
-          >
-            {success}
-          </p>
-        )}
       </form>
     </Form>
   );

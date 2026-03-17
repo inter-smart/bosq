@@ -5,6 +5,9 @@ import { Text } from "@/components/utils/text";
 import { Heading } from "@/components/utils/heading";
 
 export default function WhyBosqSection({ data, locale }) {
+
+    const isEn = locale === "en";
+
     return (
         <section className="w-full h-auto py-[40px_50px] sm:py-[50px_70px] lg:py-[60px_90px] 2xl:py-[80px_110px] 3xl:py-[100px_135px] bg-[#F4F4F4] block">
             <div className="container">
@@ -14,7 +17,7 @@ export default function WhyBosqSection({ data, locale }) {
                         size="heading1"
                         className="leading-tight text-[#282828] mb-2 sm:mb-3 lg:mb-4"
                     >
-                        {parse(data?.title)}
+                        {parse(isEn? data?.title : data?.title_ar)}
                         <span
                             className={cn(
                                 "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
@@ -29,11 +32,11 @@ export default function WhyBosqSection({ data, locale }) {
                         size="text1"
                         className="font-light text-[#282828]"
                     >
-                        {parse(data?.description)}
+                        {parse(isEn? data?.description: data?.description_ar)}
                     </Text>
                 </div>
                 <div className="w-full h-auto block">
-                    {data?.bosq_list?.map((item) => (
+                    {data?.bosqList?.map((item) => (
                         <div
                             key={item?.id}
                             className="w-full h-full mb-8 sm:mb-10 lg:mb-15 xl:mb-18 2xl:mb-22 3xl:mb-28 last:mb-0 block"
@@ -47,10 +50,11 @@ export default function WhyBosqSection({ data, locale }) {
                                     <div className="w-full h-auto aspect-[1.951] overflow-hidden block">
                                         <Image
                                             src={item?.media.path}
-                                            alt={item?.media.alt}
+                                            alt={isEn? item?.media.alt: item?.media.alt_ar}
                                             width={810}
                                             height={420}
                                             className="w-full h-full object-cover hover:scale-105 transition-all duration-500 ease-in-out"
+                                          quality={90}
                                         />
                                     </div>
                                 </div>
@@ -59,21 +63,22 @@ export default function WhyBosqSection({ data, locale }) {
                                         <div className="w-8 sm:w-10 2xl:w-12.5 3xl:w-15 h-auto aspect-square mb-3 sm:mb-4 lg:mb-5 3xl:mb-6.5 overflow-hidden flex items-center justify-center">
                                             <Image
                                                 src={item?.icon?.path}
-                                                alt={item?.icon?.alt}
+                                                alt={isEn? item?.icon?.alt: item?.icon?.alt_ar}
                                                 width={60}
                                                 height={60}
                                                 className="w-full h-full object-contain"
+                                              quality={90}
                                             />
                                         </div>
-                                        <div className="text-[16px] 2xl:text-[20px] 3xl:text-[25px] leading-[1.2] font-normal text-[#282828] mb-2">{item?.title}</div>
-                                        <div className="txet-[13px] 2xl:txet-[15px] 3xl:txet-[18px] leading-[1.2] font-normal text-[#282828]">{item?.caption}</div>
+                                        <div className="text-[16px] 2xl:text-[20px] 3xl:text-[25px] leading-[1.2] font-normal text-[#282828] mb-2">{isEn? item?.title: item?.title_ar}</div>
+                                        <div className="txet-[13px] 2xl:txet-[15px] 3xl:txet-[18px] leading-[1.2] font-normal text-[#282828]">{isEn? item?.caption: item?.caption_ar}</div>
                                     </div>
                                     <div
                                         dir={locale === "ar" ? "rtl" : "ltr"}
                                         className={cn("typography sm:[&_p,li]:text-[13px] 2xl:[&_p,li]:text-[15px] 3xl:[&_p,li]:text-[18px] [&_p,li]:leading-[1.8] lg:[&_li]:mb-2 2xl:[&_li]:mb-3 3xl:[&_li]:mb-5 2xl:[&_p]:mb-5 3xl:[&_p]:mb-8", "[--text-color:#282828]", locale === "ar" ? "[&_ul]:pr-4 sm:[&_ul]:pr-5 pl-0" : "[&_ul]:pl-4 sm:[&_ul]:pl-5"
                                         )}
                                     >
-                                        {parse(item?.description)}
+                                        {parse(isEn? item?.description: item?.description_ar)}
                                     </div>
                                 </div>
                             </div>

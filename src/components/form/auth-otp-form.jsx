@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { z } from "zod";
 
 import {
@@ -17,34 +17,44 @@ import {
 import {
   InputOTP,
   InputOTPGroup,
-  InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { commonValidations, setValidationTranslator } from "@/lib/validations";
+import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
-// Validation schema
-const formSchema = z.object({
-  otp: z
-    .string()
-    .length(6, "OTP must be exactly 6 digits")
-    .regex(/^\d+$/, "OTP must contain only numbers"),
-});
 
 // Shared styles
 const labelStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]"
+  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]",
 );
 
 const inputStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] focus-visible:ring-1"
+  "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] focus-visible:ring-1",
   // "bg-red-500"
 );
 
 const errorStyle = cn("text-[#f17423]");
 
-export default function AuthOtpForm() {
+export default function AuthOtpForm({ locale }) {
+  const t = useTranslations("auth.otp");
+  const tErrors = useTranslations("errors");
+
+  const isEn = locale === "en";
+
+      // ✅ inject translator (once per render is fine)
+  setValidationTranslator(tErrors);
+
+  // Validation schema
+const formSchema = z.object({
+  otp: commonValidations.otp(),
+});
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -52,34 +62,38 @@ export default function AuthOtpForm() {
     },
   });
 
-  const [loading, setLoading] = useState(false);
+  const { verifyOtp, pendingEmail, isAuthenticated, isLoading, clearAuthError } = useAuth();
   const [success, setSuccess] = useState("");
 
+  const router = useRouter();
+
+  // Guard: if already logged in redirect home; if no flow state redirect to signup
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.replace(`/${locale}`);
+    } else if (!pendingEmail) {
+      router.replace(`/${locale}/signup`);
+    }
+  }, [isAuthenticated, pendingEmail, locale, router]);
+
   const onSubmit = async (values) => {
-    setLoading(true);
+    clearAuthError();
     setSuccess("");
 
-    try {
-      const res = await fetch("http://localhost:1337/api/auth/verify-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: values }),
-      });
+    const result = await verifyOtp(values.otp, pendingEmail);
 
-      if (!res.ok) throw new Error("Failed to verify OTP");
+    if (result.success) {
+      setSuccess(t("success"));
+            toast.success(t("success"));
 
-      const data = await res.json();
-
-      setSuccess("OTP verified successfully!");
-
-      // Redirect to password creation or next step
-      // window.location.href = "/create-password";
-    } catch (err) {
-      console.error(err);
-      setSuccess("Invalid OTP. Please try again.");
-    }
-
-    setLoading(false);
+      router.push(`/${locale}/create-password`);
+    } else {
+ const isEN = locale === "en";
+        const errorMsg = typeof result.error === "object"
+          ? (isEN ? result.error?.en : result.error?.ar) ?? t("error")
+          : result.error || t("error");
+        setSuccess(errorMsg);
+        toast.error(errorMsg);    }
   };
 
   return (
@@ -94,10 +108,10 @@ export default function AuthOtpForm() {
           name="otp"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel className={labelStyle}>Enter OTP</FormLabel>
+              <FormLabel className={labelStyle}>{t("label")}</FormLabel>
               <FormControl>
                 <InputOTP
-                  maxLength={6}
+                  maxLength={4}
                   value={field.value}
                   onChange={field.onChange}
                 >
@@ -113,12 +127,6 @@ export default function AuthOtpForm() {
                   <InputOTPGroup>
                     <InputOTPSlot index={3} className={inputStyle} />
                   </InputOTPGroup>
-                  <InputOTPGroup>
-                    <InputOTPSlot index={4} className={inputStyle} />
-                  </InputOTPGroup>
-                  <InputOTPGroup>
-                    <InputOTPSlot index={5} className={inputStyle} />
-                  </InputOTPGroup>
                 </InputOTP>
               </FormControl>
               <FormMessage className={errorStyle} />
@@ -131,21 +139,21 @@ export default function AuthOtpForm() {
           <Button
             type="submit"
             variant="black"
-            disabled={loading}
+            disabled={isLoading}
             className="w-full"
           >
-            {loading ? "Verifying..." : "Verify OTP"}
+            {isLoading ? t("loading") : t("submit")}
           </Button>
         </div>
 
         {/* Success/Error Message */}
-        {success && !loading && (
+        {success && !isLoading && (
           <p
             className={cn(
               "text-[10px] mt-1 w-full",
-              success.includes("successfully")
+              success === t("success")
                 ? "text-green-600"
-                : "text-red-600"
+                : "text-red-600",
             )}
           >
             {success}

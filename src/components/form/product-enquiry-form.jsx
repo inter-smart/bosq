@@ -4,6 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { z } from "zod";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { useSubmitProductEnquiryMutation } from "@/store/services/productEnquiryApi";
 
 import {
   Form,
@@ -23,40 +25,55 @@ import "react-international-phone/style.css";
 
 import Image from "next/image";
 import { X } from "lucide-react";
-
-// ✅ Final Correct Schema
-const formSchema = z.object({
-  fullName: z
-    .string()
-    .min(2, "Full name must be at least 2 characters")
-    .max(50, "Full name cannot exceed 50 characters"),
-  email: z.string().email("Invalid email address"),
-  phone: z.string().min(8, "Phone number is required"),
-  city: z.string().optional(),
-  message: z.string().optional(),
-
-  attachment: z.any().optional(),
-});
+import { commonValidations, setValidationTranslator } from "@/lib/validations";
+import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 // Styles
 const labelStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]"
+  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]",
 );
 
 const inputStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1"
+  "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1",
 );
 
 const errorStyle = cn("text-[#f17423]");
 
 const textareaStyle = cn(
   inputStyle,
-  "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none"
+  "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none",
 );
 
-export default function ProductEnquiryForm() {
+export default function ProductEnquiryForm({ productId, onClose, locale }) {
+  const { executeRecaptcha } = useGoogleReCaptcha();
+  const [submitProductEnquiry, { isLoading }] =
+    useSubmitProductEnquiryMutation();
+  const [selectedCountry, setSelectedCountry] = useState("ae");
+  // File upload
+  const [uploadedFile, setUploadedFile] = useState(null);
+
+  const isEN = locale === "en";
+
+  const t = useTranslations("form");
+  const tErrors = useTranslations("errors");
+  const tToast = useTranslations("toast");
+  // ✅ inject translator (once per render is fine)
+  setValidationTranslator(tErrors);
+
+  // ✅ Final Correct Schema
+  const formSchema = z.object({
+    fullName: commonValidations.name(t("full_name")),
+    email: commonValidations.email(),
+    phone: commonValidations.phone(selectedCountry.toUpperCase()),
+    city: commonValidations.message(t("city")),
+    message: commonValidations.message(t("message")),
+    attachment: commonValidations.image(),
+  });
   const form = useForm({
     resolver: zodResolver(formSchema),
+    reValidateMode: "onChange",
     defaultValues: {
       fullName: "",
       email: "",
@@ -67,33 +84,50 @@ export default function ProductEnquiryForm() {
     },
   });
 
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState("");
-
-  // File upload
-  const [uploadedFile, setUploadedFile] = useState(null);
-
   const onSubmit = async (values) => {
-    setLoading(true);
-    setSuccess("");
-
-    try {
-      const res = await fetch("http://localhost:1337/api/enquiry", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: values }),
-      });
-
-      if (!res.ok) throw new Error("Failed to send enquiry");
-
-      form.reset();
-      setUploadedFile(null);
-      setSuccess("Message sent successfully!");
-    } catch {
-      setSuccess("Something went wrong. Please try again.");
+    if (!executeRecaptcha) {
+      toast.error(t("recaptcha_not_initialized"));
+      return;
     }
 
-    setLoading(false);
+    try {
+      const token = await executeRecaptcha("product_enquiry");
+
+      const formData = new FormData();
+      formData.append("product_id", productId);
+      formData.append("name", values.fullName);
+      formData.append("email", values.email);
+      formData.append("phone", values.phone);
+      formData.append("city", values.city);
+      formData.append("message", values.message);
+      formData.append("recaptcha_token", token);
+      formData.append("media_path", uploadedFile);
+
+      const data = await submitProductEnquiry(formData).unwrap();
+
+      if (!data?.success) {
+        return toast.error(
+          isEN
+            ? data.message.en
+            : data.message.ar || tToast("submission_failed"),
+        );
+      }
+      form.reset();
+      setSelectedCountry("ae");
+      setUploadedFile(null);
+      toast.success(isEN ? data.message.en : data.message.ar);
+      onClose?.();
+    } catch (error) {
+      const apiError = error?.data;
+
+      toast.error(
+        isEN
+          ? apiError?.message?.en ||
+          tErrors("invalid_content", { field: "form" })
+          : apiError?.message?.ar ||
+          tErrors("invalid_content", { field: "form" }),
+      );
+    }
   };
 
   const handleFileChange = (e) => {
@@ -101,7 +135,10 @@ export default function ProductEnquiryForm() {
 
     if (file) {
       setUploadedFile(file);
-      form.setValue("attachment", file);
+      form.setValue("attachment", file, {
+        shouldValidate: true, // ✅ trigger Zod
+        shouldDirty: true, // ✅ mark field as touched
+      });
     }
   };
 
@@ -123,13 +160,14 @@ export default function ProductEnquiryForm() {
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                Name<span className={errorStyle}>*</span>
+                {t("full_name")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   className={inputStyle}
-                  placeholder="Enter your name"
+                  placeholder={t("enter_name")}
                 />
               </FormControl>
               <FormMessage />
@@ -144,14 +182,15 @@ export default function ProductEnquiryForm() {
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                Email Address<span className={errorStyle}>*</span>
+                {t("email_id")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   type="email"
                   className={inputStyle}
-                  placeholder="Enter Email Address"
+                  placeholder={t("enter_email_id")}
                 />
               </FormControl>
               <FormMessage />
@@ -166,15 +205,33 @@ export default function ProductEnquiryForm() {
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                Contact Number<span className={errorStyle}>*</span>
+                {t("phone_number")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <PhoneInput
-                  defaultCountry="ua"
-                  {...field}
-                  className={cn(inputStyle, "w-full p-0 [&_input]:flex-1  [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px] [--react-international-phone-flag-width:20px] [--react-international-phone-flag-height:20px]")}
-                  placeholder="Enter phone number"
-                  onChange={(value) => field.onChange(value)}
+                  defaultCountry="ae"
+                  value={field.value}
+                  onChange={(phone, meta) => {
+                    const countryIso = meta.country.iso2;
+                    const callingCode = `+${meta.country.callingCode}`;
+
+                    if (phone !== field.value) {
+                      if (!field.value && phone.trim() === callingCode) {
+                        return;
+                      }
+                      field.onChange(phone);
+                    }
+
+                    if (countryIso !== selectedCountry) {
+                      setSelectedCountry(countryIso);
+                    }
+                  }}
+                  className={cn(
+                    inputStyle,
+                    "w-full p-0 [&_input]:flex-1  [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px] [--react-international-phone-flag-width:20px] [--react-international-phone-flag-height:20px]",
+                  )}
+                  placeholder={t("enter_phone")}
                 />
               </FormControl>
               <FormMessage />
@@ -188,12 +245,12 @@ export default function ProductEnquiryForm() {
           name="city"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel className={labelStyle}>City</FormLabel>
+              <FormLabel className={labelStyle}>{t("city")}</FormLabel>
               <FormControl>
                 <Input
                   {...field}
                   className={inputStyle}
-                  placeholder="Enter Your City"
+                  placeholder={t("enter_city")}
                 />
               </FormControl>
               <FormMessage />
@@ -207,7 +264,7 @@ export default function ProductEnquiryForm() {
           name="attachment"
           render={() => (
             <FormItem className="w-full">
-              <FormLabel className={labelStyle}>Upload Image</FormLabel>
+              <FormLabel className={labelStyle}>{t("upload_image")}</FormLabel>
               <FormControl>
                 <div className="max-w-full space-y-2">
                   {!uploadedFile ? (
@@ -215,10 +272,12 @@ export default function ProductEnquiryForm() {
                       htmlFor="file-upload"
                       className={cn(
                         inputStyle,
-                        "flex items-center justify-between gap-x-1 border"
+                        "flex items-center justify-between gap-x-1 border cursor-pointer",
                       )}
                     >
-                      <span className="text-[#aeaeae]">Choose Image</span>
+                      <span className="text-[#aeaeae]">
+                        {t("choose_image")}
+                      </span>
                       <Image
                         src="/images/icon-attachment.svg"
                         alt="icon-attachment"
@@ -240,7 +299,7 @@ export default function ProductEnquiryForm() {
                     <div
                       className={cn(
                         inputStyle,
-                        "flex items-center justify-between gap-x-1 border"
+                        "flex items-center justify-between gap-x-1 border",
                       )}
                     >
                       <span className="line-clamp-1 flex-1 pr-2">
@@ -257,10 +316,7 @@ export default function ProductEnquiryForm() {
                   )}
                 </div>
               </FormControl>
-
-              <FormMessage className="font-light text-black">
-                &nbsp;Max. 10 MB. (Type: pdf, doc, png, jpeg, docx)
-              </FormMessage>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -271,12 +327,12 @@ export default function ProductEnquiryForm() {
           name="message"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel className={labelStyle}>Message</FormLabel>
+              <FormLabel className={labelStyle}>{t("message")}</FormLabel>
               <FormControl>
                 <Textarea
                   {...field}
                   className={textareaStyle}
-                  placeholder="Enter Message..."
+                  placeholder={t("form_placeholder_inquiry")}
                 />
               </FormControl>
               <FormMessage />
@@ -285,20 +341,16 @@ export default function ProductEnquiryForm() {
         />
 
         {/* Submit */}
-        <div className="w-full mt-2 flex">
+        <div className="w-full mt-2 flex flex-col gap-2">
           <Button
             type="submit"
             variant={"black"}
-            disabled={loading}
+            disabled={isLoading}
             className="min-w-full"
           >
-            {loading ? "Sending..." : "Submit Enquiry"}
+            {isLoading ? t("submitting") : t("submit_enquiry")}
           </Button>
         </div>
-
-        {success && !loading && (
-          <p className="text-green-600 mt-1">{success}</p>
-        )}
       </form>
     </Form>
   );

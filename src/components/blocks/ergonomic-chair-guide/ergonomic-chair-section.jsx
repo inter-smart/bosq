@@ -4,19 +4,21 @@ import parse from "html-react-parser";
 import { Heading } from "@/components/utils/heading";
 
 export default function ErgonomicChairSection({ data, locale }) {
+  const isEn = locale === "en";
   return (
     <section className="w-full h-auto py-[10px_40px] sm:py-[10px_50px] lg:py-[20px_70px] 2xl:py-[30px_90px] block">
       <div className="w-full aspect-6/5 sm:aspect-1920/740 overflow-hidden flex items-center relative z-0">
         <picture className="absolute -z-2 inset-0 opacity-95">
-          <source media="(max-width: 640px)" srcSet={data?.media?.mobilePath} />
+          <source media="(max-width: 640px)" srcSet={isEn ? data?.media?.mobile?.path: data?.media_ar?.mobile?.path} />
           <Image
-            src={data?.media?.desktopPath}
-            alt={data?.media?.media_alt}
+            src={isEn ? data?.media?.desktop?.path: data?.media_ar?.desktop?.path}
+            alt={isEn ? data?.media?.desktop?.alt: data?.media?.desktop?.alt_ar}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 80vw"
             className="-z-2 object-cover"
             placeholder="blur"
             blurDataURL="/images/placeholder.jpg"
+            quality={90}
           />
         </picture>
         <div className="container">
@@ -26,11 +28,11 @@ export default function ErgonomicChairSection({ data, locale }) {
               size="heading1"
               className="line-clamp-4 leading-tight text-white mb-2 xl:mb-4 2xl:mb-6"
             >
-              {parse(data?.title)}
+              {parse(isEn ? data?.title : data?.title_ar)}
               <span
                 className={cn(
                   "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
-                  locale === "ar"
+                  !isEn
                     ? "-translate-x-1 xl:-translate-x-2 "
                     : "translate-x-1 xl:translate-x-2 ",
                 )}
@@ -40,7 +42,7 @@ export default function ErgonomicChairSection({ data, locale }) {
         </div>
       </div>
       <div className="container pt-7 sm:pt-10 lg:pt-17 2xl:pt-20 3xl:pt-25">
-        {data?.chair_info_list?.map((item) => (
+        {data?.sections?.map((item) => (
           <div
             key={item.id}
             className="w-full h-auto py-2.5 sm:py-5 lg:py-8 2xl:py-10 3xl:py-12 first:pt-0 last:pb-0 block"
@@ -56,10 +58,11 @@ export default function ErgonomicChairSection({ data, locale }) {
                   <div className="w-35 sm:w-45 lg:w-52 2xl:w-65 3xl:w-80 h-auto aspect-square m-auto overflow-hidden block">
                     <Image
                       src={item?.media?.path || "/images/placeholder.jpg"}
-                      alt={item?.media?.alt || "ergonomic-chair-guide"}
+                      alt={isEn? item?.media?.alt: item?.media?.alt_ar}
                       width={735}
                       height={355}
                       className="w-full h-full object-contain"
+                      quality={90}
                     />
                   </div>
                   <div
@@ -79,21 +82,21 @@ export default function ErgonomicChairSection({ data, locale }) {
                     size="heading1"
                     className="line-clamp-2 text-black mb-4 sm:mb-5 2xl:mb-7.5 3xl:mb-8.5"
                   >
-                    {parse(item?.title)}
+                    {parse(isEn ? item?.title : item?.title_ar)}
                     <span
                       className={cn(
                         "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
-                        locale === "ar"
+                        !isEn
                           ? "-translate-x-1 xl:-translate-x-2 "
                           : "translate-x-1 xl:translate-x-2 ",
                       )}
                     />
                   </Heading>
                   <div
-                    dir={locale === "ar" ? "rtl" : "ltr"}
+                    dir={!isEn ? "rtl" : "ltr"}
                     className={cn("typography", "[--text-color:#282828]")}
                   >
-                    {parse(item?.description)}
+                    {parse(isEn ? item?.description : item?.description_ar)}
                   </div>
                 </div>
               </div>
