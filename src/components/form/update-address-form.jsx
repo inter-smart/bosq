@@ -36,7 +36,7 @@ const textareaStyle = cn(inputStyle, "leading-tight min-h-[80px] 2xl:min-h-[100p
 
 import { useTranslations } from "next-intl";
 
-export default function UpdateAddressForm({ locale, addressData, onSuccess, isFromCheckout=false }) {
+export default function UpdateAddressForm({ locale, addressData, onSuccess, isFromCheckout=false, showShipToDifferent=false }) {
   const t = useTranslations("form");
   const { executeRecaptcha } = useGoogleReCaptcha();
 
@@ -445,7 +445,7 @@ export default function UpdateAddressForm({ locale, addressData, onSuccess, isFr
 
 
         {
-          !isFromCheckout &&
+          (!isFromCheckout || showShipToDifferent) &&
         <FormField
           control={form.control}
           name="shipToDifferentAddress"

@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import AddAddressBlock from "./AddAddressBlock";
 import AddressBlock from "./AddressBlock";
 import { useGetAddressesQuery } from "@/store/services/addressApi";
@@ -17,6 +17,16 @@ import {
   setSelectedBillingAddress,
 } from "@/store/slices/checkoutSlice";
 import { cn } from "@/lib/utils";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import UpdateAddressForm from "@/components/form/update-address-form";
+import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
 
 const AddressSection = ({ locale }) => {
   const dispatch = useDispatch();
@@ -27,8 +37,10 @@ const AddressSection = ({ locale }) => {
   const selectedBillingAddressId = useSelector((state) => state.checkout.selectedBillingAddressId);
   const user = useSelector((state) => state.auth.user);
 
-  const [showShippingAddressForm, setShowShippingAddressForm] = React.useState(false);
-  const [showBillingAddressForm, setShowBillingAddressForm] = React.useState(false);
+  const [showShippingAddressForm, setShowShippingAddressForm] = useState(false);
+  const [showBillingAddressForm, setShowBillingAddressForm] = useState(false);
+  const [editModalAddress, setEditModalAddress] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const { data, isLoading, isError } = useGetAddressesQuery();
 
@@ -70,8 +82,17 @@ const AddressSection = ({ locale }) => {
     // Auto-select first billing address if none is selected
     if (value && billingAddresses.length > 0) {
       const sorted = [...billingAddresses].sort((a, b) => (b.is_default ? 1 : 0) - (a.is_default ? 1 : 0));
+      const selected = sorted.find((a) => a.is_default) || sorted[0];
+      dispatch(setSelectedBillingAddress(selected.id));
+    }
 
-      dispatch(setSelectedBillingAddress((sorted.find((a) => a.is_default) || sorted[0]).id));
+    // Open edit modal when unchecking and no shipping addresses exist
+    if (!value && shippingAddresses.length === 0) {
+      const selectedBilling = billingAddresses.find((a) => a.id === selectedBillingAddressId) || billingAddresses[0];
+      if (selectedBilling) {
+        setEditModalAddress(selectedBilling);
+        setIsEditModalOpen(true);
+      }
     }
   };
 
@@ -141,6 +162,42 @@ const AddressSection = ({ locale }) => {
           <Plus className="size-3" />
         </Button>
       </div>
+
+      {/* Edit Address Dialog - triggered when "use same for shipping" with no shipping addresses */}
+      <AlertDialog
+        dir={locale === "ar" ? "rtl" : "ltr"}
+        open={isEditModalOpen}
+        onOpenChange={(open) => {
+          setIsEditModalOpen(open);
+          if (!open) setEditModalAddress(null);
+        }}
+      >
+        <AlertDialogContent className={"xl:max-w-[768px] 2xl:max-w-[840px] gap-0"}>
+          <AlertDialogHeader className={"flex-row items-center justify-between mb-2 2xl:mb-4"}>
+            <AlertDialogTitle className="text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-semibold text-[#282828]">
+              {t("edit_title")}
+            </AlertDialogTitle>
+            <AlertDialogDescription className={"sr-only"}>{t("edit_description")}</AlertDialogDescription>
+            <AlertDialogCancel className={"h-auto p-0 border-0 hover:bg-transparent"}>
+              <X className="size-5 text-black" />
+            </AlertDialogCancel>
+          </AlertDialogHeader>
+          <div className="max-h-[70vh] mask-[linear-gradient(to_bottom,transparent_0%,white_2%,white_98%,transparent_100%)] overflow-y-auto overflow-x-hidden">
+            <RecaptchaProvider>
+              <UpdateAddressForm
+                isFromCheckout={true}
+                showShipToDifferent={true}
+                locale={locale}
+                addressData={editModalAddress}
+                onSuccess={() => {
+                  setIsEditModalOpen(false);
+                  setEditModalAddress(null);
+                }}
+              />
+            </RecaptchaProvider>
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 };
