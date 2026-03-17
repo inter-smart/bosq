@@ -57,6 +57,16 @@ export default function AuthLoginForm({ locale, data }) {
   const [showPassword, setShowPassword] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
 
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("remembered_email");
+    const savedPassword = localStorage.getItem("remembered_password");
+    if (savedEmail && savedPassword) {
+      form.setValue("email", savedEmail);
+      form.setValue("password", savedPassword);
+      form.setValue("rememberMe", true);
+    }
+  }, []);
+
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -83,6 +93,13 @@ export default function AuthLoginForm({ locale, data }) {
 
       const result = await login(values);
       if (result?.success) {
+        if (values.rememberMe) {
+          localStorage.setItem("remembered_email", values.email);
+          localStorage.setItem("remembered_password", values.password);
+        } else {
+          localStorage.removeItem("remembered_email");
+          localStorage.removeItem("remembered_password");
+        }
         toast.success(tAuth("success"));
         // setIsRedirecting(true);
         setTimeout(() => {
