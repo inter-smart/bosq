@@ -35,10 +35,18 @@ function ShippingCard({ item, onEdit, t, c }) {
   return (
     <div className="w-full sm:w-1/2 lg:w-1/3 flex">
       <div className="w-full bg-white border border-[#dedede] p-2.5 xl:p-3.5 2xl:p-5 transition hover:shadow-sm relative flex flex-col">
-        <Heading as="div" size="heading5" className="font-medium text-[#282828] mb-1 xl:mb-2">
+        <Heading
+          as="div"
+          size="heading5"
+          className="font-medium text-[#282828] mb-1 xl:mb-2"
+        >
           {item?.shippingFullName}
         </Heading>
-        <Text as="div" size="text3" className="text-[#282828] mb-2 xl:mb-2.5 flex-1">
+        <Text
+          as="div"
+          size="text3"
+          className="text-[#282828] mb-2 xl:mb-2.5 flex-1"
+        >
           {item?.shipping_address && parse(item?.shipping_address)}
         </Text>
         <div className="flex gap-0.5 xl:gap-1 flex-wrap mt-auto">
@@ -47,7 +55,14 @@ function ShippingCard({ item, onEdit, t, c }) {
             onClick={() => onEdit(item)}
             className="min-w-[45px] xl:min-w-[50px] 2xl:min-w-[70px] h-[20px] lg:h-[22px] 2xl:h-[24px] 3xl:h-[26px] bg-white gap-1 border border-[#e9e9e9] hover:text-black hover:bg-white hover:border-[#f17423]"
           >
-            <Image src={"/images/icon-edit.svg"} alt={"icon-edit"} width={10} height={10} className="w-2 xl:w-2.5" quality={90} />
+            <Image
+              src={"/images/icon-edit.svg"}
+              alt={"icon-edit"}
+              width={10}
+              height={10}
+              className="w-2 xl:w-2.5"
+              quality={90}
+            />
             {c("edit")}
           </Button>
         </div>
@@ -56,7 +71,15 @@ function ShippingCard({ item, onEdit, t, c }) {
   );
 }
 
-function AddressCard({ item, isDeleting, onEdit, onSetDefault, onDelete, t, c }) {
+function AddressCard({
+  item,
+  isDeleting,
+  onEdit,
+  onSetDefault,
+  onDelete,
+  t,
+  c,
+}) {
   return (
     <div className="w-full sm:w-1/2 lg:w-1/3 flex">
       <div
@@ -65,14 +88,26 @@ function AddressCard({ item, isDeleting, onEdit, onSetDefault, onDelete, t, c })
           item.is_default ? "border-[#f17423]" : "border-[#dedede]",
         )}
       >
-        <Heading as="div" size="heading5" className="font-medium text-[#282828] mb-1 xl:mb-2">
+        <Heading
+          as="div"
+          size="heading5"
+          className="font-medium text-[#282828] mb-1 xl:mb-2"
+        >
           {item?.fullName}
         </Heading>
         <Text as="div" size="text3" className="text-[#282828] mb-1 xl:mb-2">
           {item?.streetAddress && parse(item?.streetAddress)}
         </Text>
-        <Text as="div" size="text3" className="font-medium text-[#282828] mb-2 xl:mb-2.5 flex-1">
-          <a href={`tel:${item?.phone}`} target="_blank" rel="noopener noreferrer">
+        <Text
+          as="div"
+          size="text3"
+          className="font-medium text-[#282828] mb-2 xl:mb-2.5 flex-1"
+        >
+          <a
+            href={`tel:${item?.phone}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {item?.phone}
           </a>
         </Text>
@@ -82,7 +117,14 @@ function AddressCard({ item, isDeleting, onEdit, onSetDefault, onDelete, t, c })
             onClick={() => onEdit(item)}
             className="min-w-[45px] xl:min-w-[50px] 2xl:min-w-[70px] h-[20px] lg:h-[22px] 2xl:h-[24px] 3xl:h-[26px] bg-white gap-1 border border-[#e9e9e9] hover:text-black hover:bg-white hover:border-[#f17423]"
           >
-            <Image src={"/images/icon-edit.svg"} alt={"icon-edit"} width={10} height={10} className="w-2 xl:w-2.5" quality={90} />
+            <Image
+              src={"/images/icon-edit.svg"}
+              alt={"icon-edit"}
+              width={10}
+              height={10}
+              className="w-2 xl:w-2.5"
+              quality={90}
+            />
             {c("edit")}
           </Button>
           {item.is_default ? (
@@ -108,7 +150,14 @@ function AddressCard({ item, isDeleting, onEdit, onSetDefault, onDelete, t, c })
             disabled={isDeleting === item?.id}
             className="min-w-[55px] xl:min-w-[60px] 2xl:min-w-[85px] h-[20px] lg:h-[22px] 2xl:h-[24px] 3xl:h-[26px] bg-white gap-1 border border-[#e9e9e9] hover:text-red-600 hover:bg-white hover:border-red-600"
           >
-            <Image src={"/images/icon-delete.svg"} alt={"icon-delete"} width={10} height={10} className="w-2 xl:w-2.5" quality={90} />
+            <Image
+              src={"/images/icon-delete.svg"}
+              alt={"icon-delete"}
+              width={10}
+              height={10}
+              className="w-2 xl:w-2.5"
+              quality={90}
+            />
             {isDeleting === item?.id ? t("deleting") : c("delete")}
           </Button>
         </div>
@@ -125,12 +174,11 @@ export default function AccountAddress({ data, locale, addressData }) {
   const router = useRouter();
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingAddress, setEditingAddress] = useState(null);
+  const [editMode, setEditMode] = useState("billing"); // "billing" | "shipping"
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isLoadingEdit, setIsLoadingEdit] = useState(false);
   const [isDeleting, setIsDeleting] = useState(null);
   const [isDeleteItem, setisDeleteItem] = useState(false);
-
-
 
   const sortByDefault = (arr) =>
     [...arr].sort((a, b) => {
@@ -148,6 +196,7 @@ export default function AccountAddress({ data, locale, addressData }) {
     : [];
 
   const handleEditClick = async (address) => {
+    setEditMode("billing");
     setIsLoadingEdit(true);
     setIsEditDialogOpen(true);
 
@@ -164,62 +213,74 @@ export default function AccountAddress({ data, locale, addressData }) {
     setIsLoadingEdit(false);
   };
 
+  const handleShippingEditClick = async (address) => {
+    setEditMode("shipping");
+    setIsLoadingEdit(true);
+    setIsEditDialogOpen(true);
+
+    const { data, error } = await fetchFromAPIWithCredentials(
+      `/api/frontend/address/${address.id}`,
+    );
+
+    if (!error && data) {
+      setEditingAddress(data);
+    } else {
+      setEditingAddress(address);
+    }
+    setIsLoadingEdit(false);
+  };
+
   const handleEditSuccess = () => {
     setIsEditDialogOpen(false);
-    setEditingAddress(null);
-    router.refresh();
+    setTimeout(() => {
+      setEditingAddress(null);
+      router.refresh();
+    }, 50);
   };
 
   const handleSetDefault = async (addressId) => {
-
     try {
-      
-  
-    const { error } = await fetchFromAPIWithCredentials(
-      `/api/frontend/address/${addressId}/default`,
-      {
-        method: "PUT",
-      },
-    );
+      const { error } = await fetchFromAPIWithCredentials(
+        `/api/frontend/address/${addressId}/default`,
+        {
+          method: "PUT",
+        },
+      );
 
-    if (!error) {
-      router.refresh();
-    }
-
-    toast.success(`${tTost("default_address")}`);
-
-      } catch (error) {
-        toast.error(`${tTost("failed_default_address")}`);
+      if (!error) {
+        router.refresh();
       }
+
+      toast.success(`${tTost("default_address")}`);
+    } catch (error) {
+      toast.error(`${tTost("failed_default_address")}`);
+    }
   };
 
   const handleDelete = async (addressId) => {
     setIsDeleting(addressId);
     setisDeleteItem(true);
     try {
-    const { data, error, message } = await fetchFromAPIWithCredentials(
-      `/api/frontend/address/${addressId}`,
-      {
-        method: "DELETE",
-      },
-    );
+      const { data, error, message } = await fetchFromAPIWithCredentials(
+        `/api/frontend/address/${addressId}`,
+        {
+          method: "DELETE",
+        },
+      );
 
-    if (!error) {
-      router.refresh();
-    }
-    setIsDeleting(null);
-    setisDeleteItem(false);
+      if (!error) {
+        router.refresh();
+      }
+      setIsDeleting(null);
+      setisDeleteItem(false);
 
-    toast.success(`${tTost("delete_address")}`);
-       
+      toast.success(`${tTost("delete_address")}`);
     } catch (error) {
       toast.error(`${tTost("failed_delete_address")}`);
     }
   };
 
-
-
-  console.log("addressdata: ", addressData)
+  console.log("addressdata: ", addressData);
 
   return (
     <>
@@ -281,7 +342,11 @@ export default function AccountAddress({ data, locale, addressData }) {
           {/* Billing Address Section */}
           {billingAddresses.length > 0 && (
             <div className="mb-5 xl:mb-7 2xl:mb-10">
-              <Heading as="h3" size="heading5" className="font-semibold text-[#282828] mb-2 xl:mb-3">
+              <Heading
+                as="h3"
+                size="heading5"
+                className="font-semibold text-[#282828] mb-2 xl:mb-3"
+              >
                 {t("billing")}
               </Heading>
               <div className="flex flex-wrap -mx-2 xl:-mx-3 2xl:-mx-4 [&>*]:px-2 [&>*]:py-1 xl:[&>*]:px-3 xl:[&>*]:py-1.5 2xl:[&>*]:px-4 2xl:[&>*]:py-2">
@@ -304,7 +369,11 @@ export default function AccountAddress({ data, locale, addressData }) {
           {/* Shipping Address Section */}
           {shippingAddresses.length > 0 && (
             <div className="mb-5 xl:mb-7 2xl:mb-10">
-              <Heading as="h3" size="heading5" className="font-semibold text-[#282828] mb-2 xl:mb-3">
+              <Heading
+                as="h3"
+                size="heading5"
+                className="font-semibold text-[#282828] mb-2 xl:mb-3"
+              >
                 {t("shipping")}
               </Heading>
               <div className="flex flex-wrap -mx-2 xl:-mx-3 2xl:-mx-4 [&>*]:px-2 [&>*]:py-1 xl:[&>*]:px-3 xl:[&>*]:py-1.5 2xl:[&>*]:px-4 2xl:[&>*]:py-2">
@@ -312,7 +381,7 @@ export default function AccountAddress({ data, locale, addressData }) {
                   <ShippingCard
                     key={"shipping-item-" + index}
                     item={item}
-                    onEdit={handleEditClick}
+                    onEdit={handleShippingEditClick}
                     t={t}
                     c={c}
                   />
@@ -381,9 +450,7 @@ export default function AccountAddress({ data, locale, addressData }) {
           <div className="max-h-[70vh] mask-[linear-gradient(to_bottom,transparent_0%,white_2%,white_98%,transparent_100%)] overflow-y-auto overflow-x-hidden">
             {isLoadingEdit ? (
               <div className="flex items-center justify-center py-10">
-                <span className="text-sm text-gray-500">
-                  {t("loading")}
-                </span>
+                <span className="text-sm text-gray-500">{t("loading")}</span>
               </div>
             ) : (
               <RecaptchaProvider>
@@ -391,6 +458,7 @@ export default function AccountAddress({ data, locale, addressData }) {
                   locale={locale}
                   addressData={editingAddress}
                   onSuccess={handleEditSuccess}
+                  editMode={editMode}
                 />
               </RecaptchaProvider>
             )}

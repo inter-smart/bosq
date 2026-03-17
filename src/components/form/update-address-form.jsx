@@ -36,7 +36,7 @@ const textareaStyle = cn(inputStyle, "leading-tight min-h-[80px] 2xl:min-h-[100p
 
 import { useTranslations } from "next-intl";
 
-export default function UpdateAddressForm({ locale, addressData, onSuccess, isFromCheckout=false, showShipToDifferent=false }) {
+export default function UpdateAddressForm({ locale, addressData, onSuccess, isFromCheckout=false, showShipToDifferent=false, editMode="billing" }) {
   const t = useTranslations("form");
   const { executeRecaptcha } = useGoogleReCaptcha();
 
@@ -243,9 +243,13 @@ export default function UpdateAddressForm({ locale, addressData, onSuccess, isFr
     }
   }, [shippingStates, addressData, form]);
 
+  const isShippingMode = editMode === "shipping";
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-wrap items-start -mx-4 [&>*]:px-4 [&>*]:py-3">
+        {/* Billing Address Fields */}
+        {!isShippingMode && <>
         {/* Full Name */}
         <FormField
           control={form.control}
@@ -443,7 +447,6 @@ export default function UpdateAddressForm({ locale, addressData, onSuccess, isFr
 
         {/* Ship to Different Address Checkbox */}
 
-
         {
           (!isFromCheckout || showShipToDifferent) &&
         <FormField
@@ -464,9 +467,10 @@ export default function UpdateAddressForm({ locale, addressData, onSuccess, isFr
           )}
         />
         }
+        </>}
 
-        {/* Shipping Address Section - Shows when checkbox is checked */}
-        {shipToDifferent && (
+        {/* Shipping Address Section - Shows when checkbox is checked (billing mode) or always (shipping mode) */}
+        {(isShippingMode || shipToDifferent) && (
           <>
             <div className="w-full my-1.5 xl:my-2">
               <Heading as="h4" size="heading4" className="font-normal text-[#282828] mb-2">
