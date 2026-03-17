@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { commonValidations, setValidationTranslator } from "@/lib/validations";
+import { encryptText, decryptText } from "@/lib/credentialCrypto";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -58,13 +59,19 @@ export default function AuthLoginForm({ locale, data }) {
   const [isRedirecting, setIsRedirecting] = useState(false);
 
   useEffect(() => {
-    const savedEmail = localStorage.getItem("remembered_email");
-    const savedPassword = localStorage.getItem("remembered_password");
-    if (savedEmail && savedPassword) {
-      form.setValue("email", savedEmail);
-      form.setValue("password", savedPassword);
-      form.setValue("rememberMe", true);
-    }
+    (async () => {
+      const savedEmail = localStorage.getItem("remembered_email");
+      const savedPassword = localStorage.getItem("remembered_password");
+      if (savedEmail && savedPassword) {
+        const email = await decryptText(savedEmail);
+        const password = await decryptText(savedPassword);
+        if (email && password) {
+          form.setValue("email", email);
+          form.setValue("password", password);
+          form.setValue("rememberMe", true);
+        }
+      }
+    })();
   }, []);
 
   const router = useRouter();
@@ -94,8 +101,10 @@ export default function AuthLoginForm({ locale, data }) {
       const result = await login(values);
       if (result?.success) {
         if (values.rememberMe) {
-          localStorage.setItem("remembered_email", values.email);
-          localStorage.setItem("remembered_password", values.password);
+          const encEmail = await encryptText(values.email);
+          const encPassword = await encryptText(values.password);
+          localStorage.setItem("remembered_email", encEmail);
+          localStorage.setItem("remembered_password", encPassword);
         } else {
           localStorage.removeItem("remembered_email");
           localStorage.removeItem("remembered_password");
