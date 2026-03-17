@@ -17,6 +17,11 @@ export default function AuthLogin({ locale, data }) {
           Create an Account
         </Link>
       </Text>
+      <Text as="div" size="text1" className="text-center text-[#282828] mt-1">
+        <Link href={`/${locale}/products`} className="font-normal hover:underline">
+          Continue Browsing
+        </Link>
+      </Text>
     </>
   );
 }
