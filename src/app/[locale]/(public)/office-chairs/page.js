@@ -5,7 +5,7 @@ const local_data = {
   heroData: {
     title: "Office Chairs",
     title_ar: "كراسي المكتب",
-    heroTitle: "Comfort-first office chairs",
+    heroTitle: "Office Chairs",
     heroTitle_ar: "كراسي مكتب تركّز على الراحة",
     heroDescription:
       "Explore our comprehensive collection of office chairs designed for every workspace need. From ergonomic task chairs to luxurious leather executive seating, find the perfect chair that combines comfort, style, and functionality.",
@@ -18,8 +18,13 @@ const local_data = {
         alt: "Comfort-first office chairs",
       },
       mobile: {
-        path: "/images/ergonomic-chair-hero.jpg",
+        path: "/images/officerchair-hero.jpg",
         alt: "Comfort-first office chairs",
+      },
+      cta: {
+        label: "View All",
+        label_ar: "عرض الكل",
+        href: "/office-chairs",
       },
     },
   },
@@ -33,13 +38,10 @@ const local_data = {
     description_ar:
       "Ù…ØµÙ…Ù…Ø© Ù„Ù„Ø¥Ù†ØªØ§Ø¬ÙŠØ© Ø§Ù„ÙŠÙˆÙ…ÙŠØ©ØŒ ØªÙ‚Ø¯Ù‘Ù… ÙƒØ±Ø§Ø³ÙŠ Ø§Ù„Ù…Ù‡Ø§Ù… Ø±Ø§Ø­Ø© ÙˆØ¯Ø¹Ù…Ø§Ù‹Ø§ Ù…ØªÙ…ÙŠØ²ÙŠÙ† Ù„Ù„Ù…Ø­ØªØ±ÙÙŠÙ† Ø§Ù„Ø°ÙŠÙ† ÙŠÙ‚Ø¶ÙˆÙ† Ø³Ø§Ø¹Ø§Øª Ø·ÙˆÙŠÙ„Ø© Ø£Ù…Ø§Ù… Ø§Ù„Ù…ÙƒØªØ¨. Ù…Ø«Ø§Ù„ÙŠØ© Ù„Ù…ÙƒØ§ØªØ¨ Ø§Ù„Ù…Ù†Ø²Ù„ØŒ ÙˆØ¬Ø¯Ø§ÙˆÙ„ Ø§Ù„Ø´Ø±ÙƒØ§ØªØŒ ÙˆØ§Ù„ÙØ±Ø§ØºØ§Øª Ø§Ù„ØªØ¹Ø§ÙˆÙ†ÙŠØ©.",
     features: [
-      "Adjustable seat height and tilt mechanism",
-      "Breathable mesh or padded upholstery",
-      "360° swivel with smooth-rolling casters",
-      "Compact design for space efficiency",
+      "<ul><li>Adjustable seat height and tilt mechanism</li><li>Breathable mesh or padded upholstery</li><li>360° swivel with smooth-rolling casters</li><li>Compact design for space efficiency</li></ul>",
     ],
     features_ar: [
-      "Ø§Ø±ØªÙØ§Ø¹ Ù…Ù‚Ø¹Ø¯ ÙˆÙ…ÙŠÙƒØ§Ù†ÙŠÙƒÙŠØ© Ø¥Ù…Ø§Ù„Ø© Ù‚Ø§Ø¨Ù„Ø© Ù„Ù„ØªØ¹Ø¯ÙŠÙ„",
+      "Ø§Ø±ØªÙØ§Ø¹ Ù…Ù‚Ø¹Ø¯ ÙˆÙ…ÙŠÙƒØ§Ù†ÙŠÙƒÙŠØ© Ø¥Ù…Ø§Ù„Ø© Ù‚Ø§Ø¨Ù„Ø© Ù„Ù„ØªØ¹Ø¯ÙŠÙ„",
       "Ù‚Ø¨Ø§Ø¶Ø© Ù…Ù† Ø§Ù„Ø´Ø¨ÙƒØ© Ø§Ù„Ù…Ù‡ÙˆØ§Ø© Ø£Ùˆ ØªØ¬Ù„ÙŠØ¯ Ù…Ø¨Ø·Ù†",
       "Ø¯ÙˆØ±Ø§Ù† 360 Ø¯Ø±Ø¬Ø© Ù…Ø¹ Ø¹Ø¬Ù„ Ø³Ù„Ø³",
       "ØªØµÙ…ÙŠÙ… Ù…ÙƒØªÙ…Ù„ Ù„Ù„ÙƒÙØ§Ø¡Ø© Ø§Ù„Ù…Ø³Ø§Ø­ÙŠØ©",
@@ -55,11 +57,11 @@ const local_data = {
         id: 1,
         media: {
           type: "image",
-          path: "/images/pro-list-2.jpg",
+          path: "/images/officer-01.jpg",
           alt: "pro-1",
         },
         isStock: true,
-        name: "Kyro Mid Back Leather Executive Chair",
+        name: "Orca Mid Back Ergonomic Office Chair",
         slug: "/products/okidoki-too-stool",
         price: 458,
         category: "Office Chair",
@@ -74,11 +76,11 @@ const local_data = {
         id: 2,
         media: {
           type: "image",
-          path: "/images/pro-list-2.jpg",
+          path: "/images/officer-02.jpg",
           alt: "pro-1",
         },
         isStock: true,
-        name: "Kyro Mid Back Leather Executive Chair",
+        name: "Orca Mid Back Ergonomic Office Chair",
         slug: "/products/okidoki-too-stool",
         price: 458,
         category: "Office Chair",
@@ -97,7 +99,7 @@ const local_data = {
           alt: "pro-1",
         },
         isStock: true,
-        name: "Demos High Back Ergonomic Office Chair",
+        name: "Orca Mid Back Ergonomic Office Chair",
         slug: "/products/360-chair",
         price: 458,
         category: "Office Chair",
