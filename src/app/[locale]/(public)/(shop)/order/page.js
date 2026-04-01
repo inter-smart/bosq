@@ -8,6 +8,6 @@ export default async function OrderStatus({ params, searchParams }) {
 
   const ref = resolvedSearchParams.ref || null;
 
-  // return <CheckoutResponse orderRef={ref} locale={locale} />;
-  return <CheckoutResponseTest locale={locale} />;
+  return <CheckoutResponse orderRef={ref} locale={locale} />;
+  // return <CheckoutResponseTest locale={locale} />;
 }
