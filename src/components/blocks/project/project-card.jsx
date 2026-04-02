@@ -12,7 +12,7 @@ export default function ProjectCard({ data, locale }) {
     <Suspense fallback={<ProjectSkeleton />}>
       <div className="group w-full h-full flex flex-col justify-between">
         <Link
-          href={`/projects/${data?.slug}`}
+          href={`/${locale}/projects/${data?.slug}`}
           className="w-full block aspect-square overflow-hidden border border-gray-100 bg-black mb-1.5 sm:mb-3 xl:mb-4"
         >
           <Image
@@ -29,7 +29,7 @@ export default function ProjectCard({ data, locale }) {
           size="text3"
           className="font-normal turncate text-[#282828] hover:underline"
         >
-          <Link href={`/projects/${data?.slug}`}>
+          <Link href={`/${locale}/projects/${data?.slug}`}>
             {isEN ? data?.title : data?.title_ar}
           </Link>
         </Text>
