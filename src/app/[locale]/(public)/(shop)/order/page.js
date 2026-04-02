@@ -1,4 +1,5 @@
 import CheckoutResponse from "@/components/blocks/checkout/checkout-response";
+import CheckoutResponseTest from "@/components/blocks/checkout/checkOutResp";
 
 export default async function OrderStatus({ params, searchParams }) {
   const resolvedParams = await params;
@@ -8,4 +9,5 @@ export default async function OrderStatus({ params, searchParams }) {
   const ref = resolvedSearchParams.ref || null;
 
   return <CheckoutResponse orderRef={ref} locale={locale} />;
+  // return <CheckoutResponseTest locale={locale} />;
 }
