@@ -228,7 +228,9 @@ export default async function ProjectDetailPage({ params }) {
       <ProductHero
         locale={locale}
         data={heroData}
-        slug={`Projects / ${slug}`}
+        slug={heroData?.title}
+        slugData={slugData}
+        type="project"
       />
       <ProjectDetail
         locale={locale}

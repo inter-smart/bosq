@@ -42,7 +42,7 @@ export default function AboutBannerSection({ data, locale }) {
             muted
             playsInline
             preload="auto"
-            poster={"/images/placeholder.jpg"}
+            poster={isEn ? data?.media?.thumbnailPath : data?.media?.thumbnailPath_ar}
             className="w-full h-full object-cover absolute -z-2 inset-0"
           >
             <source

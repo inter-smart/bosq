@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import { Heading } from "@/components/utils/heading";
 import { useTranslations } from "next-intl";
 
-export default function ProductHero({ data, locale, slug, link, type = "" }) {
+export default function ProductHero({ data, locale, slug, link, type = "", slugData }) {
   const isEn = locale === "en";
   const t = useTranslations();
 
@@ -32,6 +32,16 @@ export default function ProductHero({ data, locale, slug, link, type = "" }) {
                 <BreadcrumbItem>
                   <BreadcrumbLink href={`/products`}>
                     {t("common.products")}
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator>/</BreadcrumbSeparator>
+              </>
+            )}
+            {type === "project" && (
+              <>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href={`/${locale}/projects`}>
+                    {slugData}
                   </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator>/</BreadcrumbSeparator>
