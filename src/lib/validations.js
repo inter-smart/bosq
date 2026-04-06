@@ -22,6 +22,7 @@ export const commonValidations = {
     z
       .string()
       .trim()
+      .min(1, vt("required", { field: Value }))
       .min(2, vt("min_length", { field: Value, min: 2 }))
       .max(100, vt("max_length", { field: Value, max: 100 }))
 
