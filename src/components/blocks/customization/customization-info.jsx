@@ -26,6 +26,7 @@ export default function CustomizationInfo({
             autoPlay
             loop
             muted
+            poster={data?.media?.thumbnailPath}
             playsInline
             className="w-full h-full object-cover absolute z-0 inset-0"
           >

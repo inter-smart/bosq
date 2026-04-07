@@ -33,6 +33,7 @@ export default function SustainabilityInfo({
             autoPlay
             loop
             muted
+            poster={bannerData?.thumbnail}
             playsInline
             className="w-full h-full object-cover absolute z-0 inset-0"
           >
