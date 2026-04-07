@@ -87,7 +87,7 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
     onNextButtonClick,
   } = usePrevNextButtons(emblaApi);
 
-  
+
   return (
     <section className="w-full block py-[10px] sm:py-[15px] xl:py-[20px] 2xl:py-[30px]">
       <div className="w-full aspect-6/5 sm:aspect-1920/740 overflow-hidden flex items-center relative z-0">
@@ -161,9 +161,7 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
                 size="text1"
                 className="line-clamp-2 font-light text-white mb-2 xl:mb-3"
               >
-                {data?.publishedAt
-                  ? format(new Date(data.publishedAt), "dd MMMM yyyy")
-                  : null}
+                {data.publishedAt}
               </Text>
             )}
             <Heading
@@ -336,9 +334,7 @@ export default function BlogInfo({ data, popularData, relatedData, locale }) {
                                   size="text3"
                                   className="truncate text-[#b1b3b4]"
                                 >
-                                  {data?.publishedAt
-                                    ? format(new Date(data.publishedAt), "dd MMMM yyyy")
-                                    : null}
+                                  {item?.publishedAt ?? null}
                                 </Text>
                               </div>
                             </div>

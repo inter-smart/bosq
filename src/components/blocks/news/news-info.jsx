@@ -81,8 +81,8 @@ export default function NewsInfo({ data, popularData, relatedData, locale }) {
     },
   ];
 
-    const t = useTranslations("common");
-  
+  const t = useTranslations("common");
+
 
   const {
     prevBtnDisabled,
@@ -327,11 +327,10 @@ export default function NewsInfo({ data, popularData, relatedData, locale }) {
                                 </Link>
                               </Heading>
                               <Text
-                                as="div"
                                 size="text3"
                                 className="truncate text-[#b1b3b4]"
                               >
-                                {data?.publishedAt}
+                                {item?.publishedAt}
                               </Text>
                             </div>
                           </div>
