@@ -3,6 +3,7 @@ import { Heading } from "../../utils/heading";
 import { Text } from "../../utils/text";
 import Link from "next/link";
 import { Suspense } from "react";
+import { format } from "date-fns";
 
 import { Skeleton } from "../../ui/skeleton";
 
@@ -37,7 +38,9 @@ export default function BlogCard({ locale, data, isEn }) {
             size="text3"
             className="truncate text-[#b1b3b4] mb-1 xl:mb-2"
           >
-            {data?.publishedAt}
+            {data?.publishedAt
+              ? format(new Date(data.publishedAt), "dd MMMM yyyy")
+              : null}
           </Text>
         </div>
       </div>

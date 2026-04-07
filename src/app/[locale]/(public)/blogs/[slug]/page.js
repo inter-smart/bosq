@@ -102,11 +102,6 @@ export async function generateMetadata({ params }) {
     };
   } catch (error) {
     console.error("Error generating metadata:", error);
-    const t = await getTranslations("blog");
-    return {
-      title: t("not_found_title"),
-      description: t("not_found_description"),
-    };
   }
 }
 

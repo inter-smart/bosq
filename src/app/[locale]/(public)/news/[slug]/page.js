@@ -27,7 +27,7 @@ export async function generateMetadata({ params }) {
 
     if (!metadata) {
       return {
-        title: "News Not Found",
+        title: "",
         description: "The requested news post could not be found.",
       };
     }
