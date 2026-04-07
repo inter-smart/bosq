@@ -30,8 +30,28 @@ export default function ProductHero({ data, locale, slug, link, type = "", slugD
             {type === "product" && (
               <>
                 <BreadcrumbItem>
-                  <BreadcrumbLink href={`/products`}>
+                  <BreadcrumbLink href={`/${locale}/products`}>
                     {t("common.products")}
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator>/</BreadcrumbSeparator>
+              </>
+            )}
+             {type === "news" && (
+              <>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href={`/${locale}/news`}>
+                    {t("common.news")}
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator>/</BreadcrumbSeparator>
+              </>
+            )}
+             {type === "blog" && (
+              <>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href={`/${locale}/blogs`}>
+                    {t("common.blogs")}
                   </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator>/</BreadcrumbSeparator>

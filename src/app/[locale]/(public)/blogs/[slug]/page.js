@@ -132,7 +132,7 @@ export default async function BlogDetailPage({ params }) {
         locale={locale}
         data={heroData}
         slug={`${slug}`}
-        link={"/blogs"}
+        type="blog"
       />
       <BlogInfo
         locale={locale}

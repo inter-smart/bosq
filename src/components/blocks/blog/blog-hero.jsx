@@ -99,7 +99,7 @@ export default function BlogHero({ data, locale, slug }) {
               <Text
                 as="div"
                 size="text1"
-                className="line-clamp-2 font-light text-white max-w-[80%] "
+                className="font-light text-white max-w-[80%] "
               >
                 {parse(isEn ? data?.heroDescription : data?.heroDescription_ar)}
               </Text>

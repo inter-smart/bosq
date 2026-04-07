@@ -82,7 +82,7 @@ export default function NewsList({ locale, data }) {
               Showing {startItem}-{endItem} of{" "}
               {totalCount} news
             </div>
-            {totalPages > 0 && (
+            {totalPages > 6 && (
               <div>
                 <Pagination>
                   <PaginationContent>
