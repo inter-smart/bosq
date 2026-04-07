@@ -15,8 +15,6 @@ const MatchingProduct = async ({ locale }) => {
 
   const data = {
     frequentlyBought: {
-      title: "Matching Products - You may also like",
-      description: "<p>Save more when you buy these items together</p>",
       items,
     },
   };

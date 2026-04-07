@@ -5,8 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Text } from "@/components/utils/text";
 import { Plus } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 const MatchingProductClient = ({ data, locale }) => {
+  const t = useTranslations("checkout");
+
   return (
     <div className="w-full">
       <MatchingProductDialog data={data?.frequentlyBought} locale={locale}>
@@ -17,16 +20,16 @@ const MatchingProductClient = ({ data, locale }) => {
             </div>
             <div>
               <Text as="div" size="text3" className="font-medium text-[#282828]">
-                Add Complementary Items to Your Order?
+                {t("add_complementary_title")}
               </Text>
               <Text as="div" size="text3" className="text-[#282828] [&>a]:font-medium">
-                Save up to AED 110 with our curated bundles • <Link href="#">Click to view options</Link>
+                {t("save_bundles")} • <Link href="#">{t("click_to_view")}</Link>
               </Text>
             </div>
           </div>
           <div>
             <Button variant={"black"} disabled={false} className="min-w-[100px] sm:min-w-[120px] xl:min-w-[140px] 2xl:min-w-[210px]">
-              View Bundles
+              {t("view_bundles")}
             </Button>
           </div>
         </div>
