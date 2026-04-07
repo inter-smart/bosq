@@ -30,8 +30,11 @@ import { addToCartTogether, fetchCart } from "@/store/slices/cartSlice";
 import { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 export default function MatchingProductDialog({ children, locale, data }) {
+  const t = useTranslations("checkout");
+
   const [frequentlyEmblaRef, frequentlyEmblaApi] = useEmblaCarousel({ loop: false, align: "start", direction: locale === "ar" ? "rtl" : "ltr" }, [
     Autoplay({ delay: 3000, stopOnInteraction: true }),
   ]);
@@ -87,7 +90,7 @@ export default function MatchingProductDialog({ children, locale, data }) {
           <DialogHeader className={"mb-2 xl:mb-4 2xl:mb-7"}>
             <DialogTitle asChild>
               <Heading as="h2" size="heading2" className="font-normal text-center text-black mb-0.5 xl:mb-1">
-                {data?.title}
+                {t("matching_products")}
                 <span
                   className={cn(
                     "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
@@ -98,7 +101,7 @@ export default function MatchingProductDialog({ children, locale, data }) {
             </DialogTitle>
             <DialogDescription asChild>
               <Text as="div" size="text1" className="text-center text-[#282828]">
-                {parse(data?.description)}
+                {t("save_more")}
               </Text>
             </DialogDescription>
           </DialogHeader>

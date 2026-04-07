@@ -234,7 +234,13 @@
     "select_billing_address": "Please select a billing address",
     "select_shipping_or_same": "Please select a shipping address or check 'Use Same Address For Shipping' in billing section",
     "select_billing_or_same": "Please select a billing address or check 'Use Same Address For Billing' in shipping section",
-    "not_you": "Not you?"
+    "not_you": "Not you?",
+    "add_complementary_title": "Add Complementary Items to Your Order?",
+    "save_bundles": "Save up to AED 110 with our curated bundles",
+    "click_to_view": "Click to view options",
+    "view_bundles": "View Bundles",
+    "matching_products": "Matching Products - You may also like",
+    "save_more": "Save more when you buy these items together"
   },
   "order": {
     "success_title": "Thank You for the Purchase!",

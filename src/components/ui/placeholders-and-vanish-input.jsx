@@ -7,22 +7,12 @@ import { Search } from "lucide-react";
 import { toast } from "sonner";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { API_URL } from "@/lib/api/client";
-export function PlaceholdersAndVanishInput({
-  placeholders,
-  placeholders_ar,
-  onChange,
-  onSubmit,
-  locale,
-  variant = "default",
-}) {
+export function PlaceholdersAndVanishInput({ placeholders, placeholders_ar, onChange, onSubmit, locale, variant = "default" }) {
   const { executeRecaptcha } = useGoogleReCaptcha();
 
   const isEN = locale === "en";
 
-  const activePlaceholders =
-    locale === "ar" || locale !== "en"
-      ? placeholders_ar || placeholders
-      : placeholders;
+  const activePlaceholders = locale === "ar" || locale !== "en" ? placeholders_ar || placeholders : placeholders;
 
   const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
   const intervalRef = useRef(null);
@@ -84,20 +74,11 @@ export function PlaceholdersAndVanishInput({
       let i = 4 * t * 800;
       for (let n = 0; n < 800; n++) {
         let e = i + 4 * n;
-        if (
-          pixelData[e] !== 0 &&
-          pixelData[e + 1] !== 0 &&
-          pixelData[e + 2] !== 0
-        ) {
+        if (pixelData[e] !== 0 && pixelData[e + 1] !== 0 && pixelData[e + 2] !== 0) {
           newData.push({
             x: n,
             y: t,
-            color: [
-              pixelData[e],
-              pixelData[e + 1],
-              pixelData[e + 2],
-              pixelData[e + 3],
-            ],
+            color: [pixelData[e], pixelData[e + 1], pixelData[e + 2], pixelData[e + 3]],
           });
         }
       }
@@ -172,10 +153,7 @@ export function PlaceholdersAndVanishInput({
 
     const value = inputRef.current?.value || "";
     if (value && inputRef.current) {
-      const maxX = newDataRef.current.reduce(
-        (prev, current) => (current.x > prev ? current.x : prev),
-        0,
-      );
+      const maxX = newDataRef.current.reduce((prev, current) => (current.x > prev ? current.x : prev), 0);
       animate(maxX);
     }
   };
@@ -183,14 +161,14 @@ export function PlaceholdersAndVanishInput({
     if (isSubmitting) return;
 
     if (!email) {
-      toast.error("Please enter your email address");
+      toast.error(isEN ? "Please enter your email address" : "الرجاء إدخال بريدك الإلكتروني");
       return;
     }
 
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      toast.error("Please enter a valid email address");
+      toast.error(isEN ? "Please enter a valid email address" : "الرجاء إدخال بريد إلكتروني صالح");
       return;
     }
 
@@ -209,11 +187,7 @@ export function PlaceholdersAndVanishInput({
       const data = await res.json();
 
       if (!data?.success) {
-        toast.error(
-          isEN
-            ? data?.message?.en
-            : data?.message?.ar || tErrors("newsletter_failed"),
-        );
+        toast.error(isEN ? data?.message?.en : data?.message?.ar || tErrors("newsletter_failed"));
         return;
       }
 
@@ -232,7 +206,7 @@ export function PlaceholdersAndVanishInput({
     const email = emailInput?.value?.trim();
     if (variant !== "search") {
       if (!executeRecaptcha) {
-        toast.error("reCAPTCHA not ready. Please try again.");
+        toast.error(isEN ? "reCAPTCHA not ready. Please try again." : "reCAPTCHA غير جاهز. يرجى المحاولة مرة أخرى.");
         return;
       }
       const recaptchaToken = await executeRecaptcha("newstletter_token");
@@ -241,7 +215,6 @@ export function PlaceholdersAndVanishInput({
 
     vanishAndSubmit();
     onSubmit?.(e);
-
   };
 
   return (
@@ -249,8 +222,7 @@ export function PlaceholdersAndVanishInput({
       className={cn(
         "w-full relative max-w-full mx-auto bg-none border-b border-white dark:bg-zinc-800 h-7 2xl:h-8 overflow-hidden transition duration-200",
         value && "bg-none",
-        variant === "search" &&
-          "h-9 2xl:h-10 3xl:h-13 bg-white border border-[#e9e9e9]",
+        variant === "search" && "h-9 2xl:h-10 3xl:h-13 bg-white border border-[#e9e9e9]",
       )}
       onSubmit={handleSubmit}
     >
@@ -293,31 +265,11 @@ export function PlaceholdersAndVanishInput({
         )}
       >
         {variant === "search" ? (
-          <Search
-            className={cn(
-              "size-3",
-              value ? "text-black" : "text-[#282828]",
-              locale === "ar" && "rotate-180",
-            )}
-          />
+          <Search className={cn("size-3", value ? "text-black" : "text-[#282828]", locale === "ar" && "rotate-180")} />
         ) : (
-          <motion.svg
-            width="18"
-            height="15"
-            viewBox="0 0 18 15"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M9.22363 0.749023L16.2614 6.96595L9.22363 13.4131"
-              stroke={value ? "#f17423" : "#999"}
-              strokeWidth="2"
-            />
-            <path
-              d="M0 7.02539H16.1188"
-              stroke={value ? "#f17423" : "#999"}
-              strokeWidth="2"
-            />
+          <motion.svg width="18" height="15" viewBox="0 0 18 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9.22363 0.749023L16.2614 6.96595L9.22363 13.4131" stroke={value ? "#f17423" : "#999"} strokeWidth="2" />
+            <path d="M0 7.02539H16.1188" stroke={value ? "#f17423" : "#999"} strokeWidth="2" />
           </motion.svg>
         )}
       </button>

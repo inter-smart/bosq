@@ -30,20 +30,6 @@ export default async function HomePage({ params }) {
     notFound();
   }
 
-  const {
-    sliders,
-    aboutSection,
-    journeySection,
-    featuredSection,
-    projectSection,
-    smartSpaceSection,
-    fitsSection,
-    brandsSection,
-    formSection,
-    enquiryDropdowns,
-    state,
-  } = data;
-
   const isEN = locale === "en";
 
   return <HomeClient data={data} locale={locale} isEN={isEN} />;
