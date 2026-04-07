@@ -10,7 +10,7 @@ const HomeFind = dynamic(() => import("@/components/blocks/home/home-find"));
 const HomeBrand = dynamic(() => import("@/components/blocks/home/home-brand"));
 const HomeEnquiry = dynamic(() => import("@/components/blocks/home/home-enquiry"));
 
-export default async function HomeClient({ data, locale }) {
+export default function HomeClient({ data, locale }) {
   const {
     sliders,
     aboutSection,
