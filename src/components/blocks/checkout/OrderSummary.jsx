@@ -285,16 +285,10 @@ const OrderSummary = ({
     }
   };
 
-  // Compute display values: for percentage coupons, derive from subTotal
-  const displayDiscountTotal =
-    couponDiscountType === "percentage" && couponDiscountValue
-      ? ((parseFloat(subTotal) * parseFloat(couponDiscountValue)) / 100).toFixed(2)
-      : discountTotal;
+  // Sum discount_amount from each item in the cart
+  const itemsDiscountTotal = (products?.reduce((sum, item) => sum + parseFloat(item.discount_amount || "0"), 0) ?? 0).toFixed(2);
 
-  const displayGrandTotal =
-    couponDiscountType === "percentage" && couponDiscountValue
-      ? (parseFloat(subTotal) - (parseFloat(subTotal) * parseFloat(couponDiscountValue)) / 100).toFixed(2)
-      : grandTotal;
+  const displayGrandTotal = grandTotal;
 
   // Check if order can be placed
   const { shippingId, billingId } = getFinalAddressIds();
@@ -325,36 +319,45 @@ const OrderSummary = ({
               )}
             >
               {products?.map((item, index) => (
-                <div key={"checkout-item-" + index} className="group w-full flex flex-wrap items-center py-0.5">
-                  <div className="w-[30px] xl:w-[30px] 2xl:w-[40px] aspect-3/4 rounded-[4px] bg-white border border-gray-100 ">
-                    <Image
-                      src={item?.media_path}
-                      alt={item?.media?.title}
-                      width={168}
-                      height={168}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      quality={90}
-                    />
-                  </div>
-                  <div className="w-[calc(100%-30px)] sm:w-[calc(100%-35px)] xl:w-[calc(100%-30px)] 2xl:w-[calc(100%-40px)] px-1 sm:px-1 xl:px-1.5 flex justify-between gap-x-1 items-center">
-                    <div className="w-[calc(100%-50px)]">
-                      <Text
-                        as="div"
-                        size="none"
-                        className="text-[10px] 2xl:text-[12px] leading-none truncate leading-none text-[#282828] mb-0.5 xl:mb-1"
-                      >
-                        {item?.title} x {item?.quantity}
-                      </Text>
-                      <Text as="div" size="none" className="text-[8px] 2xl:text-[10px] leading-none font-light truncate text-[#808080]">
-                        {item?.slug}
-                      </Text>
+                <div key={"checkout-item-" + index} className="group w-full py-0.5">
+                  <div className="w-full flex flex-wrap items-center">
+                    <div className="w-[30px] xl:w-[30px] 2xl:w-[40px] aspect-3/4 rounded-[4px] bg-white border border-gray-100 ">
+                      <Image
+                        src={item?.media_path}
+                        alt={item?.media?.title}
+                        width={168}
+                        height={168}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        quality={90}
+                      />
                     </div>
-                    <div className="w-[50px]">
-                      <Text as="div" size="text3" className="font-normal text-[#282828]">
-                        {tCommon("aed")} {item?.line_total}
-                      </Text>
+                    <div className="w-[calc(100%-30px)] sm:w-[calc(100%-35px)] xl:w-[calc(100%-30px)] 2xl:w-[calc(100%-40px)] px-1 sm:px-1 xl:px-1.5 flex justify-between gap-x-1 items-center">
+                      <div className="w-[calc(100%-50px)]">
+                        <Text
+                          as="div"
+                          size="none"
+                          className="text-[10px] 2xl:text-[12px] leading-none truncate leading-none text-[#282828] mb-0.5 xl:mb-1"
+                        >
+                          {item?.title} x {item?.quantity}
+                        </Text>
+                        <Text as="div" size="none" className="text-[8px] 2xl:text-[10px] leading-none font-light truncate text-[#808080]">
+                          {item?.slug}
+                        </Text>
+                      </div>
+                      <div className="w-[50px]">
+                        <Text as="div" size="text3" className="font-normal text-[#282828]">
+                          {tCommon("aed")} {item?.line_total}
+                        </Text>
+                      </div>
                     </div>
                   </div>
+                  {parseFloat(item?.discount_amount) > 0 && (
+                    <div className="flex justify-end mt-0.5 pr-0.5">
+                      <span className="text-[8px] 2xl:text-[10px] font-light text-green-600 bg-green-50 border border-green-200 rounded px-1 py-px leading-none">
+                        - {tCommon("aed")} {parseFloat(item.discount_amount).toFixed(2)} {t("coupon_discount").toLowerCase()}
+                      </span>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -377,7 +380,7 @@ const OrderSummary = ({
               {tCommon("free")}
             </Text>
 
-            {appliedCoupon && parseFloat(discountTotal) > 0 && (
+            {appliedCoupon && parseFloat(itemsDiscountTotal) > 0 && (
               <Text
                 as="div"
                 size="text3"
@@ -387,7 +390,7 @@ const OrderSummary = ({
                   {t("coupon_discount")}
                   {couponDiscountType === "percentage" && couponDiscountValue && <span className="ml-1">({parseFloat(couponDiscountValue)}%)</span>}
                 </span>
-                - {displayDiscountTotal}
+                - {itemsDiscountTotal}
               </Text>
             )}
 
