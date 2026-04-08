@@ -28,7 +28,11 @@ export default function GoogleLoginButton({ locale, onOk }) {
           }, 500);
         }
       } else {
-        toast.error(result.error || t("google_error"));
+        const errMsg =
+          typeof result.error === "object" && result.error !== null
+            ? (locale === "ar" ? result.error.ar : result.error.en) || t("google_error")
+            : result.error || t("google_error");
+        toast.error(errMsg);
       }
     },
     onError: () => {

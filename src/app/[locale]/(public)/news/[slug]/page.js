@@ -99,8 +99,8 @@ export async function generateMetadata({ params }) {
   } catch (error) {
     console.error("Error generating metadata:", error);
     return {
-      title: "News Not Found",
-      description: "The requested news post could not be found.",
+      title: "",
+      description: "",
     };
   }
 }
