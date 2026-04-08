@@ -16,6 +16,7 @@ import HeaderNavigation from "./header-navigation";
 import MobileHeaderNavigation from "./mobile-header-navigation";
 import CartIcon from "./Header/CartIcon";
 import { useTranslations } from "next-intl";
+import { locales, defaultLocale } from "@/il8n/config";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
@@ -64,19 +65,27 @@ export default function Header({ navigationData, locale, data }) {
   const switchLocale = (newLocale) => {
     if (newLocale === locale) return;
 
-    // Remove current locale from pathname and add new one
-    const segments = pathname.split("/").filter(Boolean);
-    segments[0] = newLocale; // Replace locale segment
-    const newPath = `/${segments.join("/")}${window.location.search}`;
+    // en users have clean URLs (/products), ar users have prefixed URLs (/ar/products)
+    // Strip locale prefix if present before building new path
+    const hasLocalePrefix = locales.some((loc) => pathname === `/${loc}` || pathname.startsWith(`/${loc}/`));
+    let pathWithoutLocale = pathname;
+    if (hasLocalePrefix) {
+      const segments = pathname.split("/").filter(Boolean);
+      pathWithoutLocale = "/" + (segments.slice(1).join("/") || "");
+    }
 
-    // Set cookie for persistence
+    // en (default) → clean URL, ar → /ar prefix
+    const newPath =
+      newLocale === defaultLocale
+        ? `${pathWithoutLocale || "/"}${window.location.search}`
+        : `/${newLocale}${pathWithoutLocale}${window.location.search}`;
+
     document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000`;
-
-    // Hard navigation to ensure server re-renders with new locale messages
     window.location.href = newPath;
   };
 
-  const showDarkHeader = headerHover === true || pathname !== `/${locale}`;
+  const homePath = locale === defaultLocale ? "/" : `/${locale}`;
+  const showDarkHeader = headerHover === true || pathname !== homePath;
 
   return (
     <AnimatePresence mode="wait">
