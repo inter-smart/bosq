@@ -121,7 +121,15 @@ export default function Header({ navigationData, locale, data }) {
                     href={`/${locale}/login`}
                     className="text-[14px] leading-none font-light text-white min-h-(--header-y) h-(--header-y) bg-black flex items-center gap-x-2 px-4"
                   >
-                    <Image src="/images/icon-user.svg" alt={t("user_alt")} width={12} height={12} unoptimized className="w-[15px]" />
+                    <Image
+                      src="/images/icon-user.svg"
+                      alt={t("user_alt")}
+                      title={t("user_alt")}
+                      width={12}
+                      height={12}
+                      unoptimized
+                      className="w-[15px]"
+                    />
                     {t("login_signup")}
                   </Link>
                   <div className="w-full h-[calc(100%_-_var(--header-y)} overflow-y-auto">
@@ -158,7 +166,8 @@ export default function Header({ navigationData, locale, data }) {
               <Link href={"/"}>
                 <Image
                   src={showDarkHeader ? data?.primary_media?.path : data?.secondary_media?.path}
-                  alt={data?.primary_media?.alt}
+                  alt={data?.primary_media?.alt || "Logo"}
+                  title={data?.primary_media?.alt || "Logo"}
                   width={176}
                   height={57}
                   unoptimized
@@ -187,6 +196,7 @@ export default function Header({ navigationData, locale, data }) {
                   <Image
                     src={showDarkHeader ? "/images/icon-search-dark.svg" : "/images/icon-search.svg"}
                     alt={t("search_alt")}
+                    title={t("search_alt")}
                     width={12}
                     height={12}
                     unoptimized
@@ -200,6 +210,7 @@ export default function Header({ navigationData, locale, data }) {
                   <Image
                     src={showDarkHeader ? "/images/icon-user-dark.svg" : "/images/icon-user.svg"}
                     alt={t("user_alt")}
+                    title={t("user_alt")}
                     width={12}
                     height={12}
                     unoptimized
@@ -218,7 +229,8 @@ export default function Header({ navigationData, locale, data }) {
                 >
                   <Image
                     src="/images/lang-2.jpg"
-                    alt="lang-1"
+                    alt={t("english")}
+                    title={t("english")}
                     width={12}
                     height={12}
                     className="w-[15px] 2xl:w-[18px] aspect-square rounded-full block border-black border-1"
@@ -237,7 +249,8 @@ export default function Header({ navigationData, locale, data }) {
                 >
                   <Image
                     src="/images/lang-1.jpg"
-                    alt="lang-1"
+                    alt={t("arabic")}
+                    title={t("arabic")}
                     width={12}
                     height={12}
                     className="w-[15px] 2xl:w-[18px] aspect-square rounded-full block border-black border-1"

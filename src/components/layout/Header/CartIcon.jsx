@@ -21,7 +21,8 @@ const CartIcon = ({ showDarkHeader, locale }) => {
       <Link href={`/${locale}/cart`} className="relative inline-flex">
         <Image
           src={showDarkHeader ? "/images/icon-bag-dark.svg" : "/images/icon-bag.svg"}
-          alt="bag"
+          alt="Cart"
+          title="Cart"
           width={12}
           height={12}
           unoptimized

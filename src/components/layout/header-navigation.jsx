@@ -208,6 +208,7 @@ export default function HeaderNavigation({ locale, isDesktop, pathname, onNaviga
                                   <Image
                                     src={imageToShow}
                                     alt={nameToShow}
+                                    title={nameToShow}
                                     width={450}
                                     height={300}
                                     className="w-full h-full object-cover hover:scale-110 transition"
