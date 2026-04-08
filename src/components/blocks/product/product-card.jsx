@@ -16,7 +16,8 @@ import { useRouter } from "next/navigation";
 const colorVariant = ["#bababa", "#333333", "#8db600", "#ff0000", "#000000"];
 
 export default function ProductCard({ product, isEn, locale = "en", onRemove }) {
-  const productUrl = `/${locale}/products/${product?.base_slug}${product?.query_params}`;
+  const productSlug = product?.base_slug || (product?.slug ? product.slug.replace(/^\/products\//, "") : "");
+  const productUrl = `/${locale}/products/${productSlug}${product?.query_params || ""}`;
 
   const { isAuthenticated } = useAppSelector((state) => state.auth);
 
@@ -87,7 +88,7 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
                 />
               </svg>
             </motion.button>
-            {product?.stock == 0 && (
+            {(product?.stock == 0 || product?.isStock === false) && (
               <div className="w-full h-full bg-[#f4f4f4]/90 flex items-center justify-center absolute z-2 inset-0">
                 <Button
                   variant={"black"}
@@ -99,17 +100,17 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
               </div>
             )}
             <Image
-              src={product?.media_path ?? "/images/placeholder.jpg"}
-              alt={isEn ? product?.title : (product?.title_ar ?? "test")}
+              src={product?.media_path || product?.media?.path || "/images/placeholder.jpg"}
+              alt={isEn ? (product?.title || product?.name) : (product?.title_ar || product?.name_ar || product?.name || "test")}
               width={550}
               height={440}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               quality={90}
             />
-            {product?.hover_media_path && (
+            {(product?.hover_media_path || product?.hoverMedia?.path) && (
               <Image
-                src={product?.hover_media_path}
-                alt={isEn ? product?.title : product?.title_ar}
+                src={product?.hover_media_path || product?.hoverMedia?.path}
+                alt={isEn ? (product?.title || product?.name) : (product?.title_ar || product?.name_ar || product?.name)}
                 width={550}
                 height={440}
                 quality={100}
@@ -123,14 +124,14 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
               size="none"
               className="text-[10px] xl:text-[8px] 2xl:text-[10px] 3xl:text-[12px] leading-normal font-light truncate text-[#bbbcbc] mb-0.5"
             >
-              <Link href={productUrl}>{product?.categories?.map((cat) => (isEn ? cat.name : cat.name_ar)).join(", ")}</Link>
+              <Link href={productUrl}>{(product?.categories || [{ name: product?.category, name_ar: product?.category_ar || product?.category }])?.map((cat) => (isEn ? cat?.name : cat?.name_ar)).join(", ")}</Link>
             </Heading>
             <Heading
               as="div"
               size="none"
               className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-normal truncate text-[#282828] mb-0.5"
             >
-              <Link href={productUrl}>{isEn ? product?.title : product?.title_ar}</Link>
+              <Link href={productUrl}>{isEn ? (product?.title || product?.name) : (product?.title_ar || product?.name_ar || product?.name)}</Link>
             </Heading>
             <Text
               as="div"
@@ -142,9 +143,9 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
               </Link>
             </Text>
             <div className="flex items-center gap-0.5 xl:gap-1">
-              {product?.hasMoreVariants ? (
+              {(product?.hasMoreVariants ?? (product?.colorVariant && product.colorVariant.length > 0)) ? (
                 <>
-                  {colorVariant?.slice(0, 3).map((color, index) => (
+                  {(product?.colorVariant || colorVariant)?.slice(0, 3).map((color, index) => (
                     <Link
                       key={"color" + index}
                       href={productUrl}
