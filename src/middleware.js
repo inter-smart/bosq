@@ -19,7 +19,14 @@ export function middleware(request) {
   if (pathnameHasLocale) {
     const segments = pathname.split("/").filter(Boolean);
     locale = segments[0];
-    pathnameWithoutLocale = "/" + segments.slice(1).join("/") || "/";
+    pathnameWithoutLocale = "/" + (segments.slice(1).join("/") || "");
+
+    // /en/... → redirect to clean URL (strip default locale from URL)
+    if (locale === defaultLocale) {
+      const cleanUrl = new URL(pathnameWithoutLocale || "/", request.url);
+      cleanUrl.search = request.nextUrl.search;
+      return NextResponse.redirect(cleanUrl);
+    }
   } else {
     locale = getLocale(request) || defaultLocale;
     pathnameWithoutLocale = pathname;
@@ -36,6 +43,9 @@ export function middleware(request) {
 
   const token = request.cookies.get("access_token")?.value;
 
+  // Login URL: clean for en, prefixed for ar
+  const loginBase = locale === defaultLocale ? "" : `/${locale}`;
+
   // 🔴 Not logged in → try silent refresh first, then block protected pages
   if (isProtected && !token) {
     const refreshToken = request.cookies.get("refresh_token")?.value;
@@ -45,26 +55,33 @@ export function middleware(request) {
       refreshUrl.searchParams.set("locale", locale);
       return NextResponse.redirect(refreshUrl);
     }
-    const loginUrl = new URL(`/${locale}/login`, request.url);
+    const loginUrl = new URL(`${loginBase}/login`, request.url);
     loginUrl.searchParams.set("redirect", pathname + request.nextUrl.search);
     return NextResponse.redirect(loginUrl);
   }
 
   // 🟢 Logged in → block auth pages (even browser back button)
   if (isAuthPage && token) {
-    // Check if there's a redirect param to send them to, otherwise home
     const redirectTo = request.nextUrl.searchParams.get("redirect");
-    const destination = redirectTo && redirectTo.startsWith("/") ? redirectTo : `/${locale}`;
+    const destination = redirectTo && redirectTo.startsWith("/") ? redirectTo : (locale === defaultLocale ? "/" : `/${locale}`);
     return NextResponse.redirect(new URL(destination, request.url));
   }
 
   /* --------------------------------------------------
-     3️⃣ LOCALE REDIRECT (if needed)
+     3️⃣ LOCALE ROUTING
   -------------------------------------------------- */
   if (!pathnameHasLocale) {
-    const localeUrl = new URL(`/${locale}${pathname}`, request.url);
-    localeUrl.search = request.nextUrl.search;
-    return NextResponse.redirect(localeUrl);
+    if (locale === defaultLocale) {
+      // REWRITE: browser URL stays clean, Next.js routes internally to /en/...
+      const rewriteUrl = new URL(`/${locale}${pathname}`, request.url);
+      rewriteUrl.search = request.nextUrl.search;
+      return NextResponse.rewrite(rewriteUrl);
+    } else {
+      // Non-default locale (ar): redirect to add locale prefix
+      const localeUrl = new URL(`/${locale}${pathname}`, request.url);
+      localeUrl.search = request.nextUrl.search;
+      return NextResponse.redirect(localeUrl);
+    }
   }
 
   return NextResponse.next();
