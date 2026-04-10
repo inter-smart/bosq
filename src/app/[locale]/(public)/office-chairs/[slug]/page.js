@@ -1,5 +1,7 @@
 import ChairsListing from "@/components/blocks/office-chair-landing/ChairsListing";
 import LandingHero from "@/components/blocks/office-chair-landing/LandingHero";
+import { getOfficeChairsData } from "@/lib/api/CMS/basicGet";
+
 
 const local_data = {
   heroData: {
@@ -20,11 +22,6 @@ const local_data = {
       mobile: {
         path: "/images/officerchair-hero.jpg",
         alt: "Comfort-first office chairs",
-      },
-      cta: {
-        label: "View All",
-        label_ar: "عرض الكل",
-        href: "/office-chairs",
       },
     },
   },
@@ -158,13 +155,22 @@ const local_data = {
   },
 };
 
-export default function OfficeChairsPage({ params }) {
-  const locale = params?.locale || "en";
+
+
+export default async function OfficeChairsPage({ params }) {
+  const resolvedParams = await params;
+  const { slug, locale } = resolvedParams;
+
+  const response = await getOfficeChairsData(slug);
+  const {data} = response?.data;
+
 
   return (
     <>
-      <LandingHero data={local_data?.heroData} locale={locale} />
-      <ChairsListing data={local_data?.listingData} locale={locale} />
+      <LandingHero data={data?.heroData} locale={locale} />
+      {data?.listingData?.map((listing, index) => (
+        <ChairsListing key={index} data={listing} locale={locale} />
+      ))}
     </>
   );
 }

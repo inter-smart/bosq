@@ -85,3 +85,12 @@ export const getProjectDetails = async ({ slug }) => {
     return sendError(error);
   }
 };
+
+export const getOfficeChairsData = async (slug) => {
+  try {
+    const data = await apiClient(`/api/frontend/office-chairs?slug=${slug}`);
+    return sendSuccess(data?.data);
+  } catch (error) {
+    return sendError(error);
+  }
+};
