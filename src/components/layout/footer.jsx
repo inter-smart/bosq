@@ -24,6 +24,7 @@ export default function Footer({
   locale,
   data,
   paymentCards,
+  landingPage,
 }) {
   const isEn = locale === "en";
 
@@ -34,10 +35,10 @@ export default function Footer({
   ];
 
   const placeholders_ar = [
-  "أدخل بريدك الإلكتروني",
-  "أدخل عنوان بريدك الإلكتروني",
-  "اشترك في نشرتنا الإخبارية",
-];
+    "أدخل بريدك الإلكتروني",
+    "أدخل عنوان بريدك الإلكتروني",
+    "اشترك في نشرتنا الإخبارية",
+  ];
 
 
   const handleChange = (e) => {
@@ -100,7 +101,7 @@ export default function Footer({
             </div>
           </div>
 
-          <div className="w-full lg:w-[18%]">
+          <div className={cn("w-full", landingPage?.length > 0 ? "lg:w-[18%]" : "lg:w-[24%]")}>
             <MediaQuery minWidth={1024}>
               <div>
                 <Heading
@@ -144,7 +145,7 @@ export default function Footer({
             </MediaQuery>
           </div>
 
-          <div className="w-full lg:w-[18%]">
+          <div className={cn("w-full", landingPage?.length > 0 ? "lg:w-[18%]" : "lg:w-[24%]")}>
             <MediaQuery minWidth={1024}>
               <div>
                 <Heading
@@ -188,7 +189,7 @@ export default function Footer({
             </MediaQuery>
           </div>
 
-          <div className="w-full lg:w-[36%]">
+          <div className={cn("w-full", landingPage?.length > 0 ? "lg:w-[18%]" : "lg:w-[24%]")}>
             <MediaQuery minWidth={1024}>
               <div>
                 <Heading
@@ -202,7 +203,7 @@ export default function Footer({
                   {footerData?.other_link_navigation?.map((item, index) => (
                     <div
                       key={"other_link_navigation" + index}
-                      className="w-full lg:w-1/2"
+                      className="w-full"
                     >
                       <Text
                         as="div"
@@ -241,6 +242,58 @@ export default function Footer({
               </AccordionItem>
             </MediaQuery>
           </div>
+
+          {
+            landingPage?.length > 0 && (
+              <div className="w-full lg:w-[18%]">
+                <MediaQuery minWidth={1024}>
+                  <div>
+                    <Heading
+                      as="h6"
+                      size="none"
+                      className="text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-normal text-white mb-4 xl:mb-7 2xl:mb-10"
+                    >
+                      {t("LandingPages")}
+                    </Heading>
+                    <div className="flex flex-wrap">
+                      {landingPage?.map((item, index) => (
+                        <div key={"landing" + index} className="w-full">
+                          <Text
+                            as="div"
+                            size="text3"
+                            className="text-white transition [&>a]:hover:text-[#f17423] mb-1 xl:mb-3"
+                          >
+                            <Link href={`/${locale}/office-chairs/${item?.slug}`}>
+                              {isEn ? item?.title : item?.title_ar}
+                            </Link>
+                          </Text>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </MediaQuery>
+                <MediaQuery maxWidth={1023}>
+                  <AccordionItem title={t("LandingPages")} section="landing">
+                    <div className="flex flex-wrap">
+                      {landingPage?.map((item, index) => (
+                        <div key={"landing" + index} className="w-full">
+                          <Text
+                            as="div"
+                            size="text3"
+                            className="text-white transition [&>a]:hover:text-[#f17423] mb-2"
+                          >
+                            <Link href={`/${locale}/office-chairs/${item?.slug}`}>
+                              {isEn ? item?.title : item?.title_ar}
+                            </Link>
+                          </Text>
+                        </div>
+                      ))}
+                    </div>
+                  </AccordionItem>
+                </MediaQuery>
+              </div>
+            )}
+
         </div>
 
         <hr className="border-[#333] my-1 xl:my-2 2xl:my-4" />

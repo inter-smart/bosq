@@ -128,14 +128,14 @@ export default async function PublicLayout({ children, params }) {
 
   const { data } = await getSiteData();
 
-  const { headerData, footerData, socialMedia, cards, navigationData } = data;
+  const { headerData, footerData, socialMedia, cards, navigationData, landingPage } = data;
 
   return (
     <>
       <Header locale={locale} navigationData={navigationData} data={headerData} />
 
       <main>{children}</main>
-      <Footer locale={locale} footerData={local_data.footer_data} socialLinkData={socialMedia} data={footerData} paymentCards={cards} />
+      <Footer locale={locale} footerData={local_data.footer_data} socialLinkData={socialMedia} data={footerData} paymentCards={cards} landingPage={landingPage} />
     </>
   );
 }

@@ -160,9 +160,10 @@ const local_data = {
 export default async function OfficeChairsPage({ params }) {
   const resolvedParams = await params;
   const { slug, locale } = resolvedParams;
-
+  console.log("slug", slug)
   const response = await getOfficeChairsData(slug);
   const {data} = response?.data;
+  console.log("data", data)
 
 
   return (
