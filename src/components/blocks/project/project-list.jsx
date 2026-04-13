@@ -8,7 +8,7 @@ export default async function ProjectList({ locale, data, slug, limit }) {
   const { totalItems } = projects
 
   if (error) {
-    <NotFound />;
+    return <NotFound params={{ locale }} />;
   }
 
   return (

@@ -115,7 +115,7 @@ export default async function NewsDetailPage({ params }) {
   const { data, error } = await getNewsData.getNewsDetailsData(slug);
 
   if (!data || error) {
-    return <NotFound />;
+    return <NotFound params={{ locale }} />;
   }
 
   const { heroData, newsData, popularNewsData, relatedNewsData } = data;

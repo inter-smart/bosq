@@ -1,16 +1,7 @@
 import AuthLayout from "@/components/blocks/auth/auth-layout";
 import AuthSignup from "@/components/blocks/auth/auth-signup";
 import { getAuthData } from "@/lib/api/CMS/basicGet";
-
-const local_data = {
-  media: {
-    type: "image",
-    alt: "hero",
-    path: "/images/auth-login-1.jpg",
-  },
-  title: "Create Your Account",
-  description: "<p>Fill the the fields below to login.</p>",
-};
+import NotFound from "../../(public)/not-found";
 
 export default async function SignupPage({ params }) {
   const resolvedParams = await params;
@@ -19,7 +10,7 @@ export default async function SignupPage({ params }) {
   const { data, error } = await getAuthData();
 
   if (error) {
-    notFound();
+    <NotFound />
   }
 
   const { authPageData } = data;

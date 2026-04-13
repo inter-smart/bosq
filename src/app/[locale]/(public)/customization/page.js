@@ -2,7 +2,7 @@ import CustomizationInfo from "@/components/blocks/customization/customization-i
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getCustomizationCms } from "@/lib/api/customization";
 import { getMetaData } from "@/lib/api/metaApi";
-import { notFound } from "next/navigation";
+import NotFound from "../not-found";
 
 
 export async function generateMetadata({ params }) {
@@ -34,7 +34,7 @@ export default async function CustomizationPage({ params }) {
 
 
     if (error) {
-      notFound();
+      <NotFound />
     }
 
 

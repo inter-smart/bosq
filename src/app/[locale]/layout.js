@@ -9,6 +9,7 @@ import { locales, localeDirection } from "../../il8n/config";
 import ReduxProvider from "@/store/provider";
 import { Toaster } from "sonner";
 import AuthSyncProvider from "@/components/providers/AuthSyncProvider";
+import ScrollRestoration from "@/components/providers/ScrollRestoration";
 
 const heroNew = localFont({
   src: [
@@ -85,6 +86,7 @@ export default async function RootLayout({ children, params }) {
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ReduxProvider>
             <AuthSyncProvider />
+            <ScrollRestoration />
             <NuqsAdapter>{children}</NuqsAdapter>
             <Toaster position={locale === "ar" ? "bottom-left" : "bottom-right"} richColors closeButton visibleToasts={1} />
           </ReduxProvider>

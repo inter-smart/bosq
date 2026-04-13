@@ -1,7 +1,7 @@
 import AuthLayout from "@/components/blocks/auth/auth-layout";
 import AuthLogin from "@/components/blocks/auth/auth-login";
 import { getAuthData } from "@/lib/api/CMS/basicGet";
-import { notFound } from "next/navigation";
+import NotFound from "../../(public)/not-found";
 
 const local_data = {
   media: {
@@ -20,7 +20,7 @@ export default async function LoginPage({ params }) {
   const { data, error } = await getAuthData();
 
   if (error) {
-    notFound();
+    <NotFound />
   }
 
   const { authPageData } = data;

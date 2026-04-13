@@ -2,6 +2,7 @@ import ErgonomicChairSection from "@/components/blocks/ergonomic-chair-guide/erg
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getErgonomicChairData } from "@/lib/api/CMS/basicGet";
 import { getMetaData } from "@/lib/api/metaApi";
+import NotFound from "../not-found";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -27,7 +28,7 @@ export default async function ErgonomicChairPage({ params }) {
 
 const slug = locale === "en" ? "Ergonomic Chair Guide" : "دليل الكراسي المريحة";
   if (error) {
-    notFound();
+    <NotFound />
   }
 
   const { heroData, ergonomicChairData } = data;
