@@ -395,7 +395,7 @@ const OrderSummary = ({
             )}
 
             {/* Coupon Code Section */}
-            {user && (
+            {user && !type && (
               <div className="w-full mb-2 xl:mb-3 2xl:mb-4">
                 <div className="w-full bg-[#eee] p-1 xl:p-2 rounded-[4px] flex gap-1.5">
                   <Input
