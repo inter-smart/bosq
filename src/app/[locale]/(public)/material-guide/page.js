@@ -9,16 +9,18 @@ export default async function MaterialGuidePage({ params }) {
   const resolvedParams = await params;
   const { locale } = resolvedParams;
 
-  const { data } = await getMaterialData();
+  const { data, error } = await getMaterialData();
+
+
+  if (!data || error) {
+    return <NotFound />
+  }
+  
   const { heroData, materialsInfo, extraMaterialsInfo } = data;
 
   const slug = locale === "en" ? "Material Guide" : "سياسة الخصوصية";
 
   const isEn = locale === "en";
-
-  if (!data) {
-    <NotFound />
-  }
 
 
   return (

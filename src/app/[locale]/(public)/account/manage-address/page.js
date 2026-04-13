@@ -85,7 +85,7 @@ export default async function ManageAddressPage({ params }) {
 
   const { data, error } = await ProfileData.getAddress();
 
-  if (error) {
+  if (!data || error) {
     return <NotFound />
   }
 

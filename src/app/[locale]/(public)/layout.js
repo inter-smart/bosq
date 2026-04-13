@@ -1,6 +1,7 @@
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import { getSiteData } from "@/lib/api/CMS/basicGet";
+import NotFound from "./not-found";
 
 const local_data = {
   footer_data: {
@@ -126,7 +127,11 @@ export default async function PublicLayout({ children, params }) {
   const resolvedParams = await params;
   const { locale } = resolvedParams;
 
-  const { data } = await getSiteData();
+  const { data, error } = await getSiteData();
+  
+  if (!data || error) {
+    return <NotFound />
+  }
 
   const { headerData, footerData, socialMedia, cards, navigationData, landingPage } = data;
 
