@@ -1,17 +1,7 @@
 import AuthLayout from "@/components/blocks/auth/auth-layout";
 import AuthPasswordForm from "@/components/form/auth-password-form";
 import { getAuthData } from "@/lib/api/CMS/basicGet";
-
-const local_data = {
-  media: {
-    type: "image",
-    alt: "hero",
-    path: "/images/auth-login-1.jpg",
-  },
-  title: "Create Your Password",
-  description:
-    "<p>Enter the verification code we just sent you on your mail address.</p>",
-};
+import NotFound from "../../(public)/not-found";
 
 export default async function CreatePasswordPage({ params }) {
   const resolvedParams = await params;
@@ -20,7 +10,7 @@ export default async function CreatePasswordPage({ params }) {
   const { data, error } = await getAuthData();
   
     if (error) {
-      notFound();
+<NotFound />
     }
   
     const { authPageData } = data;

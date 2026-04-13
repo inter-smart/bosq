@@ -1,7 +1,7 @@
-import { notFound } from "next/navigation";
 import { getHomeData } from "@/lib/api/home";
 import { getMetaData } from "@/lib/api/metaApi";
 import HomeClient from "@/components/clients/HomeClient";
+import NotFound from "./not-found";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -27,7 +27,7 @@ export default async function HomePage({ params }) {
   const { data, error } = await getHomeData.getCmsData();
 
   if (error) {
-    notFound();
+    <NotFound />
   }
 
   const isEN = locale === "en";

@@ -205,7 +205,7 @@ export default async function ProjectDetailPage({ params }) {
   
   if (error) {
     console.log("error", error)
-    return <NotFound />;
+    return <NotFound params={{ locale }} />;
   }
 
   const {

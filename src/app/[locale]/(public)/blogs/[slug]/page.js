@@ -115,7 +115,7 @@ export default async function BlogDetailPage({ params }) {
   const { data, error } = await getBlogsData.getBlogDetailsData(slug);
 
   if (!data || error) {
-    return <NotFound />;
+    return <NotFound params={{ locale }} />;
   }
 
   const { heroData, blogData, popularBlogData, relatedBlogData } = data;
