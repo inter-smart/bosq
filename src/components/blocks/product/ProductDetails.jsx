@@ -130,7 +130,7 @@ const ProductDetails = ({ data, isEn, setIndexProject, setOpenProject, openProje
                 {faqs.map((faq, index) => (
                   <div key={"faq" + index} className="typography mb-4">
                     <h6>
-                      Q{index}: {isEn ? faq?.question : faq?.question_ar}
+                      Q{index+1}: {isEn ? faq?.question : faq?.question_ar}
                     </h6>
                     <p>{parse(isEn ? faq?.answer : faq?.answer_ar)}</p>
                   </div>
