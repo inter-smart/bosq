@@ -132,10 +132,8 @@ export default async function CouponsPage({ params }) {
 
   const { data, error } = await ProfileData.getCoupons();
 
-  console.log(data)
-
-  if (error) {
-    <NotFound />
+  if (!data || error) {
+    return <NotFound />
   }
 
   return (

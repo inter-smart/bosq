@@ -539,10 +539,9 @@ export default async function OrdersPage({ params, searchParams }) {
   const orders = data?.orders;
   const pagination = data?.pagination;
 
-  if (error) {
-    <NotFound />
+  if (!data || error) {
+    return <NotFound />
   }
-
   return (
     <>
       <ProductHero locale={locale} data={local_data?.heroData} slug={slug} />

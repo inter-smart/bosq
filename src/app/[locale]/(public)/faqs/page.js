@@ -7,7 +7,15 @@ import NotFound from "../not-found";
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
   const locale = resolvedParams.locale;
-  const { title, description, keywords, twitter, openGraph, alternates, other } = await getMetaData("faqs", locale);
+  const {
+    title,
+    description,
+    keywords,
+    twitter,
+    openGraph,
+    alternates,
+    other,
+  } = await getMetaData("faqs", locale);
 
   return {
     title,
@@ -26,8 +34,8 @@ export default async function FaqsPage({ params }) {
 
   const { data, error } = await getFaqData();
 
-  if (error) {
-    <NotFound />
+  if (!data || error) {
+    return <NotFound />;
   }
 
   const slug = locale === "en" ? "FAQs" : "الأسئلة الشائعة";

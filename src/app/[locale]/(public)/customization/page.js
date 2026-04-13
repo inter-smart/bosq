@@ -30,12 +30,9 @@ export default async function CustomizationPage({ params }) {
 
   const {data, error} = await getCustomizationCms.getCmsData();
 
-
-
-
-    if (error) {
-      <NotFound />
-    }
+  if (!data || error) {
+    return <NotFound />
+  }
 
 
 

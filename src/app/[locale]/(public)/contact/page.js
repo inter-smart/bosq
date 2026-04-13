@@ -31,9 +31,9 @@ export default async function ContactPage({ params }) {
   const { data, error } = await getContactData.getCmsData();
 
   const slug = locale === "en" ? "Contact" : "اتصل بنا";
-  if (error) {
-    NotFound();
-  }
+  if (error || !data) {
+     return <NotFound />;
+   }
 
   const { heroData, contactData } = data;
 

@@ -3,6 +3,7 @@ import AccountLayout from "@/components/blocks/account/account-layout";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getMetaData } from "@/lib/api/metaApi";
 import { ProfileData } from "@/lib/api/profile/profileApi";
+import NotFound from "../../not-found";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -29,7 +30,13 @@ export default async function CancelledOrdersPage({ params }) {
   const resolvedParams = await params;
   const locale = resolvedParams.locale;
 
-  const { data } = await ProfileData.getOrders();
+  const { data, error } = await ProfileData.getOrders();
+
+
+    if (!data || error) {
+    return <NotFound />
+  }
+
   const allOrders = data?.orders ?? [];
 
   const cancelledItems = allOrders

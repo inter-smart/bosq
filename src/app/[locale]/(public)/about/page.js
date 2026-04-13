@@ -35,9 +35,9 @@ export default async function AboutPage({ params }) {
   const slug = locale === "en" ? "About Us" : "معلومات عنا";
   const { data, error } = await getAboutData.getCmsData();
 
-  if (error) {
-    NotFound();
-  }
+  if (error || !data) {
+     return <NotFound />;
+   }
 
   const {
     heroData,

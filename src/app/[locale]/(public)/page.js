@@ -26,8 +26,8 @@ export default async function HomePage({ params }) {
 
   const { data, error } = await getHomeData.getCmsData();
 
-  if (error) {
-    <NotFound />
+  if (error || !data) {
+    return <NotFound />;
   }
 
   const isEN = locale === "en";

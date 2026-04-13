@@ -1,7 +1,7 @@
 import ChairsListing from "@/components/blocks/office-chair-landing/ChairsListing";
 import LandingHero from "@/components/blocks/office-chair-landing/LandingHero";
 import { getOfficeChairsData } from "@/lib/api/CMS/basicGet";
-import NotFound from "../not-found";
+import NotFound from "../../not-found";
 
 
 const local_data = {
