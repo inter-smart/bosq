@@ -36,8 +36,8 @@ export default async function ProjectsPage({ params, searchParams }) {
 // make arabic 
   const breadCrumpData = locale==="en"? "projects" : "المشاريع"
 
-  if (error) {
-    <NotFound />
+ if (error || !data) {
+    return <NotFound />;
   }
 
   return (

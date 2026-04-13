@@ -35,7 +35,7 @@ export default async function NewsPage({ params, searchParams }) {
   ]);
 
   if (cmsResult.error) {
-    NotFound()
+    return <NotFound />
   }
 
   

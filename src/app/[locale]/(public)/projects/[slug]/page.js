@@ -203,10 +203,9 @@ export default async function ProjectDetailPage({ params }) {
 
 
   
-  if (error) {
-    console.log("error", error)
-    return <NotFound params={{ locale }} />;
-  }
+   if (error || !data) {
+      return <NotFound />;
+    }
 
   const {
     heroData,

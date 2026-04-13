@@ -4,12 +4,18 @@ import { getBlogsData } from "@/lib/api/blog";
 import { getMetaData } from "@/lib/api/metaApi";
 import NotFound from "../not-found";
 
-
-
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
   const locale = resolvedParams.locale;
-  const { title, description, keywords, twitter, openGraph, alternates, other } = await getMetaData("blogs", locale);
+  const {
+    title,
+    description,
+    keywords,
+    twitter,
+    openGraph,
+    alternates,
+    other,
+  } = await getMetaData("blogs", locale);
 
   return {
     title,
@@ -21,7 +27,6 @@ export async function generateMetadata({ params }) {
     other,
   };
 }
-
 
 export default async function BlogsPage({ params, searchParams }) {
   const resolvedParams = await params;
@@ -36,7 +41,7 @@ export default async function BlogsPage({ params, searchParams }) {
   ]);
 
   if (cmsResult.error) {
-    NotFound()
+    return <NotFound />;
   }
 
   const { heroData } = cmsResult.data;
