@@ -452,7 +452,12 @@ const ProductListFilters = ({ filterData, isEn }) => {
                                         htmlFor={`subcat-${subCat.id}`}
                                         className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#666] cursor-pointer"
                                       >
-                                        {isEn ? subCat.name : subCat.name_ar}
+                                        {(() => {
+                                          const parent = filterData?.categories?.find((c) => c.id === subCat.parent_id);
+                                          const parentName = parent ? (isEn ? parent.name : parent.name_ar) : null;
+                                          const subName = isEn ? subCat.name : subCat.name_ar;
+                                          return parentName ? `${subName} - ${parentName}` : subName;
+                                        })()}
                                       </Label>
                                     </div>
                                   ))}

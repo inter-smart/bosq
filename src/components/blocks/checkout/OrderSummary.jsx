@@ -292,7 +292,7 @@ const OrderSummary = ({
 
   // Check if order can be placed
   const { shippingId, billingId } = getFinalAddressIds();
-  const canPlaceOrder = shippingId && billingId && termsAccepted;
+  const canPlaceOrder = shippingId && billingId;
 
   return (
     <>
