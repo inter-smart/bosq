@@ -42,7 +42,7 @@ const AddressSection = ({ locale }) => {
   const [editModalAddress, setEditModalAddress] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const { data, isLoading, isError } = useGetAddressesQuery();
+  const { data, isLoading, isError } = useGetAddressesQuery(undefined, { refetchOnMountOrArgChange: true });
 
   const shippingAddresses = data?.data?.shipping || [];
   const billingAddresses = data?.data?.billing || [];
