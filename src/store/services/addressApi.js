@@ -10,6 +10,7 @@ export const addressApi = createApi({
     getAddresses: builder.query({
       query: () => "/api/frontend/checkout/cart-addresss",
       providesTags: ["Address"],
+      keepUnusedDataFor: 0,
     }),
 
     addAddress: builder.mutation({

@@ -122,7 +122,7 @@ const OrderSummary = ({
   }, [isAllowed, router, locale]);
 
   // Fetch addresses to display in confirmation dialog
-  const { data: addressData } = useGetAddressesQuery();
+  const { data: addressData } = useGetAddressesQuery(undefined, { refetchOnMountOrArgChange: true });
   const allShippingAddresses = addressData?.data?.shipping || [];
   const allBillingAddresses = addressData?.data?.billing || [];
 
