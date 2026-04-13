@@ -150,7 +150,7 @@ const OrderSummary = ({
     if (!couponCode.trim()) return;
 
     try {
-      const result = await applyCoupon({ coupon_code: couponCode }).unwrap();
+      const result = await applyCoupon({ coupon_code: couponCode, type }).unwrap();
       updateSummaryFromResponse(result?.data);
       toast.success(`${tToast("coupon_success")}`);
     } catch (error) {
@@ -162,7 +162,7 @@ const OrderSummary = ({
   // Handle coupon removal
   const handleRemoveCoupon = async () => {
     try {
-      const result = await removeCoupon({ coupon_code: appliedCoupon || couponCode }).unwrap();
+      const result = await removeCoupon({ coupon_code: appliedCoupon || couponCode, type }).unwrap();
       updateSummaryFromResponse(result?.data);
       setCouponCode("");
       toast.success(`${tToast("coupon_removed")}`);

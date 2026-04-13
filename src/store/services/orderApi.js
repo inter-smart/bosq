@@ -31,11 +31,12 @@ export const orderApi = createApi({
     }),
 
     applyCoupon: builder.mutation({
-      query: ({ coupon_code }) => ({
+      query: ({ coupon_code, type }) => ({
         url: `/api/frontend/checkout/apply-coupon`,
         method: "POST",
         body: {
           coupon_code,
+          type,
         },
       }),
       transformErrorResponse: (response) => {
@@ -54,11 +55,12 @@ export const orderApi = createApi({
     }),
 
     removeCoupon: builder.mutation({
-      query: ({ coupon_code }) => ({
+      query: ({ coupon_code, type }) => ({
         url: `/api/frontend/checkout/remove-coupon`,
         method: "POST",
         body: {
           coupon_code,
+          type,
         },
       }),
       transformErrorResponse: (response) => {

@@ -8,7 +8,7 @@ import { Text } from "@/components/utils/text";
 import Image from "next/image";
 import Link from "next/link";
 
-const MAX_RETRIES = 5;
+const MAX_RETRIES = 10;
 const POLL_INTERVAL_MS = 3000;
 
 const STATUS_CONFIG = {
@@ -52,8 +52,9 @@ const STATUS_CONFIG = {
 };
 
 export default function CheckoutResponse({ orderRef, locale = "en" }) {
-  const [resolvedStatus, setResolvedStatus] = useState(null); // always start null
+  const [resolvedStatus, setResolvedStatus] = useState(null);
   const [resolvedOrderId, setResolvedOrderId] = useState(null);
+  const [isLongWait, setIsLongWait] = useState(false);
   const retryCount = useRef(0);
 
   useEffect(() => {
@@ -63,18 +64,27 @@ export default function CheckoutResponse({ orderRef, locale = "en" }) {
     }
 
     const checkStatus = async () => {
-      try {
-        // ✅ Call your Express verify endpoint with N-Genius ref
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend/payment/verify?ref=${orderRef}`, { credentials: "include" });
+      // Show "still verifying" message after 3 retries (~9s)
+      if (retryCount.current >= 3) {
+        setIsLongWait(true);
+      }
 
-        const json = await res.json(); // ✅ renamed from data → json
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend/payment/verify?ref=${orderRef}`, { credentials: "include" });
+        const json = await res.json();
 
         if (!res.ok) {
-          setResolvedStatus("failed");
+          // Non-2xx — retry up to max, then show failed
+          retryCount.current += 1;
+          if (retryCount.current < MAX_RETRIES) {
+            setTimeout(checkStatus, POLL_INTERVAL_MS);
+          } else {
+            setResolvedStatus("failed");
+          }
           return;
         }
 
-        const status = json.data?.resolvedStatus; // ✅ was: data.resolvedStatus
+        const status = json.data?.resolvedStatus;
         const returnedOrderId = json.data?.merchantRef;
 
         if (returnedOrderId) setResolvedOrderId(returnedOrderId);
@@ -93,7 +103,13 @@ export default function CheckoutResponse({ orderRef, locale = "en" }) {
           }
         }
       } catch {
-        setResolvedStatus("failed");
+        // Network error — retry, don't immediately fail
+        retryCount.current += 1;
+        if (retryCount.current < MAX_RETRIES) {
+          setTimeout(checkStatus, POLL_INTERVAL_MS);
+        } else {
+          setResolvedStatus("failed");
+        }
       }
     };
 
@@ -102,8 +118,11 @@ export default function CheckoutResponse({ orderRef, locale = "en" }) {
 
   if (!resolvedStatus) {
     return (
-      <div className="w-full py-[60px] flex items-center justify-center">
+      <div className="w-full py-[60px] flex flex-col items-center justify-center gap-2">
         <p className="text-[#808080] text-sm">Verifying your payment...</p>
+        {isLongWait && (
+          <p className="text-[#aaaaaa] text-xs">Still verifying — please wait a moment.</p>
+        )}
       </div>
     );
   }
