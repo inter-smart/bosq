@@ -122,7 +122,7 @@ const OrderSummary = ({
   }, [isAllowed, router, locale]);
 
   // Fetch addresses to display in confirmation dialog
-  const { data: addressData } = useGetAddressesQuery();
+  const { data: addressData } = useGetAddressesQuery(undefined, { refetchOnMountOrArgChange: true });
   const allShippingAddresses = addressData?.data?.shipping || [];
   const allBillingAddresses = addressData?.data?.billing || [];
 
@@ -292,7 +292,7 @@ const OrderSummary = ({
 
   // Check if order can be placed
   const { shippingId, billingId } = getFinalAddressIds();
-  const canPlaceOrder = shippingId && billingId && termsAccepted;
+  const canPlaceOrder = shippingId && billingId;
 
   return (
     <>
@@ -395,7 +395,7 @@ const OrderSummary = ({
             )}
 
             {/* Coupon Code Section */}
-            {user && (
+            {user && !type && (
               <div className="w-full mb-2 xl:mb-3 2xl:mb-4">
                 <div className="w-full bg-[#eee] p-1 xl:p-2 rounded-[4px] flex gap-1.5">
                   <Input

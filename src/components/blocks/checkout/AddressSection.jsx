@@ -42,13 +42,10 @@ const AddressSection = ({ locale }) => {
   const [editModalAddress, setEditModalAddress] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const { data, isLoading, isError } = useGetAddressesQuery();
+  const { data, isLoading, isError } = useGetAddressesQuery(undefined, { refetchOnMountOrArgChange: true });
 
   const shippingAddresses = data?.data?.shipping || [];
   const billingAddresses = data?.data?.billing || [];
-
-
-
 
   // Auto-enable "use same address" checkbox when only one type is available
   useEffect(() => {
@@ -70,7 +67,7 @@ const AddressSection = ({ locale }) => {
   const handleUseSameForBillingChange = (value) => {
     dispatch(setUseSameAddressForBilling(value));
     // Auto-select first shipping address if none is selected
-    if (value && shippingAddresses.length > 0) {
+    if (value && shippingAddresses.length > 0 && !selectedShippingAddressId) {
       const sorted = [...shippingAddresses].sort((a, b) => (b.is_default ? 1 : 0) - (a.is_default ? 1 : 0));
       dispatch(setSelectedShippingAddress((sorted.find((a) => a.is_default) || sorted[0]).id));
     }
@@ -80,7 +77,7 @@ const AddressSection = ({ locale }) => {
     dispatch(setUseSameAddressForShipping(value));
 
     // Auto-select first billing address if none is selected
-    if (value && billingAddresses.length > 0) {
+    if (value && billingAddresses.length > 0 && !selectedBillingAddressId) {
       const sorted = [...billingAddresses].sort((a, b) => (b.is_default ? 1 : 0) - (a.is_default ? 1 : 0));
       const selected = sorted.find((a) => a.is_default) || sorted[0];
       dispatch(setSelectedBillingAddress(selected.id));
