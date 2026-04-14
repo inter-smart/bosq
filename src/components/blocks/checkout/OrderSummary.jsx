@@ -150,7 +150,7 @@ const OrderSummary = ({
     if (!couponCode.trim()) return;
 
     try {
-      const result = await applyCoupon({ coupon_code: couponCode, type }).unwrap();
+      const result = await applyCoupon({ coupon_code: couponCode }).unwrap();
       updateSummaryFromResponse(result?.data);
       toast.success(`${tToast("coupon_success")}`);
     } catch (error) {
@@ -162,7 +162,7 @@ const OrderSummary = ({
   // Handle coupon removal
   const handleRemoveCoupon = async () => {
     try {
-      const result = await removeCoupon({ coupon_code: appliedCoupon || couponCode, type }).unwrap();
+      const result = await removeCoupon({ coupon_code: appliedCoupon || couponCode }).unwrap();
       updateSummaryFromResponse(result?.data);
       setCouponCode("");
       toast.success(`${tToast("coupon_removed")}`);
@@ -395,7 +395,7 @@ const OrderSummary = ({
             )}
 
             {/* Coupon Code Section */}
-            {user && !type && (
+            {user && (
               <div className="w-full mb-2 xl:mb-3 2xl:mb-4">
                 <div className="w-full bg-[#eee] p-1 xl:p-2 rounded-[4px] flex gap-1.5">
                   <Input
