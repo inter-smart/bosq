@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/dialog";
 import RequestEnquiryForm from "../form/request-enquiry-form";
 import { Heading } from "../utils/heading";
-import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
 import { useTranslations } from "next-intl";
 
 export default function EnquiryDialog({
@@ -70,13 +69,11 @@ export default function EnquiryDialog({
             />
           </Heading>
           <div className="w-full max-h-[80vh] mask-[linear-gradient(to_bottom,transparent_0%,white_2%,white_98%,transparent_100%)] overflow-x-hidden overflow-y-auto">
-            <RecaptchaProvider>
-              <RequestEnquiryForm
-                locale={locale}
-                states={state}
-                dropdownData={dropdownData}
-              />
-            </RecaptchaProvider>
+            <RequestEnquiryForm
+              locale={locale}
+              states={state}
+              dropdownData={dropdownData}
+            />
           </div>
         </div>
       </DialogContent>

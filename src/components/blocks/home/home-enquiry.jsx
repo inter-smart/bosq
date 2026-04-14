@@ -4,7 +4,6 @@ import Image from "next/image";
 import parse from "html-react-parser";
 import EnquiryForm from "@/components/form/enquiry-form";
 import { cn } from "@/lib/utils";
-import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
 import ProjectEnquiryForm from "@/components/form/project-enquiry-form";
 
 export default function HomeEnquiry({ data, locale, isEN, type = "", projectId = null }) {
@@ -59,13 +58,9 @@ export default function HomeEnquiry({ data, locale, isEN, type = "", projectId =
               </Text>
 
               {type === "project" ? (
-                <RecaptchaProvider>
-                  <ProjectEnquiryForm projectId={projectId} locale={locale} />
-                </RecaptchaProvider>
+                <ProjectEnquiryForm projectId={projectId} locale={locale} />
               ) : (
-                <RecaptchaProvider>
-                  <EnquiryForm locale={locale} />
-                </RecaptchaProvider>
+                <EnquiryForm locale={locale} />
               )}
             </div>
           </div>

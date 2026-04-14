@@ -4,7 +4,6 @@ import { Heading } from "@/components/utils/heading";
 import Image from "next/image";
 import { Text } from "@/components/utils/text";
 import RequestEnquiryForm from "@/components/form/request-enquiry-form";
-import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
 
 export default function CustomizationInfo({
   data,
@@ -367,9 +366,7 @@ export default function CustomizationInfo({
           </div>
           <div className="w-full h-auto flex flex-wrap gap-6 sm:gap-12 xl:gap-18 2xl:gap-30">
             <div className="flex-1">
-              <RecaptchaProvider>
-                <RequestEnquiryForm states={states} locale={locale} dropdownData={dropdownData} />
-              </RecaptchaProvider>
+              <RequestEnquiryForm states={states} locale={locale} dropdownData={dropdownData} />
             </div>
             <div className="w-full lg:max-w-[46%]">
               <div className="w-full aspect-75/52 overflow-hidden">

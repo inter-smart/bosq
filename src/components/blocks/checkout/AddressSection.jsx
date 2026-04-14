@@ -26,7 +26,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import UpdateAddressForm from "@/components/form/update-address-form";
-import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
 
 const AddressSection = ({ locale }) => {
   const dispatch = useDispatch();
@@ -180,18 +179,16 @@ const AddressSection = ({ locale }) => {
             </AlertDialogCancel>
           </AlertDialogHeader>
           <div className="max-h-[70vh] mask-[linear-gradient(to_bottom,transparent_0%,white_2%,white_98%,transparent_100%)] overflow-y-auto overflow-x-hidden">
-            <RecaptchaProvider>
-              <UpdateAddressForm
-                isFromCheckout={true}
-                showShipToDifferent={true}
-                locale={locale}
-                addressData={editModalAddress}
-                onSuccess={() => {
-                  setIsEditModalOpen(false);
-                  setEditModalAddress(null);
-                }}
-              />
-            </RecaptchaProvider>
+            <UpdateAddressForm
+              isFromCheckout={true}
+              showShipToDifferent={true}
+              locale={locale}
+              addressData={editModalAddress}
+              onSuccess={() => {
+                setIsEditModalOpen(false);
+                setEditModalAddress(null);
+              }}
+            />
           </div>
         </AlertDialogContent>
       </AlertDialog>

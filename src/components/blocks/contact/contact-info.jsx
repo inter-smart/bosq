@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
 import ContactEnquiryForm from "@/components/form/contact-enquiry-form";
 import parse from "html-react-parser";
-import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
 
 const ContactMap = dynamic(() => import("./contact-map"));
 
@@ -46,9 +45,7 @@ export default function ContactInfo({ locale, data }) {
                   : data?.formData?.description_ar}
               </Text>
 
-              <RecaptchaProvider>
-                <ContactEnquiryForm locale={locale} />
-              </RecaptchaProvider>
+              <ContactEnquiryForm locale={locale} />
             </div>
           </div>
           <div className="w-full lg:w-1/2">

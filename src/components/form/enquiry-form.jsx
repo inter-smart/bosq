@@ -65,7 +65,7 @@ export default function EnquiryForm({ locale }) {
 
   const onSubmit = async (values) => {
     if (!executeRecaptcha) {
-      toast.error(t("submit_error"));
+      toast.error("recaptcha is not ready");
       return;
     }
 

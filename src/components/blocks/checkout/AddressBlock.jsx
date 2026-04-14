@@ -25,7 +25,6 @@ import { useDeleteAddressMutation, useUpdateDefaultAddressMutation } from "@/sto
 import { toast } from "sonner";
 import { setSelectedShippingAddress, setSelectedBillingAddress } from "@/store/slices/checkoutSlice";
 import { useTranslations } from "next-intl";
-import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
 
 const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress, isFromCheckout }) => {
   const dispatch = useDispatch();
@@ -52,10 +51,10 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
   // Sort addresses: default address first
   const sortedAddresses = data
     ? [...data].sort((a, b) => {
-        if (a.is_default && !b.is_default) return -1;
-        if (!a.is_default && b.is_default) return 1;
-        return 0;
-      })
+      if (a.is_default && !b.is_default) return -1;
+      if (!a.is_default && b.is_default) return 1;
+      return 0;
+    })
     : [];
 
   const isProcessing = (pendingAction?.kind === "delete" && isDeletingAddress) || (pendingAction?.kind === "setDefault" && isUpdatingDefault);
@@ -80,7 +79,7 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
         }
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addressIdKey, selectedAddressId, variant, dispatch]);
 
   const handleEditClick = (address) => {
@@ -210,7 +209,7 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
                         "min-w-[45px] xl:min-w-[50px] 2xl:min-w-[70px] h-[20px] lg:h-[22px] 2xl:h-[24px] 3xl:h-[26px] bg-white gap-1 border border-[#e9e9e9] hover:text-black hover:bg-white hover:border-[#f17423]"
                       }
                     >
-                      <Image src={"/images/icon-edit.svg"} alt={"icon-edit"} width={10} height={10} className="w-2 xl:w-2.5"  quality={90} />
+                      <Image src={"/images/icon-edit.svg"} alt={"icon-edit"} width={10} height={10} className="w-2 xl:w-2.5" quality={90} />
                       {tCommon("edit")}
                     </Button>
                     {!item.is_default && (
@@ -237,7 +236,7 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
                         "min-w-[55px] xl:min-w-[60px] 2xl:min-w-[85px] h-[20px] lg:h-[22px] 2xl:h-[24px] 3xl:h-[26px] bg-white gap-1 border border-[#e9e9e9] hover:text-red-600 hover:bg-white hover:border-red-600"
                       }
                     >
-                      <Image src={"/images/icon-delete.svg"} alt={"icon-delete"} width={10} height={10} className="w-2 xl:w-2.5"  quality={90} />
+                      <Image src={"/images/icon-delete.svg"} alt={"icon-delete"} width={10} height={10} className="w-2 xl:w-2.5" quality={90} />
                       {tCommon("delete")}
                     </Button>
                   </div>
@@ -262,9 +261,7 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
           </AlertDialogHeader>
 
           <div className="max-h-[70vh] mask-[linear-gradient(to_bottom,transparent_0%,white_2%,white_98%,transparent_100%)] overflow-y-auto overflow-x-hidden">
-            <RecaptchaProvider>
-              <UpdateAddressForm isFromCheckout={isFromCheckout} locale={locale} addressData={editingAddress} onSuccess={() => { setIsEditDialogOpen(false); setEditingAddress(null); }} />
-            </RecaptchaProvider>
+            <UpdateAddressForm isFromCheckout={isFromCheckout} locale={locale} addressData={editingAddress} onSuccess={() => { setIsEditDialogOpen(false); setEditingAddress(null); }} />
           </div>
         </AlertDialogContent>
       </AlertDialog>

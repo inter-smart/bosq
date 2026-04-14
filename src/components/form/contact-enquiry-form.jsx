@@ -96,7 +96,7 @@ export default function ContactEnquiryForm({ locale }) {
       const data = await res.json();
 
       if (!res.ok) {
-        toast.error(isEN ? data?.message?.en : data?.message?.ar || t("submit_error"));
+        toast.error(isEN ? data?.message?.en : data?.message?.ar);
       }
       form.reset();
 
@@ -104,7 +104,7 @@ export default function ContactEnquiryForm({ locale }) {
       toast.success(isEN ? data?.message?.en : data?.message?.ar);
     } catch (err) {
       console.error(err);
-      toast.error(err.message || t("submit_error"));
+      toast.error(err);
       console.log(err);
     }
 

@@ -14,7 +14,6 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { API_URL } from "@/lib/api/client";
-import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
@@ -392,13 +391,11 @@ export default function Footer({
                 )}
               </Text>
               <div className="w-full sm:w-[60%]">
-                <RecaptchaProvider>
-                  <NewsletterForm
-                    placeholders={placeholders}
-                    placeholders_ar={placeholders_ar}
-                    locale={locale}
-                  />
-                </RecaptchaProvider>
+                <NewsletterForm
+                  placeholders={placeholders}
+                  placeholders_ar={placeholders_ar}
+                  locale={locale}
+                />
               </div>
             </div>
           </div>

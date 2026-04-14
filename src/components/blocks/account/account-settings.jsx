@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 import { OrderEmpty } from "./order-empty";
 import PersonalInformationForm from "@/components/form/personal-information-form";
 import PasswordChangeForm from "@/components/form/password-change-form";
-import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function AccountSettings({ data, locale }) {
@@ -26,21 +25,19 @@ export default function AccountSettings({ data, locale }) {
             <Heading as="h4" size="heading5" className="font-normal text-[#282828] mb-3 xl:mb-5 2xl:mb-8">
               {t("personal_info")}
             </Heading>
-            <RecaptchaProvider>
-              <PersonalInformationForm data={data} locale={locale} isGoogleUser={isGoogleUser} />
-              {!isGoogleUser && (
-                <>
-                  <Heading as="h4" size="heading5" className="font-normal text-[#282828] mb-3 xl:mb-5 2xl:mb-8 mt-6 xl:mt-10 2xl:mt-12">
-                    {t("password_change")}
-                  </Heading>
-                  <div className="flex">
-                    <div className="w-full lg:w-1/2">
-                      <PasswordChangeForm locale={locale} />
-                    </div>
+            <PersonalInformationForm data={data} locale={locale} isGoogleUser={isGoogleUser} />
+            {!isGoogleUser && (
+              <>
+                <Heading as="h4" size="heading5" className="font-normal text-[#282828] mb-3 xl:mb-5 2xl:mb-8 mt-6 xl:mt-10 2xl:mt-12">
+                  {t("password_change")}
+                </Heading>
+                <div className="flex">
+                  <div className="w-full lg:w-1/2">
+                    <PasswordChangeForm locale={locale} />
                   </div>
-                </>
-              )}
-            </RecaptchaProvider>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}

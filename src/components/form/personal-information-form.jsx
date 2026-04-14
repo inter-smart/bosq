@@ -197,9 +197,7 @@ export default function PersonalInformationForm({ data, locale, isGoogleUser }) 
               <FormControl>
                 <PhoneInput
                   defaultCountry="ae"
-                  forceDialCode={true}
-                  value={field.value || ""}
-                  onChange={(value) => field.onChange(value)}
+                  {...field}
                   className={cn(
                     inputStyle,
                     "w-full p-0 [&_input]:flex-1 [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px]",

@@ -23,7 +23,6 @@ import {
 import UpdateAddressForm from "@/components/form/update-address-form";
 import dynamic from "next/dynamic";
 import { fetchFromAPIWithCredentials } from "@/lib/helper";
-import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
@@ -294,15 +293,13 @@ export default function AccountAddress({ data, locale, addressData }) {
           >
             {t("add_new")}
           </Heading>
-          <RecaptchaProvider>
-            <AddressForm
-              onSuccess={() => {
-                setShowAddForm(false);
-                router.refresh();
-              }}
-              locale={locale}
-            />
-          </RecaptchaProvider>
+          <AddressForm
+            onSuccess={() => {
+              setShowAddForm(false);
+              router.refresh();
+            }}
+            locale={locale}
+          />
         </div>
       ) : (
         <div className="w-full border border-[#e9e9e9] sm:rounded-e-lg py-3 xl:py-6 3xl:py-9 px-3 xl:px-4 3xl:px-5">
@@ -413,15 +410,13 @@ export default function AccountAddress({ data, locale, addressData }) {
               >
                 {t("add_new")}
               </Heading>
-              <RecaptchaProvider>
-                <AddressForm
-                  locale={locale}
-                  onSuccess={() => {
-                    setShowAddForm(false); // ✅ close form
-                    router.refresh(); // ✅ reload page data
-                  }}
-                />
-              </RecaptchaProvider>
+              <AddressForm
+                locale={locale}
+                onSuccess={() => {
+                  setShowAddForm(false); // ✅ close form
+                  router.refresh(); // ✅ reload page data
+                }}
+              />
             </div>
           )}
         </div>
@@ -453,14 +448,12 @@ export default function AccountAddress({ data, locale, addressData }) {
                 <span className="text-sm text-gray-500">{t("loading")}</span>
               </div>
             ) : (
-              <RecaptchaProvider>
-                <UpdateAddressForm
-                  locale={locale}
-                  addressData={editingAddress}
-                  onSuccess={handleEditSuccess}
-                  editMode={editMode}
-                />
-              </RecaptchaProvider>
+              <UpdateAddressForm
+                locale={locale}
+                addressData={editingAddress}
+                onSuccess={handleEditSuccess}
+                editMode={editMode}
+              />
             )}
           </div>
         </AlertDialogContent>

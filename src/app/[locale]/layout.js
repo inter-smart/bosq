@@ -10,6 +10,7 @@ import ReduxProvider from "@/store/provider";
 import { Toaster } from "sonner";
 import AuthSyncProvider from "@/components/providers/AuthSyncProvider";
 import ScrollRestoration from "@/components/providers/ScrollRestoration";
+import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
 
 const heroNew = localFont({
   src: [
@@ -85,10 +86,12 @@ export default async function RootLayout({ children, params }) {
       <body className={locale === "ar" ? "font-cairo" : "font-hero"}>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ReduxProvider>
-            <AuthSyncProvider />
-            <ScrollRestoration />
-            <NuqsAdapter>{children}</NuqsAdapter>
-            <Toaster position={locale === "ar" ? "bottom-left" : "bottom-right"} richColors closeButton visibleToasts={1} />
+            <RecaptchaProvider>
+              <AuthSyncProvider />
+              <ScrollRestoration />
+              <NuqsAdapter>{children}</NuqsAdapter>
+              <Toaster position={locale === "ar" ? "bottom-left" : "bottom-right"} richColors closeButton visibleToasts={1} />
+            </RecaptchaProvider>
           </ReduxProvider>
         </NextIntlClientProvider>
       </body>

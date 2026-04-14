@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/utils/heading";
 import { X } from "lucide-react";
 import React from "react";
-import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
 import { useTranslations } from "next-intl";
 
 const AddAddressBlock = ({ locale, variant = "shipping", onCancel, onSuccess }) => {
@@ -21,9 +20,7 @@ const AddAddressBlock = ({ locale, variant = "shipping", onCancel, onSuccess }) 
           </Button>
         )}
       </div>
-      <RecaptchaProvider>
-        <AddressForm locale={locale} variant={variant} onSuccess={onSuccess} />
-      </RecaptchaProvider>
+      <AddressForm locale={locale} variant={variant} onSuccess={onSuccess} />
     </div>
   );
 };

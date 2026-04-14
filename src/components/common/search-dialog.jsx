@@ -22,7 +22,6 @@ import {
 import { useGetSearchQuery, useLazyGetSearchQuery } from "@/store/services/searchApi";
 import { useState } from "react";
 import { useDebouncedValue } from "@/hooks/use-debounce";
-import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
 import { useTranslations } from "next-intl";
 
 export default function SearchDialog({ children, locale }) {
@@ -140,7 +139,6 @@ export default function SearchDialog({ children, locale }) {
                       )}
                     />
                   </Heading>
-                  {/* <RecaptchaProvider> */}
                   <PlaceholdersAndVanishInput
                     placeholders={placeholders}
                     onChange={handleChange}
@@ -150,7 +148,6 @@ export default function SearchDialog({ children, locale }) {
                     className="max-w-full"
                     variant="search"
                   />
-                  {/* </RecaptchaProvider> */}
 
                   {suggestedItems?.map((item, index) => (
                     <div className="w-full mt-4 sm:mt-3 xl:mt-4 2xl:mt-8" key={index}>

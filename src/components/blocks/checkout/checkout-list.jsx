@@ -3,7 +3,6 @@ import AddressSection from "./AddressSection";
 import AuthBoard from "./AuthBoard";
 import MatchingProduct from "./MatchingProduct";
 import OrderSummaryPage from "./OrderSummaryPage";
-import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
 import CheckoutResponse from "./checkout-response";
 
 export default function CheckoutList({ locale, type }) {
