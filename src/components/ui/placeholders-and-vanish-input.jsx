@@ -4,11 +4,8 @@ import { AnimatePresence, motion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Search } from "lucide-react";
-import { toast } from "sonner";
-import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
-import { API_URL } from "@/lib/api/client";
+
 export function PlaceholdersAndVanishInput({ placeholders, placeholders_ar, onChange, onSubmit, locale, variant = "default" }) {
-  const { executeRecaptcha } = useGoogleReCaptcha();
 
   const isEN = locale === "en";
 
@@ -47,7 +44,6 @@ export function PlaceholdersAndVanishInput({ placeholders, placeholders_ar, onCh
   const inputRef = useRef(null);
   const [value, setValue] = useState("");
   const [animating, setAnimating] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const draw = useCallback(() => {
     if (!inputRef.current) return;
@@ -157,62 +153,8 @@ export function PlaceholdersAndVanishInput({ placeholders, placeholders_ar, onCh
       animate(maxX);
     }
   };
-  const handleNewsletterSubmit = async (email, recaptchaToken) => {
-    if (isSubmitting) return;
-
-    if (!email) {
-      toast.error(isEN ? "Please enter your email address" : "الرجاء إدخال بريدك الإلكتروني");
-      return;
-    }
-
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      toast.error(isEN ? "Please enter a valid email address" : "الرجاء إدخال بريد إلكتروني صالح");
-      return;
-    }
-
-    setIsSubmitting(true);
-    const URL = `${API_URL}/api/frontend/enquiries/news-letter`;
-    try {
-      const res = await fetch(URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email,
-          recaptcha_token: recaptchaToken,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (!data?.success) {
-        toast.error(isEN ? data?.message?.en : data?.message?.ar || tErrors("newsletter_failed"));
-        return;
-      }
-
-      toast.success(isEN ? data?.message?.en : data?.message?.ar);
-    } catch (error) {
-      toast.error(isEN ? error?.en : error?.ar);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    // ✅ Success UX only after API success
-
-    const emailInput = e.target.querySelector('input[type="text"]');
-    const email = emailInput?.value?.trim();
-    if (variant !== "search") {
-      if (!executeRecaptcha) {
-        toast.error(isEN ? "reCAPTCHA not ready. Please try again." : "reCAPTCHA غير جاهز. يرجى المحاولة مرة أخرى.");
-        return;
-      }
-      const recaptchaToken = await executeRecaptcha("newstletter_token");
-      handleNewsletterSubmit(email, recaptchaToken);
-    }
-
     vanishAndSubmit();
     onSubmit?.(e);
   };
