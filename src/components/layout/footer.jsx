@@ -11,8 +11,11 @@ import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useState } from "react";
-import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
+import { API_URL } from "@/lib/api/client";
+import RecaptchaProvider from "@/app/[locale]/(public)/CaptchaWrapper";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
@@ -41,12 +44,6 @@ export default function Footer({
   ];
 
 
-  const handleChange = (e) => {
-    console.log(e.target.value);
-  };
-  const onSubmit = (e) => {
-    e.preventDefault();
-  };
 
   const t = useTranslations("footer");
 
@@ -396,11 +393,9 @@ export default function Footer({
               </Text>
               <div className="w-full sm:w-[60%]">
                 <RecaptchaProvider>
-                  <PlaceholdersAndVanishInput
+                  <NewsletterForm
                     placeholders={placeholders}
                     placeholders_ar={placeholders_ar}
-                    onChange={handleChange}
-                    onSubmit={onSubmit}
                     locale={locale}
                   />
                 </RecaptchaProvider>
@@ -453,6 +448,61 @@ export default function Footer({
         </div>
       </div>
     </footer>
+  );
+}
+
+function NewsletterForm({ placeholders, placeholders_ar, locale }) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const isEn = locale === "en";
+  const { executeRecaptcha } = useGoogleReCaptcha();
+
+  const handleSubmit = async (e) => {
+    const emailInput = e.target.querySelector('input[type="text"]');
+    const email = emailInput?.value?.trim();
+
+    if (!email) {
+      toast.error(isEn ? "Please enter your email address" : "الرجاء إدخال بريدك الإلكتروني");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error(isEn ? "Please enter a valid email address" : "الرجاء إدخال بريد إلكتروني صالح");
+      return;
+    }
+
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
+    try {
+      const recaptchaToken = await executeRecaptcha("newsletter_subscription");
+
+      const res = await fetch(`${API_URL}/api/frontend/enquiries/news-letter`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, recaptcha_token: recaptchaToken }),
+      });
+      const data = await res.json();
+      if (!data?.success) {
+        toast.error(isEn ? data?.message?.en : data?.message?.ar);
+        return;
+      }
+      toast.success(isEn ? data?.message?.en : data?.message?.ar);
+    } catch (err) {
+      console.error(err);
+      toast.error(isEn ? "Something went wrong. Please try again." : "حدث خطأ ما. يرجى المحاولة مرة أخرى.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <PlaceholdersAndVanishInput
+      placeholders={placeholders}
+      placeholders_ar={placeholders_ar}
+      locale={locale}
+      onSubmit={handleSubmit}
+    />
   );
 }
 
