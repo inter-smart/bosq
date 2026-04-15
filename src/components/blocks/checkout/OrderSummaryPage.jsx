@@ -4,6 +4,8 @@ import OrderSummary from "./OrderSummary";
 const OrderSummaryPage = async ({ locale, type }) => {
   const { data, error } = await checkoutData.getCartSummary(type);
 
+  console.log(data);
+
   if (error) {
     console.error("Cart summary fetch failed:", error);
   }

@@ -133,15 +133,15 @@ const OrderSummary = ({
   // Update order summary state from mutation response data
   const updateSummaryFromResponse = (data) => {
     if (!data) return;
-    if (data.items) setProducts(data.items);
+    // if (data.items) setProducts(data.items);
     if (data.id) setCartId(data.id);
     if (data.sub_total !== undefined) setSubTotal(data.sub_total);
     if (data.grand_total !== undefined) setGrandTotal(data.grand_total);
     if (data.discount_total !== undefined) setDiscountTotal(data.discount_total);
-    if (data.coupon_discount_type !== undefined) setCouponDiscountType(data.coupon_discount_type);
+    // if (data.coupon_discount_type !== undefined) setCouponDiscountType(data.coupon_discount_type);
     if (data.coupon_discount_value !== undefined) setCouponDiscountValue(data.coupon_discount_value);
-    if (data.item_count !== undefined) setItemsCount(data.item_count);
-    if (data.items) setTotalItems(data.items.length);
+    // if (data.item_count !== undefined) setItemsCount(data.item_count);
+    // if (data.items) setTotalItems(data.items.length);
     setAppliedCoupon(data.applied_coupon_code || null);
   };
 
@@ -150,7 +150,7 @@ const OrderSummary = ({
     if (!couponCode.trim()) return;
 
     try {
-      const result = await applyCoupon({ coupon_code: couponCode }).unwrap();
+      const result = await applyCoupon({ coupon_code: couponCode, cart_type: type }).unwrap();
       updateSummaryFromResponse(result?.data);
       toast.success(`${tToast("coupon_success")}`);
     } catch (error) {
@@ -162,7 +162,7 @@ const OrderSummary = ({
   // Handle coupon removal
   const handleRemoveCoupon = async () => {
     try {
-      const result = await removeCoupon({ coupon_code: appliedCoupon || couponCode }).unwrap();
+      const result = await removeCoupon({ coupon_code: appliedCoupon || couponCode, cart_type: type }).unwrap();
       updateSummaryFromResponse(result?.data);
       setCouponCode("");
       toast.success(`${tToast("coupon_removed")}`);
@@ -257,6 +257,7 @@ const OrderSummary = ({
         address,
         payment_type: selectedPaymentMethod,
         type: type || "cart",
+        coupon_code: appliedCoupon || null,
       }).unwrap();
 
       const internalOrderId = orderData.data?.id;
@@ -380,7 +381,7 @@ const OrderSummary = ({
               {tCommon("free")}
             </Text>
 
-            {appliedCoupon && parseFloat(itemsDiscountTotal) > 0 && (
+            {appliedCoupon && (
               <Text
                 as="div"
                 size="text3"
@@ -390,7 +391,7 @@ const OrderSummary = ({
                   {t("coupon_discount")}
                   {couponDiscountType === "percentage" && couponDiscountValue && <span className="ml-1">({parseFloat(couponDiscountValue)}%)</span>}
                 </span>
-                - {itemsDiscountTotal}
+                - {couponDiscountValue}
               </Text>
             )}
 
@@ -410,7 +411,7 @@ const OrderSummary = ({
                   />
                   <Button
                     variant={"black"}
-                    disabled={!couponCode.trim()}
+                    disabled={!couponCode.trim() || !!appliedCoupon}
                     onClick={handleApplyCoupon}
                     className="min-w-[60px] sm:min-w-[60px] xl:min-w-[80px] 2xl:min-w-[100px] h-[35px] lg:h-[35px] 2xl:h-[45px] 3xl:h-[45px] "
                   >

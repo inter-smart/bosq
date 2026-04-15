@@ -6,13 +6,14 @@ export const orderApi = createApi({
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     placeOrder: builder.mutation({
-      query: ({ payment_type, address, type }) => ({
+      query: ({ payment_type, address, type, coupon_code }) => ({
         url: `/api/frontend/orders/place`,
         method: "POST",
         body: {
           payment_type,
           address,
           type,
+          coupon_code,
         },
       }),
       transformErrorResponse: (response) => {
@@ -31,11 +32,12 @@ export const orderApi = createApi({
     }),
 
     applyCoupon: builder.mutation({
-      query: ({ coupon_code }) => ({
+      query: ({ coupon_code, cart_type }) => ({
         url: `/api/frontend/checkout/apply-coupon`,
         method: "POST",
         body: {
           coupon_code,
+          cart_type,
         },
       }),
       transformErrorResponse: (response) => {
@@ -54,11 +56,12 @@ export const orderApi = createApi({
     }),
 
     removeCoupon: builder.mutation({
-      query: ({ coupon_code }) => ({
+      query: ({ coupon_code, cart_type }) => ({
         url: `/api/frontend/checkout/remove-coupon`,
         method: "POST",
         body: {
           coupon_code,
+          cart_type,
         },
       }),
       transformErrorResponse: (response) => {
