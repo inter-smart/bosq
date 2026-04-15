@@ -282,7 +282,20 @@ const OrderSummary = ({
       }
     } catch (error) {
       console.log("error", error);
-      toast.error(error?.en || error || tToast("order_failed"));
+      setShowConfirmDialog(false);
+
+      if (error?.error_code === "STOCK_VALIDATION_ERROR") {
+        const msg = locale === "en" ? error?.en : error?.ar;
+        if (msg) sessionStorage.setItem("bosq_cart_error", msg);
+        router.push(`/${locale}/cart`);
+        return;
+      }
+
+      toast.error(
+        locale === "en"
+          ? error?.en || tToast("order_failed")
+          : error?.ar || tToast("order_failed"),
+      );
     }
   };
 

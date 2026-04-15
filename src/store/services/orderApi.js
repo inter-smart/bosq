@@ -18,16 +18,19 @@ export const orderApi = createApi({
       }),
       transformErrorResponse: (response) => {
         const message = response?.data?.message;
+        const errorCode = response?.data?.error_code;
 
+        let result;
         if (!message) {
-          return { en: "Failed to place order", ar: "فشل في تقديم الطلب" };
+          result = { en: "Failed to place order", ar: "فشل في تقديم الطلب" };
+        } else if (typeof message === "string") {
+          result = { en: message, ar: message };
+        } else {
+          result = { ...message };
         }
 
-        if (typeof message === "string") {
-          return { en: message, ar: message };
-        }
-
-        return message;
+        if (errorCode) result.error_code = errorCode;
+        return result;
       },
     }),
 

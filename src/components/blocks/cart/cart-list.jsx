@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/utils/heading";
 import { Text } from "@/components/utils/text";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CartCard from "./cart-card";
 import dynamic from "next/dynamic";
 import { useSelector, useDispatch } from "react-redux";
@@ -36,6 +36,8 @@ export default function CartList({ locale, similarProducts }) {
   const router = useRouter();
   const [validateCart, { isLoading: isValidating }] = useValidateCartMutation();
   const isEn = locale === "en";
+  const [invalidItemIds, setInvalidItemIds] = useState(new Set());
+  const prevCartItemsRef = useRef(null);
 
   const t = useTranslations("cart");
   const tCommon = useTranslations("common");
@@ -49,10 +51,31 @@ export default function CartList({ locale, similarProducts }) {
   const isLoading = useSelector(selectCartIsLoading);
   const isUpdating = useSelector(selectCartIsUpdating);
 
+  const isCartBlocked =
+    cartItems.some((item) => item.is_sold_out) ||
+    cartItems.some((item) => item.variant?.stock != null && item.variant.stock > 0 && item.quantity > item.variant.stock);
+
   // Fetch cart on mount
   useEffect(() => {
     dispatch(fetchCart());
   }, [dispatch]);
+
+  // Show error message redirected from checkout (e.g. stock validation failure)
+  useEffect(() => {
+    const pendingError = sessionStorage.getItem("bosq_cart_error");
+    if (pendingError) {
+      sessionStorage.removeItem("bosq_cart_error");
+      toast.error(pendingError);
+    }
+  }, []);
+
+  // Clear invalid badges when cart items change (quantity update or removal)
+  useEffect(() => {
+    if (prevCartItemsRef.current !== null && invalidItemIds.size > 0) {
+      setInvalidItemIds(new Set());
+    }
+    prevCartItemsRef.current = cartItems;
+  }, [cartItems]);
 
   // Show loading skeleton while fetching
   if (isLoading && cartItems.length === 0) {
@@ -66,12 +89,23 @@ export default function CartList({ locale, similarProducts }) {
 
   const validateCheckout = async () => {
     try {
-      await validateCart().unwrap();
+      const result = await validateCart().unwrap();
 
+      if (result?.data?.is_valid === false) {
+        const ids = new Set((result.data.invalid_items || []).map((i) => i.id));
+        setInvalidItemIds(ids);
+        toast.error(
+          isEn
+            ? "Some items in your cart are out of stock. Please update your cart."
+            : "بعض المنتجات في سلتك غير متوفرة. يرجى تحديث السلة.",
+        );
+        return;
+      }
+
+      setInvalidItemIds(new Set());
       dispatch(setIsCheckoutAllowed(true));
 
       const encoded = btoa("allowed");
-
       router.push(`/${locale}/checkout?flow=${encoded}`);
     } catch (error) {
       toast.error(isEn ? error?.en : error?.ar || "Failed to validate cart");
@@ -86,7 +120,7 @@ export default function CartList({ locale, similarProducts }) {
             <div className="flex flex-wrap -m-[5px] *:p-[5px]">
               {cartItems?.map((item, index) => (
                 <div key={`cart-item-${item.id || index}`} className="w-full flex flex-wrap ">
-                  <CartCard product={item} isEn={isEn} />
+                  <CartCard product={item} isEn={isEn} isValidationFailed={invalidItemIds.has(item.id)} />
                 </div>
               ))}
             </div>
@@ -146,7 +180,14 @@ export default function CartList({ locale, similarProducts }) {
                 AED {grandTotal}
               </Text>
               <MediaQuery minWidth={640}>
-                <Button variant={"black"} disabled={isUpdating || isValidating || cartItems.length === 0} className="min-w-full mt-2" asChild>
+                {isCartBlocked && (
+                  <Text as="div" size="text3" className="text-red-500 text-[11px] 2xl:text-[12px] font-normal text-center mb-2">
+                    {isEn
+                      ? "Some items have stock issues. Please update your cart."
+                      : "بعض المنتجات تجاوزت الكمية المتاحة. يرجى تحديث السلة."}
+                  </Text>
+                )}
+                <Button variant={"black"} disabled={isUpdating || isValidating || cartItems.length === 0 || isCartBlocked} className="min-w-full mt-2" asChild>
                   <div onClick={validateCheckout}>{isValidating ? "Validating..." : isUpdating ? "Updating..." : `${t("checkout")}`}</div>
                 </Button>
               </MediaQuery>
@@ -157,8 +198,15 @@ export default function CartList({ locale, similarProducts }) {
       <MediaQuery maxWidth={639}>
         <hr />
         <div className="w-full py-1 px-4 pb-2 bg-white sticky z-1 bottom-0 left-0 right-0 shadow-[0px_-5px_10px_rgba(0,0,0,0.1)]">
-          <Button variant={"black"} disabled={isUpdating || isValidating || cartItems.length === 0} className="min-w-full" asChild>
-            <div onClick={validateCheckout}>{isValidating ? "Validating..." : isUpdating ? "Updating..." : "Checkout"}</div>
+          {isCartBlocked && (
+            <Text as="div" size="text3" className="text-red-500 text-[11px] font-normal text-center pt-1 mb-1">
+              {isEn
+                ? "Some items have stock issues. Please update your cart."
+                : "بعض المنتجات تجاوزت الكمية المتاحة. يرجى تحديث السلة."}
+            </Text>
+          )}
+          <Button variant={"black"} disabled={isUpdating || isValidating || cartItems.length === 0 || isCartBlocked} className="min-w-full" asChild>
+            <div onClick={validateCheckout}>{isValidating ? "Validating..." : isUpdating ? "Updating..." : `${t("checkout")}`}</div>
           </Button>
         </div>
       </MediaQuery>

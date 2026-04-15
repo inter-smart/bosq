@@ -13,7 +13,7 @@ import { selectCartIsUpdating } from "@/store/selectors/cart/selectors";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 
-export default function CartCard({ product, isEn }) {
+export default function CartCard({ product, isEn, isValidationFailed = false }) {
   const dispatch = useDispatch();
   const isUpdating = useSelector(selectCartIsUpdating);
   const [quantity, setQuantity] = useState(product?.quantity || 1);
@@ -95,20 +95,21 @@ export default function CartCard({ product, isEn }) {
   const designTitleAr = product?.design_title_ar || product?.desgin_title_ar;
   const productPrice = product?.price;
   const isProductOutOfStock = product?.is_sold_out;
+  const isQuantityExceedsStock = stock != null && stock > 0 && quantity > stock;
   const productUrl = `/${isEn ? "en" : "ar"}/products/${product?.base_slug}${product?.query_params}`;
 
   return (
     <Suspense fallback={<CartCardSkeleton />}>
-      <div className="group w-full flex flex-wrap items-center border border-[#e9e9e9] rounded-[4px] p-3 sm:p-3 xl:p-5 2xl:p-6 hover:shadow-sm transition-shadow ">
+      <div className={`group w-full flex flex-wrap items-center border rounded-[4px] p-3 sm:p-3 xl:p-5 2xl:p-6 hover:shadow-sm transition-shadow ${isQuantityExceedsStock ? "border-red-400" : "border-[#e9e9e9]"}`}>
         <div className="w-[60px] sm:w-[100px] xl:w-[150px] 2xl:w-[200px] aspect-[168/186] rounded-lg bg-white border border-gray-100 sm:border-white max-sm:mb-3 relative z-0">
-          {isProductOutOfStock && (
+          {(isProductOutOfStock || isValidationFailed) && (
             <div className="w-full h-full bg-[#f4f4f4]/90 flex items-center justify-center absolute z-2 inset-0">
               <Button
                 variant={"black"}
                 disabled={true}
                 className="min-w-[100px] xl:min-w-[120px] 2xl:min-w-[200px] disabled:opacity-100 rounded-[2px] m-auto"
               >
-                Out of Stock
+                {isEn ? "Out of Stock" : "نفذ المخزون"}
               </Button>
             </div>
           )}
@@ -130,7 +131,7 @@ export default function CartCard({ product, isEn }) {
           <Text as="div" size="text3" className="leading-tight truncate text-[#282828] mb-2 xl:mb-4">
             {isEn ? designTitle : designTitleAr}
           </Text>
-          <div className="flex justify-between items-center gap-1 mb-2 sm:mb-3 xl:mb-4 2xl:mb-6">
+          <div className={`flex justify-between items-center gap-1 mb-2 sm:mb-3 xl:mb-4 ${isQuantityExceedsStock ? "" : "2xl:mb-6"}`}>
             <Text as="div" size="text3" className="font-normal text-[#282828]">
               <Link href={`${productUrl}`}>
                 AED {productPrice} <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc]">{tCommon("inc_tax")}</span>
@@ -151,7 +152,7 @@ export default function CartCard({ product, isEn }) {
                 <button
                   onClick={handleIncrement}
                   className="transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={isUpdating || isProductOutOfStock}
+                  disabled={isUpdating || isProductOutOfStock || isValidationFailed || (stock != null && quantity >= stock)}
                 >
                   <ChevronUp className="size-2.5 text-black" />
                 </button>
@@ -160,13 +161,18 @@ export default function CartCard({ product, isEn }) {
                 <button
                   onClick={handleDecrement}
                   className="transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={quantity <= 1 || isUpdating || isProductOutOfStock}
+                  disabled={quantity <= 1 || isUpdating || isProductOutOfStock || isValidationFailed}
                 >
                   <ChevronDown className="size-2.5 text-black" />
                 </button>
               </div>
             </div>
           </div>
+          {isQuantityExceedsStock && (
+            <Text as="div" size="text3" className="text-red-500 text-[10px] 2xl:text-[11px] font-normal mb-2 2xl:mb-4">
+              {isEn ? `Only ${stock} left in stock` : `متاح ${stock} فقط في المخزون`}
+            </Text>
+          )}
           <hr className="my-1 xl:mb-2 2xl:my-4" />
           <div className="flex justify-between gap-1">
             <Text as="div" size="text3" className="font-medium text-[#282828]">
