@@ -201,7 +201,8 @@
     "updating": "Updating...",
     "removing": "Removing...",
     "line_total": "Line Total",
-    "similiar_products": "Similiar Products"
+    "similiar_products": "Similiar Products",
+    "coupon_applies_to_items": "Coupon applied to {count} item(s) in your order"
   },
   "checkout": {
     "title": "Checkout",

@@ -174,7 +174,8 @@
     "updating": "جارٍ التحديث...",
     "removing": "جارٍ الإزالة...",
     "line_total": "إجمالي السطر",
-    "similiar_products": "منتجات مشابهة"
+    "similiar_products": "منتجات مشابهة",
+    "coupon_applies_to_items": "تم تطبيق القسيمة على {count} منتج(ات) في طلبك"
   },
   "common": {
     "home": "الرئيسية",

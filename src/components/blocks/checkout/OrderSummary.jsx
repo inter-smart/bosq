@@ -80,6 +80,7 @@ const OrderSummary = ({
   const [discountTotal, setDiscountTotal] = useState(initialDiscountTotal ?? "0.00");
   const [couponDiscountType, setCouponDiscountType] = useState(initialCouponDiscountType ?? null);
   const [couponDiscountValue, setCouponDiscountValue] = useState(initialCouponDiscountValue ?? null);
+  const [couponScopeType, setCouponScopeType] = useState(null);
 
   // Sync local state when server props update (e.g. after login → cart merge → navigation)
   useEffect(() => {
@@ -140,8 +141,26 @@ const OrderSummary = ({
     if (data.discount_total !== undefined) setDiscountTotal(data.discount_total);
     // if (data.coupon_discount_type !== undefined) setCouponDiscountType(data.coupon_discount_type);
     if (data.coupon_discount_value !== undefined) setCouponDiscountValue(data.coupon_discount_value);
+    if (data.coupon_scope_type !== undefined) setCouponScopeType(data.coupon_scope_type);
     // if (data.item_count !== undefined) setItemsCount(data.item_count);
     // if (data.items) setTotalItems(data.items.length);
+
+    // Patch per-item discount amounts for scoped coupons (in-memory only, no DB write)
+    if (data.item_discounts && Array.isArray(data.item_discounts)) {
+      setProducts((prev) =>
+        prev.map((item) => {
+          const d = data.item_discounts.find((x) => x.id === item.id);
+          return d ? { ...item, discount_amount: d.amount.toFixed(2) } : item;
+        })
+      );
+    }
+
+    // Reset per-item discounts and scope when coupon is removed
+    if (!data.applied_coupon_code) {
+      setCouponScopeType(null);
+      setProducts((prev) => prev.map((item) => ({ ...item, discount_amount: "0.00" })));
+    }
+
     setAppliedCoupon(data.applied_coupon_code || null);
   };
 
@@ -332,6 +351,18 @@ const OrderSummary = ({
                 checkoutList ? "h-auto block" : "h-0 hidden",
               )}
             >
+              {appliedCoupon && couponScopeType && couponScopeType !== "common" && (() => {
+                const discountedCount = products?.filter((item) => parseFloat(item.discount_amount) > 0).length ?? 0;
+                if (discountedCount === 0) return null;
+                return (
+                  <div className="flex items-center gap-1 bg-green-50 border border-green-200 rounded px-1.5 py-1 mb-1">
+                    <span className="text-[8px] 2xl:text-[10px] text-green-600 leading-none">✓</span>
+                    <span className="text-[8px] 2xl:text-[10px] font-light text-green-700 leading-snug">
+                      {t("coupon_applies_to_items", { count: discountedCount })}
+                    </span>
+                  </div>
+                );
+              })()}
               {products?.map((item, index) => (
                 <div key={"checkout-item-" + index} className="group w-full py-0.5">
                   <div className="w-full flex flex-wrap items-center">
