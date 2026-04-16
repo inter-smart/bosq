@@ -539,7 +539,7 @@ export default async function OrdersPage({ params, searchParams }) {
   const orders = data?.orders;
   const pagination = data?.pagination;
 
-  console.log("Orders data:", data?.orders[0]?.items);
+  console.log("Orders data:", data?.orders[0]);
 
   if (!data || error) {
     return <NotFound />;
