@@ -319,10 +319,24 @@ export default function OrdersDetailModal({ children, order, locale }) {
                           </span>
                         </Text>
                       </div>
-                      <div>
-                        <Text as="div" size="text3" className="font-normal text-[#282828] mt-0.5">
-                          AED {item?.line_total}{" "}
-                        </Text>
+                      <div className="text-end">
+                        {item?.is_coupon_applied ? (
+                          <>
+                            <Text as="div" size="text3" className="font-normal text-[#bbbcbc] line-through mt-0.5">
+                              AED {item?.line_total}
+                            </Text>
+                            <Text as="div" size="text3" className="font-normal text-[#282828]">
+                              AED {item?.final_amount}
+                            </Text>
+                            <Text as="div" size="text3" className="text-green-600 font-medium">
+                              -AED {item?.discount_amount}
+                            </Text>
+                          </>
+                        ) : (
+                          <Text as="div" size="text3" className="font-normal text-[#282828] mt-0.5">
+                            AED {item?.line_total}
+                          </Text>
+                        )}
                       </div>
                     </div>
                     <hr className="mt-1.5 my-2" />

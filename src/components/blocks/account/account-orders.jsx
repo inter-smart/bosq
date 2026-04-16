@@ -153,8 +153,23 @@ export default function AccountOrders({ locale, orders: initialOrders, paginatio
                           {orderItem?.quantity}
                         </Text>
                         <Text as="div" size="text3" className="font-normal text-[#282828] mt-2 xl:mt-3">
-                          {tCommon("aed")} {orderItem?.line_total}{" "}
-                          <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc]">{tCommon("inc_tax")}</span>
+                          {orderItem?.is_coupon_applied ? (
+                            <>
+                              <span className="line-through text-[#bbbcbc] me-1">
+                                {tCommon("aed")} {orderItem?.line_total}
+                              </span>
+                              {tCommon("aed")} {orderItem?.final_amount}{" "}
+                              <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc]">{tCommon("inc_tax")}</span>
+                              <span className="block text-[10px] 2xl:text-xs text-green-600 font-medium">
+                                -{tCommon("aed")} {orderItem?.discount_amount}
+                              </span>
+                            </>
+                          ) : (
+                            <>
+                              {tCommon("aed")} {orderItem?.line_total}{" "}
+                              <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc]">{tCommon("inc_tax")}</span>
+                            </>
+                          )}
                         </Text>
                       </div>
 
