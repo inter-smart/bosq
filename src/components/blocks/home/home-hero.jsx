@@ -116,9 +116,8 @@ export default function HomeHero({ data, locale }) {
     [
       Autoplay({ delay: 6000, stopOnInteraction: true, pauseOnHover: true }),
       Fade(),
-    ]
+    ],
   );
-
 
   const {
     prevBtnDisabled,
@@ -140,7 +139,7 @@ export default function HomeHero({ data, locale }) {
                 <div
                   className={cn(
                     "w-full h-full from-transparent to-black/40 absolute -z-1 inset-0 ",
-                    !isEn ? "bg-linear-to-r" : "bg-linear-to-l"
+                    !isEn ? "bg-linear-to-r" : "bg-linear-to-l",
                   )}
                 />
                 {item?.media_type === "video" ? (
@@ -151,13 +150,26 @@ export default function HomeHero({ data, locale }) {
                     playsInline
                     className="w-full h-full object-cover absolute -z-2 inset-0"
                   >
-                    <source src={isEn ? item?.media?.desktop?.path: item?.media?.desktop?.path_ar} type="video/mp4" />
+                    <source
+                      src={
+                        isEn
+                          ? item?.media?.desktop?.path
+                          : item?.media?.desktop?.path_ar
+                      }
+                      type="video/mp4"
+                    />
                   </video>
-                ) : (item?.media?.mobile?.path || item?.media?.mobile?.path) ? (
+                ) : item?.media?.mobile?.path ||
+                  item?.media?.mobile?.path_ar ? (
                   <>
                     <div className="absolute -z-2 inset-0 sm:hidden">
                       <Image
-                        src={isEn ? item.media.mobile.path: item.media.mobile.path_ar}
+                        src={
+                          (isEn
+                            ? item?.media?.mobile?.path
+                            : item?.media?.mobile?.path_ar) ||
+                          "/images/placeholder.png"
+                        }
                         alt={!isEn ? item?.media_alt_ar : item?.media_alt}
                         fill
                         sizes="100vw"
@@ -168,7 +180,12 @@ export default function HomeHero({ data, locale }) {
                     </div>
                     <div className="absolute -z-2 inset-0 max-sm:hidden">
                       <Image
-                        src={isEn ? item?.media?.desktop?.path: item?.media?.desktop?.path_ar}
+                        src={
+                          (isEn
+                            ? item?.media?.desktop?.path
+                            : item?.media?.desktop?.path_ar) ||
+                          "/images/placeholder.png"
+                        }
                         alt={!isEn ? item?.media_alt_ar : item?.media_alt}
                         fill
                         sizes="(max-width: 1200px) 100vw, 80vw"
@@ -181,7 +198,12 @@ export default function HomeHero({ data, locale }) {
                 ) : (
                   <div className="absolute -z-2 inset-0">
                     <Image
-                      src={item?.media?.desktop?.path}
+                      src={
+                        (isEn
+                          ? item?.media?.desktop?.path
+                          : item?.media?.desktop?.path_ar) ||
+                        "/images/placeholder.png"
+                      }
                       alt={!isEn ? item?.media_alt_ar : item?.media_alt}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 80vw"
@@ -206,7 +228,7 @@ export default function HomeHero({ data, locale }) {
                             "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
                             !isEn
                               ? "-translate-x-1 xl:-translate-x-2 "
-                              : "translate-x-1 xl:translate-x-2 "
+                              : "translate-x-1 xl:translate-x-2 ",
                           )}
                         />
                       </Heading>
@@ -216,9 +238,7 @@ export default function HomeHero({ data, locale }) {
                         className="line-clamp-2 font-light text-white max-w-[80%] mb-4 xl:mb-7 2xl:mb-10"
                       >
                         {parse(
-                          !isEn
-                            ? item?.description_ar
-                            : item?.description
+                          !isEn ? item?.description_ar : item?.description,
                         )}
                       </Text>
                       <Button
@@ -227,9 +247,7 @@ export default function HomeHero({ data, locale }) {
                         asChild
                       >
                         <Link href={`/${locale}${item?.button?.link}`}>
-                          {!isEn
-                            ? item?.button?.label_ar
-                            : item?.button?.label}
+                          {!isEn ? item?.button?.label_ar : item?.button?.label}
                         </Link>
                       </Button>
                     </div>
@@ -240,7 +258,7 @@ export default function HomeHero({ data, locale }) {
           </div>
         </div>
 
-        { (data && data?.length > 1) && (
+        {data && data?.length > 1 && (
           <div>
             <PrevButton
               onClick={onPrevButtonClick}

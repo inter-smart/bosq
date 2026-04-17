@@ -77,8 +77,7 @@ export default function BlogList({ locale, data }) {
         {totalCount > 6 && (
           <div className="w-full flex flex-col sm:flex-row sm:justify-between items-center gap-4 mt-5 xl:mt-10 2xl:mt-16">
             <div className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-normal text-[#bbb]">
-              Showing {startItem}-{endItem} of{" "}
-              {totalCount} blogs
+              Showing {startItem}-{endItem} of {totalCount} blogs
             </div>
             {totalPages > 0 && (
               <div>
@@ -86,9 +85,14 @@ export default function BlogList({ locale, data }) {
                   <PaginationContent>
                     <PaginationItem>
                       <PaginationPrevious
-                        href={currentPage > 1 ? getPageHref(currentPage - 1) : undefined}
+                        href={
+                          currentPage > 1
+                            ? getPageHref(currentPage - 1)
+                            : undefined
+                        }
                         className={cn(
-                          currentPage === 1 && "pointer-events-none opacity-50"
+                          currentPage === 1 && "pointer-events-none opacity-50",
+                          locale === "ar" ? "rotate-180" : "",
                         )}
                       />
                     </PaginationItem>
@@ -108,9 +112,15 @@ export default function BlogList({ locale, data }) {
                     ))}
                     <PaginationItem>
                       <PaginationNext
-                        href={currentPage < totalPages ? getPageHref(currentPage + 1) : undefined}
+                        href={
+                          currentPage < totalPages
+                            ? getPageHref(currentPage + 1)
+                            : undefined
+                        }
                         className={cn(
-                          currentPage === totalPages && "pointer-events-none opacity-50"
+                          currentPage === totalPages &&
+                            "pointer-events-none opacity-50",
+                          locale === "ar" ? "rotate-180" : "",
                         )}
                       />
                     </PaginationItem>
