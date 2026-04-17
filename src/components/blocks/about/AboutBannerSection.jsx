@@ -40,9 +40,10 @@ export default function AboutBannerSection({ data, locale }) {
             autoPlay
             loop
             muted
+            fetchPriority="high"
             playsInline
             preload="auto"
-            poster={data?.media?.thumbnailPath}
+            poster={data?.media?.thumbnailPath ?? "/images/placeholder.jpg"}
             className="w-full h-full object-cover absolute -z-2 inset-0"
           >
             <source
