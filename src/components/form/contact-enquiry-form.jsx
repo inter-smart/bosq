@@ -97,11 +97,11 @@ export default function ContactEnquiryForm({ locale }) {
 
       if (!res.ok) {
         toast.error(isEN ? data?.message?.en : data?.message?.ar);
+      } else {
+        form.reset();
+        setSelectedCountry("ae");
+        toast.success(isEN ? data?.message?.en : data?.message?.ar);
       }
-      form.reset();
-
-      console.log(data);
-      toast.success(isEN ? data?.message?.en : data?.message?.ar);
     } catch (err) {
       console.error(err);
       toast.error(err);
