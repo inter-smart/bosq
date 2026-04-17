@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 
 const ITEMS_PER_PAGE = 6;
 
-export default function BlogList({ data }) {
+export default function BlogList({ data, locale }) {
   const [currentPage, setCurrentPage] = useState(1);
 
   // Access the blog array from data structure
@@ -110,7 +110,8 @@ export default function BlogList({ data }) {
                         }}
                         className={cn(
                           "cursor-pointer",
-                          currentPage === 1 && "pointer-events-none opacity-50"
+                          currentPage === 1 && "pointer-events-none opacity-50",
+                          locale === "ar" ? "rotate-180" : "",
                         )}
                       />
                     </PaginationItem>
@@ -141,7 +142,8 @@ export default function BlogList({ data }) {
                         className={cn(
                           "cursor-pointer",
                           currentPage === totalPages &&
-                            "pointer-events-none opacity-50"
+                            "pointer-events-none opacity-50",
+                          locale === "ar" ? "rotate-180" : "",
                         )}
                       />
                     </PaginationItem>

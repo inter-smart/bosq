@@ -15,21 +15,29 @@ import {
 export default function NewsSection({ data, locale }) {
   const [emblaRef, emblaApi] = useEmblaCarousel(
     {
-      loop: true,
-      axis: "x",
+      loop: false,
       align: "start",
+      slidesToScroll: data?.news_list?.length >= 3 ? 3 : 1,
       dragFree: false,
-      containScroll: false,
-      watchSlides: true,
+      // watchSlides: true,
+      containScroll: "trimSnaps",
       direction: locale === "ar" ? "rtl" : "ltr",
+      breakpoints: {
+        "(max-width: 1024px)": {
+          slidesToScroll: data?.news_list?.length >= 2 ? 2 : 1,
+        },
+        "(max-width: 640px)": { slidesToScroll: 1 },
+      },
     },
-    [
-      Autoplay({
-        delay: 2500,
-        stopOnInteraction: true,
-        stopOnMouseEnter: true,
-      }),
-    ],
+    data?.news_list?.length > 3
+      ? [
+          Autoplay({
+            delay: 2500,
+            stopOnInteraction: true,
+            stopOnMouseEnter: true,
+          }),
+        ]
+      : [],
   );
 
   const { selectedIndex, scrollSnaps, onDotButtonClick } =
@@ -89,7 +97,7 @@ export default function NewsSection({ data, locale }) {
                     />
                   </div>
                   <div className="w-full h-auto">
-                    <div className="[&_div]:text-[13px] lg:[&_div]:text-[14px] 2xl:[&_div]:text-[16px] 3xl:[&_div]:text-[18px] [&_div]:leading-[1.2] [&_div]:font-light [&_div]:text-[#B1B2B4] mb-2.5 2xl:mb-3.5 flex flex-wrap items-center gap-4">
+                    <div className="[&_div]:text-[10px] lg:[&_div]:text-[12px] 2xl:[&_div]:text-[14px] 3xl:[&_div]:text-[16px] [&_div]:leading-[1.2] [&_div]:font-light [&_div]:text-[#B1B2B4] mb-2.5 2xl:mb-3.5 flex flex-wrap items-center gap-2 2xl:gap-4">
                       <div
                         className={cn(
                           "relative z-0 before:content-[''] before:w-4.5 2xl:before:w-7 before:h-[2px] 2xl:before:h-[3px] before:my-auto before:bg-[#B1B2B4] before:absolute before:z-1",
@@ -113,8 +121,10 @@ export default function NewsSection({ data, locale }) {
                     </div>
                     <div
                       className={cn(
-                        "text-[14px] sm:text-[16px] lg:text-[20px] 2xl:text-[24px] 3xl:text-[30px] leading-[1.4] font-light text-[#282828]",
-                        locale === "ar" ? "xl:pr-7 2xl:pr-10" : "xl:pl-7 2xl:pl-10",
+                        "text-[14px] sm:text-[16px] lg:text-[18px] 2xl:text-[22px] 3xl:text-[28px] leading-[1.4] font-light text-[#282828]",
+                        locale === "ar"
+                          ? "xl:pr-7 2xl:pr-10"
+                          : "xl:pl-7 2xl:pl-10",
                       )}
                     >
                       {item?.title}
@@ -125,7 +135,7 @@ export default function NewsSection({ data, locale }) {
             ))}
           </div>
         </div>
-        <div className="flex justify-center mt-15 xl:mt-20 gap-2 2xl:gap-3">
+        <div className="flex justify-center mt-8 xl:mt-10 2xl:mt-15 gap-2 2xl:gap-3">
           {scrollSnaps.map((_, index) => (
             <DotButton
               key={index}
