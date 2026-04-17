@@ -14,6 +14,12 @@ const nextConfig = {
         port: "4000",
         pathname: "/**",
       },
+       {
+        protocol: "http",
+        hostname: "localhost",
+        port: "5000",
+        pathname: "/**",
+      },
       {
         protocol: "https",
         hostname: "crm.intersmarthosting.in",

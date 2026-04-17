@@ -161,7 +161,6 @@ const local_data = {
 export default async function OfficeChairsPage({ params }) {
   const resolvedParams = await params;
   const { slug, locale } = resolvedParams;
-  console.log("slug", slug)
   const response = await getOfficeChairsData(slug);
   const {data} = response?.data;
   console.log("data", data)
@@ -170,7 +169,7 @@ export default async function OfficeChairsPage({ params }) {
 
   return (
     <>
-      <LandingHero data={data?.heroData} locale={locale} />
+      <LandingHero data={data?.heroData} locale={locale} slug={slug} />
       {data?.listingData?.map((listing, index) => (
         <ChairsListing key={index} data={listing} locale={locale} />
       ))}
