@@ -8,7 +8,11 @@ import NotFound from "../../not-found";
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
   const locale = resolvedParams.locale;
-  const { title, description, keywords, twitter, openGraph, alternates, other } = await getMetaData("manageAddress", locale, "account/manage-address");
+  const { title, description, keywords, twitter, openGraph, alternates, other } = await getMetaData(
+    "manageAddress",
+    locale,
+    "account/manage-address",
+  );
 
   return {
     title,
@@ -30,10 +34,8 @@ const local_data = {
   address: {
     title: "Manage Address",
     title_ar: "إدارة العنوان",
-    description:
-      "<p>The following addresses will be used on the checkout page by default.</p>",
-      description_ar:
-      "<p>سيتم استخدام العناوين التالية في صفحة الدفع بشكل افتراضي.</p>",
+    description: "<p>The following addresses will be used on the checkout page by default.</p>",
+    description_ar: "<p>سيتم استخدام العناوين التالية في صفحة الدفع بشكل افتراضي.</p>",
 
     // Shipping information
     shippingAddress: [
@@ -82,23 +84,17 @@ export default async function ManageAddressPage({ params }) {
   const resolvedParams = await params;
   const { locale } = resolvedParams;
 
-
   const { data, error } = await ProfileData.getAddress();
 
   if (!data || error) {
-    return <NotFound />
+    return <NotFound />;
   }
 
-const slug = locale === "en" ? "my-profile" : locale === "ar" ? "ملفي-الشخصي" : "my-profile";
-
+  const slug = locale === "en" ? "my-profile" : locale === "ar" ? "ملفي-الشخصي" : "my-profile";
 
   return (
     <>
-      <ProductHero
-        locale={locale}
-        data={local_data?.heroData}
-        slug={slug}
-      />
+      <ProductHero locale={locale} data={local_data?.heroData} slug={slug} />
       <AccountLayout locale={locale}>
         <AccountAddress locale={locale} data={local_data?.address} addressData={data?.address} />
       </AccountLayout>

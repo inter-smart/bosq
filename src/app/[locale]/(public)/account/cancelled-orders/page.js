@@ -8,7 +8,11 @@ import NotFound from "../../not-found";
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
   const locale = resolvedParams.locale;
-  const { title, description, keywords, twitter, openGraph, alternates, other } = await getMetaData("cancelledOrders", locale, "account/cancelled-orders");
+  const { title, description, keywords, twitter, openGraph, alternates, other } = await getMetaData(
+    "cancelledOrders",
+    locale,
+    "account/cancelled-orders",
+  );
 
   return {
     title,
@@ -32,9 +36,8 @@ export default async function CancelledOrdersPage({ params }) {
 
   const { data, error } = await ProfileData.getOrders();
 
-
-    if (!data || error) {
-    return <NotFound />
+  if (!data || error) {
+    return <NotFound />;
   }
 
   const allOrders = data?.orders ?? [];
@@ -55,7 +58,7 @@ export default async function CancelledOrdersPage({ params }) {
           alt: item.variant?.title ?? "",
         },
         actions: { can_reorder: true },
-      }))
+      })),
     );
 
   const slug = locale === "en" ? "Cancelled Orders" : "الطلبات الملغاة";

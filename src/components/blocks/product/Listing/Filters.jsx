@@ -242,12 +242,23 @@ const ProductListFilters = ({ filterData, isEn }) => {
     (filterType, slug) => {
       const urlKey =
         filterType === "categories" ? "category" : filterType === "subCategories" ? "subcategory" : filterType === "sectors" ? "sector" : "price";
-      setQueryState((prev) => ({
-        [urlKey]: prev[urlKey].filter((item) => item !== slug),
-        page: 1,
-      }));
+
+      if (filterType === "categories") {
+        const parentId = slugMaps.categorySlugToId[slug];
+        const childSlugs = filterData?.categories?.filter((c) => c.parent_id === parentId).map((c) => slugMaps.categoryIdToSlug[c.id]).filter(Boolean) || [];
+        setQueryState((prev) => ({
+          category: prev.category.filter((item) => item !== slug),
+          subcategory: prev.subcategory.filter((s) => !childSlugs.includes(s)),
+          page: 1,
+        }));
+      } else {
+        setQueryState((prev) => ({
+          [urlKey]: prev[urlKey].filter((item) => item !== slug),
+          page: 1,
+        }));
+      }
     },
-    [setQueryState],
+    [setQueryState, slugMaps, filterData],
   );
 
   // Remove attribute filter from URL
@@ -432,14 +443,15 @@ const ProductListFilters = ({ filterData, isEn }) => {
                           </div>
                         </AccordionContent>
                       </AccordionItem>
-                      {tempFilters.categories.length > 0 &&
-                        filterData?.categories?.some((cat) => cat.parent_id !== null && tempFilters.categories.includes(cat.parent_id)) && (
+                      {(tempFilters.subCategories.length > 0 ||
+                        (tempFilters.categories.length > 0 &&
+                          filterData?.categories?.some((cat) => cat.parent_id !== null && tempFilters.categories.includes(cat.parent_id)))) && (
                           <AccordionItem value="item-2" className="py-2 sm:py-3">
                             <AccordionTrigger className={accordionTriggerStyle}>{isEn ? "Sub Categories" : "الاقسام الفرعية"}</AccordionTrigger>
                             <AccordionContent className="p-2">
                               <div className="flex flex-col gap-2 sm:gap-4">
                                 {filterData?.categories
-                                  ?.filter((cat) => cat.parent_id !== null && tempFilters.categories.includes(cat.parent_id))
+                                  ?.filter((cat) => cat.parent_id !== null && (tempFilters.categories.includes(cat.parent_id) || tempFilters.subCategories.includes(cat.id)))
                                   ?.map((subCat) => (
                                     <div key={subCat.id} className="flex items-center gap-2">
                                       <Checkbox
@@ -572,37 +584,43 @@ const ProductListFilters = ({ filterData, isEn }) => {
           </Sheet>
 
           <MediaQuery minWidth={640}>
-            {/* Active Filter Pills */}
-            {category.map((slug) => (
-              <FilterPill
-                key={`cat-${slug}`}
-                label={`${isEn ? "Category" : "فئة"}: ${getCategoryNameBySlug(slug) || slug}`}
-                onRemove={() => removeFilter("categories", slug)}
+            {/* Active Filter Pills — grouped by type */}
+            {category.length > 0 && (
+              <GroupedFilterPill
+                label={isEn ? "Category" : "فئة"}
+                items={category.map((slug) => ({ key: slug, displayName: getCategoryNameBySlug(slug) || slug, onRemove: () => removeFilter("categories", slug) }))}
               />
-            ))}
-            {subcategory.map((slug) => (
-              <FilterPill
-                key={`subcat-${slug}`}
-                label={`${isEn ? "Sub" : "فرعي"}: ${getSubcategoryNameBySlug(slug) || slug}`}
-                onRemove={() => removeFilter("subCategories", slug)}
+            )}
+            {subcategory.length > 0 && (
+              <GroupedFilterPill
+                label={isEn ? "Sub" : "فرعي"}
+                items={subcategory.map((slug) => ({ key: slug, displayName: getSubcategoryNameBySlug(slug) || slug, onRemove: () => removeFilter("subCategories", slug) }))}
               />
-            ))}
-            {sector.map((slug) => (
-              <FilterPill
-                key={`sector-${slug}`}
-                label={`${isEn ? "Sector" : "قطاع"}: ${getSectorNameBySlug(slug) || slug}`}
-                onRemove={() => removeFilter("sectors", slug)}
+            )}
+            {sector.length > 0 && (
+              <GroupedFilterPill
+                label={isEn ? "Sector" : "قطاع"}
+                items={sector.map((slug) => ({ key: slug, displayName: getSectorNameBySlug(slug) || slug, onRemove: () => removeFilter("sectors", slug) }))}
               />
-            ))}
-            {price.map((key) => (
-              <FilterPill key={`price-${key}`} label={getPriceRangeLabel(key)} onRemove={() => removeFilter("priceRanges", key)} />
-            ))}
-            {/* Attribute Filter Pills */}
-            {activeAttributeFilters.map(({ attrSlug, valSlug, attrName, valLabel }) => (
-              <FilterPill
-                key={`attr-${attrSlug}-${valSlug}`}
-                label={`${attrName}: ${valLabel}`}
-                onRemove={() => removeAttributeFilter(attrSlug, valSlug)}
+            )}
+            {price.length > 0 && (
+              <GroupedFilterPill
+                label={isEn ? "Price" : "السعر"}
+                items={price.map((key) => ({ key, displayName: getPriceRangeLabel(key), onRemove: () => removeFilter("priceRanges", key) }))}
+              />
+            )}
+            {/* Attribute Filter Pills — grouped per attribute */}
+            {Object.entries(
+              activeAttributeFilters.reduce((acc, f) => {
+                if (!acc[f.attrSlug]) acc[f.attrSlug] = { attrName: f.attrName, values: [] };
+                acc[f.attrSlug].values.push(f);
+                return acc;
+              }, {}),
+            ).map(([attrSlug, { attrName, values }]) => (
+              <GroupedFilterPill
+                key={`attr-${attrSlug}`}
+                label={attrName}
+                items={values.map(({ valSlug, valLabel }) => ({ key: valSlug, displayName: valLabel, onRemove: () => removeAttributeFilter(attrSlug, valSlug) }))}
               />
             ))}
             {/* Clear All Button */}
@@ -644,6 +662,22 @@ const ProductListFilters = ({ filterData, isEn }) => {
     </div>
   );
 };
+
+function GroupedFilterPill({ label, items }) {
+  return (
+    <div className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-none font-light text-[#282828] flex items-center bg-gray-100 rounded-full overflow-hidden">
+      <span className="px-2.5 py-1.5 font-medium border-r border-gray-300 shrink-0">{label}</span>
+      {items.map(({ key, displayName, onRemove }, i) => (
+        <span key={key} className={cn("flex items-center gap-x-1.5 px-2 py-1.5", i < items.length - 1 && "border-r border-gray-300")}>
+          <span>{displayName}</span>
+          <button onClick={onRemove} className="hover:scale-105 transition-transform duration-300" aria-label="Remove filter">
+            <X className="size-2 xl:size-3.5 text-gray-600" />
+          </button>
+        </span>
+      ))}
+    </div>
+  );
+}
 
 function FilterPill({ label, onRemove }) {
   return (

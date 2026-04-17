@@ -1,3 +1,4 @@
+import AccountGuard from "./account-guard";
 import AccountNav from "./account-nav";
 
 export default function AccountLayout({ locale, children }) {
@@ -10,7 +11,7 @@ export default function AccountLayout({ locale, children }) {
           </div>
 
           <div className="w-full sm:w-[calc(100%-200px)] xl:w-[calc(100%-240px)] 2xl:w-[calc(100%-268px)] 3xl:w-[calc(100%-330px)] max-sm:mb-2">
-            {children}
+            <AccountGuard>{children}</AccountGuard>
           </div>
         </div>
       </div>

@@ -39,8 +39,7 @@ const local_data = {
         id: 1,
         code: "OFFICE20",
         title: "20%",
-        description:
-          "Get 20% discount on all office chairs ( Min. order: AED 500 )",
+        description: "Get 20% discount on all office chairs ( Min. order: AED 500 )",
         discount_type: "percentage", // percentage | fixed
         discount_value: 20,
         min_order_amount: 500,
@@ -97,8 +96,7 @@ const local_data = {
         id: 3,
         code: "OFFICE40",
         title: "40%",
-        description:
-          "Get 20% discount on all office chairs ( Min. order: AED 1000 )",
+        description: "Get 20% discount on all office chairs ( Min. order: AED 1000 )",
         discount_type: "percentage", // percentage | fixed
         discount_value: 20,
         min_order_amount: 1000,
@@ -133,16 +131,12 @@ export default async function CouponsPage({ params }) {
   const { data, error } = await ProfileData.getCoupons();
 
   if (!data || error) {
-    return <NotFound />
+    return <NotFound />;
   }
 
   return (
     <>
-      <ProductHero
-        locale={locale}
-        data={local_data?.heroData}
-        slug={locale === "en" ? "My Profile" : "ملفي الشخصي"}
-      />
+      <ProductHero locale={locale} data={local_data?.heroData} slug={locale === "en" ? "My Profile" : "ملفي الشخصي"} />
 
       <AccountLayout locale={locale}>
         <AccountCoupons locale={locale} couponData={data?.coupons} />

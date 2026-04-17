@@ -51,7 +51,7 @@ export default async function ProfilePage({ params }) {
   const { data, error } = await ProfileData.getMyProfile();
 
   if (!data || error) {
-    return <NotFound />
+    return <NotFound />;
   }
 
   console.log("PROFILE DATA", data);
