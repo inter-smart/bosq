@@ -19,7 +19,7 @@ export default function ChairsListing({ data, locale = "en" }) {
   const description = isEn ? data?.description : data?.description_ar;
   const features = (isEn ? data?.features : data?.features_ar) || [];
   const ctaLabel = isEn ? data?.cta?.label : data?.cta?.label_ar;
-  const ctaHref = data?.cta?.href || "#";
+  const ctaHref = data?.cta?.href;
 
   console.log("ctaLabel", ctaLabel)
 
@@ -77,13 +77,15 @@ export default function ChairsListing({ data, locale = "en" }) {
               </div>
             )}
 
-              <Button
-                asChild
-                variant="black"
-                className="min-w-[120px] sm:min-w-[120px] xl:min-w-[145px] 2xl:min-w-[218px] mt-[15px] xl:mt-[20px] 2xl:mt-[35px]"
-              >
-                <Link href={ctaHref}>{ctaLabel}</Link>
-              </Button>
+              {ctaHref && (
+                <Button
+                  asChild
+                  variant="black"
+                  className="min-w-[120px] sm:min-w-[120px] xl:min-w-[145px] 2xl:min-w-[218px] mt-[15px] xl:mt-[20px] 2xl:mt-[35px]"
+                >
+                  <Link href={ctaHref}>{ctaLabel}</Link>
+                </Button>
+              )}
           </div>
 
           {/* RIGHT (empty for now) */}
