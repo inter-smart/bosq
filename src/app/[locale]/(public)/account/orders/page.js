@@ -1,6 +1,25 @@
 import AccountLayout from "@/components/blocks/account/account-layout";
 import AccountOrders from "@/components/blocks/account/account-orders";
 import ProductHero from "@/components/blocks/product/product-hero";
+import { getMetaData } from "@/lib/api/metaApi";
+import { ProfileData } from "@/lib/api/profile/profileApi";
+import NotFound from "../../not-found";
+
+export async function generateMetadata({ params }) {
+  const resolvedParams = await params;
+  const locale = resolvedParams.locale;
+  const { title, description, keywords, twitter, openGraph, alternates, other } = await getMetaData("orders", locale, "account/orders");
+
+  return {
+    title,
+    description,
+    keywords,
+    twitter,
+    openGraph,
+    alternates,
+    other,
+  };
+}
 
 const local_data = {
   heroData: {
@@ -44,10 +63,8 @@ const local_data = {
           slug: "orca-mid-back-ergonomic-office-chair",
           type: "configurable",
           name: "Orca Mid Back Ergonomic Office Chair Orca Mid Back Ergonomic Office Chair",
-          description:
-            "light grey Frisco fabric with aquaclean 2063 light grey Frisco fabric with aquaclean 2063",
-          designDescription:
-            "<p>Materialmatt ash grey lacquered <br/> Legmatt ash grey structure lacquered <br /> Item no3670FE040008A00</p>",
+          description: "light grey Frisco fabric with aquaclean 2063 light grey Frisco fabric with aquaclean 2063",
+          designDescription: "<p>Materialmatt ash grey lacquered <br/> Legmatt ash grey structure lacquered <br /> Item no3670FE040008A00</p>",
 
           weight: 1.5,
           total_weight: 3,
@@ -101,8 +118,7 @@ const local_data = {
           type: "configurable",
           name: "Orca Mid Back Ergonomic Office Chair",
           description: "dark blue Frisco fabric with aquaclean 2063",
-          designDescription:
-            "<p>Material: matt ash grey lacquered<br/>Leg: matt ash grey structure lacquered<br/>Item no: 3670FE040009B00</p>",
+          designDescription: "<p>Material: matt ash grey lacquered<br/>Leg: matt ash grey structure lacquered<br/>Item no: 3670FE040009B00</p>",
 
           weight: 1.5,
           total_weight: 3,
@@ -156,8 +172,7 @@ const local_data = {
           type: "configurable",
           name: "Orca Mid Back Ergonomic Office Chair",
           description: "dark blue Frisco fabric with aquaclean 2063",
-          designDescription:
-            "<p>Material: matt ash grey lacquered<br/>Leg: matt ash grey structure lacquered<br/>Item no: 3670FE040009B00</p>",
+          designDescription: "<p>Material: matt ash grey lacquered<br/>Leg: matt ash grey structure lacquered<br/>Item no: 3670FE040009B00</p>",
 
           weight: 1.5,
           total_weight: 3,
@@ -211,8 +226,7 @@ const local_data = {
           type: "configurable",
           name: "Orca Mid Back Ergonomic Office Chair",
           description: "dark blue Frisco fabric with aquaclean 2063",
-          designDescription:
-            "<p>Material: matt ash grey lacquered<br/>Leg: matt ash grey structure lacquered<br/>Item no: 3670FE040009B00</p>",
+          designDescription: "<p>Material: matt ash grey lacquered<br/>Leg: matt ash grey structure lacquered<br/>Item no: 3670FE040009B00</p>",
 
           weight: 1.5,
           total_weight: 3,
@@ -351,10 +365,8 @@ const local_data = {
           slug: "orca-mid-back-ergonomic-office-chair",
           type: "configurable",
           name: "Orca Mid Back Ergonomic Office Chair Orca Mid Back Ergonomic Office Chair",
-          description:
-            "light grey Frisco fabric with aquaclean 2063 light grey Frisco fabric with aquaclean 2063",
-          designDescription:
-            "<p>Materialmatt ash grey lacquered <br/> Legmatt ash grey structure lacquered <br /> Item no3670FE040008A00</p>",
+          description: "light grey Frisco fabric with aquaclean 2063 light grey Frisco fabric with aquaclean 2063",
+          designDescription: "<p>Materialmatt ash grey lacquered <br/> Legmatt ash grey structure lacquered <br /> Item no3670FE040008A00</p>",
 
           weight: 1.5,
           total_weight: 3,
@@ -408,8 +420,7 @@ const local_data = {
           type: "configurable",
           name: "Orca Mid Back Ergonomic Office Chair",
           description: "dark blue Frisco fabric with aquaclean 2063",
-          designDescription:
-            "<p>Material: matt ash grey lacquered<br/>Leg: matt ash grey structure lacquered<br/>Item no: 3670FE040009B00</p>",
+          designDescription: "<p>Material: matt ash grey lacquered<br/>Leg: matt ash grey structure lacquered<br/>Item no: 3670FE040009B00</p>",
 
           weight: 1.5,
           total_weight: 3,
@@ -516,18 +527,28 @@ const local_data = {
   ],
 };
 
-export default async function OrdersPage({ params }) {
+export default async function OrdersPage({ params, searchParams }) {
   const resolvedParams = await params;
+  const resolvedSearch = await searchParams;
   const { locale } = resolvedParams;
+  const page = parseInt(resolvedSearch?.page) || 1;
+
+  const { data, error } = await ProfileData.getOrders(page, 12);
+
+  const slug = locale === "en" ? "My Orders" : "طلباتي";
+  const orders = data?.orders;
+  const pagination = data?.pagination;
+
+  console.log("Orders data:", data?.orders[0]);
+
+  if (!data || error) {
+    return <NotFound />;
+  }
   return (
     <>
-      <ProductHero
-        locale={locale}
-        data={local_data?.heroData}
-        slug={"My Profile"}
-      />
+      <ProductHero locale={locale} data={local_data?.heroData} slug={slug} />
       <AccountLayout locale={locale}>
-        <AccountOrders locale={locale} data={local_data?.orders} />
+        <AccountOrders locale={locale} orders={orders} pagination={pagination} />
       </AccountLayout>
     </>
   );

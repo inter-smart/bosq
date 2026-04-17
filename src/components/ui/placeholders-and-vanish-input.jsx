@@ -5,19 +5,17 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Search } from "lucide-react";
 
-export function PlaceholdersAndVanishInput({
-  placeholders,
-  onChange,
-  onSubmit,
-  locale,
-  variant = "default",
-}) {
-  const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
+export function PlaceholdersAndVanishInput({ placeholders, placeholders_ar, onChange, onSubmit, locale, variant = "default" }) {
 
+  const isEN = locale === "en";
+
+  const activePlaceholders = locale === "ar" || locale !== "en" ? placeholders_ar || placeholders : placeholders;
+
+  const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
   const intervalRef = useRef(null);
   const startAnimation = () => {
     intervalRef.current = setInterval(() => {
-      setCurrentPlaceholder((prev) => (prev + 1) % placeholders.length);
+      setCurrentPlaceholder((prev) => (prev + 1) % activePlaceholders.length);
     }, 3000);
   };
   const handleVisibilityChange = () => {
@@ -39,7 +37,7 @@ export function PlaceholdersAndVanishInput({
       }
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [placeholders]);
+  }, [activePlaceholders]);
 
   const canvasRef = useRef(null);
   const newDataRef = useRef([]);
@@ -72,20 +70,11 @@ export function PlaceholdersAndVanishInput({
       let i = 4 * t * 800;
       for (let n = 0; n < 800; n++) {
         let e = i + 4 * n;
-        if (
-          pixelData[e] !== 0 &&
-          pixelData[e + 1] !== 0 &&
-          pixelData[e + 2] !== 0
-        ) {
+        if (pixelData[e] !== 0 && pixelData[e + 1] !== 0 && pixelData[e + 2] !== 0) {
           newData.push({
             x: n,
             y: t,
-            color: [
-              pixelData[e],
-              pixelData[e + 1],
-              pixelData[e + 2],
-              pixelData[e + 3],
-            ],
+            color: [pixelData[e], pixelData[e + 1], pixelData[e + 2], pixelData[e + 3]],
           });
         }
       }
@@ -160,26 +149,22 @@ export function PlaceholdersAndVanishInput({
 
     const value = inputRef.current?.value || "";
     if (value && inputRef.current) {
-      const maxX = newDataRef.current.reduce(
-        (prev, current) => (current.x > prev ? current.x : prev),
-        0
-      );
+      const maxX = newDataRef.current.reduce((prev, current) => (current.x > prev ? current.x : prev), 0);
       animate(maxX);
     }
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     vanishAndSubmit();
-    onSubmit && onSubmit(e);
+    onSubmit?.(e);
   };
+
   return (
     <form
       className={cn(
         "w-full relative max-w-full mx-auto bg-none border-b border-white dark:bg-zinc-800 h-7 2xl:h-8 overflow-hidden transition duration-200",
         value && "bg-none",
-        variant === "search" &&
-          "h-9 2xl:h-10 3xl:h-13 bg-white border border-[#e9e9e9]"
+        variant === "search" && "h-9 2xl:h-10 3xl:h-13 bg-white border border-[#e9e9e9]",
       )}
       onSubmit={handleSubmit}
     >
@@ -188,7 +173,7 @@ export function PlaceholdersAndVanishInput({
           "absolute pointer-events-none text-base transform scale-50 top-0 origin-top-left filter",
           !animating ? "opacity-0" : "opacity-100",
           locale === "ar" ? "right-0 pl-20" : "left-0 pr-20",
-          variant === "search" && "px-0"
+          variant === "search" && "px-0",
         )}
         ref={canvasRef}
       />
@@ -208,44 +193,25 @@ export function PlaceholdersAndVanishInput({
           animating && "text-transparent dark:text-transparent",
           locale === "ar" ? "pr-0 pl-20" : "pl-0 pr-20",
           variant === "search" && "text-black selection:bg-gray-500",
-          variant === "search" && (locale === "ar" ? "pr-3" : "pl-3")
+          variant === "search" && (locale === "ar" ? "pr-3" : "pl-3"),
         )}
       />
       <button
-        disabled={!value}
+        disabled={!value || variant === "search"}
         type="submit"
+        aria-label="submit"
         className={cn(
           "w-3.5 absolute top-1/2 z-50 -translate-y-1/2 rounded-full transition duration-200 flex items-center justify-center",
           locale === "ar" ? "left-0 rotate-180" : "right-0 rotate-0",
-          variant === "search" && (locale === "ar" ? "ml-3" : "mr-3")
+          variant === "search" && (locale === "ar" ? "ml-3" : "mr-3"),
         )}
       >
         {variant === "search" ? (
-          <Search
-            className={cn(
-              "size-3",
-              value ? "text-black" : "text-[#282828]",
-              locale === "ar" && "rotate-180"
-            )}
-          />
+          <Search className={cn("size-3", value ? "text-black" : "text-[#282828]", locale === "ar" && "rotate-180")} />
         ) : (
-          <motion.svg
-            width="18"
-            height="15"
-            viewBox="0 0 18 15"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M9.22363 0.749023L16.2614 6.96595L9.22363 13.4131"
-              stroke={value ? "#f17423" : "#999"}
-              strokeWidth="2"
-            />
-            <path
-              d="M0 7.02539H16.1188"
-              stroke={value ? "#f17423" : "#999"}
-              strokeWidth="2"
-            />
+          <motion.svg width="18" height="15" viewBox="0 0 18 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9.22363 0.749023L16.2614 6.96595L9.22363 13.4131" stroke={value ? "#f17423" : "#999"} strokeWidth="2" />
+            <path d="M0 7.02539H16.1188" stroke={value ? "#f17423" : "#999"} strokeWidth="2" />
           </motion.svg>
         )}
       </button>
@@ -272,10 +238,10 @@ export function PlaceholdersAndVanishInput({
               }}
               className={cn(
                 "text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[16px] leading-tight font-light text-white/50 dark:text-zinc-500 pl-0 text-start w-[calc(100%-2rem)] truncate",
-                variant === "search" && "text-black/50 px-3"
+                variant === "search" && "text-black/50 px-3",
               )}
             >
-              {placeholders[currentPlaceholder]}
+              {activePlaceholders[currentPlaceholder]}
             </motion.p>
           )}
         </AnimatePresence>

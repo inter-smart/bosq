@@ -18,6 +18,8 @@ export default function MobileHeaderNavigation({
   onNavigationClick,
   locale,
 }) {
+
+  const isEN = locale === "en";
   const [openMenu, setOpenMenu] = useState(null);
   const [openSubMenu, setOpenSubMenu] = useState(null);
 
@@ -48,7 +50,7 @@ export default function MobileHeaderNavigation({
                   isActive && "text-[#f17423]"
                 )}
               >
-                {item.name}
+                {isEN ? item?.name : item?.name_ar}
               </Link>
 
               {item.hasSubmenu && (
@@ -70,7 +72,7 @@ export default function MobileHeaderNavigation({
             {/* SUB MENU */}
             {item.hasSubmenu && isOpen && (
               <div className="pl-1 space-y-4">
-                {item.items?.map((subItem) => {
+                {item.items?.slice(0, 5).map((subItem) => {
                   const isSubOpen = openSubMenu === subItem.id;
                   const hasSubSub = subItem.items?.length > 0;
 
@@ -83,10 +85,10 @@ export default function MobileHeaderNavigation({
                             onClick={onNavigationClick}
                             className="text-[16px] text-black/80"
                           >
-                            {subItem.name}
+                            {isEN?subItem.name:subItem.name_ar}
                           </Link>
                         ) : (
-                          <span className="text-[16px]">{subItem.name}</span>
+                          <span className="text-[16px]">{isEN ? subItem.name : subItem.name_ar}</span>
                         )}
 
                         {hasSubSub && (
@@ -117,7 +119,7 @@ export default function MobileHeaderNavigation({
                                 pathname === subSubItem.slug && "text-[#f17423]"
                               )}
                             >
-                              {subSubItem.name}
+                              {isEN ? subSubItem.name : subSubItem.name_ar}
                             </Link>
                           ))}
                         </div>
@@ -125,6 +127,15 @@ export default function MobileHeaderNavigation({
                     </div>
                   );
                 })}
+                {item.items?.length > 5 && (
+                  <Link
+                    href={`/${locale}${item.slug}`}
+                    onClick={onNavigationClick}
+                    className="inline-block mt-2 text-[16px] font-medium text-[#f17423] hover:underline"
+                  >
+                    {isEN ? "View All" : "عرض الكل"}
+                  </Link>
+                )}
               </div>
             )}
           </motion.div>

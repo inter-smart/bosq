@@ -1,5 +1,6 @@
 "use client";
 
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
@@ -17,27 +18,40 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
-
-// Validation schema
-const formSchema = z
-  .object({
-    currentPassword: z.string().min(6, "Current password is required"),
-    newPassword: z
-      .string()
-      .min(8, "Password must be at least 8 characters")
-      .max(100, "Password cannot exceed 100 characters")
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-        "Password must contain at least one uppercase letter, one lowercase letter, and one number"
-      ),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.newPassword === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
+import { fetchFromAPIWithCredentials } from "@/lib/helper";
+import { useTranslations } from "next-intl";
+import { commonValidations } from "@/lib/validations";
+import { toast } from "sonner";
 
 export default function PasswordChangeForm({ locale }) {
+  const { executeRecaptcha } = useGoogleReCaptcha();
+  const t = useTranslations("account");
+
+  const isEn = locale === "en";
+  // Validation schema — defined inside component so messages are translated
+  const formSchema = z
+    .object({
+      currentPassword: commonValidations.password(),
+      newPassword: commonValidations.password(),
+      confirmPassword: z.string().min(1, t("confirm_password_required")),
+    })
+    .superRefine((data, ctx) => {
+      if (data.newPassword === data.currentPassword) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: t("password_same_as_current"),
+          path: ["newPassword"],
+        });
+      }
+      if (data.newPassword !== data.confirmPassword) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: t("password_mismatch"),
+          path: ["confirmPassword"],
+        });
+      }
+    });
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -55,51 +69,49 @@ export default function PasswordChangeForm({ locale }) {
 
   const onSubmit = async (values) => {
     setLoading(true);
-    setSuccess(null);
 
-    // Simulate API call for local testing
-    setTimeout(() => {
-      console.log("Password Change:", {
-        currentPassword: values.currentPassword,
-        newPassword: values.newPassword,
-      });
-      form.reset();
-      setSuccess("Password changed successfully!");
+    const recaptchaToken = await executeRecaptcha("change_password_form");
+    try {
+      const { error, message } = await fetchFromAPIWithCredentials(
+        "/api/frontend/profile/change-password",
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            recaptcha_token: recaptchaToken,
+            currentPassword: values.currentPassword,
+            newPassword: values.newPassword,
+          }),
+        },
+      );
+
+      if (error) {
+        toast.error(isEn ? message?.en : message?.ar);
+      }
+      else{
+        form.reset();
+        toast.success((isEn ? message?.en : message?.ar) || t("password_changed_successfully"));
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error(isEn ? err?.en : err?.ar );
+    } finally {
       setLoading(false);
-    }, 1000);
-
-    // TODO: Connect to API when ready
-    // try {
-    //   const res = await fetch("http://localhost:1337/api/auth/change-password", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({
-    //       currentPassword: values.currentPassword,
-    //       newPassword: values.newPassword,
-    //     }),
-    //   });
-    //   if (!res.ok) throw new Error("Failed to change password");
-    //   form.reset();
-    //   setSuccess("Password changed successfully!");
-    // } catch (err) {
-    //   console.error(err);
-    //   setSuccess("Current password is incorrect. Please try again.");
-    // }
-    // setLoading(false);
+    }
   };
 
   // Shared styles
   const labelStyle = cn(
-    "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-[#282828]"
+    "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-[#282828]",
   );
 
   const inputStyle = cn(
     "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1",
-    locale === "ar" ? "pl-10" : "pr-10"
+    locale === "ar" ? "pl-10" : "pr-10",
   );
   const toggleStyle = cn(
     "absolute top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700",
-    locale === "ar" ? "left-3" : "right-3"
+    locale === "ar" ? "left-3" : "right-3",
   );
 
   const errorStyle = cn("text-[#f17423]");
@@ -117,7 +129,8 @@ export default function PasswordChangeForm({ locale }) {
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                Current Password<span className={errorStyle}>*</span>
+                {t("current_password")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <div className="relative">
@@ -125,7 +138,7 @@ export default function PasswordChangeForm({ locale }) {
                     {...field}
                     type={showCurrentPassword ? "text" : "password"}
                     className={cn(inputStyle)}
-                    placeholder="Enter your current password"
+                    placeholder={t("enter_current_password")}
                   />
                   <button
                     type="button"
@@ -152,15 +165,20 @@ export default function PasswordChangeForm({ locale }) {
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                New Password<span className={errorStyle}>*</span>
+                {t("new_password")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      form.trigger("confirmPassword");
+                    }}
                     type={showNewPassword ? "text" : "password"}
                     className={cn(inputStyle)}
-                    placeholder="Choose a strong password"
+                    placeholder={t("new_password_placeholder")}
                   />
                   <button
                     type="button"
@@ -187,7 +205,8 @@ export default function PasswordChangeForm({ locale }) {
           render={({ field }) => (
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>
-                Confirm Password<span className={errorStyle}>*</span>
+                {t("confirm_new_password")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <div className="relative">
@@ -195,7 +214,7 @@ export default function PasswordChangeForm({ locale }) {
                     {...field}
                     type={showConfirmPassword ? "text" : "password"}
                     className={cn(inputStyle)}
-                    placeholder="Confirm your password"
+                    placeholder={t("confirm_password_placeholder")}
                   />
                   <button
                     type="button"
@@ -223,7 +242,7 @@ export default function PasswordChangeForm({ locale }) {
             disabled={loading}
             className="min-w-[120px] 2xl:min-w-40"
           >
-            {loading ? "Changing..." : "Change Password"}
+            {loading ? t("changing") : t("change_password")}
           </Button>
         </div>
 
@@ -232,9 +251,10 @@ export default function PasswordChangeForm({ locale }) {
           <p
             className={cn(
               "text-[10px] mt-1 w-full",
-              success.includes("successfully")
+              success === "Password changed successfully" ||
+                success?.toLowerCase().includes("success")
                 ? "text-green-600"
-                : "text-red-600"
+                : "text-red-600",
             )}
           >
             {success}

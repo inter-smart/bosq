@@ -8,6 +8,8 @@ import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 
 export default function JourneySection({ data, locale }) {
+  const isEn = locale === "en";
+
   const [emblaRef] = useEmblaCarousel(
     {
       loop: false,
@@ -37,7 +39,7 @@ export default function JourneySection({ data, locale }) {
                 size="heading1"
                 className="leading-tight text-[#282828] mb-3 sm:mb-5 lg:mb-6.5 2xl:mb-7.5 3xl:mb-10"
               >
-                {parse(data?.title)}
+                {parse(isEn ? data?.title : data?.title_ar)}
                 <span
                   className={cn(
                     "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
@@ -48,13 +50,13 @@ export default function JourneySection({ data, locale }) {
                 />
               </Heading>
               <Text as="div" size="text1" className="font-light text-[#282828]">
-                {parse(data?.description)}
+                {parse(isEn ? data?.description : data?.description_ar)}
               </Text>
             </div>
             <div
               ref={emblaRef}
               className={cn(
-                " overflow-hidden relative z-0 before:content-[''] before:w-8 2xl:before:w-10 before:h-50 2xl:before:h-59 before:bg-[url('/images/about-scale.svg')] before:bg-cover before:bg-no-repeat before:absolute before:z-1",
+                "overflow-hidden relative z-0 before:content-[''] before:w-8 2xl:before:w-10 before:h-50 2xl:before:h-59 before:bg-[url('/images/about-scale.svg')] before:bg-cover before:bg-no-repeat before:absolute before:z-1",
                 locale === "ar"
                   ? "pr-12 2xl:pr-15 before:inset-[0_0_0_auto]"
                   : "pl-12 2xl:pl-15 before:inset-[0_auto_0_0]",
@@ -62,13 +64,10 @@ export default function JourneySection({ data, locale }) {
             >
               <div className="h-51 2xl:h-60 select-none flex flex-col">
                 {data?.journey_list?.map((item) => (
-                  <div
-                    key={item?.id}
-                    className="flex-[0_0_8%] mb-7.5 2xl:mb-9 last:!mb-0"
-                  >
+                  <div key={item?.id} className="flex-[0_0_8%] mb-7.5 2xl:mb-9">
                     <div className="w-full h-full block">
                       <div className="text-[12px] sm:text-[13px] 2xl:text-[16px] 3xl:text-[18px] leading-[1] font-light text-[#282828] line-clamp-1">
-                        {item?.title}
+                        {isEn ? item?.title : item?.title_ar}
                       </div>
                     </div>
                   </div>
@@ -86,10 +85,11 @@ export default function JourneySection({ data, locale }) {
                   >
                     <Image
                       src={item?.media?.path}
-                      alt={item?.media?.alt}
+                      alt={isEn ? item?.media?.alt : item?.media?.alt_ar}
                       width={415}
                       height={280}
                       className="w-full h-full object-cover hover:scale-105 transition-all duration-400 ease-in-out"
+                      quality={90}
                     />
                   </div>
                 ))}
@@ -101,10 +101,11 @@ export default function JourneySection({ data, locale }) {
                 >
                   <Image
                     src={item?.media?.path}
-                    alt={item?.media?.alt}
+                    alt={isEn ? item?.media?.alt : item?.media?.alt_ar}
                     width={435}
                     height={580}
                     className="w-full h-full object-cover hover:scale-105 transition-all duration-400 ease-in-out"
+                    quality={90}
                   />
                 </div>
               ))}

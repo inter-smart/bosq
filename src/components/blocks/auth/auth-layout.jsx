@@ -4,7 +4,14 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { Text } from "@/components/utils/text";
 
-export default function AuthLayout({ locale, data, children }) {
+export default function AuthLayout({
+  locale,
+  data,
+  children,
+  isApiData = true,
+}) {
+  const isEn = locale === "en";
+
   return (
     <section className="w-full block relative z-0">
       <div
@@ -15,12 +22,19 @@ export default function AuthLayout({ locale, data, children }) {
       >
         <Image
           src={data?.media?.path}
-          alt={data?.media?.alt}
+          alt={
+            isApiData
+              ? isEn
+                ? data?.media?.alt
+                : data?.media?.alt_ar
+              : data?.media?.alt
+          }
           width={960}
           height={1000}
           className="w-full h-full block object-cover max-lg:opacity-60"
           placeholder="blur"
           blurDataURL="/images/placeholder.jpg"
+          quality={90}
         />
       </div>
       <div className="container">
@@ -37,7 +51,13 @@ export default function AuthLayout({ locale, data, children }) {
                 size="none"
                 className="text-[16px] sm:text-[18px] lg:text-[20px] xl:text-[26px] 2xl:text-[32px] 3xl:text-[40px] leading-normal tracking-tight font-light text-black mb-1 xl:mb-1.5 2xl:mb-2"
               >
-                {parse(data?.title)}
+                {parse(
+                  isApiData
+                    ? isEn
+                      ? data?.title
+                      : data?.title_ar
+                    : data?.title,
+                )}
                 <span
                   className={cn(
                     "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
@@ -47,13 +67,22 @@ export default function AuthLayout({ locale, data, children }) {
                   )}
                 />
               </Heading>
-              <Text
-                as="div"
-                size="text1"
-                className="line-clamp-4 font-light text-black mb-4 xl:mb-5 2xl:mb-7"
-              >
-                {parse(data?.description)}
-              </Text>
+
+              {(data?.description && data?.description_ar) && (
+                <Text
+                  as="div"
+                  size="text1"
+                  className="line-clamp-4 font-light text-black mb-4 xl:mb-5 2xl:mb-7"
+                >
+                  {parse(
+                    isApiData
+                      ? isEn
+                        ? data?.description
+                        : data?.description_ar
+                      : data?.description,
+                  )}
+                </Text>
+              )}
               {children}
             </div>
           </div>

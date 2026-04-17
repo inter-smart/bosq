@@ -2,15 +2,17 @@ import { Heading } from "@/components/utils/heading";
 import { Text } from "@/components/utils/text";
 import Image from "next/image";
 import React from "react";
-import parse from "html-react-parser";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
 import ContactEnquiryForm from "@/components/form/contact-enquiry-form";
+import parse from "html-react-parser";
 
 const ContactMap = dynamic(() => import("./contact-map"));
 
 export default function ContactInfo({ locale, data }) {
+  const isEn = locale === "en";
+
   return (
     <section className="w-full block py-[10px_30px] xl:py-[10px_60px] 2xl:py-[15px_100px] relative z-0">
       <div className="container">
@@ -22,14 +24,14 @@ export default function ContactInfo({ locale, data }) {
                 size="none"
                 className="text-[16px] sm:text-[18px] lg:text-[20px] xl:text-[26px] 2xl:text-[34px] 3xl:text-[40px] leading-tight font-light text-[#282828] mb-1.5 xl:mb-2.5 2xl:mb-4"
               >
-                {data?.formData?.title}
+                {isEn ? data?.formData?.title : data?.formData?.title_ar}
 
                 <span
                   className={cn(
                     "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
-                    locale === "ar"
+                    !isEn
                       ? "-translate-x-1 xl:-translate-x-2 "
-                      : "translate-x-1 xl:translate-x-2 "
+                      : "translate-x-1 xl:translate-x-2 ",
                   )}
                 />
               </Heading>
@@ -38,8 +40,11 @@ export default function ContactInfo({ locale, data }) {
                 size="text1"
                 className="leading-tight text-[#282828] mb-2 xl:mb-4 2xl:mb-6"
               >
-                {parse(data?.formData?.description)}
+                {isEn
+                  ? data?.formData?.description
+                  : data?.formData?.description_ar}
               </Text>
+
               <ContactEnquiryForm locale={locale} />
             </div>
           </div>
@@ -48,10 +53,11 @@ export default function ContactInfo({ locale, data }) {
               <div className="w-full aspect-576/348 overflow-hidden rounded-[4px] bg-white block mb-2 xl:mb-3 2xl:mb-5">
                 <Image
                   src={data?.media?.path}
-                  alt={data?.media?.alt}
+                  alt={isEn ? data?.media?.alt : data?.media?.alt_ar}
                   width={864}
                   height={522}
                   className="w-full h-full hover:scale-105 transition"
+                  quality={90}
                 />
               </div>
               <Heading
@@ -59,10 +65,10 @@ export default function ContactInfo({ locale, data }) {
                 size="none"
                 className="text-[14px] sm:text-[16px] lg:text-[18px] xl:text-[26px] 2xl:text-[30px] 3xl:text-[36px] leading-tight font-light text-[#282828] mb-2 xl:mb-4 2xl:mb-6"
               >
-                {data?.title}
+                {isEn ? data?.title : data?.title_ar}
               </Heading>
               <Text as="div" size="text1" className="text-[#282828]">
-                {parse(data?.description)}
+                {isEn ? parse(data?.description) : parse(data?.description_ar)}
               </Text>
             </div>
           </div>
@@ -80,11 +86,18 @@ export default function ContactInfo({ locale, data }) {
                     size="heading3"
                     className="font-normal capitalize text-[#282828] mb-1.5 xl:mb-2 2xl:mb-3"
                   >
-                    {item?.label}
+                    {isEn ? item?.label : item?.label_ar}
                   </Heading>
-                  {item?.value?.map((valueItem, idx) => {
+
+                  {(isEn
+                    ? item?.value
+                    : item?.value_ar?.length
+                      ? item.value_ar
+                      : item.value
+                  )?.map((valueItem, idx) => {
                     const isEmail = item?.type === "email";
                     const isPhone = item?.type === "phone";
+                    const isAddress = item?.type === "address";
 
                     if (isEmail) {
                       return (
@@ -140,10 +153,14 @@ export default function ContactInfo({ locale, data }) {
                     size="heading3"
                     className="font-normal capitalize text-[#282828] mb-2 xl:mb-3 2xl:mb-5"
                   >
-                    social media
+                    {isEn ? data?.socialMedia?.title : data?.socialMedia?.title_ar}
                   </Heading>
                   <div className="flex flex-wrap gap-x-2 xl:gap-x-3 2xl:gap-x-4">
-                    {data?.socialMedia?.map((item, idx) => {
+                    {data?.socialMedia?.list?.map((item, idx) => {
+                      const media = item?.media;
+
+                      if (!media?.icon) return null;
+
                       return (
                         <div key={"socialMedia" + idx}>
                           <a
@@ -152,11 +169,12 @@ export default function ContactInfo({ locale, data }) {
                             rel="noopener noreferrer"
                           >
                             <Image
-                              src={item?.icon}
-                              alt={item?.label}
+                              src={media.icon}
+                              alt={isEn ? media.label : media.label_ar}
                               width={12}
                               height={12}
                               className="w-3.5 aspect-square hover:scale-110 transition"
+                              quality={90}
                             />
                           </a>
                         </div>

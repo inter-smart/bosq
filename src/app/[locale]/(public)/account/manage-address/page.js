@@ -1,6 +1,25 @@
 import AccountAddress from "@/components/blocks/account/account-address";
 import AccountLayout from "@/components/blocks/account/account-layout";
 import ProductHero from "@/components/blocks/product/product-hero";
+import { getMetaData } from "@/lib/api/metaApi";
+import { ProfileData } from "@/lib/api/profile/profileApi";
+import NotFound from "../../not-found";
+
+export async function generateMetadata({ params }) {
+  const resolvedParams = await params;
+  const locale = resolvedParams.locale;
+  const { title, description, keywords, twitter, openGraph, alternates, other } = await getMetaData("manageAddress", locale, "account/manage-address");
+
+  return {
+    title,
+    description,
+    keywords,
+    twitter,
+    openGraph,
+    alternates,
+    other,
+  };
+}
 
 const local_data = {
   heroData: {
@@ -10,8 +29,11 @@ const local_data = {
 
   address: {
     title: "Manage Address",
+    title_ar: "إدارة العنوان",
     description:
       "<p>The following addresses will be used on the checkout page by default.</p>",
+      description_ar:
+      "<p>سيتم استخدام العناوين التالية في صفحة الدفع بشكل افتراضي.</p>",
 
     // Shipping information
     shippingAddress: [
@@ -59,15 +81,26 @@ const local_data = {
 export default async function ManageAddressPage({ params }) {
   const resolvedParams = await params;
   const { locale } = resolvedParams;
+
+
+  const { data, error } = await ProfileData.getAddress();
+
+  if (!data || error) {
+    return <NotFound />
+  }
+
+const slug = locale === "en" ? "my-profile" : locale === "ar" ? "ملفي-الشخصي" : "my-profile";
+
+
   return (
     <>
       <ProductHero
         locale={locale}
         data={local_data?.heroData}
-        slug={"My Profile"}
+        slug={slug}
       />
       <AccountLayout locale={locale}>
-        <AccountAddress locale={locale} data={local_data?.address} />
+        <AccountAddress locale={locale} data={local_data?.address} addressData={data?.address} />
       </AccountLayout>
     </>
   );

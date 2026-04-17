@@ -11,11 +11,12 @@ import {
 import { useState, useEffect } from "react";
 
 export default function TestimonialSection({ data, locale }) {
-  const [axis, setAxis] = useState("y");
-  useEffect(() => {
-    const handleResize = () => {
-      setAxis(window.innerWidth < 630 ? "x" : "y");
-    };
+    const isEn = locale === "en";
+    const [axis, setAxis] = useState("y");
+    useEffect(() => {
+        const handleResize = () => {
+            setAxis(window.innerWidth < 630 ? "x" : "y");
+        };
 
     handleResize();
     window.addEventListener("resize", handleResize);
@@ -53,7 +54,7 @@ export default function TestimonialSection({ data, locale }) {
                 locale === "ar" ? "ml-[50%] text-left" : "mr-[50%] text-right",
               )}
             >
-              {parse(data?.title)}
+              {parse(isEn? data?.title: data?.title_ar)}
               <span
                 className={cn(
                   "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
@@ -75,6 +76,7 @@ export default function TestimonialSection({ data, locale }) {
                 width={590}
                 height={610}
                 className="w-full h-full object-contain"
+                quality={90}
               />
             </div>
           </div>
@@ -88,7 +90,7 @@ export default function TestimonialSection({ data, locale }) {
             )}
           >
             <div className="h-full select-none flex sm:flex-col">
-              {data?.testimonial_list?.map((item) => (
+              {data?.list?.map((item) => (
                 <div
                   key={item?.id}
                   className="h-full flex-[0_0_100%] mb-5 flex flex-col justify-center"
@@ -101,13 +103,13 @@ export default function TestimonialSection({ data, locale }) {
                   >
                     <div className="w-full h-auto my-auto">
                       <div className="text-[13px] 2xl:text-[16px] 3xl:text-[18px] leading-[1.4] font-normal text-[#282828] mb-3 sm:mb-5 2xl:mb-7.5">
-                        {item?.title}
+                        {isEn? item?.title: item?.title_ar}
                       </div>
                       <div className="text-[11px] lg:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-[1.8] font-light text-[#282828] mb-3 sm:mb-5 2xl:mb-7.5">
-                        {item?.description}
+                        {isEn? item?.description: item?.description_ar}
                       </div>
                       <div className="text-[13px] 2xl:text-[16px] 3xl:text-[18px] leading-[1.4] font-normal text-[#282828]">
-                        {item?.designation}
+                        {isEn? item?.name: item?.name_ar}, {isEn? item?.designation: item?.designation_ar}
                       </div>
                     </div>
                   </div>

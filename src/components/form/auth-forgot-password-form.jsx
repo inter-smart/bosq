@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { z } from "zod";
 
 import {
@@ -22,54 +22,74 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
+import { commonValidations, setValidationTranslator } from "@/lib/validations";
+import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
-// Step 1: Email validation schema
-const emailSchema = z.object({
-  email: z.string().email("Invalid email address"),
-});
+export default function AuthForgotPasswordForm({ locale, setStep, step }) {
+  const t = useTranslations("auth.forgot_password");
 
-// Step 2: OTP validation schema
-const otpSchema = z.object({
-  otp: z
-    .string()
-    .length(6, "OTP must be exactly 6 digits")
-    .regex(/^\d+$/, "OTP must contain only numbers"),
-});
+  const tErrors = useTranslations("errors");
+  
+  
+        // ✅ inject translator (once per render is fine)
+    setValidationTranslator(tErrors);
 
-// Step 3: Password validation schema
-const passwordSchema = z
-  .object({
-    password: z
-      .string()
-      .min(8, "Password must be at least 8 characters")
-      .max(100, "Password cannot exceed 100 characters")
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-        "Password must contain at least one uppercase letter, one lowercase letter, and one number",
-      ),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
+  // Step 1: Email validation schema
+  const emailSchema = z.object({
+    email:commonValidations.email(),
   });
 
-// Shared styles
-const labelStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]",
-);
+  // Step 2: OTP validation schema
+  const otpSchema = z.object({
+    otp: commonValidations.otp(),
+  });
 
-const inputStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1",
-);
+  // Step 3: Password validation schema
+  const passwordSchema = z
+    .object({
+      password: commonValidations.password(),
+      confirmPassword: commonValidations.password(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t("error_match"),
+      path: ["confirmPassword"],
+    });
 
-const errorStyle = cn("text-[#f17423]");
+  // Shared styles
+  const labelStyle = cn(
+    "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]",
+  );
 
-export default function AuthForgotPasswordForm({ locale }) {
-  const [step, setStep] = useState(1); // 1: Email, 2: OTP, 3: Password
-  const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState("");
+  const inputStyle = cn(
+    "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1",
+  );
+
+  const errorStyle = cn("text-[#f17423]");
+
+  const {
+    forgotPassword,
+    verifyResetOtp,
+    resetPassword,
+    pendingEmail,
+    isAuthenticated,
+    isLoading,
+    clearAuthError,
+  } = useAuth();
+
+  const router = useRouter();
+
+  // Guard: if already logged in (e.g. browser back button), redirect to home
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.replace(`/${locale}`);
+    }
+  }, [isAuthenticated, locale, router]);
+
+  const isEN = locale === "en";
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -96,129 +116,44 @@ export default function AuthForgotPasswordForm({ locale }) {
 
   // Step 1: Submit email
   const onSubmitEmail = async (values) => {
-    setLoading(true);
-    setSuccess("");
+    clearAuthError();
 
-    // Simulate API call for local testing
-    setTimeout(() => {
-      console.log("Step 1 - Email:", values.email);
-      setEmail(values.email);
-      setSuccess("OTP sent to your email!");
-      setLoading(false);
+    const result = await forgotPassword(values.email);
 
-      setTimeout(() => {
-        setStep(2);
-        setSuccess("");
-      }, 1500);
-    }, 1000);
-
-    // TODO: Connect to API when ready
-    // try {
-    //   const res = await fetch("http://localhost:1337/api/auth/forgot-password", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({ email: values.email }),
-    //   });
-    //   if (!res.ok) throw new Error("Failed to send OTP");
-    //   setEmail(values.email);
-    //   setSuccess("OTP sent to your email!");
-    //   setTimeout(() => {
-    //     setStep(2);
-    //     setSuccess("");
-    //   }, 1500);
-    // } catch (err) {
-    //   console.error(err);
-    //   setSuccess("Email not found. Please try again.");
-    // }
-    // setLoading(false);
+    if (result.success) {
+      toast.success(t("success_send"));
+      setTimeout(() => { setStep(2); }, 1500);
+    } else {
+      toast.error(isEN ? result.error?.en : result.error?.ar || t("error_send"));
+    }
   };
 
   // Step 2: Verify OTP
   const onSubmitOtp = async (values) => {
-    setLoading(true);
-    setSuccess("");
+    clearAuthError();
 
-    // Simulate API call for local testing
-    setTimeout(() => {
-      console.log("Step 2 - OTP:", values.otp, "Email:", email);
+    const result = await verifyResetOtp(values.otp, pendingEmail);
 
-      // Accept any 6-digit OTP for testing
-      if (values.otp.length === 6) {
-        setSuccess("OTP verified successfully!");
-        setLoading(false);
-
-        setTimeout(() => {
-          setStep(3);
-          setSuccess("");
-        }, 1500);
-      } else {
-        setSuccess("Invalid OTP. Please try again.");
-        setLoading(false);
-      }
-    }, 1000);
-
-    // TODO: Connect to API when ready
-    // try {
-    //   const res = await fetch("http://localhost:1337/api/auth/verify-reset-otp", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({ email, otp: values.otp }),
-    //   });
-    //   if (!res.ok) throw new Error("Invalid OTP");
-    //   setSuccess("OTP verified successfully!");
-    //   setTimeout(() => {
-    //     setStep(3);
-    //     setSuccess("");
-    //   }, 1500);
-    // } catch (err) {
-    //   console.error(err);
-    //   setSuccess("Invalid OTP. Please try again.");
-    // }
-    // setLoading(false);
+    if (result.success) {
+      toast.success(t("success_verify"));
+      setTimeout(() => { setStep(3); }, 1500);
+    } else {
+      toast.error(isEN ? result.error?.en : result.error?.ar || t("error_verify"));
+    }
   };
 
   // Step 3: Reset password
   const onSubmitPassword = async (values) => {
-    setLoading(true);
-    setSuccess("");
+    clearAuthError();
 
-    // Simulate API call for local testing
-    setTimeout(() => {
-      console.log("Step 3 - Password Reset:", {
-        email,
-        password: values.password,
-      });
+    const result = await resetPassword(values.password);
 
-      setSuccess("Password reset successfully!");
-      setLoading(false);
-
-      // Simulate redirect to login after 2 seconds
-      setTimeout(() => {
-        console.log("Redirecting to /login...");
-        // Uncomment when ready: window.location.href = "/login";
-      }, 2000);
-    }, 1000);
-
-    // TODO: Connect to API when ready
-    // try {
-    //   const res = await fetch("http://localhost:1337/api/auth/reset-password", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({
-    //       email,
-    //       password: values.password,
-    //     }),
-    //   });
-    //   if (!res.ok) throw new Error("Failed to reset password");
-    //   setSuccess("Password reset successfully!");
-    //   setTimeout(() => {
-    //     window.location.href = "/login";
-    //   }, 2000);
-    // } catch (err) {
-    //   console.error(err);
-    //   setSuccess("Something went wrong. Please try again.");
-    // }
-    // setLoading(false);
+    if (result.success) {
+      toast.success(t("success_reset"));
+      setTimeout(() => { window.location.href = `/${locale}/login`; }, 2000);
+    } else {
+      toast.error(isEN ? result.error?.en : result.error?.ar || t("error_reset"));
+    }
   };
 
   const toggleStyle = cn(
@@ -241,14 +176,14 @@ export default function AuthForgotPasswordForm({ locale }) {
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel className={labelStyle}>
-                    Email<span className={errorStyle}>*</span>
+                    {t("email_label")}<span className={errorStyle}>*</span>
                   </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       type="email"
                       className={inputStyle}
-                      placeholder="Enter your email"
+                      placeholder={t("email_placeholder")}
                     />
                   </FormControl>
                   <FormMessage className={errorStyle} />
@@ -260,23 +195,13 @@ export default function AuthForgotPasswordForm({ locale }) {
               <Button
                 type="submit"
                 variant="black"
-                disabled={loading}
+                disabled={isLoading}
                 className="w-full"
               >
-                {loading ? "Sending..." : "Send OTP"}
+                {isLoading ? t("loading_send") : t("submit_email")}
               </Button>
             </div>
 
-            {success && !loading && (
-              <p
-                className={cn(
-                  "text-[10px] mt-1 w-full",
-                  success.includes("sent") ? "text-green-600" : "text-red-600",
-                )}
-              >
-                {success}
-              </p>
-            )}
           </form>
         </Form>
       )}
@@ -294,11 +219,11 @@ export default function AuthForgotPasswordForm({ locale }) {
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel className={labelStyle}>
-                    Enter OTP<span className={errorStyle}>*</span>
+                    {t("otp_label")}<span className={errorStyle}>*</span>
                   </FormLabel>
                   <FormControl>
                     <InputOTP
-                      maxLength={6}
+                      maxLength={4}
                       value={field.value}
                       onChange={field.onChange}
                     >
@@ -314,12 +239,6 @@ export default function AuthForgotPasswordForm({ locale }) {
                       <InputOTPGroup>
                         <InputOTPSlot index={3} />
                       </InputOTPGroup>
-                      <InputOTPGroup>
-                        <InputOTPSlot index={4} />
-                      </InputOTPGroup>
-                      <InputOTPGroup>
-                        <InputOTPSlot index={5} />
-                      </InputOTPGroup>
                     </InputOTP>
                   </FormControl>
                   <FormMessage className={errorStyle} />
@@ -331,25 +250,13 @@ export default function AuthForgotPasswordForm({ locale }) {
               <Button
                 type="submit"
                 variant="black"
-                disabled={loading}
+                disabled={isLoading}
                 className="w-full"
               >
-                {loading ? "Verifying..." : "Verify OTP"}
+                {isLoading ? t("loading_verify") : t("submit_otp")}
               </Button>
             </div>
 
-            {success && !loading && (
-              <p
-                className={cn(
-                  "text-[10px] mt-1 w-full",
-                  success.includes("verified")
-                    ? "text-green-600"
-                    : "text-red-600",
-                )}
-              >
-                {success}
-              </p>
-            )}
           </form>
         </Form>
       )}
@@ -367,7 +274,7 @@ export default function AuthForgotPasswordForm({ locale }) {
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel className={labelStyle}>
-                    New Password<span className={errorStyle}>*</span>
+                    {t("password_label")}<span className={errorStyle}>*</span>
                   </FormLabel>
                   <FormControl>
                     <div className="relative">
@@ -378,7 +285,7 @@ export default function AuthForgotPasswordForm({ locale }) {
                           inputStyle,
                           locale === "ar" ? "pl-10" : "pr-10",
                         )}
-                        placeholder="Choose a strong password"
+                        placeholder={t("password_placeholder")}
                       />
                       <button
                         type="button"
@@ -404,7 +311,7 @@ export default function AuthForgotPasswordForm({ locale }) {
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel className={labelStyle}>
-                    Confirm Password<span className={errorStyle}>*</span>
+                    {t("confirm_password_label")}<span className={errorStyle}>*</span>
                   </FormLabel>
                   <FormControl>
                     <div className="relative">
@@ -415,7 +322,7 @@ export default function AuthForgotPasswordForm({ locale }) {
                           inputStyle,
                           locale === "ar" ? "pl-10" : "pr-10",
                         )}
-                        placeholder="Confirm your password"
+                        placeholder={t("confirm_password_placeholder")}
                       />
                       <button
                         type="button"
@@ -441,25 +348,13 @@ export default function AuthForgotPasswordForm({ locale }) {
               <Button
                 type="submit"
                 variant="black"
-                disabled={loading}
+                disabled={isLoading}
                 className="w-full"
               >
-                {loading ? "Resetting..." : "Reset Password"}
+                {isLoading ? t("loading_reset") : t("submit_password")}
               </Button>
             </div>
 
-            {success && !loading && (
-              <p
-                className={cn(
-                  "text-[10px] mt-1 w-full",
-                  success.includes("successfully")
-                    ? "text-green-600"
-                    : "text-red-600",
-                )}
-              >
-                {success}
-              </p>
-            )}
           </form>
         </Form>
       )}

@@ -110,13 +110,15 @@ const buttonContainerVariants = {
 };
 
 export default function HomeHero({ data, locale }) {
+  const isEn = locale === "en";
   const [emblaRef, emblaApi] = useEmblaCarousel(
-    { loop: false, direction: locale === "ar" ? "rtl" : "ltr" },
+    { loop: false, direction: !isEn ? "rtl" : "ltr" },
     [
       Autoplay({ delay: 6000, stopOnInteraction: true, pauseOnHover: true }),
       Fade(),
     ]
   );
+
 
   const {
     prevBtnDisabled,
@@ -138,7 +140,7 @@ export default function HomeHero({ data, locale }) {
                 <div
                   className={cn(
                     "w-full h-full from-transparent to-black/40 absolute -z-1 inset-0 ",
-                    locale === "ar" ? "bg-linear-to-r" : "bg-linear-to-l"
+                    !isEn ? "bg-linear-to-r" : "bg-linear-to-l"
                   )}
                 />
                 {item?.media_type === "video" ? (
@@ -149,27 +151,45 @@ export default function HomeHero({ data, locale }) {
                     playsInline
                     className="w-full h-full object-cover absolute -z-2 inset-0"
                   >
-                    <source src={item?.media?.desktop?.path} type="video/mp4" />
+                    <source src={isEn ? item?.media?.desktop?.path: item?.media?.desktop?.path_ar} type="video/mp4" />
                   </video>
+                ) : (item?.media?.mobile?.path || item?.media?.mobile?.path) ? (
+                  <>
+                    <div className="absolute -z-2 inset-0 sm:hidden">
+                      <Image
+                        src={isEn ? item.media.mobile.path: item.media.mobile.path_ar}
+                        alt={!isEn ? item?.media_alt_ar : item?.media_alt}
+                        fill
+                        sizes="100vw"
+                        className="object-cover"
+                        priority={index === 0}
+                        quality={90}
+                      />
+                    </div>
+                    <div className="absolute -z-2 inset-0 max-sm:hidden">
+                      <Image
+                        src={isEn ? item?.media?.desktop?.path: item?.media?.desktop?.path_ar}
+                        alt={!isEn ? item?.media_alt_ar : item?.media_alt}
+                        fill
+                        sizes="(max-width: 1200px) 100vw, 80vw"
+                        className="object-cover"
+                        priority={index === 0}
+                        quality={90}
+                      />
+                    </div>
+                  </>
                 ) : (
-                  <picture className="absolute -z-2 inset-0">
-                    <source
-                      media="(max-width: 640px)"
-                      srcSet={item?.media?.mobile?.path}
-                    />
+                  <div className="absolute -z-2 inset-0">
                     <Image
                       src={item?.media?.desktop?.path}
-                      alt={
-                        locale === "ar" ? item?.media_alt_ar : item?.media_alt
-                      }
+                      alt={!isEn ? item?.media_alt_ar : item?.media_alt}
                       fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 80vw"
-                      className="-z-2 object-cover"
-                      placeholder="blur"
-                      blurDataURL="/images/placeholder.jpg"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 80vw"
+                      className="object-cover"
                       priority={index === 0}
+                      quality={90}
                     />
-                  </picture>
+                  </div>
                 )}
 
                 <div className="container">
@@ -180,11 +200,11 @@ export default function HomeHero({ data, locale }) {
                         size="heading1"
                         className="line-clamp-4 leading-tight text-white mb-2 xl:mb-4 2xl:mb-6"
                       >
-                        {parse(locale === "ar" ? item?.title_ar : item?.title)}
+                        {parse(!isEn ? item?.title_ar : item?.title)}
                         <span
                           className={cn(
                             "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
-                            locale === "ar"
+                            !isEn
                               ? "-translate-x-1 xl:-translate-x-2 "
                               : "translate-x-1 xl:translate-x-2 "
                           )}
@@ -196,7 +216,7 @@ export default function HomeHero({ data, locale }) {
                         className="line-clamp-2 font-light text-white max-w-[80%] mb-4 xl:mb-7 2xl:mb-10"
                       >
                         {parse(
-                          locale === "ar"
+                          !isEn
                             ? item?.description_ar
                             : item?.description
                         )}
@@ -206,8 +226,8 @@ export default function HomeHero({ data, locale }) {
                         className="min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-40"
                         asChild
                       >
-                        <Link href={item?.button?.link}>
-                          {locale === "ar"
+                        <Link href={`/${locale}${item?.button?.link}`}>
+                          {!isEn
                             ? item?.button?.label_ar
                             : item?.button?.label}
                         </Link>
@@ -219,30 +239,37 @@ export default function HomeHero({ data, locale }) {
             ))}
           </div>
         </div>
-        <PrevButton
-          onClick={onPrevButtonClick}
-          disabled={prevBtnDisabled}
-          className="w-[10px] xl:w-[12px] 2xl:w-[15px] absolute z-1 top-1/2 left-4 -translate-y-1/2 disabled:opacity-50 not-disabled:hover:scale-110"
-        >
-          <Image
-            src="/images/icon-embla-prev.svg"
-            alt="arrow prev"
-            width={16}
-            height={32}
-          />
-        </PrevButton>
-        <NextButton
-          onClick={onNextButtonClick}
-          disabled={nextBtnDisabled}
-          className="w-[10px] xl:w-[12px] 2xl:w-[15px] absolute z-1 top-1/2 right-4 -translate-y-1/2 disabled:opacity-50 not-disabled:hover:scale-110"
-        >
-          <Image
-            src="/images/icon-embla-next.svg"
-            alt="arrow next"
-            width={16}
-            height={32}
-          />
-        </NextButton>
+
+        { (data && data?.length > 1) && (
+          <div>
+            <PrevButton
+              onClick={onPrevButtonClick}
+              disabled={prevBtnDisabled}
+              className="w-[10px] xl:w-[12px] 2xl:w-[15px] absolute z-1 top-1/2 left-4 -translate-y-1/2 disabled:opacity-50 not-disabled:hover:scale-110"
+            >
+              <Image
+                src="/images/icon-embla-prev.svg"
+                alt="arrow prev"
+                width={16}
+                height={32}
+                quality={90}
+              />
+            </PrevButton>
+            <NextButton
+              onClick={onNextButtonClick}
+              disabled={nextBtnDisabled}
+              className="w-[10px] xl:w-[12px] 2xl:w-[15px] absolute z-1 top-1/2 right-4 -translate-y-1/2 disabled:opacity-50 not-disabled:hover:scale-110"
+            >
+              <Image
+                src="/images/icon-embla-next.svg"
+                alt="arrow next"
+                width={16}
+                height={32}
+                quality={90}
+              />
+            </NextButton>
+          </div>
+        )}
       </div>
     </section>
   );

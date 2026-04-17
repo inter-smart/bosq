@@ -7,6 +7,9 @@ import useEmblaCarousel from 'embla-carousel-react'
 import Autoplay from 'embla-carousel-autoplay';
 
 export default function ClinetSection({ data, locale }) {
+
+    const isEn = locale === "en";
+
     const [emblaRef] = useEmblaCarousel(
         {
             loop: true,
@@ -33,7 +36,7 @@ export default function ClinetSection({ data, locale }) {
                     size="heading1"
                     className="leading-tight text-[#282828] mb-3 lg:mb-5"
                 >
-                    {parse(data?.title)}
+                    {parse(isEn?data?.title: data?.title_ar)}
                     <span
                         className={cn(
                             "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
@@ -46,7 +49,7 @@ export default function ClinetSection({ data, locale }) {
                 <div ref={emblaRef}
                     className="overflow-hidden">
                     <div className="w-full h-full select-none flex">
-                        {data?.client_list?.reduce((acc, _, index, arr) => {
+                        {data?.list?.reduce((acc, _, index, arr) => {
                             if (index % 2 === 0) acc.push(arr.slice(index, index + 2))
                             return acc
                         }, [])
@@ -62,10 +65,11 @@ export default function ClinetSection({ data, locale }) {
                                                 <div className="w-20 sm:w-25 2xl:w-30 3xl:w-40 h-auto aspect-[200/80] m-auto overflow-hidden flex items-center justify-center">
                                                     <Image
                                                         src={item?.media?.path}
-                                                        alt={item?.media?.alt}
+                                                        alt={isEn? item?.media?.alt: item?.media?.alt_ar}
                                                         width={160}
                                                         height={70}
                                                         className="w-full h-full object-contain"
+                                                      quality={90}
                                                     />
                                                 </div>
                                             </div>

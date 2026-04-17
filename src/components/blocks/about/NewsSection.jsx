@@ -13,6 +13,9 @@ import {
 } from "@/components/utils/embla-carousel-dot-button";
 
 export default function NewsSection({ data, locale }) {
+  // const mockedList = Array.from({ length: 4 }, (_, i) => data?.list?.[i % data?.list.length]);
+  const mockedList = data?.list;
+
   const [emblaRef, emblaApi] = useEmblaCarousel(
     {
       loop: false,
@@ -43,7 +46,10 @@ export default function NewsSection({ data, locale }) {
   const { selectedIndex, scrollSnaps, onDotButtonClick } =
     useDotButton(emblaApi);
   return (
-    <section className="w-full h-auto py-10 sm:py-20 lg:py-25 2xl:py-30 3xl:py-38 block">
+    <section
+      id="news"
+      className="w-full h-auto py-10 sm:py-20 lg:py-25 2xl:py-30 3xl:py-38 block"
+    >
       <div className="container">
         <div className="mb-5 lg:mb-7 2xl:mb-10 flex items-center">
           <div className="w-1/2">
@@ -69,7 +75,7 @@ export default function NewsSection({ data, locale }) {
               className="min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-40 mb-0"
               asChild
             >
-              <Link href={"/"}>
+              <Link href={`/${locale}/news`}>
                 {locale == "ar" ? "قراءة المزيد" : "View All"}
               </Link>
             </Button>
@@ -77,13 +83,13 @@ export default function NewsSection({ data, locale }) {
         </div>
         <div ref={emblaRef} className="overflow-hidden">
           <div className="select-none flex">
-            {data?.news_list?.map((item) => (
+            {mockedList.map((item) => (
               <div
                 key={item?.id}
                 className="flex-[0_0_100%] 3xs:flex-[0_0_46%] lg:flex-[0_0_28%] mr-5 sm:mr-15 lg:mr-20 xl:mr-23 2xl:mr-30 3xl:mr-35"
               >
                 <Link
-                  href={item?.lnik?.href || "/"}
+                  href={`/${locale}/news/${item?.slug}` || "/"}
                   target={item?.lnik?.target ? "_blank" : "_self"}
                   className="group w-full h-full block"
                 >
@@ -94,6 +100,7 @@ export default function NewsSection({ data, locale }) {
                       width={500}
                       height={440}
                       className="w-full h-full object-cover group-hover:scale-110 transition duration-300"
+                      quality={90}
                     />
                   </div>
                   <div className="w-full h-auto">
@@ -135,18 +142,20 @@ export default function NewsSection({ data, locale }) {
             ))}
           </div>
         </div>
-        <div className="flex justify-center mt-8 xl:mt-10 2xl:mt-15 gap-2 2xl:gap-3">
-          {scrollSnaps.map((_, index) => (
-            <DotButton
-              key={index}
-              onClick={() => onDotButtonClick(index)}
-              className={cn(
-                "w-2.25 2xl:w-3 h-2.25 2xl:h-3 bg-[#D9D9D9]",
-                index === selectedIndex && "bg-[#282828]",
-              )}
-            />
-          ))}
-        </div>
+        {mockedList.length > 3 && (
+          <div className="flex justify-center mt-15 xl:mt-20 gap-2 2xl:gap-3">
+            {scrollSnaps.map((_, index) => (
+              <DotButton
+                key={index}
+                onClick={() => onDotButtonClick(index)}
+                className={cn(
+                  "w-2.25 2xl:w-3 h-2.25 2xl:h-3 bg-[#D9D9D9]",
+                  index === selectedIndex && "bg-[#282828]",
+                )}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

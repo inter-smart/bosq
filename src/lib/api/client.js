@@ -1,22 +1,22 @@
-const API_URL = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-
-console.log(process.env.NEXT_PUBLIC_API_URL);
-console.log(process.env.API_URL);
+export const API_URL = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export async function apiClient(endpoint, options = {}) {
   const url = `${API_URL}${endpoint}`;
 
+  const { next, cache, ...restOptions } = options;
   const config = {
     headers: {
       "Content-Type": "application/json",
-      ...options.headers,
+      ...restOptions.headers,
     },
-    ...options,
+    ...restOptions,
+
+    ...(next && { next }),
+    ...(cache && { cache }),
   };
 
   try {
     const res = await fetch(url, config);
-
     if (!res.ok) {
       const error = await res.json().catch(() => ({ message: "Request failed" }));
       throw new Error(error.message || `HTTP ${res.status}`);
@@ -28,19 +28,3 @@ export async function apiClient(endpoint, options = {}) {
     throw error;
   }
 }
-
-export const sendSuccess = (data) => {
-  return {
-    success: true,
-    data,
-    error: null,
-  };
-};
-
-export const sendError = (error) => {
-  return {
-    success: false,
-    data: null,
-    error,
-  };
-};

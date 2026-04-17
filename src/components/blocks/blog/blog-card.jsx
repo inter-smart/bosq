@@ -3,34 +3,26 @@ import { Heading } from "../../utils/heading";
 import { Text } from "../../utils/text";
 import Link from "next/link";
 import { Suspense } from "react";
-
-import { Skeleton } from "../../ui/skeleton";
 import { format } from "date-fns";
 
-export default function BlogCard({ data }) {
-  let formattedDate = "";
+import { Skeleton } from "../../ui/skeleton";
 
-  if (data?.publishedAt) {
-    const date = new Date(data.publishedAt);
-
-    if (!isNaN(date)) {
-      formattedDate = format(date, "MMMM dd, yyyy");
-    }
-  }
+export default function BlogCard({ locale, data, isEn }) {
 
   return (
     <Suspense fallback={<CartCardSkeleton />}>
       <div className="group w-full h-full flex flex-col justify-between">
         <Link
-          href={data?.slug}
+          href={`/${locale}/blogs/${data?.slug}`}
           className="w-full block aspect-580/290 overflow-hidden border border-gray-100 mb-1.5 sm:mb-3 xl:mb-5"
         >
           <Image
             src={data?.media?.path || "/images/placeholder.jpg"}
-            alt={data?.media?.alt}
+            alt={isEn ? data?.media?.alt : data?.media?.alt_ar}
             width={583}
             height={290}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            quality={90}
           />
         </Link>
         <div className="w-full flex-1 flex flex-col justify-between">
@@ -39,14 +31,14 @@ export default function BlogCard({ data }) {
             size="heading4"
             className="tracking-tight line-clamp-2 text-[#282828] mb-1 xl:mb-2 hover:underline"
           >
-            <Link href={data?.slug}>{data?.title}</Link>
+            <Link href={`/${locale}/blogs/${data?.slug}`}>{isEn ? data?.title : data?.title_ar}</Link>
           </Heading>
           <Text
             as="div"
             size="text3"
             className="truncate text-[#b1b3b4] mb-1 xl:mb-2"
           >
-            {formattedDate}
+            {data?.publishedAt ?? null}
           </Text>
         </div>
       </div>

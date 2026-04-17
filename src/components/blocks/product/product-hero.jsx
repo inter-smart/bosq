@@ -1,3 +1,4 @@
+"use client";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,36 +10,87 @@ import {
 import parse from "html-react-parser";
 import { cn } from "@/lib/utils";
 import { Heading } from "@/components/utils/heading";
+import { useTranslations } from "next-intl";
 
-export default function ProductHero({ data, locale, slug }) {
+export default function ProductHero({ data, locale, slug, link, type = "", slugData }) {
+  const isEn = locale === "en";
+  const t = useTranslations();
+
   return (
     <section className="w-full pt-[calc(var(--header-y)_+_20px)] sm:pt-[calc(var(--header-y)_+_10px)] pb-1 sm:pb-2.5">
       <div className="container">
         <Breadcrumb className="mb-1 xl:mb-2">
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/">Home</BreadcrumbLink>
+              <BreadcrumbLink href={`/${locale}`}>
+                {t("common.home")}
+              </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator>/</BreadcrumbSeparator>
-            {/* <BreadcrumbItem>
-              <BreadcrumbLink href="/components">Components</BreadcrumbLink>
-            </BreadcrumbItem> */}
+            {type === "product" && (
+              <>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href={`/${locale}/products`}>
+                    {t("common.products")}
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator>/</BreadcrumbSeparator>
+              </>
+            )}
+             {type === "news" && (
+              <>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href={`/${locale}/news`}>
+                    {t("common.news")}
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator>/</BreadcrumbSeparator>
+              </>
+            )}
+             {type === "blog" && (
+              <>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href={`/${locale}/blogs`}>
+                    {t("common.blogs")}
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator>/</BreadcrumbSeparator>
+              </>
+            )}
+            {type === "project" && (
+              <>
+                <BreadcrumbItem>
+                  <BreadcrumbLink href={`/${locale}/projects`}>
+                    {slugData}
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator>/</BreadcrumbSeparator>
+              </>
+            )}
             {slug && (
               <BreadcrumbItem>
-                <BreadcrumbPage className={"capitalize"}>{slug}</BreadcrumbPage>
+                {link ? (
+                  <BreadcrumbLink href={`/${locale}${link}`}>
+                    {slug}
+                  </BreadcrumbLink>
+                ) : (
+                  <BreadcrumbPage className={"capitalize"}>
+                    {slug}
+                  </BreadcrumbPage>
+                )}
               </BreadcrumbItem>
             )}
           </BreadcrumbList>
         </Breadcrumb>
-        {data?.title && (
+        {(data?.title || data?.title_ar) && (
           <Heading as="h2" size="heading6" className="line-clamp-2 text-black">
-            {parse(data?.title)}
+            {parse(isEn ? data?.title : data?.title_ar || data?.title)}
             <span
               className={cn(
                 "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
                 locale === "ar"
                   ? "-translate-x-1 xl:-translate-x-2 "
-                  : "translate-x-1 xl:translate-x-2 "
+                  : "translate-x-1 xl:translate-x-2 ",
               )}
             />
           </Heading>
@@ -49,7 +101,7 @@ export default function ProductHero({ data, locale, slug }) {
             dir={locale === "ar" ? "rtl" : "ltr"}
             className={cn("typography", "[--text-color:#282828]")}
           >
-            {parse(data?.description)}
+            {parse(isEn ? data?.description : data?.description_ar)}
           </div>
         )}
       </div>

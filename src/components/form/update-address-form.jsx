@@ -2,99 +2,29 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { z } from "zod";
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { fetchFromAPIWithCredentials } from "@/lib/helper";
 
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 import { Heading } from "../utils/heading";
-
-// Validation schema
-const formSchema = z
-  .object({
-    fullName: z
-      .string()
-      .min(2, "Full name must be at least 2 characters")
-      .max(50, "Full name cannot exceed 50 characters"),
-    companyName: z.string().optional(),
-    email: z.string().email("Invalid email address"),
-    phone: z
-      .string()
-      .min(10, "Phone number is required")
-      .max(20, "Phone number is too long"),
-    region: z.string().min(1, "Please select a region"),
-    streetAddress: z.string().min(1, "Street address is required"),
-    apartment: z.string().optional(),
-    country: z.string().min(1, "Please select a country"),
-    orderNotes: z.string().optional(),
-    shipToDifferentAddress: z.boolean().default(false),
-    shippingFullName: z.string().optional(),
-    shippingCompanyName: z.string().optional(),
-    shippingRegion: z.string().optional(),
-    shippingStreetAddress: z.string().optional(),
-    shippingApartment: z.string().optional(),
-    shippingCountry: z.string().optional(),
-  })
-  .superRefine((data, ctx) => {
-    // Validate shipping fields only if checkbox is checked
-    if (data.shipToDifferentAddress) {
-      if (!data.shippingFullName || data.shippingFullName.length < 2) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Shipping name is required",
-          path: ["shippingFullName"],
-        });
-      }
-      if (!data.shippingRegion) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Shipping region is required",
-          path: ["shippingRegion"],
-        });
-      }
-      if (!data.shippingStreetAddress) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Shipping street address is required",
-          path: ["shippingStreetAddress"],
-        });
-      }
-      if (!data.shippingCountry) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Shipping country is required",
-          path: ["shippingCountry"],
-        });
-      }
-    }
-  });
+import { commonValidations, setValidationTranslator } from "@/lib/validations";
+import { useUpdateAddressMutation } from "@/store/services/addressApi";
+import { toast } from "sonner";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 // Shared styles
-const labelStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]",
-);
+const labelStyle = cn("text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]");
 
 const inputStyle = cn(
   "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] data-[size=default]:h-[35px] 2xl:data-[size=default]:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1",
@@ -102,71 +32,224 @@ const inputStyle = cn(
 
 const errorStyle = cn("text-[#f17423]");
 
-const textareaStyle = cn(
-  inputStyle,
-  "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none",
-);
+const textareaStyle = cn(inputStyle, "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none");
 
-export default function UpdateAddressForm({ locale }) {
+import { useTranslations } from "next-intl";
+
+export default function UpdateAddressForm({ locale, addressData, onSuccess, isFromCheckout=false, showShipToDifferent=false, editMode="billing" }) {
+  const t = useTranslations("form");
+  const { executeRecaptcha } = useGoogleReCaptcha();
+
+  const tErrors = useTranslations("errors");
+
+  // ✅ inject translator (once per render is fine)
+  setValidationTranslator(tErrors);
+
+  const formSchema = z
+    .object({
+      fullName: commonValidations.name(t("full_name")),
+      companyName: commonValidations.optionalString(),
+      email: commonValidations.email(),
+      phone: commonValidations.phone(),
+      country: z.string().min(1, t("country_required")),
+      streetAddress: z.string().min(1, t("street_address_required")),
+      apartment: commonValidations.optionalString(),
+      state: z.string().min(1, t("state_required")),
+      orderNotes: commonValidations.optionalString(),
+      shipToDifferentAddress: z.boolean().default(false),
+      shippingFullName: commonValidations.optionalString(),
+      shippingCompanyName: commonValidations.optionalString(),
+      shippingCountry: commonValidations.optionalString(),
+      shippingStreetAddress: commonValidations.optionalString(),
+      shippingApartment: commonValidations.optionalString(),
+      shippingState: commonValidations.optionalString(),
+    })
+    .superRefine((data, ctx) => {
+      // Validate shipping fields only if checkbox is checked
+      if (data.shipToDifferentAddress) {
+        if (!data.shippingFullName || data.shippingFullName.length < 2) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: t("shipping_name_required"),
+            path: ["shippingFullName"],
+          });
+        }
+        if (!data.shippingCountry) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: t("shipping_country_required"),
+            path: ["shippingCountry"],
+          });
+        }
+        if (!data.shippingState) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: t("shipping_state_required"),
+            path: ["shippingState"],
+          });
+        }
+        if (!data.shippingStreetAddress) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: t("shipping_street_address_required"),
+            path: ["shippingStreetAddress"],
+          });
+        }
+      }
+    });
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      fullName: "",
-      companyName: "",
-      email: "",
-      phone: "",
-      region: "",
-      streetAddress: "",
-      apartment: "",
-      country: "",
-      orderNotes: "",
-      shipToDifferentAddress: false,
-      shippingFullName: "",
-      shippingCompanyName: "",
-      shippingRegion: "",
-      shippingStreetAddress: "",
-      shippingApartment: "",
-      shippingCountry: "",
+      fullName: addressData?.fullName || "",
+      companyName: addressData?.companyName || "",
+      email: addressData?.email || "",
+      phone: addressData?.phone || "",
+      streetAddress: addressData?.streetAddress || "",
+      apartment: addressData?.apartment || "",
+      country: addressData?.country || "",
+      state: addressData?.state || "",
+      orderNotes: addressData?.orderNotes || "",
+      shipToDifferentAddress: addressData?.shipToDifferentAddress || false,
+      shippingFullName: addressData?.shippingFullName || "",
+      shippingCompanyName: addressData?.shippingCompanyName || "",
+      shippingCountry: addressData?.shippingCountry || "",
+      shippingState: addressData?.shippingState || "",
+      shippingStreetAddress: addressData?.shippingStreetAddress || "",
+      shippingApartment: addressData?.shippingApartment || "",
     },
   });
 
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(null);
+  const [updateAddress, { isLoading }] = useUpdateAddressMutation();
+
+  const [countries, setCountries] = useState([]);
+  const [states, setStates] = useState([]);
+  const [shippingStates, setShippingStates] = useState([]);
 
   const shipToDifferent = form.watch("shipToDifferentAddress");
+  const selectedCountry = form.watch("country");
+  const selectedShippingCountry = form.watch("shippingCountry");
 
-  const regions = ["United Arab Emirates", "Asia", "Europe", "North America"];
-  const countries = ["Dubai", "India", "United States", "United Kingdom"];
+  // Fetch countries on mount
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const { data } = await fetchFromAPIWithCredentials("/api/frontend/country");
+        if (data) {
+          setCountries(data);
+        }
+      } catch (error) {
+        console.error("Error fetching countries:", error);
+      }
+    };
+    fetchCountries();
+  }, []);
+
+  // Fetch states when country changes
+  useEffect(() => {
+    const fetchStates = async () => {
+      if (!selectedCountry) {
+        setStates([]);
+        return;
+      }
+      try {
+        const { data } = await fetchFromAPIWithCredentials(`/api/frontend/state?slug=${selectedCountry}`);
+        if (data) {
+          setStates(data);
+        }
+      } catch (error) {
+        console.error("Error fetching states:", error);
+      }
+    };
+    fetchStates();
+  }, [selectedCountry]);
+
+  // Fetch shipping states when shipping country changes
+  useEffect(() => {
+    const fetchShippingStates = async () => {
+      if (!selectedShippingCountry) {
+        setShippingStates([]);
+        return;
+      }
+      try {
+        const { data } = await fetchFromAPIWithCredentials(`/api/frontend/state?slug=${selectedShippingCountry}`);
+        if (data) {
+          setShippingStates(data);
+        }
+      } catch (error) {
+        console.error("Error fetching shipping states:", error);
+      }
+    };
+    fetchShippingStates();
+  }, [selectedShippingCountry]);
+
+  useEffect(() => {
+    if (addressData) {
+      const shippingAddr = addressData.shipping_address;
+      form.reset({
+        fullName: addressData.name || "",
+        companyName: addressData.company_name || "",
+        email: addressData.email || "",
+        phone: addressData.phone || "",
+        country: addressData.country?.slug || "",
+        streetAddress: addressData.street_address || "",
+        apartment: addressData.apartment || "",
+        state: addressData.state?.slug || "",
+        orderNotes: addressData.order_notes || "",
+        shipToDifferentAddress: addressData.shipToDifferentAddress || false,
+        shippingFullName: shippingAddr?.name || "",
+        shippingCompanyName: shippingAddr?.company_name || "",
+        shippingCountry: shippingAddr?.country?.slug || "",
+        shippingState: shippingAddr?.state?.slug || "",
+        shippingStreetAddress: shippingAddr?.street_address || "",
+        shippingApartment: shippingAddr?.apartment || "",
+      });
+    }
+  }, [addressData, countries, form]);
 
   const onSubmit = async (values) => {
-    setLoading(true);
-    setSuccess(null);
-
     try {
-      const res = await fetch("http://localhost:1337/api/enquiry", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: values }),
-      });
+      const recaptchaToken = await executeRecaptcha("update_address");
 
-      if (!res.ok) throw new Error("Failed to send enquiry");
+      await updateAddress({
+        id: addressData?.id,
+        values: {
+          ...values,
+          recaptcha_token: recaptchaToken,
+          addressType: addressData?.address_type,
+        },
+      }).unwrap();
 
-      form.reset();
-      setSuccess("Order submitted successfully!");
+      toast.success(t("updated_success"));
+
+      onSuccess?.();
     } catch (err) {
       console.error(err);
-      setSuccess("Something went wrong. Please try again.");
+      toast.error(t("updated_failed"));
     }
-
-    setLoading(false);
   };
+
+  // Set state value after states list loads from the API
+  useEffect(() => {
+    if (addressData?.state?.slug && states.length > 0) {
+      form.setValue("state", addressData.state.slug);
+    }
+  }, [states, addressData, form]);
+
+  // Set shipping state value after shipping states list loads
+  useEffect(() => {
+    if (addressData?.shipping_address?.state?.slug && shippingStates.length > 0) {
+      form.setValue("shippingState", addressData.shipping_address.state.slug);
+    }
+  }, [shippingStates, addressData, form]);
+
+  const isShippingMode = editMode === "shipping";
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-wrap items-start -mx-4 [&>*]:px-4 [&>*]:py-2"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-wrap items-start -mx-4 [&>*]:px-4 [&>*]:py-3">
+        {/* Billing Address Fields */}
+        {!isShippingMode && <>
         {/* Full Name */}
         <FormField
           control={form.control}
@@ -174,14 +257,11 @@ export default function UpdateAddressForm({ locale }) {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                Name<span className={errorStyle}>*</span>
+                {t("full_name")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  className={inputStyle}
-                  placeholder="Enter your name"
-                />
+                <Input {...field} className={inputStyle} placeholder={t("enter_name")} />
               </FormControl>
               <FormMessage className={errorStyle} />
             </FormItem>
@@ -194,15 +274,9 @@ export default function UpdateAddressForm({ locale }) {
           name="companyName"
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
-              <FormLabel className={labelStyle}>
-                Company Name (Optional)
-              </FormLabel>
+              <FormLabel className={labelStyle}>{t("company_name")}</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  className={inputStyle}
-                  placeholder="Enter your company name"
-                />
+                <Input {...field} className={inputStyle} placeholder={t("enter_company_name")} />
               </FormControl>
               <FormMessage className={errorStyle} />
             </FormItem>
@@ -216,15 +290,11 @@ export default function UpdateAddressForm({ locale }) {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                Email Address<span className={errorStyle}>*</span>
+                {t("email_address")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  type="email"
-                  className={inputStyle}
-                  placeholder="Enter email address"
-                />
+                <Input {...field} type="email" className={inputStyle} placeholder={t("enter_email")} />
               </FormControl>
               <FormMessage className={errorStyle} />
             </FormItem>
@@ -238,7 +308,8 @@ export default function UpdateAddressForm({ locale }) {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                Phone<span className={errorStyle}>*</span>
+                {t("phone")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
                 <PhoneInput
@@ -248,7 +319,7 @@ export default function UpdateAddressForm({ locale }) {
                     inputStyle,
                     "w-full p-0 [&_input]:flex-1 [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px] [--react-international-phone-flag-width:20px] [--react-international-phone-flag-height:20px]",
                   )}
-                  placeholder="Enter your mobile number"
+                  placeholder={t("enter_mobile")}
                 />
               </FormControl>
               <FormMessage className={errorStyle} />
@@ -256,29 +327,33 @@ export default function UpdateAddressForm({ locale }) {
           )}
         />
 
-        {/* Region */}
+        {/* Country */}
         <FormField
           control={form.control}
-          name="region"
+          name="country"
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                Country / Region<span className={errorStyle}>*</span>
+                {t("country")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <Select
                 dir={locale === "ar" ? "rtl" : "ltr"}
-                onValueChange={field.onChange}
+                onValueChange={(value) => {
+                  field.onChange(value);
+                  form.setValue("state", ""); // Reset state when country changes
+                }}
                 value={field.value}
               >
                 <FormControl>
                   <SelectTrigger className={cn(inputStyle, "w-full")}>
-                    <SelectValue placeholder="Select region" />
+                    <SelectValue placeholder={t("select_country")} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {regions.map((item, index) => (
-                    <SelectItem key={index} value={item} className={labelStyle}>
-                      {item}
+                  {countries.map((item) => (
+                    <SelectItem key={item.slug} value={item.slug} className={labelStyle}>
+                      {item.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -295,14 +370,11 @@ export default function UpdateAddressForm({ locale }) {
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                Street Address<span className={errorStyle}>*</span>
+                {t("street_address")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  className={inputStyle}
-                  placeholder="Enter street address"
-                />
+                <Input {...field} className={inputStyle} placeholder={t("enter_street_address")} />
               </FormControl>
               <FormMessage className={errorStyle} />
             </FormItem>
@@ -315,42 +387,40 @@ export default function UpdateAddressForm({ locale }) {
           name="apartment"
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
-              <FormLabel className={labelStyle}>Apartment</FormLabel>
+              <FormLabel className={labelStyle}>{t("apartment")}</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  className={inputStyle}
-                  placeholder="Apartment, Suite, Unit, etc (optional)"
-                />
+                <Input {...field} className={inputStyle} placeholder={t("apartment_placeholder")} />
               </FormControl>
               <FormMessage className={errorStyle} />
             </FormItem>
           )}
         />
 
-        {/* Country */}
+        {/* State */}
         <FormField
           control={form.control}
-          name="country"
+          name="state"
           render={({ field }) => (
             <FormItem className="w-full sm:w-1/2">
               <FormLabel className={labelStyle}>
-                State / Country<span className={errorStyle}>*</span>
+                {t("state")}
+                <span className={errorStyle}>*</span>
               </FormLabel>
               <Select
                 dir={locale === "ar" ? "rtl" : "ltr"}
                 onValueChange={field.onChange}
                 value={field.value}
+                disabled={!selectedCountry || states.length === 0}
               >
                 <FormControl>
                   <SelectTrigger className={cn(inputStyle, "w-full")}>
-                    <SelectValue placeholder="Select country" />
+                    <SelectValue placeholder={selectedCountry ? t("select_state") : t("select_country_first")} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {countries.map((item, index) => (
-                    <SelectItem key={index} value={item} className={labelStyle}>
-                      {item}
+                  {states.map((item) => (
+                    <SelectItem key={item.slug} value={item.slug} className={labelStyle}>
+                      {item.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -366,13 +436,9 @@ export default function UpdateAddressForm({ locale }) {
           name="orderNotes"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel className={labelStyle}>Order Notes</FormLabel>
+              <FormLabel className={labelStyle}>{t("order_notes")}</FormLabel>
               <FormControl>
-                <Textarea
-                  {...field}
-                  className={textareaStyle}
-                  placeholder="Notes about your order, e.g. special notes for delivery"
-                />
+                <Textarea {...field} className={textareaStyle} placeholder={t("order_notes_placeholder")} />
               </FormControl>
               <FormMessage className={errorStyle} />
             </FormItem>
@@ -380,6 +446,9 @@ export default function UpdateAddressForm({ locale }) {
         />
 
         {/* Ship to Different Address Checkbox */}
+
+        {
+          (!isFromCheckout || showShipToDifferent) &&
         <FormField
           control={form.control}
           name="shipToDifferentAddress"
@@ -387,13 +456,9 @@ export default function UpdateAddressForm({ locale }) {
             <FormItem className="w-full">
               <FormControl>
                 <div className="flex items-center gap-3">
-                  <Checkbox
-                    id="shipToDifferent"
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
+                  <Checkbox id="shipToDifferent" checked={field.value} onCheckedChange={field.onChange} />
                   <Label htmlFor="shipToDifferent" className={labelStyle}>
-                    Ship to a Different Address?
+                    {t("ship_to_different")}
                   </Label>
                 </div>
               </FormControl>
@@ -401,17 +466,15 @@ export default function UpdateAddressForm({ locale }) {
             </FormItem>
           )}
         />
+        }
+        </>}
 
-        {/* Shipping Address Section - Shows when checkbox is checked */}
-        {shipToDifferent && (
+        {/* Shipping Address Section - Shows when checkbox is checked (billing mode) or always (shipping mode) */}
+        {(isShippingMode || shipToDifferent) && (
           <>
             <div className="w-full my-1.5 xl:my-2">
-              <Heading
-                as="h4"
-                size="heading4"
-                className="font-normal text-[#282828] mb-2"
-              >
-                Shipping Address
+              <Heading as="h4" size="heading4" className="font-normal text-[#282828] mb-2">
+                {t("shipping_address")}
               </Heading>
               <hr />
             </div>
@@ -421,14 +484,11 @@ export default function UpdateAddressForm({ locale }) {
               render={({ field }) => (
                 <FormItem className="w-full sm:w-1/2">
                   <FormLabel className={labelStyle}>
-                    Name<span className={errorStyle}>*</span>
+                    {t("full_name")}
+                    <span className={errorStyle}>*</span>
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      className={inputStyle}
-                      placeholder="Enter recipient name"
-                    />
+                    <Input {...field} className={inputStyle} placeholder={t("enter_recipient_name")} />
                   </FormControl>
                   <FormMessage className={errorStyle} />
                 </FormItem>
@@ -440,13 +500,9 @@ export default function UpdateAddressForm({ locale }) {
               name="shippingCompanyName"
               render={({ field }) => (
                 <FormItem className="w-full sm:w-1/2">
-                  <FormLabel className={labelStyle}>Company Name</FormLabel>
+                  <FormLabel className={labelStyle}>{t("company_name")}</FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      className={inputStyle}
-                      placeholder="Enter company name"
-                    />
+                    <Input {...field} className={inputStyle} placeholder={t("enter_company_name")} />
                   </FormControl>
                   <FormMessage className={errorStyle} />
                 </FormItem>
@@ -455,30 +511,30 @@ export default function UpdateAddressForm({ locale }) {
 
             <FormField
               control={form.control}
-              name="shippingRegion"
+              name="shippingCountry"
               render={({ field }) => (
                 <FormItem className="w-full sm:w-1/2">
                   <FormLabel className={labelStyle}>
-                    Country / Region<span className={errorStyle}>*</span>
+                    {t("country")}
+                    <span className={errorStyle}>*</span>
                   </FormLabel>
                   <Select
                     dir={locale === "ar" ? "rtl" : "ltr"}
-                    onValueChange={field.onChange}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      form.setValue("shippingState", ""); // Reset state when country changes
+                    }}
                     value={field.value}
                   >
                     <FormControl>
                       <SelectTrigger className={cn(inputStyle, "w-full")}>
-                        <SelectValue placeholder="Select region" />
+                        <SelectValue placeholder={t("select_country")} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {regions.map((item, index) => (
-                        <SelectItem
-                          key={index}
-                          value={item}
-                          className={labelStyle}
-                        >
-                          {item}
+                      {countries.map((item) => (
+                        <SelectItem key={item.slug} value={item.slug} className={labelStyle}>
+                          {item.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -494,14 +550,11 @@ export default function UpdateAddressForm({ locale }) {
               render={({ field }) => (
                 <FormItem className="w-full sm:w-1/2">
                   <FormLabel className={labelStyle}>
-                    Street Address<span className={errorStyle}>*</span>
+                    {t("street_address")}
+                    <span className={errorStyle}>*</span>
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      className={inputStyle}
-                      placeholder="Enter street address"
-                    />
+                    <Input {...field} className={inputStyle} placeholder={t("enter_street_address")} />
                   </FormControl>
                   <FormMessage className={errorStyle} />
                 </FormItem>
@@ -513,13 +566,9 @@ export default function UpdateAddressForm({ locale }) {
               name="shippingApartment"
               render={({ field }) => (
                 <FormItem className="w-full sm:w-1/2">
-                  <FormLabel className={labelStyle}>Apartment</FormLabel>
+                  <FormLabel className={labelStyle}>{t("apartment")}</FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      className={inputStyle}
-                      placeholder="Apartment, Suite, Unit, etc (optional)"
-                    />
+                    <Input {...field} className={inputStyle} placeholder={t("apartment_placeholder")} />
                   </FormControl>
                   <FormMessage className={errorStyle} />
                 </FormItem>
@@ -528,30 +577,28 @@ export default function UpdateAddressForm({ locale }) {
 
             <FormField
               control={form.control}
-              name="shippingCountry"
+              name="shippingState"
               render={({ field }) => (
                 <FormItem className="w-full sm:w-1/2">
                   <FormLabel className={labelStyle}>
-                    State / Country<span className={errorStyle}>*</span>
+                    {t("state")}
+                    <span className={errorStyle}>*</span>
                   </FormLabel>
                   <Select
                     dir={locale === "ar" ? "rtl" : "ltr"}
                     onValueChange={field.onChange}
                     value={field.value}
+                    disabled={!selectedShippingCountry || shippingStates.length === 0}
                   >
                     <FormControl>
                       <SelectTrigger className={cn(inputStyle, "w-full")}>
-                        <SelectValue placeholder="Select country" />
+                        <SelectValue placeholder={selectedShippingCountry ? t("select_state") : t("select_country_first")} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {countries.map((item, index) => (
-                        <SelectItem
-                          key={index}
-                          value={item}
-                          className={labelStyle}
-                        >
-                          {item}
+                      {shippingStates.map((item) => (
+                        <SelectItem key={item.slug} value={item.slug} className={labelStyle}>
+                          {item.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -565,27 +612,10 @@ export default function UpdateAddressForm({ locale }) {
 
         {/* Submit Button */}
         <div className="w-full mt-2 flex">
-          <Button
-            type="submit"
-            variant="black"
-            disabled={loading}
-            className="min-w-[120px] 2xl:min-w-40"
-          >
-            {loading ? "Submitting..." : "Update Address"}
+          <Button type="submit" variant="black" disabled={isLoading} className="min-w-[120px] 2xl:min-w-40">
+            {isLoading ? t("submitting") : t("update_address")}
           </Button>
         </div>
-
-        {/* Success/Error Message */}
-        {success && !loading && (
-          <p
-            className={cn(
-              "mt-1 w-full",
-              success.includes("success") ? "text-green-600" : "text-red-600",
-            )}
-          >
-            {success}
-          </p>
-        )}
       </form>
     </Form>
   );
