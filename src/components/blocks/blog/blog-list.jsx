@@ -92,6 +92,7 @@ export default function BlogList({ locale, data }) {
                         }
                         className={cn(
                           currentPage === 1 && "pointer-events-none opacity-50",
+                          locale === "ar" ? "rotate-180" : "",
                         )}
                       />
                     </PaginationItem>
@@ -119,6 +120,7 @@ export default function BlogList({ locale, data }) {
                         className={cn(
                           currentPage === totalPages &&
                             "pointer-events-none opacity-50",
+                          locale === "ar" ? "rotate-180" : "",
                         )}
                       />
                     </PaginationItem>

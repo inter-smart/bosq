@@ -143,7 +143,7 @@ export default function NewsSection({ data, locale }) {
           </div>
         </div>
         {mockedList.length > 3 && (
-          <div className="flex justify-center mt-15 xl:mt-20 gap-2 2xl:gap-3">
+          <div className="flex justify-center mt-8 xl:mt-10 2xl:mt-15 gap-2 2xl:gap-3">
             {scrollSnaps.map((_, index) => (
               <DotButton
                 key={index}
