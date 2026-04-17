@@ -86,7 +86,12 @@ export default function NewsSection({ data, locale }) {
             {mockedList.map((item) => (
               <div
                 key={item?.id}
-                className="flex-[0_0_100%] 3xs:flex-[0_0_46%] lg:flex-[0_0_28%] mr-5 sm:mr-15 lg:mr-20 xl:mr-23 2xl:mr-30 3xl:mr-35"
+                className={cn(
+                  "flex-[0_0_100%] 3xs:flex-[0_0_46%] lg:flex-[0_0_28%]",
+                  locale === "ar"
+                    ? "ml-5 sm:ml-15 lg:ml-20 xl:ml-23 2xl:ml-30 3xl:ml-35"
+                    : "mr-5 sm:mr-15 lg:mr-20 xl:mr-23 2xl:mr-30 3xl:mr-35",
+                )}
               >
                 <Link
                   href={`/${locale}/news/${item?.slug}` || "/"}

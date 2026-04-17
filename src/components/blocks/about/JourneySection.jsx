@@ -32,7 +32,14 @@ export default function JourneySection({ data, locale }) {
     <section className="w-full h-auto py-[20px_40px] sm:py-[20px_50px] lg:py-[30px_70px] 2xl:py-[40px_80px] 3xl:py-[50px_100px] block">
       <div className="container">
         <div className="w-full h-auto flex flex-wrap items-center">
-          <div className="w-full md:w-1/2 md:pr-10 lg:pr-12.5 2xl:pr-15 3xl:pr-20 mb-6 sm:mb-8 md:mb-0">
+          <div
+            className={cn(
+              "w-full md:w-1/2 mb-6 sm:mb-8 md:mb-0",
+              locale === "ar"
+                ? "md:pl-10 lg:pl-12.5 2xl:pl-15 3xl:pl-20"
+                : "md:pr-10 lg:pr-12.5 2xl:pr-15 3xl:pr-20",
+            )}
+          >
             <div className="w-full h-auto mb-6 sm:mb-8 lg:mb-10 xl:mb-12.5 3xl:mb-18">
               <Heading
                 as="h1"
