@@ -14,18 +14,15 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-export default function LandingHero({ data, locale, slug }) {
+export default function LandingHero({ data, locale, slug, link }) {
   const isEn = locale === "en";
 
   const ctaHref = data?.media?.cta?.href || "#";
-  const label = isEn
-    ? data?.media?.cta?.label
-    : data?.media?.cta?.label_ar;
+  const label = isEn ? data?.media?.cta?.label : data?.media?.cta?.label_ar;
 
   return (
     <section className="w-full pt-[calc(var(--header-y)_+_20px)] sm:pt-[calc(var(--header-y)_+_10px)] relative">
       <div className="container mb-3 xl:mb-5 2xl:mb-8">
-
         <Breadcrumb className="mb-1 xl:mb-2">
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -35,7 +32,7 @@ export default function LandingHero({ data, locale, slug }) {
             </BreadcrumbItem>
             <BreadcrumbSeparator>/</BreadcrumbSeparator>
             <BreadcrumbItem>
-              <BreadcrumbLink href={`/Office Chairs`}>
+              <BreadcrumbLink>
                 {isEn ? "Office Chairs" : "كراسي مكتب"}
               </BreadcrumbLink>
             </BreadcrumbItem>
@@ -46,9 +43,13 @@ export default function LandingHero({ data, locale, slug }) {
                     {slug}
                   </BreadcrumbLink>
                 ) : (
-                  <BreadcrumbPage className={"capitalize"}>
-                    {slug}
-                  </BreadcrumbPage>
+                  <>
+                    <BreadcrumbSeparator>/</BreadcrumbSeparator>
+
+                    <BreadcrumbPage className={"capitalize"}>
+                      {slug}
+                    </BreadcrumbPage>
+                  </>
                 )}
               </BreadcrumbItem>
             )}
@@ -63,7 +64,7 @@ export default function LandingHero({ data, locale, slug }) {
                 "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block",
                 !isEn
                   ? "-translate-x-1 xl:-translate-x-2"
-                  : "translate-x-1 xl:translate-x-2"
+                  : "translate-x-1 xl:translate-x-2",
               )}
             />
           </Heading>
@@ -79,7 +80,8 @@ export default function LandingHero({ data, locale, slug }) {
             loop
             muted
             playsInline
-            className="w-full h-full object-cover absolute -z-2 inset-0">
+            className="w-full h-full object-cover absolute -z-2 inset-0"
+          >
             <source
               src={isEn ? data?.media?.path : data?.media_ar?.path}
               type="video/mp4"
@@ -90,9 +92,7 @@ export default function LandingHero({ data, locale, slug }) {
             <source
               media="(max-width: 640px)"
               srcSet={
-                isEn
-                  ? data?.media?.mobile?.path
-                  : data?.media_ar?.mobile?.path
+                isEn ? data?.media?.mobile?.path : data?.media_ar?.mobile?.path
               }
             />
             <Image
@@ -130,7 +130,7 @@ export default function LandingHero({ data, locale, slug }) {
                   "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block",
                   locale === "ar"
                     ? "-translate-x-1 xl:-translate-x-2"
-                    : "translate-x-1 xl:translate-x-2"
+                    : "translate-x-1 xl:translate-x-2",
                 )}
               />
             </Heading>
@@ -141,11 +141,7 @@ export default function LandingHero({ data, locale, slug }) {
                 size="text1"
                 className="line-clamp-4 font-light text-white max-w-[72%]"
               >
-                {parse(
-                  isEn
-                    ? data?.heroDescription
-                    : data?.heroDescription_ar
-                )}
+                {parse(isEn ? data?.heroDescription : data?.heroDescription_ar)}
               </Text>
             )}
 
