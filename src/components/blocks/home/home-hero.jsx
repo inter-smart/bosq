@@ -1,4 +1,5 @@
 "use client";
+import { useMemo } from "react";
 import Image from "@/components/utils/custom-image";
 import Link from "next/link";
 
@@ -19,96 +20,6 @@ import {
 } from "@/components/utils/embla-carousel-arrow-button";
 import { cn } from "@/lib/utils";
 
-const slideContentVariants = {
-  initial: {
-    opacity: 0,
-    y: 50,
-    scale: 0.95,
-  },
-  animate: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      duration: 1,
-      ease: [0.25, 0.46, 0.45, 0.94],
-      staggerChildren: 0.2,
-      delayChildren: 0.1,
-    },
-  },
-  exit: {
-    opacity: 0,
-    y: -30,
-    scale: 0.95,
-    transition: {
-      duration: 0.5,
-      ease: [0.25, 0.46, 0.45, 0.94],
-    },
-  },
-};
-
-const titleVariants = {
-  initial: {
-    opacity: 0,
-    y: -40,
-    scale: 0.9,
-    rotateX: -15,
-  },
-  animate: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    rotateX: 0,
-    transition: {
-      duration: 0.8,
-      ease: [0.25, 0.46, 0.45, 0.94],
-      type: "spring",
-      stiffness: 100,
-      damping: 20,
-    },
-  },
-};
-
-const descriptionVariants = {
-  initial: {
-    opacity: 0,
-    y: 20,
-    scale: 0.95,
-    filter: "blur(8px)",
-  },
-  animate: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    filter: "blur(0px)",
-    transition: {
-      duration: 0.7,
-      ease: [0.25, 0.46, 0.45, 0.94],
-      delay: 0.2,
-    },
-  },
-};
-
-const buttonContainerVariants = {
-  initial: {
-    opacity: 0,
-    y: 30,
-    scale: 0.9,
-  },
-  animate: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      duration: 0.6,
-      ease: [0.25, 0.46, 0.45, 0.94],
-      delay: 0.4,
-      staggerChildren: 0.1,
-      delayChildren: 0.1,
-    },
-  },
-};
-
 export default function HomeHero({ data, locale }) {
   const isEn = locale === "en";
   const [emblaRef, emblaApi] = useEmblaCarousel(
@@ -126,12 +37,22 @@ export default function HomeHero({ data, locale }) {
     onNextButtonClick,
   } = usePrevNextButtons(emblaApi);
 
+  const parsedSlides = useMemo(
+    () =>
+      data?.map((item) => ({
+        ...item,
+        parsedTitle: parse(isEn ? item?.title ?? "" : item?.title_ar ?? ""),
+        parsedDesc: parse(isEn ? item?.description ?? "" : item?.description_ar ?? ""),
+      })),
+    [data, isEn],
+  );
+
   return (
     <section className="w-full h-auto block bg-black relative z-0">
       <div className="w-full max-w-full">
         <div className="overflow-hidden" ref={emblaRef}>
           <div className="flex touch-pan-y touch-pinch-zoom">
-            {data?.map((item, index) => (
+            {parsedSlides?.map((item, index) => (
               <div
                 key={"gallery" + index}
                 className="flex-[0_0_100%] min-w-0 select-none relative z-0"
@@ -148,6 +69,7 @@ export default function HomeHero({ data, locale }) {
                     loop
                     muted
                     playsInline
+                    preload="none"
                     className="w-full h-full object-cover absolute -z-2 inset-0"
                   >
                     <source
@@ -236,7 +158,7 @@ export default function HomeHero({ data, locale }) {
                         size="heading1"
                         className="line-clamp-4 leading-tight text-white mb-2 xl:mb-4 2xl:mb-6"
                       >
-                        {parse(!isEn ? item?.title_ar : item?.title)}
+                        {item.parsedTitle}
                         <span
                           className={cn(
                             "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block ",
@@ -251,9 +173,7 @@ export default function HomeHero({ data, locale }) {
                         size="text1"
                         className="line-clamp-2 font-light text-white max-w-[80%] mb-4 xl:mb-7 2xl:mb-10"
                       >
-                        {parse(
-                          !isEn ? item?.description_ar : item?.description,
-                        )}
+                        {item.parsedDesc}
                       </Text>
                       <Button
                         variant={"white"}

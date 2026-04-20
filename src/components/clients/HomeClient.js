@@ -1,7 +1,7 @@
 "use client";
 import dynamic from "next/dynamic";
 const HomeHero = dynamic(() => import("@/components/blocks/home/home-hero"), { ssr: true });
-const HomeAbout = dynamic(() => import("@/components/blocks/home/home-about"));
+const HomeAbout = dynamic(() => import("@/components/blocks/home/home-about"), { ssr: true });
 const HomeFeatured = dynamic(() => import("@/components/blocks/home/home-featured"));
 const HomeJourney = dynamic(() => import("@/components/blocks/home/home-journey"));
 const HomeProject = dynamic(() => import("@/components/blocks/home/home-project"));

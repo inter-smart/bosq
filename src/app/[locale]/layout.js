@@ -55,6 +55,7 @@ const heroNew = localFont({
       style: "italic",
     },
   ],
+  display: "swap",
 });
 
 export async function generateStaticParams() {

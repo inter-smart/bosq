@@ -21,7 +21,7 @@ export default function HomeAbout({ data, locale, dropdownData, state }) {
         fill
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 80vw"
         className="w-full h-full absolute -z-1 inset-0 object-cover pointer-events-none"
-        quality={90}
+        quality={75}
       />
 
       <div className="container">
