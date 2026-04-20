@@ -28,7 +28,7 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
   const [toggleWishlist] = useToggleWishlistMutation();
 
   const tToast = useTranslations("toast");
-
+const t = useTranslations("common");
   const handleWishlistClick = (e) => {
     e.stopPropagation();
     handleToggleWishlist(product?.variant_id || product?.id);
@@ -159,7 +159,7 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
                 </>
               ) : (
                 <Link href={productUrl} className="text-[8px] 2xl:text-[10px] leading-normal font-light text-[#28288] hover:text-[#f17423]">
-                  View Product
+                  {t("view_product")}
                 </Link>
               )}
             </div>

@@ -82,25 +82,16 @@ export default function LandingHero({ data, locale, slug, link }) {
             playsInline
             className="w-full h-full object-cover absolute -z-2 inset-0"
           >
-            <source
-              src={isEn ? data?.media?.path : data?.media_ar?.path}
-              type="video/mp4"
-            />
+            <source src={data?.media?.path} type="video/mp4" />
           </video>
         ) : (
           <picture className="absolute -z-2 inset-0">
             <source
               media="(max-width: 640px)"
-              srcSet={
-                isEn ? data?.media?.mobile?.path : data?.media_ar?.mobile?.path
-              }
+              srcSet={data?.media?.mobile?.path}
             />
             <Image
-              src={
-                isEn
-                  ? data?.media?.desktop?.path
-                  : data?.media_ar?.desktop?.path
-              }
+              src={data?.media?.desktop?.path}
               alt={
                 isEn
                   ? data?.media?.desktop?.alt

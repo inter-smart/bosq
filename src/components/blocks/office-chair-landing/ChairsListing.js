@@ -23,7 +23,7 @@ export default function ChairsListing({ data, locale = "en" }) {
 
   console.log("ctaLabel", ctaLabel)
 
-  const heroImage = data?.heroImage || "/images/officerchair-hero.jpg";
+  const heroImage = data?.heroImage;
   const heroTitle = isEn ? data?.heroTitle : data?.heroTitle_ar;
 
   return (

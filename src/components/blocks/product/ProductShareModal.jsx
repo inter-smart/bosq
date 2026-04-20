@@ -65,13 +65,13 @@ export default function ProductShareModal({ open, onClose, locale }) {
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-[500px] sm:max-w-[540px] p-6 gap-5">
-        <DialogHeader className="pb-0">
+        <DialogHeader className="pb-4">
           <DialogTitle className="text-[13px] xl:text-[14px] font-normal text-[#282828]">
             {isEn ? "Share" : "مشاركة"}
           </DialogTitle>
         </DialogHeader>
 
-        <div className="flex gap-6 justify-center">
+        <div className="flex gap-6 justify-center mb-4">
           {shareLinks.map((item) => (
             <a
               key={item.id}
