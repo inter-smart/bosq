@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { z } from "zod";
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { PhoneInput } from "react-international-phone";
+import { PhoneInput, parseCountry, defaultCountries } from "react-international-phone";
 import "react-international-phone/style.css";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { toast } from "sonner";
@@ -37,6 +37,35 @@ export default function EnquiryForm({ locale }) {
   setValidationTranslator(tErrors);
 
   const [selectedCountry, setSelectedCountry] = useState("ae");
+  const phoneWrapperRef = useRef(null);
+
+  // Build a static iso2 → country name lookup from the library's bundled data
+  const countryNameMap = useRef(
+    Object.fromEntries(defaultCountries.map((c) => { const p = parseCountry(c); return [p.iso2, p.name]; }))
+  );
+
+  // Patch alt + title on every flag <img data-country="..."> inside the phone wrapper.
+  // The library renders all flags in the DOM from mount (dropdown uses display:none/block),
+  // so a single pass after paint is enough. Re-run when the selected country changes so
+  // the button flag is also kept in sync.
+  const patchAllFlags = useRef(() => {
+    const wrapper = phoneWrapperRef.current;
+    if (!wrapper) return;
+    wrapper.querySelectorAll("img[data-country]").forEach((img) => {
+      const iso2 = img.getAttribute("data-country");
+      const name = countryNameMap.current[iso2] ?? iso2;
+      if (name) {
+        img.alt = name;
+        img.title = name;
+      }
+    });
+  });
+
+  useEffect(() => {
+    // Use rAF so the DOM is fully painted before we query
+    const id = requestAnimationFrame(patchAllFlags.current);
+    return () => cancelAnimationFrame(id);
+  }, [selectedCountry]);
 
   // ✅ Validation schema
   const formSchema = z.object({
@@ -139,31 +168,33 @@ export default function EnquiryForm({ locale }) {
                 <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
-                <PhoneInput
-                  value={field.value}
-                  onChange={(phone, meta) => {
-                    const countryIso = meta.country.iso2;
-                    const callingCode = `+${meta.country.callingCode}`;
+                <div ref={phoneWrapperRef}>
+                  <PhoneInput
+                    value={field.value}
+                    onChange={(phone, meta) => {
+                      const countryIso = meta.country.iso2;
+                      const callingCode = `+${meta.country.callingCode}`;
 
-                    if (phone !== field.value) {
-                      if (!field.value && phone.trim() === callingCode) {
-                        return;
+                      if (phone !== field.value) {
+                        if (!field.value && phone.trim() === callingCode) {
+                          return;
+                        }
+                        field.onChange(phone);
                       }
-                      field.onChange(phone);
-                    }
 
-                    if (countryIso !== selectedCountry) {
-                      setSelectedCountry(countryIso);
-                    }
-                  }}
-                  defaultCountry="ae"
-                  dir={locale === "ar" ? "rtl" : "ltr"}
-                  className={cn(
-                    inputStyle,
-                    "w-full p-0 [&_input]:flex-1 [--react-international-phone-country-selector-border-color:#bababa] [--react-international-phone-border-color:#bababa] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px]",
-                  )}
-                  placeholder={t("enter_phone")}
-                />
+                      if (countryIso !== selectedCountry) {
+                        setSelectedCountry(countryIso);
+                      }
+                    }}
+                    defaultCountry="ae"
+                    dir={locale === "ar" ? "rtl" : "ltr"}
+                    className={cn(
+                      inputStyle,
+                      "w-full p-0 [&_input]:flex-1 [--react-international-phone-country-selector-border-color:#bababa] [--react-international-phone-border-color:#bababa] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px]",
+                    )}
+                    placeholder={t("enter_phone")}
+                  />
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>

@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { z } from "zod";
 
 import {
@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
-import { PhoneInput } from "react-international-phone";
+import { PhoneInput, parseCountry, defaultCountries } from "react-international-phone";
 import "react-international-phone/style.css";
 import { Heading } from "../utils/heading";
 import { commonValidations, setValidationTranslator } from "@/lib/validations";
@@ -151,6 +151,34 @@ export default function AddressForm({
   const shipToDifferent = form.watch("shipToDifferentAddress");
   const selectedCountry = form.watch("country");
   const selectedShippingCountry = form.watch("shippingCountry");
+
+  // Separate state for phone country selector (for flag alt/title patching)
+  const [phoneCountry, setPhoneCountry] = useState("ae");
+  const phoneWrapperRef = useRef(null);
+
+  // Build a static iso2 → country name lookup from the library's bundled data
+  const countryNameMap = useRef(
+    Object.fromEntries(defaultCountries.map((c) => { const p = parseCountry(c); return [p.iso2, p.name]; }))
+  );
+
+  // Patch alt + title on every flag <img data-country="..."> inside the phone wrapper.
+  const patchAllFlags = useRef(() => {
+    const wrapper = phoneWrapperRef.current;
+    if (!wrapper) return;
+    wrapper.querySelectorAll("img[data-country]").forEach((img) => {
+      const iso2 = img.getAttribute("data-country");
+      const name = countryNameMap.current[iso2] ?? iso2;
+      if (name) {
+        img.alt = name;
+        img.title = name;
+      }
+    });
+  });
+
+  useEffect(() => {
+    const id = requestAnimationFrame(patchAllFlags.current);
+    return () => cancelAnimationFrame(id);
+  }, [phoneCountry]);
 
   // Fetch countries on mount
   useEffect(() => {
@@ -318,15 +346,22 @@ export default function AddressForm({
                 <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
-                <PhoneInput
-                  defaultCountry="ae"
-                  {...field}
-                  className={cn(
-                    inputStyle,
-                    "w-full p-0 [&_input]:flex-1 [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px] [--react-international-phone-flag-width:20px] [--react-international-phone-flag-height:20px]",
-                  )}
-                  placeholder={t("enter_mobile")}
-                />
+                <div ref={phoneWrapperRef}>
+                  <PhoneInput
+                    defaultCountry="ae"
+                    value={field.value}
+                    onChange={(phone, meta) => {
+                      field.onChange(phone);
+                      const iso = meta.country.iso2;
+                      if (iso !== phoneCountry) setPhoneCountry(iso);
+                    }}
+                    className={cn(
+                      inputStyle,
+                      "w-full p-0 [&_input]:flex-1 [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px] [--react-international-phone-flag-width:20px] [--react-international-phone-flag-height:20px]",
+                    )}
+                    placeholder={t("enter_mobile")}
+                  />
+                </div>
               </FormControl>
               <FormMessage className={errorStyle} />
             </FormItem>
