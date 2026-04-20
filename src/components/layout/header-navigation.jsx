@@ -117,7 +117,7 @@ export default function HeaderNavigation({
                             setHoveredSubSubmenu(null);
                           }}
                         >
-                          {item?.items?.slice(0, 8).map((i, subItem) => {
+                          {item?.items?.slice(0, 8).map((subItem, i) => {
                             const isSubActive = pathname === subItem.slug;
                             const hasSubSubItems =
                               subItem?.items && subItem.items.length > 0;

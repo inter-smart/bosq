@@ -67,10 +67,28 @@ export default function RequestEnquiryForm({
 
   setValidationTranslator(tErrors);
 
+  const nameMin1 = (field) =>
+    z
+      .string()
+      .trim()
+      .min(1, tErrors("required", { field }))
+      .max(100, tErrors("max_length", { field, max: 100 }))
+      .refine((val) => !/[\t\n\r]/.test(val), tErrors("invalid_whitespace", { field }))
+      .refine((val) => /^[\p{L}][\p{L}\s'-]*$/u.test(val), tErrors("invalid_characters", { field }))
+      .refine((val) => !/\d/.test(val), tErrors("no_numbers", { field }))
+      .refine(
+        (val) => !/(<script>|<\/script>|javascript:|alert\(|onerror=|onload=)/i.test(val),
+        tErrors("invalid_content", { field }),
+      )
+      .refine(
+        (val) => !/('|--|;|\/\*|\*\/| OR | AND )/i.test(val),
+        tErrors("invalid_content", { field }),
+      );
+
   // Validation schema
   const formSchema = z.object({
-    firstName: commonValidations.name(t("first_name")),
-    lastName: commonValidations.name(t("last_name")),
+    firstName: nameMin1(t("first_name")),
+    lastName: nameMin1(t("last_name")),
     companyName: commonValidations.optionalString(),
     email: commonValidations.email(),
     phone: commonValidations.phone(selectedCountry.toUpperCase()),
