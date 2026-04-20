@@ -1,5 +1,6 @@
 import { getHomeData } from "@/lib/api/home";
 import { getMetaData } from "@/lib/api/metaApi";
+import HomeHero from "@/components/blocks/home/home-hero";
 import HomeClient from "@/components/clients/HomeClient";
 import NotFound from "./not-found";
 
@@ -32,5 +33,10 @@ export default async function HomePage({ params }) {
 
   const isEN = locale === "en";
 
-  return <HomeClient data={data} locale={locale} isEN={isEN} />;
+  return (
+    <>
+      <HomeHero data={data.sliders} locale={locale} />
+      <HomeClient data={data} locale={locale} isEN={isEN} />
+    </>
+  );
 }

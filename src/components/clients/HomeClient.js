@@ -1,6 +1,5 @@
 "use client";
 import dynamic from "next/dynamic";
-const HomeHero = dynamic(() => import("@/components/blocks/home/home-hero"), { ssr: true });
 const HomeAbout = dynamic(() => import("@/components/blocks/home/home-about"), { ssr: true });
 const HomeFeatured = dynamic(() => import("@/components/blocks/home/home-featured"));
 const HomeJourney = dynamic(() => import("@/components/blocks/home/home-journey"));
@@ -12,7 +11,6 @@ const HomeEnquiry = dynamic(() => import("@/components/blocks/home/home-enquiry"
 
 export default function HomeClient({ data, locale }) {
   const {
-    sliders,
     aboutSection,
     journeySection,
     featuredSection,
@@ -29,7 +27,6 @@ export default function HomeClient({ data, locale }) {
 
   return (
     <>
-      <HomeHero locale={locale} data={sliders} />
       <HomeAbout locale={locale} data={aboutSection} state={state} dropdownData={enquiryDropdowns} />
 
       {featuredSection?.list.length > 0 && <HomeFeatured locale={locale} data={featuredSection} />}

@@ -1,5 +1,5 @@
 "use client";
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import Image from "@/components/utils/custom-image";
 import Link from "next/link";
 
@@ -22,6 +22,7 @@ import { cn } from "@/lib/utils";
 
 export default function HomeHero({ data, locale }) {
   const isEn = locale === "en";
+  const [emblaReady, setEmblaReady] = useState(false);
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { loop: false, direction: !isEn ? "rtl" : "ltr" },
     [
@@ -36,6 +37,11 @@ export default function HomeHero({ data, locale }) {
     onPrevButtonClick,
     onNextButtonClick,
   } = usePrevNextButtons(emblaApi);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    setEmblaReady(true);
+  }, [emblaApi]);
 
   const parsedSlides = useMemo(
     () =>
@@ -56,6 +62,7 @@ export default function HomeHero({ data, locale }) {
               <div
                 key={"gallery" + index}
                 className="flex-[0_0_100%] min-w-0 select-none relative z-0"
+                style={!emblaReady && index === 0 ? { opacity: 1 } : undefined}
               >
                 <div
                   className={cn(
