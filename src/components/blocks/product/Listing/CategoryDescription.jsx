@@ -7,7 +7,7 @@ export default function CategoryDescription({ category, locale }) {
   return (
     <section className="w-full">
       {/* Added 'editor-content' class here */}
-      <div className="container py-8 xl:py-12 editor-content">{parse(category.description)}</div>
+      <div className="container py-8 xl:py-12 editor-content">{parse(locale === "ar" ? category.description_ar : category.description)}</div>
     </section>
   );
 }

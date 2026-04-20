@@ -280,7 +280,6 @@
   }
 }
 
-/* Only apply these to the wrapper we just created */
 .editor-content h1 {
   @apply text-3xl font-bold mb-4;
 }
@@ -291,22 +290,51 @@
   @apply text-xl font-bold mb-2;
 }
 
+/* The fix for your 'Enter' button issue */
 .editor-content p {
   @apply mb-4 leading-relaxed;
 }
 
+/* Ensure lists have bullets and correct indentation */
 .editor-content ul {
   @apply list-disc ml-6 mb-4;
 }
-
 .editor-content ol {
   @apply list-decimal ml-6 mb-4;
 }
-
 .editor-content li {
   @apply mb-1;
 }
 
+/* Prevent double-spacing if the editor puts a <p> inside an <li> */
+.editor-content li p {
+  margin-bottom: 0 !important;
+}
+
 .editor-content strong {
   @apply font-bold;
+}
+
+/* Cleanup for trailing breaks or empty lines */
+.editor-content p:last-child {
+  margin-bottom: 0;
+}
+
+.editor-content img {
+  @apply max-w-full h-auto rounded-lg my-6;
+  display: block; /* Prevents text from sitting on the same line awkwardly */
+}
+
+/* If your editor centers images using 'margin: auto' or text-align */
+.editor-content .image-center {
+  @apply mx-auto;
+}
+
+/* If your editor uses <figure> for captions */
+.editor-content figure {
+  @apply my-6 flex flex-col items-center;
+}
+
+.editor-content figcaption {
+  @apply text-sm text-gray-500 mt-2 text-center italic;
 }
