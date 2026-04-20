@@ -2,6 +2,7 @@ import ProductHero from "@/components/blocks/product/product-hero";
 import { getMetaData } from "@/lib/api/metaApi";
 import { ProductData } from "@/lib/api/products/ResourcesApi";
 import ProductList from "@/components/blocks/product/Listing/ProductList";
+import CategoryDescription from "@/components/blocks/product/Listing/CategoryDescription";
 import { searchParamsCache, slugify, PRICE_RANGES } from "@/components/blocks/product/Listing/searchParams";
 
 export async function generateMetadata({ params }) {
@@ -67,12 +68,36 @@ export default async function ProductsPage({ params, searchParams }) {
   const pagination = products?.pagination;
   const productList = products?.products;
 
+  // Resolve a single active category for the description block
+  const activeCategory = resolveActiveCategory(parsedParams, filters?.categories);
+
   return (
     <>
       <ProductHero locale={locale} data={local_data?.heroData} slug={slug} />
       <ProductList locale={locale} pagination={pagination} products={productList} filters={filters} />
+      <CategoryDescription category={activeCategory} locale={locale} />
     </>
   );
+}
+
+// Return the single active category when exactly one category OR one subcategory is selected
+function resolveActiveCategory(parsedParams, categories) {
+  if (!categories) return null;
+
+  const onlyCategory = parsedParams.category.length === 1 && parsedParams.subcategory.length === 0;
+  const onlySubcategory = parsedParams.subcategory.length === 1 && parsedParams.category.length === 0;
+
+  if (onlyCategory) {
+    const slug = slugify(parsedParams.category[0]);
+    return categories.find((c) => slugify(c.slug) === slug && c.parent_id === null) ?? null;
+  }
+
+  if (onlySubcategory) {
+    const slug = slugify(parsedParams.subcategory[0]);
+    return categories.find((c) => slugify(c.slug) === slug && c.parent_id !== null) ?? null;
+  }
+
+  return null;
 }
 
 // Check if any attribute filters exist in search params
