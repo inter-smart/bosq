@@ -1,6 +1,6 @@
 import { Heading } from "@/components/utils/heading";
 import { Text } from "@/components/utils/text";
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 import React from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";

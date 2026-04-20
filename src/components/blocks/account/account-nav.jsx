@@ -1,7 +1,7 @@
 "use client";
 import { Text } from "@/components/utils/text";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";

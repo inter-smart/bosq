@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import cn from "clsx";
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 import FrequentlyBoughtCard from "./frequently-bought-card";
 import { Heading } from "@/components/utils/heading";
 import { Text } from "@/components/utils/text";

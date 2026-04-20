@@ -23,7 +23,7 @@ import { cn } from "@/lib/utils";
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 import { X } from "lucide-react";
 import { commonValidations, setValidationTranslator } from "@/lib/validations";
 import { useParams } from "next/navigation";

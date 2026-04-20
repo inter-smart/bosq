@@ -7,7 +7,7 @@ const MediaQuery = dynamic(() => import("react-responsive"), {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { X, Loader2 } from "lucide-react";
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 import { Button } from "@/components/ui/button";
 import { SelectIcon } from "@radix-ui/react-select";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";

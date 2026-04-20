@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { cn, saveVariantToStorage, getStoredVariants } from "@/lib/utils";

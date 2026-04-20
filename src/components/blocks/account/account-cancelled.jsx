@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/utils/heading";
 import { Text } from "@/components/utils/text";
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 import parse from "html-react-parser";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";

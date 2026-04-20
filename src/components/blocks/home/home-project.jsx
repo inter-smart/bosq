@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/utils/heading";
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 import Link from "next/link";
 import parse from "html-react-parser";
 import { useTranslations } from "next-intl";

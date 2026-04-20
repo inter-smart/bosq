@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 import { cn } from "@/lib/utils";
 import parse from "html-react-parser";
 import { Text } from "@/components/utils/text";
@@ -39,7 +39,7 @@ export default function AboutBannerSection({ data, locale }) {
           <>
             <Image
               src={data?.media?.thumbnailPath ?? "/images/placeholder.jpg"}
-              alt=""
+              alt={isEn ? data?.media?.alt : data?.media?.alt_ar}
               fill
               priority
               className="object-cover absolute -z-2 inset-0"

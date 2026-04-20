@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 import { Heading } from "../../utils/heading";
 import { Text } from "../../utils/text";
 import Link from "next/link";

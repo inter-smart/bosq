@@ -1,5 +1,5 @@
 "use client";
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 import Link from "next/link";
 
 import useEmblaCarousel from "embla-carousel-react";

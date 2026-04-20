@@ -2,7 +2,7 @@ import parse from "html-react-parser";
 
 import { cn } from "@/lib/utils";
 import { Heading } from "@/components/utils/heading";
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 
 export default function ReturnInfo({ data, locale }) {
 

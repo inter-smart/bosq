@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";

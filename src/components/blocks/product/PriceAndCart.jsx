@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/utils/text";
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, fetchCart } from "@/store/slices/cartSlice";

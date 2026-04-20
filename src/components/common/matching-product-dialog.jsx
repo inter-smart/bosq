@@ -23,7 +23,7 @@ import Autoplay from "embla-carousel-autoplay";
 
 import parse from "html-react-parser";
 import FrequentlyBoughtCard from "../blocks/product/frequently-bought-card";
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
 import { addToCartTogether, fetchCart } from "@/store/slices/cartSlice";

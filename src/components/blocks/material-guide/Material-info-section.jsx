@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 import { Heading } from "@/components/utils/heading";
 import parse from "html-react-parser";
 import { cn } from "@/lib/utils";

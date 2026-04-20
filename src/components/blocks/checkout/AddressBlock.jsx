@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import UpdateAddressForm from "@/components/form/update-address-form";
 import { X } from "lucide-react";
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/utils/text";
 import { cn } from "@/lib/utils";

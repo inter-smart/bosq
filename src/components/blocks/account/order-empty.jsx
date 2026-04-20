@@ -12,7 +12,7 @@ import {
 import { Text } from "@/components/utils/text";
 import Link from "next/link";
 import { Heading } from "@/components/utils/heading";
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 import { useTranslations } from "next-intl";
 
 export function OrderEmpty({

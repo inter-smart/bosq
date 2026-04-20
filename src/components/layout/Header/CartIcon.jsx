@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { selectCartCount, selectCartIsLoading } from "@/store/selectors/cart/selectors";
 import { fetchCart } from "@/store/slices/cartSlice";
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 import Link from "next/link";
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";

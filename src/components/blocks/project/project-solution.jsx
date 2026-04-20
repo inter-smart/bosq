@@ -1,6 +1,6 @@
 import { Heading } from "@/components/utils/heading";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 import React from "react";
 import parse from "html-react-parser";
 

@@ -1,7 +1,7 @@
 "use client";
 import parse from "html-react-parser";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 import { Text } from "@/components/utils/text";
 import dynamic from "next/dynamic";
 

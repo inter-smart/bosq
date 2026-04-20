@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

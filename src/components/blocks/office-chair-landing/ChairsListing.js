@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 import { Button } from "@/components/ui/button";
 import ChairSlider from "./ChairSlider";
 import { cn } from "@/lib/utils";

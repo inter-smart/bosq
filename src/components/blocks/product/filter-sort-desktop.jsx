@@ -21,7 +21,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 import { cn } from "@/lib/utils";
 import {
   Select,

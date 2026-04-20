@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 import {
   Dialog,
   DialogContent,

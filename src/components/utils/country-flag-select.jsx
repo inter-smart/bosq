@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 
 export default function CountryFlagSelect() {
   return (

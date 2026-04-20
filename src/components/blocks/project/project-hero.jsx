@@ -1,7 +1,7 @@
 import parse from "html-react-parser";
 import { cn } from "@/lib/utils";
 import { Heading } from "@/components/utils/heading";
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 import { Text } from "@/components/utils/text";
 
 export default function ProjectHero({ locale, data }) {

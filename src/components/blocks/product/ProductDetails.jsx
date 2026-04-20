@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import React from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useTranslations } from "next-intl";
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 const Lightbox = dynamic(() => import("yet-another-react-lightbox"));
 import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 import { cn, getLocalizedContent } from "@/lib/utils";

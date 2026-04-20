@@ -2,7 +2,7 @@
 import parse from "html-react-parser";
 import { cn } from "@/lib/utils";
 import { Heading } from "@/components/utils/heading";
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 
 import { motion } from "motion/react";
 
@@ -142,7 +142,7 @@ export default function SustainabilityInfo({
                 >
                   <Image
                     src={item?.media?.path}
-                    alt={isEn ? item?.media?.alt : item?.media?.alt}
+                    alt={isEn ? item?.media?.alt : item?.media?.alt_ar}
                     width={768}
                     height={468}
                     className="w-full h-full object-cover hover:scale-105 transition duration-300"

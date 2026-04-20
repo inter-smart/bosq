@@ -17,7 +17,8 @@ export const generateInvoiceHTML = (order, locale, userName) => {
       src="${item?.variant?.media_path || "https://ux.intersmarthosting.in/Mailers/Bosq/prod-1.png"}"
       width="66"
       height="55"
-      alt="image"
+      alt="${isEn ? item?.variant?.title : item?.variant?.title_ar || item?.variant?.title}"
+      title="${isEn ? item?.variant?.title : item?.variant?.title_ar || item?.variant?.title}"
       style="object-fit: cover; display: block;"
     />
   </td>
@@ -108,7 +109,7 @@ export const generateInvoiceHTML = (order, locale, userName) => {
                                                     <td
                                                         style="display: block; width: 700px; margin: 0 auto; padding: 30px 0; background: #282828; text-align: center;">
                                                         <img src="/images/brand-logo.svg"
-                                                            width="132px" height="40" alt="banner"
+                                                            width="132px" height="40" alt="BOSQ Logo" title="BOSQ Logo"
                                                             style="display:block; margin:0 auto; object-fit:contain;"
                                                     </td>
                                                 </tr>
@@ -345,7 +346,7 @@ export const generateInvoiceHTML = (order, locale, userName) => {
                                                                     <a href="#!" target="_blank"
                                                                         style="text-decoration: none;border-radius: 50%;width: 18px;height: 18px; margin: 0 auto"><img
                                                                             src="https://ux.intersmarthosting.in/Mailers/Bosq/fb.png"
-                                                                            alt="social" width="14px" height="14px"
+                                                                            alt="Facebook" title="Facebook" width="14px" height="14px"
                                                                             style="object-fit:contain"></a>
                                                                 </td>
                                                                 <td width="5%"
@@ -353,7 +354,7 @@ export const generateInvoiceHTML = (order, locale, userName) => {
                                                                     <a href="#!" target="_blank"
                                                                         style="text-decoration: none;border-radius: 50%;width: 18px;height: 18px; margin: 0 auto"><img
                                                                             src="https://ux.intersmarthosting.in/Mailers/Bosq/insta.png"
-                                                                            alt="social" width="14px" height="14px"
+                                                                            alt="Instagram" title="Instagram" width="14px" height="14px"
                                                                             style="object-fit:contain"></a>
                                                                     </td>
                                                                 <td width="5%"
@@ -361,7 +362,7 @@ export const generateInvoiceHTML = (order, locale, userName) => {
                                                                     <a href="#!" target="_blank"
                                                                         style="text-decoration: none;border-radius: 50%;width: 18px;height: 18px; margin: 0 auto"><img
                                                                             src="https://ux.intersmarthosting.in/Mailers/Bosq/youtube.png"
-                                                                            alt="social" width="14px" height="14px"
+                                                                            alt="YouTube" title="YouTube" width="14px" height="14px"
                                                                             style="object-fit:contain"></a>
                                                                 </td>
                                                                 <td width="5%"
@@ -369,7 +370,7 @@ export const generateInvoiceHTML = (order, locale, userName) => {
                                                                     <a href="#!" target="_blank"
                                                                         style="text-decoration: none;border-radius: 50%;width: 18px;height: 18px; margin: 0 auto"><img
                                                                             src="https://ux.intersmarthosting.in/Mailers/Bosq/linkedin.png"
-                                                                            alt="social" width="14px" height="14px"
+                                                                            alt="LinkedIn" title="LinkedIn" width="14px" height="14px"
                                                                             style="object-fit:contain"></a>
                                                                 </td>
 

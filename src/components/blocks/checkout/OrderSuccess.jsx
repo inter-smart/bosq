@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { Heading } from "@/components/utils/heading";
 import { Text } from "@/components/utils/text";
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 import Link from "next/link";
 
 const STATUS_CONFIG = {

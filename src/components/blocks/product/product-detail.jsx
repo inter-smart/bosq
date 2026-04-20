@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Fade from "embla-carousel-fade";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
+import Image from "@/components/utils/custom-image";
 import parse from "html-react-parser";
 import { Heading } from "@/components/utils/heading";
 import { Text } from "@/components/utils/text";
