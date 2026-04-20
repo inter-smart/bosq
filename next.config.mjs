@@ -5,7 +5,7 @@ const withNextIntl = createNextIntlPlugin("./src/il8n/request.js");
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    qualities: [75, 85, 90],
+    qualities: [100],
     formats: ["image/avif", "image/webp"],
     dangerouslyAllowLocalIP: true,
     remotePatterns: [
