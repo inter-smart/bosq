@@ -2,6 +2,7 @@ import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import { getSiteData } from "@/lib/api/CMS/basicGet";
 import NotFound from "./not-found";
+import HeaderClient from "@/components/clients/HeaderClient";
 
 const local_data = {
   footer_data: {
@@ -128,19 +129,26 @@ export default async function PublicLayout({ children, params }) {
   const { locale } = resolvedParams;
 
   const { data, error } = await getSiteData();
-  
+
   if (!data || error) {
-    return <NotFound />
+    return <NotFound />;
   }
 
   const { headerData, footerData, socialMedia, cards, navigationData, landingPage } = data;
 
   return (
     <>
-      <Header locale={locale} navigationData={navigationData} data={headerData} />
+      <HeaderClient locale={locale} navigationData={navigationData} data={headerData} />
 
       <main>{children}</main>
-      <Footer locale={locale} footerData={local_data.footer_data} socialLinkData={socialMedia} data={footerData} paymentCards={cards} landingPage={landingPage} />
+      <Footer
+        locale={locale}
+        footerData={local_data.footer_data}
+        socialLinkData={socialMedia}
+        data={footerData}
+        paymentCards={cards}
+        landingPage={landingPage}
+      />
     </>
   );
 }
