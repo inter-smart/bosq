@@ -170,8 +170,15 @@ export default function HomeHero({ data, locale }) {
                             : item?.media?.mobile?.path_ar) ||
                           "/images/placeholder.png"
                         }
-                        alt={!isEn ? item?.media_alt_ar : item?.media_alt}
+                        alt={
+                          (!isEn ? item?.media_alt_ar : item?.media_alt) ??
+                          "slider image"
+                        }
                         fill
+                        title={
+                          (!isEn ? item?.media_alt_ar : item?.media_alt) ??
+                          "slider image"
+                        }
                         sizes="100vw"
                         className="object-cover"
                         priority={index === 0}
@@ -186,7 +193,14 @@ export default function HomeHero({ data, locale }) {
                             : item?.media?.desktop?.path_ar) ||
                           "/images/placeholder.png"
                         }
-                        alt={!isEn ? item?.media_alt_ar : item?.media_alt}
+                        alt={
+                          (!isEn ? item?.media_alt_ar : item?.media_alt) ??
+                          "slider image"
+                        }
+                        title={
+                          (!isEn ? item?.media_alt_ar : item?.media_alt) ??
+                          "slider image"
+                        }
                         fill
                         sizes="(max-width: 1200px) 100vw, 80vw"
                         className="object-cover"

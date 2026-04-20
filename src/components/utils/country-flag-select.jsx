@@ -7,16 +7,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import Image from "next/image";
 
 export default function CountryFlagSelect() {
   return (
     <Select>
       <SelectTrigger className="w-[180px]">
         <SelectValue className="bg-red-500" >
-          <img
+          <Image
             className="mr-2 h-4 w-4 rounded-sm"
             src="https://flagcdn.com/w20/au.png"
             alt="au"
+            title="Australia"
           />
           Australia
         </SelectValue>

@@ -71,7 +71,7 @@ export default function HomeFeatured({ data, locale }) {
                       <div className="w-full aspect-440/576 overflow-hidden mb-1 xl:mb-3 2xl:mb-5">
                         <Image
                           src={item?.media?.path ?? "/images/placeholder.jpg"}
-                          alt={isEN ? item?.media?.alt : item?.media?.alt_ar}
+                          alt={isEN ? item?.media?.alt : item?.media?.alt_ar ?? "Image"}
                           width={308}
                           height={517}
                           className="w-full h-full object-cover hover:scale-110 transition duration-300"

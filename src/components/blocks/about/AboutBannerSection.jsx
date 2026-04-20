@@ -36,23 +36,31 @@ export default function AboutBannerSection({ data, locale }) {
             />
           </picture>
         ) : (
-          <video
-            autoPlay
-            loop
-            muted
-            fetchPriority="high"
-            playsInline
-            preload="auto"
-            poster={data?.media?.thumbnailPath ?? "/images/placeholder.jpg"}
-            className="w-full h-full object-cover absolute -z-2 inset-0"
-          >
-            <source
-              src={
-                isEn ? data?.media?.desktopPath : data?.media?.desktopPath_ar
-              }
-              type="video/mp4"
+          <>
+            <Image
+              src={data?.media?.thumbnailPath ?? "/images/placeholder.jpg"}
+              alt=""
+              fill
+              priority
+              className="object-cover absolute -z-2 inset-0"
             />
-          </video>
+            <video
+              autoPlay
+              loop
+              muted
+              fetchPriority="high"
+              playsInline
+              preload="auto"
+              className="w-full h-full object-cover absolute -z-2 inset-0"
+            >
+              <source
+                src={
+                  isEn ? data?.media?.desktopPath : data?.media?.desktopPath_ar
+                }
+                type="video/mp4"
+              />
+            </video>
+          </>
         )}
         <div className="container">
           <div className="w-full xl:max-w-1/2 py-15 xl:py-20 2xl:py-25">
