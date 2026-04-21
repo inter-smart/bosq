@@ -14,6 +14,8 @@ export async function GET(request) {
       headers: { cookie: cookieHeader },
     });
 
+    console.log("refreshResponse", refreshResponse);
+
     if (refreshResponse.ok) {
       const response = NextResponse.redirect(new URL(redirectTo, request.url));
       const cookies = refreshResponse.headers.getSetCookie?.()
@@ -23,7 +25,7 @@ export async function GET(request) {
       }
       return response;
     }
-  } catch (_) {}
+  } catch (_) { }
 
   // Refresh failed → redirect to login
   const loginUrl = new URL(`/${locale}/login`, request.url);

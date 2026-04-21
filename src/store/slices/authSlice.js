@@ -427,12 +427,15 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.user = action.payload;
       })
-      .addCase(fetchUserProfile.rejected, (state, action) => {
+      .addCase(fetchUserProfile.rejected, (state) => {
         state.isLoading = false;
-        if (action.payload === "Unauthorized") {
-          state.user = null;
-          state.isAuthenticated = false;
-        }
+        state.user = null;
+        state.isAuthenticated = false;
+        state.isGoogleUser = false;
+        state.tempToken = null;
+        state.resetToken = null;
+        state.pendingEmail = null;
+        state.error = null;
       });
   },
 });
