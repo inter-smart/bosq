@@ -416,7 +416,6 @@ export default function Footer({
               {paymentCards?.map((item, index) => (
                 <div
                   key={"card" + index}
-                  className="bg-red-500"
                   // className={cn(locale === "ar" ? "mr-auto" : "ml-auto")}
                 >
                   <Image
