@@ -47,8 +47,10 @@ export default function HomeHero({ data, locale }) {
     () =>
       data?.map((item) => ({
         ...item,
-        parsedTitle: parse(isEn ? item?.title ?? "" : item?.title_ar ?? ""),
-        parsedDesc: parse(isEn ? item?.description ?? "" : item?.description_ar ?? ""),
+        parsedTitle: parse(isEn ? (item?.title ?? "") : (item?.title_ar ?? "")),
+        parsedDesc: parse(
+          isEn ? (item?.description ?? "") : (item?.description_ar ?? ""),
+        ),
       })),
     [data, isEn],
   );
@@ -76,7 +78,8 @@ export default function HomeHero({ data, locale }) {
                     loop
                     muted
                     playsInline
-                    preload="none"
+                    preload={index === 0 ? "auto" : "none"} // lazy load others
+                    fetchPriority={index === 0 ? "high" : "auto"}
                     className="w-full h-full object-cover absolute -z-2 inset-0"
                   >
                     <source
@@ -104,6 +107,7 @@ export default function HomeHero({ data, locale }) {
                           "slider image"
                         }
                         fill
+                        fetchPriority={index === 0 ? "high" : "auto"}
                         title={
                           (!isEn ? item?.media_alt_ar : item?.media_alt) ??
                           "slider image"
@@ -131,6 +135,7 @@ export default function HomeHero({ data, locale }) {
                           "slider image"
                         }
                         fill
+                        fetchPriority={index === 0 ? "high" : "auto"}
                         sizes="(max-width: 1200px) 100vw, 80vw"
                         className="object-cover"
                         priority={index === 0}
