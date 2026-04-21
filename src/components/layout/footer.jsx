@@ -42,8 +42,6 @@ export default function Footer({
     "اشترك في نشرتنا الإخبارية",
   ];
 
-
-
   const t = useTranslations("footer");
 
   return (
@@ -97,7 +95,12 @@ export default function Footer({
             </div>
           </div>
 
-          <div className={cn("w-full", landingPage?.length > 0 ? "lg:w-[18%]" : "lg:w-[24%]")}>
+          <div
+            className={cn(
+              "w-full",
+              landingPage?.length > 0 ? "lg:w-[18%]" : "lg:w-[24%]",
+            )}
+          >
             <MediaQuery minWidth={1024}>
               <div>
                 <Heading
@@ -141,7 +144,12 @@ export default function Footer({
             </MediaQuery>
           </div>
 
-          <div className={cn("w-full", landingPage?.length > 0 ? "lg:w-[18%]" : "lg:w-[24%]")}>
+          <div
+            className={cn(
+              "w-full",
+              landingPage?.length > 0 ? "lg:w-[18%]" : "lg:w-[24%]",
+            )}
+          >
             <MediaQuery minWidth={1024}>
               <div>
                 <Heading
@@ -185,7 +193,12 @@ export default function Footer({
             </MediaQuery>
           </div>
 
-          <div className={cn("w-full", landingPage?.length > 0 ? "lg:w-[18%]" : "lg:w-[24%]")}>
+          <div
+            className={cn(
+              "w-full",
+              landingPage?.length > 0 ? "lg:w-[18%]" : "lg:w-[24%]",
+            )}
+          >
             <MediaQuery minWidth={1024}>
               <div>
                 <Heading
@@ -239,57 +252,55 @@ export default function Footer({
             </MediaQuery>
           </div>
 
-          {
-            landingPage?.length > 0 && (
-              <div className="w-full lg:w-[18%]">
-                <MediaQuery minWidth={1024}>
-                  <div>
-                    <Heading
-                      as="h6"
-                      size="none"
-                      className="text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-normal text-white mb-4 xl:mb-7 2xl:mb-10"
-                    >
-                      {t("LandingPages")}
-                    </Heading>
-                    <div className="flex flex-wrap">
-                      {landingPage?.map((item, index) => (
-                        <div key={"landing" + index} className="w-full">
-                          <Text
-                            as="div"
-                            size="text3"
-                            className="text-white transition [&>a]:hover:text-[#f17423] mb-1 xl:mb-3"
-                          >
-                            <Link href={`/${locale}/office-chairs/${item?.slug}`}>
-                              {isEn ? item?.title : item?.title_ar}
-                            </Link>
-                          </Text>
-                        </div>
-                      ))}
-                    </div>
+          {landingPage?.length > 0 && (
+            <div className="w-full lg:w-[18%]">
+              <MediaQuery minWidth={1024}>
+                <div>
+                  <Heading
+                    as="h6"
+                    size="none"
+                    className="text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-normal text-white mb-4 xl:mb-7 2xl:mb-10"
+                  >
+                    {t("LandingPages")}
+                  </Heading>
+                  <div className="flex flex-wrap">
+                    {landingPage?.map((item, index) => (
+                      <div key={"landing" + index} className="w-full">
+                        <Text
+                          as="div"
+                          size="text3"
+                          className="text-white transition [&>a]:hover:text-[#f17423] mb-1 xl:mb-3"
+                        >
+                          <Link href={`/${locale}/office-chairs/${item?.slug}`}>
+                            {isEn ? item?.title : item?.title_ar}
+                          </Link>
+                        </Text>
+                      </div>
+                    ))}
                   </div>
-                </MediaQuery>
-                <MediaQuery maxWidth={1023}>
-                  <AccordionItem title={t("LandingPages")} section="landing">
-                    <div className="flex flex-wrap">
-                      {landingPage?.map((item, index) => (
-                        <div key={"landing" + index} className="w-full">
-                          <Text
-                            as="div"
-                            size="text3"
-                            className="text-white transition [&>a]:hover:text-[#f17423] mb-2"
-                          >
-                            <Link href={`/${locale}/office-chairs/${item?.slug}`}>
-                              {isEn ? item?.title : item?.title_ar}
-                            </Link>
-                          </Text>
-                        </div>
-                      ))}
-                    </div>
-                  </AccordionItem>
-                </MediaQuery>
-              </div>
-            )}
-
+                </div>
+              </MediaQuery>
+              <MediaQuery maxWidth={1023}>
+                <AccordionItem title={t("LandingPages")} section="landing">
+                  <div className="flex flex-wrap">
+                    {landingPage?.map((item, index) => (
+                      <div key={"landing" + index} className="w-full">
+                        <Text
+                          as="div"
+                          size="text3"
+                          className="text-white transition [&>a]:hover:text-[#f17423] mb-2"
+                        >
+                          <Link href={`/${locale}/office-chairs/${item?.slug}`}>
+                            {isEn ? item?.title : item?.title_ar}
+                          </Link>
+                        </Text>
+                      </div>
+                    ))}
+                  </div>
+                </AccordionItem>
+              </MediaQuery>
+            </div>
+          )}
         </div>
 
         <hr className="border-[#333] my-1 xl:my-2 2xl:my-4" />
@@ -400,22 +411,25 @@ export default function Footer({
             </div>
           </div>
 
-          <div className="w-full lg:w-[20%] flex flex-wrap">
-            {paymentCards?.map((item, index) => (
-              <div
-                key={"card" + index}
-                className={cn(locale === "ar" ? "mr-auto" : "ml-auto")}
-              >
-                <Image
-                  src={item?.media?.path}
-                  alt={isEn ? item?.media?.alt : item?.media?.alt_ar}
-                  width={120}
-                  height={16}
-                  className="w-[160px] lg:w-[100px] xl:w-[120px] 2xl:w-[150px] block"
-                  quality={90}
-                />
-              </div>
-            ))}
+          <div className="w-full lg:w-[20%]">
+            <div className="flex flex-wrap justify-end gap-0.5 xl:gap-1">
+              {paymentCards?.map((item, index) => (
+                <div
+                  key={"card" + index}
+                  className="bg-red-500"
+                  // className={cn(locale === "ar" ? "mr-auto" : "ml-auto")}
+                >
+                  <Image
+                    src={item?.media?.path}
+                    alt={isEn ? item?.media?.alt : item?.media?.alt_ar}
+                    width={120}
+                    height={16}
+                    className="w-[160px] lg:w-[100px] xl:w-[120px] 2xl:w-[150px] block"
+                    quality={90}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -458,13 +472,21 @@ function NewsletterForm({ placeholders, placeholders_ar, locale }) {
     const email = emailInput?.value?.trim();
 
     if (!email) {
-      toast.error(isEn ? "Please enter your email address" : "الرجاء إدخال بريدك الإلكتروني");
+      toast.error(
+        isEn
+          ? "Please enter your email address"
+          : "الرجاء إدخال بريدك الإلكتروني",
+      );
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      toast.error(isEn ? "Please enter a valid email address" : "الرجاء إدخال بريد إلكتروني صالح");
+      toast.error(
+        isEn
+          ? "Please enter a valid email address"
+          : "الرجاء إدخال بريد إلكتروني صالح",
+      );
       return;
     }
 
@@ -487,7 +509,11 @@ function NewsletterForm({ placeholders, placeholders_ar, locale }) {
       toast.success(isEn ? data?.message?.en : data?.message?.ar);
     } catch (err) {
       console.error(err);
-      toast.error(isEn ? "Something went wrong. Please try again." : "حدث خطأ ما. يرجى المحاولة مرة أخرى.");
+      toast.error(
+        isEn
+          ? "Something went wrong. Please try again."
+          : "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+      );
     } finally {
       setIsSubmitting(false);
     }
