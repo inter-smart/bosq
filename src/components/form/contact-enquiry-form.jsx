@@ -3,7 +3,7 @@
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { z } from "zod";
 
 import {
@@ -53,6 +53,8 @@ export default function ContactEnquiryForm({ locale }) {
   setValidationTranslator(tErrors);
 
   const [selectedCountry, setSelectedCountry] = useState("ae");
+  const [formKey, setFormKey] = useState(0);
+  const [success, setSuccess] = useState(null);
   const phoneWrapperRef = useRef(null);
 
   // Build a static iso2 → country name lookup from the library's bundled data
@@ -79,22 +81,28 @@ export default function ContactEnquiryForm({ locale }) {
     return () => cancelAnimationFrame(id);
   }, [selectedCountry]);
 
+  const defaultValues = {
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+  };
+
   // Validation schema
-  const formSchema = z.object({
-    name: commonValidations.name(t("full_name")),
-    email: commonValidations.email(),
-    phone: commonValidations.phone(selectedCountry.toUpperCase()),
-    message: commonValidations.message(t("message")),
-  });
+  const formSchema = useMemo(
+    () =>
+      z.object({
+        name: commonValidations.name(t("full_name")),
+        email: commonValidations.email(),
+        phone: commonValidations.phone(selectedCountry.toUpperCase()),
+        message: commonValidations.message(t("message")),
+      }),
+    [selectedCountry, t],
+  );
+
   const form = useForm({
     resolver: zodResolver(formSchema),
-    reValidateMode: "onChange",
-    defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
-      message: "",
-    },
+    defaultValues: defaultValues,
   });
 
   const [loading, setLoading] = useState(false);
@@ -103,6 +111,7 @@ export default function ContactEnquiryForm({ locale }) {
 
   const onSubmit = async (values) => {
     setLoading(true);
+    setSuccess(null);
 
     try {
       const recaptchaToken = await executeRecaptcha("contact_enquiry_form");
@@ -112,10 +121,10 @@ export default function ContactEnquiryForm({ locale }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          ...values,
+          phone: normalizedPhone,
           recaptcha_token: recaptchaToken,
           type: "contact",
-          phone: normalizedPhone,
-          ...values,
         }),
       });
       const data = await res.json();
@@ -123,9 +132,14 @@ export default function ContactEnquiryForm({ locale }) {
       if (!res.ok) {
         toast.error(isEN ? data?.message?.en : data?.message?.ar);
       } else {
-        form.reset();
-        setSelectedCountry("ae");
         toast.success(isEN ? data?.message?.en : data?.message?.ar);
+        setSuccess(isEN ? data?.message?.en : data?.message?.ar);
+
+        setTimeout(() => {
+          form.reset(defaultValues);
+          form.clearErrors();
+          setFormKey((prev) => prev + 1);
+        }, 100);
       }
     } catch (err) {
       console.error(err);
@@ -164,32 +178,6 @@ export default function ContactEnquiryForm({ locale }) {
           )}
         />
 
-        {/* Phone */}
-        {/* <FormField
-          control={form.control}
-          name="phone"
-          render={({ field }) => (
-            <FormItem className="w-full">
-              <FormLabel className={labelStyle}>
-                {t("phone_number")}
-                <span className={errorStyle}>*</span>
-              </FormLabel>
-              <FormControl>
-                <PhoneInput
-                  dir={locale === "ar" ? "rtl" : "ltr"}
-                  defaultCountry="ae"
-                  {...field}
-                  className={cn(
-                    inputStyle,
-                    "w-full p-0 [&_input]:flex-1 [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px] [--react-international-phone-flag-width:20px] [--react-international-phone-flag-height:20px]",
-                  )}
-                  placeholder={t("enter_mobile")}
-                />
-              </FormControl>
-              <FormMessage className={errorStyle} />
-            </FormItem>
-          )}
-        /> */}
 
         <FormField
           control={form.control}
@@ -204,13 +192,25 @@ export default function ContactEnquiryForm({ locale }) {
               <FormControl>
                 <div ref={phoneWrapperRef}>
                   <PhoneInput
+                    key={formKey}
                     value={field.value}
                     onChange={(phone, meta) => {
-                      field.onChange(phone);
-                      setSelectedCountry(meta.country.iso2);
-                      // form.trigger("phone");
+                      const countryIso = meta.country.iso2;
+                      const callingCode = `+${meta.country.callingCode}`;
+
+                      if (phone !== field.value) {
+                        if (!field.value && phone.trim() === callingCode) {
+                          form.setValue("phone", "", { shouldValidate: false });
+                          return;
+                        }
+                        field.onChange(phone);
+                      }
+
+                      if (countryIso !== selectedCountry) {
+                        setSelectedCountry(countryIso);
+                      }
                     }}
-                    defaultCountry="ae"
+                    defaultCountry={selectedCountry}
                     dir={locale === "ar" ? "rtl" : "ltr"}
                     className={cn(
                       inputStyle,

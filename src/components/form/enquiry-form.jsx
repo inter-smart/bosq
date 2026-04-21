@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { z } from "zod";
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -37,6 +37,7 @@ export default function EnquiryForm({ locale }) {
   setValidationTranslator(tErrors);
 
   const [selectedCountry, setSelectedCountry] = useState("ae");
+  const [formKey, setFormKey] = useState(0);
   const phoneWrapperRef = useRef(null);
 
   // Build a static iso2 → country name lookup from the library's bundled data
@@ -67,23 +68,29 @@ export default function EnquiryForm({ locale }) {
     return () => cancelAnimationFrame(id);
   }, [selectedCountry]);
 
+  const defaultValues = {
+    name: "",
+    email: "",
+    phone: "",
+    additionalDetails: "",
+  };
+
   // ✅ Validation schema
-  const formSchema = z.object({
-    name: commonValidations.name(t("full_name")),
-    email: commonValidations.email(),
-    phone: commonValidations.phone(selectedCountry.toUpperCase()),
-    additionalDetails: commonValidations.message(t("message")),
-  });
+  const formSchema = useMemo(
+    () =>
+      z.object({
+        name: commonValidations.name(t("full_name")),
+        email: commonValidations.email(),
+        phone: commonValidations.phone(selectedCountry.toUpperCase()),
+        additionalDetails: commonValidations.message(t("message")),
+      }),
+    [selectedCountry, t],
+  );
 
   const isEn = locale === "en";
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
-      additionalDetails: "",
-    },
+    defaultValues: defaultValues,
   });
 
   const [loading, setLoading] = useState(false);
@@ -124,9 +131,13 @@ export default function EnquiryForm({ locale }) {
       } else {
         const msg = (isEn ? data?.message?.en : data?.message?.ar) || t("success_message");
         toast.success(msg);
-        form.reset();
-        setSelectedCountry("ae");
         setSuccess(isEn ? data?.message?.en : data?.message?.ar || t("success_message"));
+
+        setTimeout(() => {
+          form.reset(defaultValues);
+          form.clearErrors();
+          setFormKey((prev) => prev + 1);
+        }, 100);
       }
     } catch (err) {
       const msg = (isEn ? err?.en : err?.ar) || t("submit_error");
@@ -170,6 +181,7 @@ export default function EnquiryForm({ locale }) {
               <FormControl>
                 <div ref={phoneWrapperRef}>
                   <PhoneInput
+                    key={formKey}
                     value={field.value}
                     onChange={(phone, meta) => {
                       const countryIso = meta.country.iso2;
@@ -177,6 +189,7 @@ export default function EnquiryForm({ locale }) {
 
                       if (phone !== field.value) {
                         if (!field.value && phone.trim() === callingCode) {
+                          form.setValue("phone", "", { shouldValidate: false });
                           return;
                         }
                         field.onChange(phone);
@@ -186,7 +199,7 @@ export default function EnquiryForm({ locale }) {
                         setSelectedCountry(countryIso);
                       }
                     }}
-                    defaultCountry="ae"
+                    defaultCountry={selectedCountry}
                     dir={locale === "ar" ? "rtl" : "ltr"}
                     className={cn(
                       inputStyle,

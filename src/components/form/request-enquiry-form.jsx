@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { z } from "zod";
 
 import {
@@ -59,6 +59,7 @@ export default function RequestEnquiryForm({
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState("ae");
+  const [formKey, setFormKey] = useState(0);
   const phoneWrapperRef = useRef(null);
 
   // Build a static iso2 → country name lookup from the library's bundled data
@@ -115,16 +116,20 @@ export default function RequestEnquiryForm({
       );
 
   // Validation schema
-  const formSchema = z.object({
-    firstName: nameMin1(t("first_name")),
-    lastName: nameMin1(t("last_name")),
-    companyName: commonValidations.optionalString(),
-    email: commonValidations.email(),
-    phone: commonValidations.phone(selectedCountry.toUpperCase()),
-    state: commonValidations.region(),
-    dropdown_id: commonValidations.dropdown(),
-    message: commonValidations.message(t("message")),
-  });
+  const formSchema = useMemo(
+    () =>
+      z.object({
+        firstName: nameMin1(t("first_name")),
+        lastName: nameMin1(t("last_name")),
+        companyName: commonValidations.optionalString(),
+        email: commonValidations.email(),
+        phone: commonValidations.phone(selectedCountry.toUpperCase()),
+        state: commonValidations.region(),
+        dropdown_id: commonValidations.dropdown(),
+        message: commonValidations.message(t("message")),
+      }),
+    [selectedCountry, t],
+  );
 
   const defaultValues = {
     firstName: "",
@@ -173,15 +178,18 @@ export default function RequestEnquiryForm({
         toast.error(
           isEN ? data?.message?.en : data?.message?.ar || t("submit_error"),
         );
-      } else {
         toast.success(
           isEN ? data?.message?.en : data?.message?.ar || t("success_message"),
         );
-        form.reset(defaultValues);
-        setSelectedCountry("ae");
         setSuccess(
           isEN ? data?.message?.en : data?.message?.ar || t("success_message"),
         );
+
+        setTimeout(() => {
+          form.reset(defaultValues);
+          form.clearErrors();
+          setFormKey((prev) => prev + 1);
+        }, 100);
       }
     } catch (err) {
       setSuccess(isEN ? err?.en : err?.ar || t("submit_error"));
@@ -298,7 +306,8 @@ export default function RequestEnquiryForm({
               <FormControl>
                 <div ref={phoneWrapperRef}>
                   <PhoneInput
-                    defaultCountry="ae"
+                    key={formKey}
+                    defaultCountry={selectedCountry}
                     value={field.value}
                     onChange={(phone, meta) => {
                       const countryIso = meta.country.iso2;
@@ -307,6 +316,7 @@ export default function RequestEnquiryForm({
                       if (phone !== field.value) {
                         // If it's just the prefix being added to an empty field, don't trigger onChange
                         if (!field.value && phone.trim() === callingCode) {
+                          form.setValue("phone", "", { shouldValidate: false });
                           return;
                         }
                         field.onChange(phone);

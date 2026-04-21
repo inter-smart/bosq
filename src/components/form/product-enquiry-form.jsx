@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { z } from "zod";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useSubmitProductEnquiryMutation } from "@/store/services/productEnquiryApi";
@@ -51,6 +51,8 @@ export default function ProductEnquiryForm({ productId, onClose, locale }) {
   const [submitProductEnquiry, { isLoading }] =
     useSubmitProductEnquiryMutation();
   const [selectedCountry, setSelectedCountry] = useState("ae");
+  const [formKey, setFormKey] = useState(0);
+  const [success, setSuccess] = useState(null);
   // File upload
   const [uploadedFile, setUploadedFile] = useState(null);
 
@@ -62,26 +64,32 @@ export default function ProductEnquiryForm({ productId, onClose, locale }) {
   // ✅ inject translator (once per render is fine)
   setValidationTranslator(tErrors);
 
+  const defaultValues = {
+    fullName: "",
+    email: "",
+    phone: "",
+    city: "",
+    message: "",
+    attachment: null,
+  };
+
   // ✅ Final Correct Schema
-  const formSchema = z.object({
-    fullName: commonValidations.name(t("full_name")),
-    email: commonValidations.email(),
-    phone: commonValidations.phone(selectedCountry.toUpperCase()),
-    city: commonValidations.message(t("city")),
-    message: commonValidations.message(t("message")),
-    attachment: commonValidations.image(),
-  });
+  const formSchema = useMemo(
+    () =>
+      z.object({
+        fullName: commonValidations.name(t("full_name")),
+        email: commonValidations.email(),
+        phone: commonValidations.phone(selectedCountry.toUpperCase()),
+        city: commonValidations.message(t("city")),
+        message: commonValidations.message(t("message")),
+        attachment: commonValidations.image(),
+      }),
+    [selectedCountry, t],
+  );
+
   const form = useForm({
     resolver: zodResolver(formSchema),
-    reValidateMode: "onChange",
-    defaultValues: {
-      fullName: "",
-      email: "",
-      phone: "",
-      city: "",
-      message: "",
-      attachment: null,
-    },
+    defaultValues: defaultValues,
   });
 
   const onSubmit = async (values) => {
@@ -112,11 +120,16 @@ export default function ProductEnquiryForm({ productId, onClose, locale }) {
             : data.message.ar || tToast("submission_failed"),
         );
       }
-      form.reset();
-      setSelectedCountry("ae");
-      setUploadedFile(null);
       toast.success(isEN ? data.message.en : data.message.ar);
-      onClose?.();
+      setSuccess(isEN ? data.message.en : data.message.ar);
+
+      setTimeout(() => {
+        form.reset(defaultValues);
+        form.clearErrors();
+        setFormKey((prev) => prev + 1);
+        setUploadedFile(null);
+        onClose?.();
+      }, 100);
     } catch (error) {
       const apiError = error?.data;
 
@@ -210,7 +223,8 @@ export default function ProductEnquiryForm({ productId, onClose, locale }) {
               </FormLabel>
               <FormControl>
                 <PhoneInput
-                  defaultCountry="ae"
+                  key={formKey}
+                  defaultCountry={selectedCountry}
                   value={field.value}
                   onChange={(phone, meta) => {
                     const countryIso = meta.country.iso2;
@@ -218,6 +232,7 @@ export default function ProductEnquiryForm({ productId, onClose, locale }) {
 
                     if (phone !== field.value) {
                       if (!field.value && phone.trim() === callingCode) {
+                        form.setValue("phone", "", { shouldValidate: false });
                         return;
                       }
                       field.onChange(phone);
