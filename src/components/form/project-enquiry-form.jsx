@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { z } from "zod";
 
 import {
@@ -51,6 +51,8 @@ export default function ProjectEnquiryForm({ projectId, locale }) {
   setValidationTranslator(tErrors);
 
   const [selectedCountry, setSelectedCountry] = useState("ae");
+  const [formKey, setFormKey] = useState(0);
+  const [success, setSuccess] = useState(null);
   const phoneWrapperRef = useRef(null);
 
   // Build a static iso2 → country name lookup from the library's bundled data
@@ -77,22 +79,28 @@ export default function ProjectEnquiryForm({ projectId, locale }) {
     return () => cancelAnimationFrame(id);
   }, [selectedCountry]);
 
+  const defaultValues = {
+    name: "",
+    email: "",
+    phone: "",
+    additionalDetails: "",
+  };
+
   // ✅ Validation schema
-  const formSchema = z.object({
-    name: commonValidations.name(t("full_name")),
-    email: commonValidations.email(),
-    phone: commonValidations.phone(selectedCountry.toUpperCase()),
-    additionalDetails: commonValidations.message(t("message")),
-  });
+  const formSchema = useMemo(
+    () =>
+      z.object({
+        name: commonValidations.name(t("full_name")),
+        email: commonValidations.email(),
+        phone: commonValidations.phone(selectedCountry.toUpperCase()),
+        additionalDetails: commonValidations.message(t("message")),
+      }),
+    [selectedCountry, t],
+  );
 
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
-      additionalDetails: "",
-    },
+    defaultValues: defaultValues,
   });
 
   const [loading, setLoading] = useState(false);
@@ -102,6 +110,7 @@ export default function ProjectEnquiryForm({ projectId, locale }) {
 
   const onSubmit = async (values) => {
     setLoading(true);
+    setSuccess(null);
 
     try {
       const recaptchaToken = await executeRecaptcha("project_enquiry_form");
@@ -127,9 +136,13 @@ export default function ProjectEnquiryForm({ projectId, locale }) {
         toast.success(
           isEN ? data?.message?.en : data?.message?.ar || t("success_message"),
         );
-        form.reset();
-        setSelectedCountry("ae");
-        setLoading(false);
+        setSuccess(isEN ? data?.message?.en : data?.message?.ar || t("success_message"));
+
+        setTimeout(() => {
+          form.reset(defaultValues);
+          form.clearErrors();
+          setFormKey((prev) => prev + 1);
+        }, 100);
       }
     } catch (err) {
       toast.error(isEN ? err?.en : err?.ar || t("submit_error"));
@@ -178,6 +191,7 @@ export default function ProjectEnquiryForm({ projectId, locale }) {
               <FormControl>
                 <div ref={phoneWrapperRef}>
                   <PhoneInput
+                    key={formKey}
                     value={field.value}
                     onChange={(phone, meta) => {
                       const countryIso = meta.country.iso2;
@@ -185,6 +199,7 @@ export default function ProjectEnquiryForm({ projectId, locale }) {
 
                       if (phone !== field.value) {
                         if (!field.value && phone.trim() === callingCode) {
+                          form.setValue("phone", "", { shouldValidate: false });
                           return;
                         }
                         field.onChange(phone);
@@ -194,7 +209,7 @@ export default function ProjectEnquiryForm({ projectId, locale }) {
                         setSelectedCountry(countryIso);
                       }
                     }}
-                    defaultCountry="ae"
+                    defaultCountry={selectedCountry}
                     dir={locale === "ar" ? "rtl" : "ltr"}
                     className={cn(
                       inputStyle,

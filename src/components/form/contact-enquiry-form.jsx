@@ -139,7 +139,6 @@ export default function ContactEnquiryForm({ locale }) {
           form.reset(defaultValues);
           form.clearErrors();
           setFormKey((prev) => prev + 1);
-          setSelectedCountry("ae");
         }, 100);
       }
     } catch (err) {
@@ -211,7 +210,7 @@ export default function ContactEnquiryForm({ locale }) {
                         setSelectedCountry(countryIso);
                       }
                     }}
-                    defaultCountry="ae"
+                    defaultCountry={selectedCountry}
                     dir={locale === "ar" ? "rtl" : "ltr"}
                     className={cn(
                       inputStyle,

@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { z } from "zod";
 
 import {
@@ -67,79 +67,85 @@ export default function AddressForm({
   const tErrors = useTranslations("errors");
   setValidationTranslator(tErrors);
 
-  const formSchema = z
-    .object({
-      fullName: commonValidations.name(t("full_name")),
-      companyName: commonValidations.optionalString(),
-      email: commonValidations.email(),
-      phone: commonValidations.phone(),
-      streetAddress: commonValidations.requiredString(t("street_address")),
-      apartment: commonValidations.optionalString(),
-      country: z.string().min(1, t("country_required")),
-      state: z.string().min(1, t("state_required")),
-      orderNotes: commonValidations.optionalString(),
-      shipToDifferentAddress: commonValidations.optionalBoolean(),
-      shippingFullName: commonValidations.optionalString(),
-      shippingCompanyName: commonValidations.optionalString(),
-      shippingCountry: commonValidations.optionalString(),
-      shippingState: commonValidations.optionalString(),
-      shippingStreetAddress: commonValidations.optionalString(),
-      shippingApartment: commonValidations.optionalString(),
-    })
-    .superRefine((data, ctx) => {
-      // Validate shipping fields only if checkbox is checked
-      if (data.shipToDifferentAddress) {
-        if (!data.shippingFullName || data.shippingFullName.length < 2) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: t("shipping_name_required"),
-            path: ["shippingFullName"],
-          });
-        }
-        if (!data.shippingCountry) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: t("shipping_country_required"),
-            path: ["shippingCountry"],
-          });
-        }
-        if (!data.shippingState) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: t("shipping_state_required"),
-            path: ["shippingState"],
-          });
-        }
-        if (!data.shippingStreetAddress) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: t("shipping_street_address_required"),
-            path: ["shippingStreetAddress"],
-          });
-        }
-      }
-    });
+  const defaultValues = {
+    fullName: "",
+    companyName: "",
+    email: "",
+    phone: "",
+    streetAddress: "",
+    apartment: "",
+    country: "",
+    state: "",
+    orderNotes: "",
+    shipToDifferentAddress: false,
+    shippingFullName: "",
+    shippingCompanyName: "",
+    shippingCountry: "",
+    shippingState: "",
+    shippingStreetAddress: "",
+    shippingApartment: "",
+  };
+
+  const formSchema = useMemo(
+    () =>
+      z
+        .object({
+          fullName: commonValidations.name(t("full_name")),
+          companyName: commonValidations.optionalString(),
+          email: commonValidations.email(),
+          phone: commonValidations.phone(),
+          streetAddress: commonValidations.requiredString(t("street_address")),
+          apartment: commonValidations.optionalString(),
+          country: z.string().min(1, t("country_required")),
+          state: z.string().min(1, t("state_required")),
+          orderNotes: commonValidations.optionalString(),
+          shipToDifferentAddress: commonValidations.optionalBoolean(),
+          shippingFullName: commonValidations.optionalString(),
+          shippingCompanyName: commonValidations.optionalString(),
+          shippingCountry: commonValidations.optionalString(),
+          shippingState: commonValidations.optionalString(),
+          shippingStreetAddress: commonValidations.optionalString(),
+          shippingApartment: commonValidations.optionalString(),
+        })
+        .superRefine((data, ctx) => {
+          // Validate shipping fields only if checkbox is checked
+          if (data.shipToDifferentAddress) {
+            if (!data.shippingFullName || data.shippingFullName.length < 2) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: t("shipping_name_required"),
+                path: ["shippingFullName"],
+              });
+            }
+            if (!data.shippingCountry) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: t("shipping_country_required"),
+                path: ["shippingCountry"],
+              });
+            }
+            if (!data.shippingState) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: t("shipping_state_required"),
+                path: ["shippingState"],
+              });
+            }
+            if (!data.shippingStreetAddress) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: t("shipping_street_address_required"),
+                path: ["shippingStreetAddress"],
+              });
+            }
+          }
+        }),
+    [t],
+  );
 
   const form = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      fullName: "",
-      companyName: "",
-      email: "",
-      phone: "",
-      streetAddress: "",
-      apartment: "",
-      country: "",
-      state: "",
-      orderNotes: "",
-      shipToDifferentAddress: false,
-      shippingFullName: "",
-      shippingCompanyName: "",
-      shippingCountry: "",
-      shippingState: "",
-      shippingStreetAddress: "",
-      shippingApartment: "",
-    },
+    defaultValues: defaultValues,
   });
 
   const [addAddress, { isLoading }] = useAddAddressMutation();
@@ -154,6 +160,7 @@ export default function AddressForm({
 
   // Separate state for phone country selector (for flag alt/title patching)
   const [phoneCountry, setPhoneCountry] = useState("ae");
+  const [formKey, setFormKey] = useState(0);
   const phoneWrapperRef = useRef(null);
 
   // Build a static iso2 → country name lookup from the library's bundled data
@@ -256,9 +263,13 @@ export default function AddressForm({
       }).unwrap();
 
       toast.success(t("added_success"));
-      form.reset();
 
-      onSuccess?.();
+      setTimeout(() => {
+        form.reset(defaultValues);
+        form.clearErrors();
+        setFormKey((prev) => prev + 1);
+        onSuccess?.();
+      }, 100);
     } catch (err) {
       console.error(err);
       toast.error(t("added_failed"));
@@ -348,10 +359,18 @@ export default function AddressForm({
               <FormControl>
                 <div ref={phoneWrapperRef}>
                   <PhoneInput
-                    defaultCountry="ae"
+                    key={formKey}
+                    defaultCountry={phoneCountry}
                     value={field.value}
                     onChange={(phone, meta) => {
-                      field.onChange(phone);
+                      const callingCode = `+${meta.country.callingCode}`;
+                      if (phone !== field.value) {
+                        if (!field.value && phone.trim() === callingCode) {
+                          form.setValue("phone", "", { shouldValidate: false });
+                          return;
+                        }
+                        field.onChange(phone);
+                      }
                       const iso = meta.country.iso2;
                       if (iso !== phoneCountry) setPhoneCountry(iso);
                     }}
