@@ -39,10 +39,14 @@ const nextConfig = {
     ],
   },
   async rewrites() {
+    const apiUrl = process.env.API_URL || "";
+    // Only enable proxy rewrite in production (when API_URL is a remote server)
+    // In local dev, NEXT_PUBLIC_API_BASE_URL points directly to localhost:4000
+    if (!apiUrl || apiUrl.includes("localhost")) return [];
     return [
       {
         source: "/api/proxy/:path*",
-        destination: "https://crm.intersmarthosting.in/bosq/:path*",
+        destination: `${apiUrl}/:path*`,
       },
     ];
   },

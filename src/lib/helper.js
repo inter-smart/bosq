@@ -46,8 +46,17 @@ export function parseOtherMeta(htmlString) {
   return { other, scripts };
 }
 
+function getApiBaseUrl() {
+  // Server-side (SSR/API routes): use API_URL (full backend URL)
+  // Client-side: use NEXT_PUBLIC_API_BASE_URL (may be /api/proxy in production)
+  if (typeof window === "undefined") {
+    return process.env.API_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "";
+  }
+  return process.env.NEXT_PUBLIC_API_BASE_URL || "";
+}
+
 export async function fetchFromAPI(endpoint, options = {}) {
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+  const API_BASE_URL = getApiBaseUrl();
 
   const url = `${API_BASE_URL}${endpoint}`;
   const defaultOptions = {
@@ -86,7 +95,7 @@ export async function fetchFromAPI(endpoint, options = {}) {
 }
 
 export async function fetchFromAPIWithCredentials(endpoint, options = {}) {
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+  const API_BASE_URL = getApiBaseUrl();
   const url = `${API_BASE_URL}${endpoint}`;
 
   const defaultOptions = {
@@ -141,7 +150,7 @@ export async function attemptTokenRefresh() {
 
   _refreshPromise = (async () => {
     try {
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+      const API_BASE_URL = getApiBaseUrl();
       const response = await fetch(`${API_BASE_URL}/api/frontend/auth/refresh-token`, {
         method: "POST",
         credentials: "include",
@@ -158,7 +167,7 @@ export async function attemptTokenRefresh() {
 }
 
 export async function fetchWithCredentials(endpoint, options = {}) {
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+  const API_BASE_URL = getApiBaseUrl();
   const url = `${API_BASE_URL}${endpoint}`;
 
   const defaultOptions = {
