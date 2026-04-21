@@ -421,9 +421,9 @@ export default function Footer({
                   <Image
                     src={item?.media?.path}
                     alt={isEn ? item?.media?.alt : item?.media?.alt_ar}
-                    width={120}
-                    height={16}
-                    className="w-[160px] lg:w-[100px] xl:w-[120px] 2xl:w-[150px] block"
+                    width={40}
+                    height={35}
+                    className="w-[20px] lg:w-[30px] xl:w-[35px] 2xl:w-[40px] aspect-3/2 block object-contain"
                     quality={90}
                   />
                 </div>
