@@ -49,12 +49,19 @@ export function middleware(request) {
   // 🔴 Not logged in → try silent refresh first, then block protected pages
   if (isProtected && !token) {
     const refreshToken = request.cookies.get("refresh_token")?.value;
+
+    console.log(`[Middleware] Protected page "${pathnameWithoutLocale}" accessed without access_token.`);
+    console.log(`[Middleware] refresh_token present: ${!!refreshToken}`);
+    console.log(`[Middleware] All cookies: ${request.cookies.getAll().map(c => c.name).join(", ") || "none"}`);
+
     if (refreshToken) {
+      console.log(`[Middleware] Redirecting to /api/refresh-and-redirect`);
       const refreshUrl = new URL(`/api/refresh-and-redirect`, request.url);
       refreshUrl.searchParams.set("redirect", pathname + request.nextUrl.search);
       refreshUrl.searchParams.set("locale", locale);
       return NextResponse.redirect(refreshUrl);
     }
+    console.log(`[Middleware] No refresh_token found. Redirecting to login.`);
     const loginUrl = new URL(`${loginBase}/login`, request.url);
     loginUrl.searchParams.set("redirect", pathname + request.nextUrl.search);
     return NextResponse.redirect(loginUrl);
