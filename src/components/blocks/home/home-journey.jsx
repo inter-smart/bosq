@@ -7,7 +7,7 @@ import Link from "next/link";
 import parse from "html-react-parser";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
-
+import { getExternalLink, getTarget } from "@/lib/helper";
 
 export default function HomeJourney({ data, locale, isEN }) {
   const t = useTranslations("home");
@@ -16,7 +16,7 @@ export default function HomeJourney({ data, locale, isEN }) {
       <div
         className={cn(
           "w-full h-full from-white/20 sm:from-transparent sm:via-30% sm:via-transparent to-[#f4f4f4] absolute -z-1 inset-0 ",
-          locale === "ar" ? "bg-gradient-to-r" : "bg-gradient-to-l"
+          locale === "ar" ? "bg-gradient-to-r" : "bg-gradient-to-l",
         )}
       />
       {data?.media_type === "video" ? (
@@ -48,7 +48,9 @@ export default function HomeJourney({ data, locale, isEN }) {
           />
           <Image
             src={data?.media?.desktop?.path}
-            alt={isEN ? data?.media?.desktop?.alt : data?.media?.desktop?.alt_ar}
+            alt={
+              isEN ? data?.media?.desktop?.alt : data?.media?.desktop?.alt_ar
+            }
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 80vw"
             className="-z-2 object-cover opacity-80"
@@ -72,7 +74,7 @@ export default function HomeJourney({ data, locale, isEN }) {
                 "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
                 locale === "ar"
                   ? "-translate-x-1 xl:-translate-x-2 "
-                  : "translate-x-1 xl:translate-x-2 "
+                  : "translate-x-1 xl:translate-x-2 ",
               )}
             />
           </Heading>
@@ -88,7 +90,12 @@ export default function HomeJourney({ data, locale, isEN }) {
             className="min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-40"
             asChild
           >
-            <Link href={`/${locale}${data?.link || ""}`}>{t("view_details")}</Link>
+            <Link
+              href={getExternalLink(data?.link)}
+              target={getTarget(data?.link)}
+            >
+              {t("view_details")}
+            </Link>
           </Button>
         </div>
       </div>

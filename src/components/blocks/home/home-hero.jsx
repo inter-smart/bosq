@@ -19,6 +19,7 @@ import {
   usePrevNextButtons,
 } from "@/components/utils/embla-carousel-arrow-button";
 import { cn } from "@/lib/utils";
+import { getExternalLink, getTarget } from "@/lib/helper";
 
 export default function HomeHero({ data, locale }) {
   const isEn = locale === "en";
@@ -191,7 +192,11 @@ export default function HomeHero({ data, locale }) {
                         className="min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-40"
                         asChild
                       >
-                        <Link href={`/${locale}${item?.button?.link}`}>
+                        {/* implement external url  */}
+                        <Link
+                          href={getExternalLink(item?.button?.link)}
+                          target={getTarget(item?.button?.link)}
+                        >
                           {isEn ? item?.button?.label : item?.button?.label_ar}
                         </Link>
                       </Button>

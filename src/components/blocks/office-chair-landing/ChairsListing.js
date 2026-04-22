@@ -7,6 +7,7 @@ import ChairSlider from "./ChairSlider";
 import { cn } from "@/lib/utils";
 import parse from "html-react-parser";
 import { Heading } from "@/components/utils/heading";
+import { getExternalLink, getTarget } from "@/lib/helper";
 
 export default function ChairsListing({ data, locale = "en" }) {
   const isEn = locale === "en";
@@ -21,7 +22,7 @@ export default function ChairsListing({ data, locale = "en" }) {
   const ctaLabel = isEn ? data?.cta?.label : data?.cta?.label_ar;
   const ctaHref = data?.cta?.href;
 
-  console.log("ctaLabel", ctaLabel)
+  console.log("ctaLabel", ctaLabel);
 
   const heroImage = data?.heroImage;
   const heroTitle = isEn ? data?.heroTitle : data?.heroTitle_ar;
@@ -77,15 +78,20 @@ export default function ChairsListing({ data, locale = "en" }) {
               </div>
             )}
 
-              {ctaHref && (
-                <Button
-                  asChild
-                  variant="black"
-                  className="min-w-[120px] sm:min-w-[120px] xl:min-w-[145px] 2xl:min-w-[218px] mt-[15px] xl:mt-[20px] 2xl:mt-[35px]"
+            {ctaHref && (
+              <Button
+                asChild
+                variant="black"
+                className="min-w-[120px] sm:min-w-[120px] xl:min-w-[145px] 2xl:min-w-[218px] mt-[15px] xl:mt-[20px] 2xl:mt-[35px]"
+              >
+                <Link
+                  href={getExternalLink(ctaHref)}
+                  target={getTarget(ctaHref)}
                 >
-                  <Link href={ctaHref}>{ctaLabel}</Link>
-                </Button>
-              )}
+                  {ctaLabel}
+                </Link>
+              </Button>
+            )}
           </div>
 
           {/* RIGHT (empty for now) */}

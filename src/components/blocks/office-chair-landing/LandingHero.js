@@ -13,6 +13,7 @@ import { Text } from "@/components/utils/text";
 import Image from "@/components/utils/custom-image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { getExternalLink, getTarget } from "@/lib/helper";
 
 export default function LandingHero({ data, locale, slug, link }) {
   const isEn = locale === "en";
@@ -142,7 +143,7 @@ export default function LandingHero({ data, locale, slug, link }) {
                 variant="white"
                 className="text-[12px] 2xl:text-[16px] min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-[200px] mt-[20px] xl:mt-[30px] 2xl:mt-[45px]"
               >
-                <Link href={ctaHref}>{label}</Link>
+                <Link href={getExternalLink(ctaHref)} target={getTarget(ctaHref)}>{label}</Link>
               </Button>
             )}
           </div>

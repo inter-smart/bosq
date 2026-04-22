@@ -5,6 +5,7 @@ import Image from "@/components/utils/custom-image";
 import Link from "next/link";
 import parse from "html-react-parser";
 import { cn } from "@/lib/utils";
+import { getExternalLink, getTarget } from "@/lib/helper";
 
 export default function HomeCalculator({ smartSpaceSection, locale, isEN }) {
   return (
@@ -47,15 +48,14 @@ export default function HomeCalculator({ smartSpaceSection, locale, isEN }) {
                       />
                     </div>
                     <div className="w-full sm:w-1/2">
-                    {
-                      rightItem && 
-                      <CardComp
-                      locale={locale}
-                      data={rightItem}
-                      isEN={isEN}
-                      variant={"reverse"}
-                      />
-                    }
+                      {rightItem && (
+                        <CardComp
+                          locale={locale}
+                          data={rightItem}
+                          isEN={isEN}
+                          variant={"reverse"}
+                        />
+                      )}
                     </div>
                   </div>
                 </div>
@@ -68,7 +68,6 @@ export default function HomeCalculator({ smartSpaceSection, locale, isEN }) {
 }
 
 function CardComp({ data, variant, locale, isEN }) {
-
   return (
     <div
       className={cn(
@@ -81,7 +80,7 @@ function CardComp({ data, variant, locale, isEN }) {
       <div className="w-full max-w-[220px] sm:max-w-[90%] aspect-4/3 hover:scale-105 transition duration-300">
         <Image
           src={data?.media?.path}
-          alt={!isEN? data?.media?.alt_ar : data?.media?.alt}
+          alt={!isEN ? data?.media?.alt_ar : data?.media?.alt}
           width={620}
           height={500}
           className="w-full h-full object-contain"
@@ -99,7 +98,7 @@ function CardComp({ data, variant, locale, isEN }) {
           size="heading1"
           className="line-clamp-2 text-[#282828] mb-2 xl:mb-3 2xl:mb-5"
         >
-          {parse(isEN? data?.title : data?.title_ar)}
+          {parse(isEN ? data?.title : data?.title_ar)}
           <span
             className={cn(
               "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
@@ -115,15 +114,18 @@ function CardComp({ data, variant, locale, isEN }) {
           size="text1"
           className="line-clamp-6 font-light text-black mb-4 xl:mb-7 2xl:mb-10"
         >
-          {parse(isEN? data?.description : data?.description_ar)}
+          {parse(isEN ? data?.description : data?.description_ar)}
         </Text>
         <Button
           variant={"black"}
           className="min-w-[100px] sm:min-w-[120px] xl:min-w-[135px] 2xl:min-w-[160px]"
           asChild
         >
-          <Link href={`/${locale}${data?.button?.link}`}>
-            {isEN? data?.button?.label: data?.button?.label_ar}
+          <Link
+            href={getExternalLink(data?.button?.link)}
+            target={getTarget(data?.button?.link)}
+          >
+            {isEN ? data?.button?.label : data?.button?.label_ar}
           </Link>
         </Button>
       </div>

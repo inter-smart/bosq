@@ -11,6 +11,7 @@ import Autoplay from "embla-carousel-autoplay";
 import { Suspense, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getExternalLink, getTarget } from "@/lib/helper";
 
 export default function HomeFind({ data, locale, isEN }) {
   const [emblaRef] = useEmblaCarousel(
@@ -119,7 +120,7 @@ export default function HomeFind({ data, locale, isEN }) {
                                   )}
                                   asChild
                                 >
-                                  <Link href={`${locale}${item?.button?.link}`}>
+                                  <Link href={getExternalLink(item?.button?.link)} target={getTarget(item?.button?.link)}>
                                     {!isEN? item?.button?.label_ar : item?.button?.label}
                                   </Link>
                                 </Button>

@@ -1,3 +1,22 @@
+import { locales, defaultLocale } from "@/il8n/config";
+
+export function getLocale() {
+  if (typeof window !== "undefined") {
+    const cookieLocale = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("NEXT_LOCALE="))
+      ?.split("=")[1];
+    if (cookieLocale && locales.includes(cookieLocale)) return cookieLocale;
+
+    const pathname = window.location.pathname;
+    const locale = locales.find(
+      (l) => pathname === `/${l}` || pathname.startsWith(`/${l}/`),
+    );
+    return locale || defaultLocale;
+  }
+  return defaultLocale;
+}
+
 export function parseOtherMeta(htmlString) {
   if (!htmlString || htmlString.trim() === "") {
     return { other: {}, scripts: [] };
@@ -31,7 +50,8 @@ export function parseOtherMeta(htmlString) {
   }
 
   // Extract script tags (for JSON-LD)
-  const scriptRegex = /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
+  const scriptRegex =
+    /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
   let scriptMatch;
 
   while ((scriptMatch = scriptRegex.exec(htmlString)) !== null) {
@@ -76,7 +96,10 @@ export async function fetchFromAPI(endpoint, options = {}) {
       return {
         data: null,
         error: true,
-        message: data?.message || data?.error?.message || `Error: ${response.status} ${response.statusText}`,
+        message:
+          data?.message ||
+          data?.error?.message ||
+          `Error: ${response.status} ${response.statusText}`,
       };
     }
 
@@ -124,7 +147,10 @@ export async function fetchFromAPIWithCredentials(endpoint, options = {}) {
       return {
         data: null,
         error: true,
-        message: data?.message || data?.error?.message || `Error: ${response.status} ${response.statusText}`,
+        message:
+          data?.message ||
+          data?.error?.message ||
+          `Error: ${response.status} ${response.statusText}`,
       };
     }
 
@@ -151,10 +177,13 @@ export async function attemptTokenRefresh() {
   _refreshPromise = (async () => {
     try {
       const API_BASE_URL = getApiBaseUrl();
-      const response = await fetch(`${API_BASE_URL}/api/frontend/auth/refresh-token`, {
-        method: "POST",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${API_BASE_URL}/api/frontend/auth/refresh-token`,
+        {
+          method: "POST",
+          credentials: "include",
+        },
+      );
       return response.ok;
     } catch {
       return false;
@@ -269,3 +298,13 @@ export async function fetchUserProfileAPI() {
     method: "GET",
   });
 }
+
+export const getExternalLink = (link) => {
+  const locale = getLocale();
+
+  return link.startsWith("/") ? `/${locale}${link}` : link;
+};
+
+export const getTarget = (link) => {
+  return link.startsWith("/") ? "_self" : "_blank";
+};
