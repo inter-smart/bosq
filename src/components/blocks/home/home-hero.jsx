@@ -80,7 +80,6 @@ export default function HomeHero({ data, locale }) {
                     muted
                     playsInline
                     preload={index === 0 ? "auto" : "none"} // lazy load others
-                    // fetchPriority={index === 0 ? "high" : "auto"}
                     className="w-full h-full object-cover absolute -z-2 inset-0"
                   >
                     <source
@@ -108,7 +107,7 @@ export default function HomeHero({ data, locale }) {
                           "slider image"
                         }
                         fill
-                        // fetchPriority={index === 0 ? "high" : "auto"}
+                        fetchPriority={index === 0 ? "high" : "auto"}
                         title={
                           (isEn ? item?.media_alt : item?.media_alt_ar) ??
                           "slider image"
@@ -139,6 +138,7 @@ export default function HomeHero({ data, locale }) {
                         sizes="(max-width: 1200px) 100vw, 80vw"
                         className="object-cover"
                         priority={index === 0}
+                        fetchPriority={index === 0 ? "high" : "auto"}
                         quality={90}
                       />
                     </div>
