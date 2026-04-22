@@ -1,4 +1,5 @@
 import { apiClient } from "../client";
+import { fetchApi } from "../server";
 import { sendError, sendSuccess } from "../api";
 
 export const getSustainabilityData = async () => {
@@ -88,7 +89,7 @@ export const getProjectDetails = async ({ slug }) => {
 
 export const getOfficeChairsData = async (slug) => {
   try {
-    const data = await apiClient(`/api/frontend/office-chairs?slug=${slug}`);
+    const data = await fetchApi(`/api/frontend/office-chairs?slug=${slug}`, {}, true);
     return sendSuccess(data?.data);
   } catch (error) {
     return sendError(error);
