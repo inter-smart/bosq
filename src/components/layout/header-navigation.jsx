@@ -10,7 +10,6 @@ import {
   NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
-import { motion } from "motion/react";
 import Image from "@/components/utils/custom-image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -22,11 +21,6 @@ const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
 });
 
-const itemVariants = {
-  hidden: { opacity: 0, x: -20 },
-  show: { opacity: 1, x: 0, transition: { duration: 0.35, ease: "easeOut" } },
-  exit: { opacity: 0, x: -20, transition: { duration: 0.2 } },
-};
 
 export default function HeaderNavigation({
   locale,
@@ -89,10 +83,8 @@ export default function HeaderNavigation({
       <NavigationMenuList className="xl:gap-x-3 2xl:gap-x-4 max-lg:flex-col max-lg:[&>div]:w-full">
         {menuItems?.map((item, i) => {
           const isActive = pathname === item.slug;
-          return (
-            <motion.div key={i} variants={itemVariants}>
-              {item?.hasSubmenu ? (
-                <NavigationMenuItem value={"toplevel" + i}>
+          return item?.hasSubmenu ? (
+                <NavigationMenuItem key={i} value={"toplevel" + i}>
                   <NavigationMenuTrigger
                     className={cn(getNavigationMenuTriggerStyle(isActive))}
                     onClick={() => {
@@ -286,7 +278,7 @@ export default function HeaderNavigation({
                   </NavigationMenuContent>
                 </NavigationMenuItem>
               ) : (
-                <NavigationMenuItem>
+                <NavigationMenuItem key={i}>
                   <NavigationMenuLink
                     className={cn(getNavigationMenuTriggerStyle(isActive))}
                     asChild
@@ -299,8 +291,6 @@ export default function HeaderNavigation({
                     </Link>
                   </NavigationMenuLink>
                 </NavigationMenuItem>
-              )}
-            </motion.div>
           );
         })}
       </NavigationMenuList>

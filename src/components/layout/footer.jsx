@@ -524,6 +524,8 @@ function NewsletterForm({ placeholders, placeholders_ar, locale }) {
       placeholders_ar={placeholders_ar}
       locale={locale}
       onSubmit={handleSubmit}
+      inputLabel="Subscribe to newsletter"
+      inputLabel_ar="اشترك في النشرة الإخبارية"
     />
   );
 }

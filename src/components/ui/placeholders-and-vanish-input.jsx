@@ -5,11 +5,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Search } from "lucide-react";
 
-export function PlaceholdersAndVanishInput({ placeholders, placeholders_ar, onChange, onSubmit, locale, variant = "default" }) {
+export function PlaceholdersAndVanishInput({ placeholders, placeholders_ar, onChange, onSubmit, locale, variant = "default", inputLabel, inputLabel_ar }) {
 
   const isEN = locale === "en";
 
   const activePlaceholders = locale === "ar" || locale !== "en" ? placeholders_ar || placeholders : placeholders;
+  const ariaLabel = (isEN ? inputLabel : inputLabel_ar) || activePlaceholders[0];
 
   const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
   const intervalRef = useRef(null);
@@ -188,6 +189,7 @@ export function PlaceholdersAndVanishInput({ placeholders, placeholders_ar, onCh
         ref={inputRef}
         value={value}
         type="text"
+        aria-label={ariaLabel}
         className={cn(
           "text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[16px] leading-tight font-light text-white w-full relative z-50 border-none dark:text-white bg-transparent h-full focus:outline-none focus:ring-0 selection:bg-white selection:text-black ",
           animating && "text-transparent dark:text-transparent",

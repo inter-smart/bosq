@@ -79,7 +79,7 @@ export default function HomeHero({ data, locale }) {
                     muted
                     playsInline
                     preload={index === 0 ? "auto" : "none"} // lazy load others
-                    fetchPriority={index === 0 ? "high" : "auto"}
+                    // fetchPriority={index === 0 ? "high" : "auto"}
                     className="w-full h-full object-cover absolute -z-2 inset-0"
                   >
                     <source
@@ -103,13 +103,13 @@ export default function HomeHero({ data, locale }) {
                           "/images/placeholder.png"
                         }
                         alt={
-                          (!isEn ? item?.media_alt_ar : item?.media_alt) ??
+                          (isEn ? item?.media_alt : item?.media_alt_ar) ??
                           "slider image"
                         }
                         fill
-                        fetchPriority={index === 0 ? "high" : "auto"}
+                        // fetchPriority={index === 0 ? "high" : "auto"}
                         title={
-                          (!isEn ? item?.media_alt_ar : item?.media_alt) ??
+                          (isEn ? item?.media_alt : item?.media_alt_ar) ??
                           "slider image"
                         }
                         sizes="100vw"
@@ -127,15 +127,14 @@ export default function HomeHero({ data, locale }) {
                           "/images/placeholder.png"
                         }
                         alt={
-                          (!isEn ? item?.media_alt_ar : item?.media_alt) ??
+                          (isEn ? item?.media_alt : item?.media_alt_ar) ??
                           "slider image"
                         }
                         title={
-                          (!isEn ? item?.media_alt_ar : item?.media_alt) ??
+                          (isEn ? item?.media_alt : item?.media_alt_ar) ??
                           "slider image"
                         }
                         fill
-                        fetchPriority={index === 0 ? "high" : "auto"}
                         sizes="(max-width: 1200px) 100vw, 80vw"
                         className="object-cover"
                         priority={index === 0}
@@ -152,7 +151,7 @@ export default function HomeHero({ data, locale }) {
                           : item?.media?.desktop?.path_ar) ||
                         "/images/placeholder.png"
                       }
-                      alt={!isEn ? item?.media_alt_ar : item?.media_alt}
+                      alt={isEn ? item?.media_alt : item?.media_alt_ar}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 80vw"
                       className="object-cover"
@@ -193,7 +192,7 @@ export default function HomeHero({ data, locale }) {
                         asChild
                       >
                         <Link href={`/${locale}${item?.button?.link}`}>
-                          {!isEn ? item?.button?.label_ar : item?.button?.label}
+                          {isEn ? item?.button?.label : item?.button?.label_ar}
                         </Link>
                       </Button>
                     </div>
