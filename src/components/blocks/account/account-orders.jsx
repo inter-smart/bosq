@@ -11,6 +11,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import OrdersDetailModal from "./orders-detail-modal";
+import ReturnOrderDialog from "./return-order-dialog";
 import ProductListPagination from "@/components/blocks/product/Listing/Pagination";
 import { OrderEmpty } from "./order-empty";
 import { useCancelOrderMutation, useReorderOrderMutation } from "@/store/services/orderApi";
@@ -36,6 +37,7 @@ export default function AccountOrders({ locale, orders: initialOrders, paginatio
 
   const orders = initialOrders ?? [];
   const [cancelTargetId, setCancelTargetId] = useState(null);
+  const [returnTargetOrder, setReturnTargetOrder] = useState(null);
 
   const [cancelOrder, { isLoading: isCancelling }] = useCancelOrderMutation();
   const [reorderOrder, { isLoading: isReordering }] = useReorderOrderMutation();
@@ -190,8 +192,7 @@ export default function AccountOrders({ locale, orders: initialOrders, paginatio
                           <Button
                             variant={"link"}
                             className={cn(btnStyle, "text-red-600 hover:text-red-700")}
-                            onClick={() => setCancelTargetId(item.id)}
-                            disabled={isCancelling && cancelTargetId === item.id}
+                            onClick={() => setReturnTargetOrder(item)}
                           >
                             {t("return_order")}
                           </Button>
@@ -230,6 +231,14 @@ export default function AccountOrders({ locale, orders: initialOrders, paginatio
           )}
         </div>
       )}
+
+      {/* Return Order Dialog */}
+      <ReturnOrderDialog
+        open={!!returnTargetOrder}
+        order={returnTargetOrder}
+        locale={locale}
+        onOpenChange={(open) => !open && setReturnTargetOrder(null)}
+      />
 
       {/* Cancel Order Confirmation Dialog */}
       <AlertDialog open={!!cancelTargetId} onOpenChange={(open) => !open && setCancelTargetId(null)}>

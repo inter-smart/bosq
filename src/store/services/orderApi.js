@@ -146,6 +146,21 @@ export const orderApi = createApi({
         return message;
       },
     }),
+
+    returnOrder: builder.mutation({
+      query: ({ orderId, formData }) => ({
+        url: `/api/frontend/orders/${orderId}/return`,
+        method: "POST",
+        body: formData,
+        formData: true,
+      }),
+      transformErrorResponse: (response) => {
+        const message = response?.data?.message;
+        if (!message) return { en: "Failed to submit return request", ar: "فشل في تقديم طلب الإرجاع" };
+        if (typeof message === "string") return { en: message, ar: message };
+        return message;
+      },
+    }),
   }),
 });
 
@@ -157,4 +172,5 @@ export const {
   useReorderOrderMutation,
   useInitiatePaymentMutation,
   useGetPaymentStatusQuery,
+  useReturnOrderMutation,
 } = orderApi;
