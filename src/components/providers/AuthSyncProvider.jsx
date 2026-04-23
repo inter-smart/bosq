@@ -11,13 +11,15 @@ export default function AuthSyncProvider() {
   const dispatch = useDispatch();
   const router = useRouter();
   const pathname = usePathname();
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const user = useSelector((state) => state.auth.user);
 
   // On mount, validate persisted session against the server.
+  // isAuthenticated is never persisted, so we check for a persisted user object instead.
+  // fetchUserProfile success sets isAuthenticated=true; failure clears all auth state.
   // Skip on auth pages — don't silently re-authenticate a user who intentionally navigated to login.
   useEffect(() => {
     const isAuthPage = AUTH_PATHS.some((p) => pathname.includes(p));
-    if (isAuthenticated && !isAuthPage) {
+    if (user && !isAuthPage) {
       dispatch(fetchUserProfile());
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps

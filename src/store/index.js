@@ -32,10 +32,12 @@ const createNoopStorage = () => {
 const storage = typeof window !== "undefined" ? createWebStorage("local") : createNoopStorage();
 
 // Auth-specific persist config
+// isAuthenticated is intentionally excluded — it's always derived from
+// the server (fetchUserProfile) to prevent stale localStorage lying about session validity.
 const authPersistConfig = {
   key: "auth",
   storage,
-  whitelist: ["user", "isAuthenticated", "isGoogleUser"],
+  whitelist: ["user", "isGoogleUser"],
 };
 
 const rootReducer = combineReducers({

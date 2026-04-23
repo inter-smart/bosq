@@ -1,3 +1,4 @@
+"use client";
 import Image from "@/components/utils/custom-image";
 import Link from "next/link";
 import { Button } from "../ui/button";
@@ -72,13 +73,13 @@ export default function SearchDialog({ children, locale }) {
 
   const handleAddToLocalStorage = (item) => {
     saveVariantToStorage({
-      label: isEn ? item?.title : (item?.title_ar || item?.title),
+      label: isEn ? item?.title : item?.title_ar || item?.title,
       url: `/${locale}/products/${item?.baseSlug}?sku=${item?.slug}`,
       STORAGE_KEY: "recently_viewed",
     });
 
     saveVariantToStorage({
-      label: isEn ? item?.category?.name : (item?.category?.name_ar || item?.category?.name),
+      label: isEn ? item?.category?.name : item?.category?.name_ar || item?.category?.name,
       url: `/${locale}/products?${item?.category?.parent_id ? `category=${item?.category?.slug}` : `sub_category=${item?.category?.slug}`}`,
       STORAGE_KEY: "categories",
     });
@@ -228,7 +229,9 @@ export default function SearchDialog({ children, locale }) {
                             <p className="text-[10px] leading-normal font-light truncate text-[#bbbcbc]">
                               {item?.categories?.map((cat) => (isEn ? cat.name : cat.name_ar)).join(", ")}
                             </p>
-                            <p className="text-[13px] leading-normal font-normal truncate text-[#282828]">{isEn ? item?.title : (item?.title_ar || item?.title)}</p>
+                            <p className="text-[13px] leading-normal font-normal truncate text-[#282828]">
+                              {isEn ? item?.title : item?.title_ar || item?.title}
+                            </p>
                           </div>
                         </Link>
                       </DialogClose>
@@ -306,7 +309,7 @@ export default function SearchDialog({ children, locale }) {
                                   href={`/${locale}/products/${item?.baseSlug}${item?.query_params}`}
                                   onClick={() => handleAddToLocalStorage(item)}
                                 >
-                                  {isEn ? item?.title : (item?.title_ar || item?.title)}
+                                  {isEn ? item?.title : item?.title_ar || item?.title}
                                 </Link>
                               </DialogClose>
                             </Heading>
