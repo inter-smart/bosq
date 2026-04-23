@@ -103,7 +103,7 @@ export default function PersonalInformationForm({ data, locale, isGoogleUser }) 
       firstName: "",
       lastName: "",
       displayName: "",
-      email: "",
+      // email: "",
       phone: "",
     });
     setSuccess(null);
