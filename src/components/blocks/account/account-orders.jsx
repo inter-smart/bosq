@@ -176,7 +176,24 @@ export default function AccountOrders({ locale, orders: initialOrders, paginatio
                       <div className="w-full flex flex-wrap items-center justify-end mt-2 2xl:mt-4">
                         {item?.order_url && (
                           <Button variant={"link"} className={btnStyle} asChild>
-                            <a href={/^https?:\/\//.test(item?.order_url) ? item.order_url : `https://${item.order_url}`} target="_blank" rel="noopener noreferrer">{t("track_order")}</a>
+                            <a
+                              href={/^https?:\/\//.test(item?.order_url) ? item.order_url : `https://${item.order_url}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {t("track_order")}
+                            </a>
+                          </Button>
+                        )}
+
+                        {item?.status?.toLowerCase() === "delivered" && item?.showReturnButton && (
+                          <Button
+                            variant={"link"}
+                            className={cn(btnStyle, "text-red-600 hover:text-red-700")}
+                            onClick={() => setCancelTargetId(item.id)}
+                            disabled={isCancelling && cancelTargetId === item.id}
+                          >
+                            {t("return_order")}
                           </Button>
                         )}
 
