@@ -1,5 +1,6 @@
 import React from "react";
 import BlogCard from "./blog-card";
+import { useTranslations } from "next-intl";
 
 import {
   Pagination,
@@ -15,6 +16,7 @@ import { cn } from "@/lib/utils";
 const ITEMS_PER_PAGE = 6;
 
 export default function BlogList({ locale, data }) {
+  const t = useTranslations("common");
   const blogs = data?.blog || [];
   const pagination = data?.pagination || {};
   const isEn = locale === "en";
@@ -77,7 +79,9 @@ export default function BlogList({ locale, data }) {
         {totalCount > 6 && (
           <div className="w-full flex flex-col sm:flex-row sm:justify-between items-center gap-4 mt-5 xl:mt-10 2xl:mt-16">
             <div className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-normal text-[#bbb]">
-              Showing {startItem}-{endItem} of {totalCount} blogs
+              {locale === "ar"
+                ? `عرض ${startItem}-${endItem} من ${totalCount} مدونات`
+                : `Showing ${startItem}-${endItem} of ${totalCount} blogs`}
             </div>
             {totalPages > 0 && (
               <div>
