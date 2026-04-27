@@ -146,7 +146,9 @@ export default function OrdersDetailModal({ children, order, locale }) {
       // ── ITEMS TABLE ──────────────────────────────────────────────────
       const cols = {
         product: margin,
-        qty: margin + 100,
+        qty: margin + 90,
+        price: margin + 118,
+        discount: margin + 150,
         subtotal: pageWidth - margin,
       };
 
@@ -157,6 +159,8 @@ export default function OrdersDetailModal({ children, order, locale }) {
       doc.setTextColor(80, 80, 80);
       doc.text("PRODUCT", cols.product, y);
       doc.text("QTY", cols.qty, y, { align: "center" });
+      doc.text("PRICE", cols.price, y, { align: "center" });
+      doc.text("DISCOUNT", cols.discount, y, { align: "center" });
       doc.text("SUBTOTAL", cols.subtotal, y, { align: "right" });
       y += 5;
       doc.setDrawColor(200, 200, 200);
@@ -174,7 +178,9 @@ export default function OrdersDetailModal({ children, order, locale }) {
         }
         const productTitle = item?.variant?.title ?? "Unknown Product";
         const sku = item?.variant?.sku ? `SKU: ${item.variant.sku}` : "";
-        const t = productTitle.length > 45 ? productTitle.substring(0, 43) + ".." : productTitle;
+        const t = productTitle.length > 38 ? productTitle.substring(0, 36) + ".." : productTitle;
+        const unitPrice = parseFloat(item?.price ?? item?.line_total ?? 0);
+        const discountAmt = parseFloat(item?.discount_amount ?? 0);
 
         doc.setFont("helvetica", "bold");
         doc.text(t, cols.product, y);
@@ -188,6 +194,9 @@ export default function OrdersDetailModal({ children, order, locale }) {
         }
         doc.setFont("helvetica", "normal");
         doc.text(String(item?.quantity ?? 0), cols.qty, y, { align: "center" });
+        doc.text(aed(unitPrice), cols.price, y, { align: "center" });
+        const discountValue = !isNaN(discountAmt) && discountAmt > 0 ? aed(discountAmt) : "-";
+        doc.text(discountValue, cols.discount, y, { align: "center" });
         doc.setFont("helvetica", "bold");
         doc.text(aed(item?.line_total), cols.subtotal, y, { align: "right" });
         y += 11;
@@ -345,7 +354,7 @@ export default function OrdersDetailModal({ children, order, locale }) {
 
                 <Text as="div" size="text3" className={cn(labelStyle, "font-bold mb-1! [&>span]:font-bold")}>
                   Total Amount : {""}
-                  <span>{order?.grand_total}</span>
+                  <span>AED {order?.grand_total}</span>
                 </Text>
               </div>
             </div>

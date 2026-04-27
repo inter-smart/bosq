@@ -31,12 +31,6 @@ export default function LandingHero({ data, locale, slug, link }) {
                 {isEn ? "Home" : "الرئيسية"}
               </BreadcrumbLink>
             </BreadcrumbItem>
-            <BreadcrumbSeparator>/</BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbLink>
-                {isEn ? "Office Chairs" : "كراسي مكتب"}
-              </BreadcrumbLink>
-            </BreadcrumbItem>
             {slug && (
               <BreadcrumbItem>
                 {link ? (

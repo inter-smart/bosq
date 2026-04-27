@@ -3,7 +3,7 @@ import Image from "@/components/utils/custom-image";
 import { Heading } from "../../utils/heading";
 import { Text } from "../../utils/text";
 import Link from "next/link";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useState } from "react";
 import { motion } from "motion/react";
 import { Skeleton } from "../../ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -21,10 +21,17 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
 
   const { isAuthenticated } = useAppSelector((state) => state.auth);
 
+  console.log("isAuthenticated ", isAuthenticated)
+
   const router = useRouter();
 
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(product?.isWishlisted ?? false);
+  const [prevWishlistKey, setPrevWishlistKey] = useState({ id: product?.id, val: product?.isWishlisted });
+  if (prevWishlistKey.id !== product?.id || prevWishlistKey.val !== product?.isWishlisted) {
+    setPrevWishlistKey({ id: product?.id, val: product?.isWishlisted });
+    setIsWishlisted(product?.isWishlisted ?? false);
+  }
   const [toggleWishlist] = useToggleWishlistMutation();
 
   const tToast = useTranslations("toast");
@@ -40,7 +47,7 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
 
   const handleToggleWishlist = async (id) => {
     if (!isAuthenticated) {
-      router.push(`/${locale}/login?activity=wishlist`);
+      router.push("/login");
       return;
     }
     // Optimistic update
@@ -60,10 +67,6 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
       toast.error(`${tToast("wishlist_remove_failed")}`);
     }
   };
-
-  useEffect(() => {
-    setIsWishlisted(product?.isWishlisted ?? false);
-  }, [product?.id, product?.isWishlisted]);
 
   return (
     <>

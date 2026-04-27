@@ -413,7 +413,7 @@ const OrderSummary = ({
               className="font-normal text-[#282828] my-2 xl:my-3 2xl:my-4 [&_span]:font-light [&_span]:text-[#808080] flex justify-between"
             >
               <span>{tCheckout("subtotal", { count: itemsCount })}</span>
-              {subTotal}
+              AED {subTotal}
             </Text>
             <Text
               as="div"
@@ -484,7 +484,7 @@ const OrderSummary = ({
                 <br />
                 <span className="text-[8px] 2xl:text-[10px] font-light text-[#808080]">{tCommon("inc_tax")}</span>
               </span>
-              {displayGrandTotal}
+             AED {displayGrandTotal}
             </Text>
           </div>
 
@@ -639,7 +639,7 @@ const OrderSummary = ({
                       {tCheckout("total_amount")}
                     </Text>
                     <Text as="div" size="text3" className="font-semibold text-[#282828]">
-                      {displayGrandTotal}
+                      AED {displayGrandTotal}
                     </Text>
                   </div>
                 </>

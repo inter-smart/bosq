@@ -306,5 +306,6 @@ export const getExternalLink = (link) => {
 };
 
 export const getTarget = (link) => {
-  return link.startsWith("/") ? "_self" : "_blank";
+  // return link.startsWith("/") ? "_self" : "_blank";
+  return "_self";
 };

@@ -1,8 +1,8 @@
-import CartHero from "@/components/blocks/cart/cart-hero";
 import ContactInfo from "@/components/blocks/contact/contact-info";
 import { getContactData } from "@/lib/api/contact";
 import { getMetaData } from "@/lib/api/metaApi";
 import NotFound from "../not-found";
+import ProductHero from "@/components/blocks/product/product-hero";
 
 
 
@@ -39,7 +39,7 @@ export default async function ContactPage({ params }) {
 
   return (
     <>
-      <CartHero locale={locale} data={heroData} slug={slug} />
+      <ProductHero locale={locale} data={heroData} slug={slug} />
       <ContactInfo locale={locale} data={contactData} />
     </>
   );
