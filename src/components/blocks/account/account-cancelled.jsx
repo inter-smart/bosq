@@ -11,9 +11,7 @@ import { cn } from "@/lib/utils";
 import { OrderEmpty } from "./order-empty";
 import { useReorderOrderMutation } from "@/store/services/orderApi";
 
-const btnStyle = cn(
-  "underline underline-offset-1 text-[#282828] h-auto! px-1 xl:px-1.5 gap-0.5",
-);
+const btnStyle = cn("underline underline-offset-1 text-[#282828] h-auto! px-1 xl:px-1.5 gap-0.5");
 
 export default function AccountCancelled({ data, locale }) {
   const router = useRouter();
@@ -35,18 +33,12 @@ export default function AccountCancelled({ data, locale }) {
         <div className="w-full border border-[#e9e9e9] sm:rounded-e-lg py-3 xl:py-6 3xl:py-9 px-3 xl:px-4 3xl:px-5">
           <OrderEmpty
             title={"You haven't cancelled any orders yet"}
-            description={
-              "Once you place your first order, you'll be able to track your deliveries and manage returns from here."
-            }
+            description={"Once you place your first order, you'll be able to track your deliveries and manage returns from here."}
           />
         </div>
       ) : (
         <div className="w-full border border-[#e9e9e9] sm:rounded-e-lg py-3 xl:py-6 3xl:py-9 px-3 xl:px-4 3xl:px-5">
-          <Heading
-            as="h2"
-            size={"heading5"}
-            className="font-semibold text-[#282828] mb-2 xl:mb-4"
-          >
+          <Heading as="h2" size={"heading5"} className="font-semibold text-[#282828] mb-2 xl:mb-4">
             Cancelled Orders
           </Heading>
 
@@ -65,34 +57,33 @@ export default function AccountCancelled({ data, locale }) {
                     />
                   </div>
                   <div className="w-[calc(100%-80px)] xl:w-[calc(100%-80px)] 2xl:w-[calc(100%-100px)] px-3 xl:px-6 2xl:px-8 *:my-0.5 2xl:*:my-1">
-                    <Text
-                      as="div"
-                      size="text3"
-                      className="truncate text-[#282828] [&>span]:font-medium"
-                    >
+                    <Text as="div" size="text3" className="truncate text-[#282828] [&>span]:font-medium">
                       Order ID: <span>{item?.order_number}</span>
                     </Text>
-                    <Heading
-                      as="div"
-                      size="heading5"
-                      className="truncate text-[#282828] max-lg:font-medium"
-                    >
+                    <Heading as="div" size="heading5" className="truncate text-[#282828] max-lg:font-medium">
                       {item?.name}
                     </Heading>
                     <Text as="div" size="text3" className="text-[#282828]">
                       Qty: {""}
                       {item?.quantity}
                     </Text>
-                    <Text
-                      as="div"
-                      size="text3"
-                      className="font-normal text-[#282828] mt-2 xl:mt-3"
-                    >
-                      {item?.formatted_total}{" "}
-                      <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc]">
-                        Inc Tax
-                      </span>
-                    </Text>
+                    {parseFloat(String(item.discount_amount || 0)) > 0 ? (
+                      <>
+                        <Text as="div" size="text3" className="font-normal text-[#bbbcbc] line-through mt-2 xl:mt-3">
+                          {item?.formatted_total}
+                        </Text>
+                        <Text as="div" size="text3" className="text-green-600 font-medium">
+                          -AED {item?.discount_amount}
+                        </Text>
+                        <Text as="div" size="text3" className="font-normal text-[#282828]">
+                          AED {item?.final_amount}
+                        </Text>
+                      </>
+                    ) : (
+                      <Text as="div" size="text3" className="font-normal text-[#282828] mt-2 xl:mt-3">
+                        {item?.formatted_total} <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc]">Inc Tax</span>
+                      </Text>
+                    )}
                   </div>
 
                   <div className="w-full flex justify-between items-end gap-5 mt-2 xl:mt-4">
@@ -101,31 +92,15 @@ export default function AccountCancelled({ data, locale }) {
                         Cancelled on {item?.formatted_cancelled_date}
                       </Text>
                       {item?.cancelledReason && (
-                        <Text
-                          as="div"
-                          size="text3"
-                          className="font-normal text-[#282828]"
-                        >
+                        <Text as="div" size="text3" className="font-normal text-[#282828]">
                           {parse(item?.cancelledReason)}
                         </Text>
                       )}
                     </div>
                     <div>
                       {item?.actions?.can_reorder && (
-                        <Button
-                          variant={"link"}
-                          className={btnStyle}
-                          onClick={() => handleReorder(item.order_id)}
-                          disabled={isReordering}
-                        >
-                          <Image
-                            src={"/images/icon-reorder.svg"}
-                            alt={"icon-reorder"}
-                            width={10}
-                            height={10}
-                            className="w-2 xl:w-2.5"
-                            quality={90}
-                          />
+                        <Button variant={"link"} className={btnStyle} onClick={() => handleReorder(item.order_id)} disabled={isReordering}>
+                          <Image src={"/images/icon-reorder.svg"} alt={"icon-reorder"} width={10} height={10} className="w-2 xl:w-2.5" quality={90} />
                           Reorder
                         </Button>
                       )}

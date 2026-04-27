@@ -83,9 +83,10 @@ export const orderApi = createApi({
     }),
 
     cancelOrder: builder.mutation({
-      query: ({ orderId }) => ({
+      query: ({ orderId, orderItemId }) => ({
         url: `/api/frontend/orders/${orderId}/cancel`,
         method: "PUT",
+        body: { orderItemId },
       }),
       transformErrorResponse: (response) => {
         const message = response?.data?.message;
@@ -103,9 +104,10 @@ export const orderApi = createApi({
     }),
 
     reorderOrder: builder.mutation({
-      query: ({ orderId }) => ({
+      query: ({ orderId, variantId, quantity }) => ({
         url: `/api/frontend/orders/${orderId}/reorder`,
         method: "POST",
+        body: { variant_id: variantId, quantity },
       }),
       transformErrorResponse: (response) => {
         const message = response?.data?.message;

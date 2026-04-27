@@ -30,6 +30,23 @@ export const ProfileData = {
 
       return sendSuccess(data?.data);
     } catch (error) {
+      console.error("Error fetching orders:", error);
+      return sendError(error);
+    }
+  },
+  getCancelledOrders: async (page = 1, limit = 6) => {
+    try {
+      const data = await fetchApi(
+        `/api/frontend/orders/cancelled?page=${page}&limit=${limit}`,
+        {
+          credentials: "include",
+        },
+        true,
+      );
+
+      return sendSuccess(data?.data);
+    } catch (error) {
+      console.error("Error fetching cancelled orders:", error);
       return sendError(error);
     }
   },

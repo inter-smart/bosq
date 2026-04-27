@@ -36,6 +36,7 @@ export default function AccountOrders({ locale, orders: initialOrders, paginatio
 
   const orders = initialOrders ?? [];
   const [cancelTargetId, setCancelTargetId] = useState(null);
+  const [cancelOrderId, setCancelOrderId] = useState(null);
 
   const [cancelOrder, { isLoading: isCancelling }] = useCancelOrderMutation();
   const [reorderOrder, { isLoading: isReordering }] = useReorderOrderMutation();
@@ -43,20 +44,21 @@ export default function AccountOrders({ locale, orders: initialOrders, paginatio
   const handleCancelConfirm = async () => {
     if (!cancelTargetId) return;
     try {
-      await cancelOrder({ orderId: cancelTargetId }).unwrap();
+      await cancelOrder({ orderItemId: cancelTargetId, orderId: cancelOrderId }).unwrap();
       toast.success("Order cancelled successfully");
       router.refresh();
     } catch (error) {
       toast.error(typeof error?.en === "string" ? error.en : "Failed to cancel order");
     } finally {
       setCancelTargetId(null);
+      setCancelOrderId(null);
     }
   };
 
-  const handleReorder = async (orderId) => {
+  const handleReorder = async (orderId, variantId, quantity) => {
     try {
-      await reorderOrder({ orderId }).unwrap();
-      toast.success("Items added to cart");
+      await reorderOrder({ orderId, variantId, quantity }).unwrap();
+      toast.success("Item added to cart");
       router.push(`/${locale}/cart`);
     } catch (error) {
       toast.error(typeof error?.en === "string" ? error.en : "Failed to reorder");
@@ -197,18 +199,27 @@ export default function AccountOrders({ locale, orders: initialOrders, paginatio
                           </Button>
                         )}
 
-                        {item?.status?.toLowerCase() === "pending" && item?.showCancelButton && (
+                        {item?.status?.toLowerCase() === "confirmed" && item?.showCancelButton && (
                           <Button
                             variant={"link"}
                             className={cn(btnStyle, "text-red-600 hover:text-red-700")}
-                            onClick={() => setCancelTargetId(item.id)}
-                            disabled={isCancelling && cancelTargetId === item.id}
+                            onClick={() => {
+                              console.log("Clicked item:", orderItem);
+                              setCancelOrderId(item.id);
+                              setCancelTargetId(orderItem.id);
+                            }}
+                            disabled={isCancelling && cancelTargetId === orderItem.id}
                           >
                             {t("cancel_order")}
                           </Button>
                         )}
 
-                        <Button variant={"link"} className={btnStyle} onClick={() => handleReorder(item.id)} disabled={isReordering}>
+                        <Button
+                          variant={"link"}
+                          className={btnStyle}
+                          onClick={() => handleReorder(item.id, orderItem.variant_id, orderItem.quantity)}
+                          disabled={isReordering}
+                        >
                           <Image src={"/images/icon-reorder.svg"} alt={"icon-reorder"} width={10} height={10} className="w-2 xl:w-2.5" quality={90} />
                           {t("reorder")}
                         </Button>
@@ -232,7 +243,7 @@ export default function AccountOrders({ locale, orders: initialOrders, paginatio
       )}
 
       {/* Cancel Order Confirmation Dialog */}
-      <AlertDialog open={!!cancelTargetId} onOpenChange={(open) => !open && setCancelTargetId(null)}>
+      <AlertDialog open={!!cancelTargetId && !!cancelOrderId} onOpenChange={(open) => !open && setCancelTargetId(null) && setCancelOrderId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Cancel Order</AlertDialogTitle>

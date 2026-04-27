@@ -34,7 +34,7 @@ export default async function CancelledOrdersPage({ params }) {
   const resolvedParams = await params;
   const locale = resolvedParams.locale;
 
-  const { data, error } = await ProfileData.getOrders();
+  const { data, error } = await ProfileData.getCancelledOrders();
 
   if (!data || error) {
     return <NotFound />;
@@ -42,24 +42,9 @@ export default async function CancelledOrdersPage({ params }) {
 
   const allOrders = data?.orders ?? [];
 
-  const cancelledItems = allOrders
-    .filter((order) => order.status?.toLowerCase() === "cancelled")
-    .flatMap((order) =>
-      (order.items ?? []).map((item) => ({
-        order_id: order.id,
-        order_number: order.order_id,
-        name: locale === "ar" ? item.variant?.title_ar : item.variant?.title,
-        quantity: item.quantity,
-        formatted_total: item.line_total,
-        formatted_cancelled_date: order.createdAt,
-        cancelledReason: "",
-        media: {
-          path: item.variant?.media_path ?? "/images/cart-product-1.png",
-          alt: item.variant?.title ?? "",
-        },
-        actions: { can_reorder: true },
-      })),
-    );
+  const cancelledItems = allOrders;
+
+  console.log(cancelledItems);
 
   const slug = locale === "en" ? "Cancelled Orders" : "الطلبات الملغاة";
 
