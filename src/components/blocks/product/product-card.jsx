@@ -28,7 +28,7 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
   const [toggleWishlist] = useToggleWishlistMutation();
 
   const tToast = useTranslations("toast");
-const t = useTranslations("common");
+  const t = useTranslations("common");
   const handleWishlistClick = (e) => {
     e.stopPropagation();
     handleToggleWishlist(product?.variant_id || product?.id);
@@ -101,7 +101,7 @@ const t = useTranslations("common");
             )}
             <Image
               src={product?.media_path || product?.media?.path || "/images/placeholder.jpg"}
-              alt={isEn ? (product?.title || product?.name) : (product?.title_ar || product?.name_ar || product?.name || "test")}
+              alt={isEn ? product?.title || product?.name : product?.title_ar || product?.name_ar || product?.name || "test"}
               width={550}
               height={440}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -110,7 +110,7 @@ const t = useTranslations("common");
             {(product?.hover_media_path || product?.hoverMedia?.path) && (
               <Image
                 src={product?.hover_media_path || product?.hoverMedia?.path}
-                alt={isEn ? (product?.title || product?.name) : (product?.title_ar || product?.name_ar || product?.name)}
+                alt={isEn ? product?.title || product?.name : product?.title_ar || product?.name_ar || product?.name}
                 width={550}
                 height={440}
                 quality={100}
@@ -124,14 +124,18 @@ const t = useTranslations("common");
               size="none"
               className="text-[10px] xl:text-[8px] 2xl:text-[10px] 3xl:text-[12px] leading-normal font-light truncate text-[#bbbcbc] mb-0.5"
             >
-              <Link href={productUrl}>{(product?.categories || [{ name: product?.category, name_ar: product?.category_ar || product?.category }])?.map((cat) => (isEn ? cat?.name : cat?.name_ar)).join(", ")}</Link>
+              <Link href={productUrl}>
+                {(product?.categories || [{ name: product?.category, name_ar: product?.category_ar || product?.category }])
+                  ?.map((cat) => (isEn ? cat?.name : cat?.name_ar))
+                  .join(", ")}
+              </Link>
             </Heading>
             <Heading
               as="div"
               size="none"
               className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-normal truncate text-[#282828] mb-0.5"
             >
-              <Link href={productUrl}>{isEn ? (product?.title || product?.name) : (product?.title_ar || product?.name_ar || product?.name)}</Link>
+              <Link href={productUrl}>{isEn ? product?.title || product?.name : product?.title_ar || product?.name_ar || product?.name}</Link>
             </Heading>
             <Text
               as="div"

@@ -13,6 +13,7 @@ import {
   googleLogin as googleLoginAPI,
 } from "@/lib/helper";
 import { mergeCartAPI } from "@/lib/api/cart/cartApi";
+import { getPersistor } from "../persistorInstance";
 
 // Async Thunks
 
@@ -78,6 +79,9 @@ export const logoutUser = createAsyncThunk("auth/logout", async () => {
   } catch (e) {
     // ignore network/server errors
   }
+  // Explicitly purge persisted auth data from localStorage so stale user/isGoogleUser
+  // can't be rehydrated if the tab was closed before redux-persist flushed null values.
+  getPersistor()?.purge();
   if (typeof window !== "undefined" && "BroadcastChannel" in window) {
     const bc = new BroadcastChannel("bosq_auth");
     bc.postMessage({ type: "LOGOUT" });
