@@ -354,7 +354,7 @@ export default function OrdersDetailModal({ children, order, locale }) {
 
                 <Text as="div" size="text3" className={cn(labelStyle, "font-bold mb-1! [&>span]:font-bold")}>
                   Total Amount : {""}
-                  <span>{order?.grand_total}</span>
+                  <span>AED {order?.grand_total}</span>
                 </Text>
               </div>
             </div>

@@ -88,7 +88,7 @@ export default function AccountCancelled({ data, locale }) {
                       size="text3"
                       className="font-normal text-[#282828] mt-2 xl:mt-3"
                     >
-                      {item?.formatted_total}{" "}
+                      AED {item?.formatted_total}{" "}
                       <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc]">
                         Inc Tax
                       </span>

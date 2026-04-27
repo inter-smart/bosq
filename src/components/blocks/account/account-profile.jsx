@@ -14,6 +14,12 @@ export default function AccountProfile({ data, locale }) {
   const tAccount = useTranslations("account");
   const tAddress = useTranslations("address");
 
+
+
+  const {isAuthenticated} = useSelector((state) => state.auth);
+
+  console.log("isAuthenticated ", isAuthenticated)
+
   return (
     <div className="w-full border border-[#e9e9e9] sm:rounded-e-[4px] py-3 xl:py-6 3xl:py-9 px-3 xl:px-4 3xl:px-5">
       <Heading as="h2" size={"heading5"} className="font-semibold text-[#282828] mb-3 xl:mb-7">

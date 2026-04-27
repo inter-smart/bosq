@@ -1,6 +1,7 @@
 "use client";
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { REHYDRATE } from "redux-persist";
 import {
   login as loginAPI,
   register as registerAPI,
@@ -282,6 +283,11 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(REHYDRATE, (state, action) => {
+        if (action.key === "auth" && action.payload?.user) {
+          state.isAuthenticated = true;
+        }
+      })
       // Login
       .addCase(loginUser.pending, (state) => {
         state.isLoading = true;
@@ -426,6 +432,7 @@ const authSlice = createSlice({
       .addCase(fetchUserProfile.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user = action.payload;
+        state.isAuthenticated = true;
       })
       .addCase(fetchUserProfile.rejected, (state) => {
         state.isLoading = false;
