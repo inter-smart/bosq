@@ -17,9 +17,9 @@ export default function AccountCancelled({ data, locale }) {
   const router = useRouter();
   const [reorderOrder, { isLoading: isReordering }] = useReorderOrderMutation();
 
-  const handleReorder = async (orderId) => {
+  const handleReorder = async (orderId, variantId, quantity) => {
     try {
-      await reorderOrder({ orderId }).unwrap();
+      await reorderOrder({ orderId, variantId, quantity }).unwrap();
       toast.success("Items added to cart");
       router.push(`/${locale}/cart`);
     } catch (error) {
@@ -81,7 +81,7 @@ export default function AccountCancelled({ data, locale }) {
                       </>
                     ) : (
                       <Text as="div" size="text3" className="font-normal text-[#282828] mt-2 xl:mt-3">
-                       AED {item?.formatted_total} <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc]">Inc Tax</span>
+                        AED {item?.formatted_total} <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc]">Inc Tax</span>
                       </Text>
                     )}
                   </div>
@@ -99,7 +99,12 @@ export default function AccountCancelled({ data, locale }) {
                     </div>
                     <div>
                       {item?.actions?.can_reorder && (
-                        <Button variant={"link"} className={btnStyle} onClick={() => handleReorder(item.order_id)} disabled={isReordering}>
+                        <Button
+                          variant={"link"}
+                          className={btnStyle}
+                          onClick={() => handleReorder(item.order_id, item.variant_id, item.quantity)}
+                          disabled={isReordering}
+                        >
                           <Image src={"/images/icon-reorder.svg"} alt={"icon-reorder"} width={10} height={10} className="w-2 xl:w-2.5" quality={90} />
                           Reorder
                         </Button>

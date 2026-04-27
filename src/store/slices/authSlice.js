@@ -225,16 +225,18 @@ export const resetPasswordThunk = createAsyncThunk("auth/resetPassword", async (
 });
 
 // Fetch user profile
-export const fetchUserProfile = createAsyncThunk("frontend/profile/my-profile", async (_, { rejectWithValue }) => {
+export const fetchUserProfile = createAsyncThunk("frontend/profile/my-profile", async (_, { dispatch, rejectWithValue }) => {
   try {
     const { data, error, message } = await fetchUserProfileAPI();
 
     if (error) {
+      dispatch(logoutUser());
       return rejectWithValue(message);
     }
 
     return data;
   } catch (error) {
+    dispatch(logoutUser());
     return rejectWithValue(error.message || "Failed to fetch profile");
   }
 });
