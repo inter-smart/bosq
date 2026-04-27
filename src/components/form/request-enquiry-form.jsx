@@ -116,8 +116,7 @@ export default function RequestEnquiryForm({
       );
 
   // Validation schema
-  const formSchema = useMemo(
-    () =>
+  const formSchema = useMemo(() =>
       z.object({
         firstName: nameMin1(t("first_name")),
         lastName: nameMin1(t("last_name")),
@@ -178,6 +177,7 @@ export default function RequestEnquiryForm({
         toast.error(
           isEN ? data?.message?.en : data?.message?.ar || t("submit_error"),
         );
+      } else {
         toast.success(
           isEN ? data?.message?.en : data?.message?.ar || t("success_message"),
         );
