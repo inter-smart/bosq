@@ -2,108 +2,73 @@ import NewsInfo from "@/components/blocks/news/news-info";
 import NewsViewTracker from "@/components/blocks/news/news-view-tracker";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getNewsData } from "@/lib/api/news";
-import { parseOtherMeta } from "@/lib/helper";
-import { DefaultOgImage } from "@/lib/api/constants";
+import { getMetaData } from "@/lib/api/metaApi";
 import NotFound from "../../not-found";
 
 export async function generateMetadata({ params }) {
-  const { slug, locale } = await params;
+  const resolvedParams = await params;
+  const locale = resolvedParams.locale;
+  const slug = resolvedParams.slug;
 
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend/news-details?slug=${slug}`,
-      { cache: "no-store" },
-    );
+  const [metaResult, detailResult] = await Promise.all([
+    getMetaData(`news-${slug}`, locale, `news/${slug}`),
+    getNewsData.getNewsDetailsData(slug),
+  ]);
 
-    // Check if response is ok
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-    }
+  const {
+    title: metaTitle,
+    description: metaDescription,
+    keywords,
+    twitter,
+    openGraph,
+    alternates,
+    other,
+  } = metaResult;
 
-    // Parse JSON response
-    const data = await response.json();
+  const heroData = detailResult?.data?.heroData;
+  const newsData = detailResult?.data?.newsData;
 
-    const isEN = locale === "en";
-    const metadata = data?.data?.metaData;
+  const title = heroData?.title || metaTitle;
+  const description =
+    heroData?.description ||
+    (newsData?.description
+      ? newsData.description.replace(/<[^>]+>/g, "").slice(0, 160)
+      : metaDescription);
 
-    if (!metadata) {
-      return {
-        title: "",
-        description: "The requested news post could not be found.",
-      };
-    }
+  const ogImage =
+    newsData?.media?.desktop_path ||
+    newsData?.media?.mobile_path ||
+    openGraph?.images?.[0]?.url;
 
-    const {
-      meta_title,
-      meta_description,
-      meta_keywords,
-      other_meta,
-      meta_title_ar,
-      meta_description_ar,
-      meta_keywords_ar,
-      other_meta_ar,
-    } = metadata;
-
-    // Select language-specific metadata
-    const title = isEN ? meta_title : meta_title_ar;
-    const description = isEN ? meta_description : meta_description_ar;
-    const keywords = isEN ? meta_keywords : meta_keywords_ar;
-
-    // Use news's own image or fallback
-    const ogImage = DefaultOgImage;
-    const { other } = isEN
-      ? parseOtherMeta(other_meta)
-      : parseOtherMeta(other_meta_ar);
-
-    return {
-      title: title || "News Post",
-      description: description || "Read our latest news post",
-      keywords: keywords || "",
-
-      openGraph: {
-        title: title || "News Post",
-        description: description || "Read our latest news post",
-        images: [
-          {
-            url: ogImage,
-            width: 1200,
-            height: 630,
-            alt: "News post image",
-          },
-        ],
-        type: "article",
-        publishedTime: data?.newsData?.publishedAt || undefined,
-        authors: undefined,
-        url: `${process.env.NEXT_PUBLIC_SITE_URL}/${locale}/news/${slug}`,
-        locale: isEN ? "en_US" : "ar_AR",
+  return {
+    title,
+    description,
+    keywords,
+    twitter: {
+      ...twitter,
+      title: twitter?.title === metaTitle ? title : twitter?.title,
+      description:
+        twitter?.description === metaDescription ? description : twitter?.description,
+      images: ogImage ? [ogImage] : twitter?.images,
+    },
+    openGraph: {
+      ...openGraph,
+      title: openGraph?.title === metaTitle ? title : openGraph?.title,
+      description:
+        openGraph?.description === metaDescription ? description : openGraph?.description,
+      images: ogImage ? [{ url: ogImage, width: 1200, height: 630 }] : openGraph?.images,
+      type: "article",
+      publishedTime: newsData?.publishedAt || undefined,
+    },
+    alternates: {
+      ...alternates,
+      languages: {
+        en: `${process.env.NEXT_PUBLIC_SITE_URL}/en/news/${slug}`,
+        ar: `${process.env.NEXT_PUBLIC_SITE_URL}/ar/news/${slug}`,
       },
-
-      twitter: {
-        card: "summary_large_image",
-        title: title || "News Post",
-        description: description || "Read our latest news post",
-        images: [ogImage],
-      },
-
-      other: {
-        ...other,
-      },
-
-      alternates: {
-        canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/${locale}/news/${slug}`,
-        languages: {
-          en: `${process.env.NEXT_PUBLIC_SITE_URL}/en/news/${slug}`,
-          ar: `${process.env.NEXT_PUBLIC_SITE_URL}/ar/news/${slug}`,
-        },
-      },
-    };
-  } catch (error) {
-    console.error("Error generating metadata:", error);
-    return {
-      title: "",
-      description: "",
-    };
-  }
+    },
+    other,
+  };
 }
 
 export default async function NewsDetailPage({ params }) {

@@ -10,25 +10,12 @@ const nextConfig = {
   images: {
     qualities: [75, 85, 100],
     formats: ["image/avif", "image/webp"],
+    dangerouslyAllowLocalIP: true,
     minimumCacheTTL: 60 * 60 * 24 * 7, // cache images 7 days
     remotePatterns: [
-      {
-        protocol: "http",
-        hostname: "localhost",
-        port: "4000",
-        pathname: "/**",
-      },
-      {
-        protocol: "http",
-        hostname: "localhost",
-        port: "5000",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "crm.intersmarthosting.in",
-        pathname: "/**",
-      },
+      { protocol: "http",  hostname: "localhost", port: "4000", pathname: "/**" },
+      { protocol: "http",  hostname: "localhost", port: "5000", pathname: "/**" },
+      { protocol: "https", hostname: "crm.intersmarthosting.in", pathname: "/**" },
       { protocol: "https", hostname: "images.unsplash.com", pathname: "/**" },
       { protocol: "https", hostname: "picsum.photos", pathname: "/**" },
     ],
@@ -79,27 +66,14 @@ const nextConfig = {
       {
         source: "/(.*)",
         headers: [
-          {
-            key: "Cross-Origin-Opener-Policy",
-            value: "same-origin-allow-popups",
-          },
-          {
-            key: "Strict-Transport-Security",
-            value: "max-age=31536000; includeSubDomains; preload",
-          },
-          { key: "X-Frame-Options", value: "SAMEORIGIN" },
-          { key: "X-XSS-Protection", value: "1; mode=block" },
-          { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          { key: "X-DNS-Prefetch-Control", value: "on" },
-          {
-            key: "Cache-Control",
-            value: "no-cache, no-store, must-revalidate",
-          },
-          {
-            key: "Netlify-CDN-Cache-Control",
-            value: "no-store",
-          },
+          { key: "Cross-Origin-Opener-Policy",   value: "same-origin-allow-popups" },
+          { key: "Strict-Transport-Security",     value: "max-age=31536000; includeSubDomains; preload" },
+          { key: "X-Frame-Options",               value: "SAMEORIGIN" },
+          { key: "X-XSS-Protection",              value: "1; mode=block" },
+          { key: "X-Content-Type-Options",        value: "nosniff" },
+          { key: "Referrer-Policy",               value: "strict-origin-when-cross-origin" },
+          // ✅ Added: prevent unnecessary revalidation
+          { key: "X-DNS-Prefetch-Control",        value: "on" },
         ],
       },
 
@@ -107,10 +81,7 @@ const nextConfig = {
       {
         source: "/_next/static/(.*)",
         headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
-          },
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
         ],
       },
 
@@ -118,10 +89,7 @@ const nextConfig = {
       {
         source: "/_next/image(.*)",
         headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=86400, stale-while-revalidate=604800",
-          },
+          { key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" },
         ],
       },
 
@@ -129,10 +97,7 @@ const nextConfig = {
       {
         source: "/fonts/(.*)",
         headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
-          },
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
         ],
       },
     ];
@@ -152,11 +117,9 @@ const nextConfig = {
           vendor: {
             test: /[\\/]node_modules[\\/]/,
             name(module) {
-              const match = module.context?.match(
-                /[\\/]node_modules[\\/](.*?)([\\/]|$)/,
-              );
-              if (!match) return "vendor";
-              return `vendor.${match[1].replace("@", "")}`;
+              const match = module.context?.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)
+              if (!match) return "vendor"
+              return `vendor.${match[1].replace("@", "")}`
             },
             priority: 10,
             reuseExistingChunk: true,
@@ -177,9 +140,9 @@ const nextConfig = {
             reuseExistingChunk: true,
           },
         },
-      };
+      }
     }
-    return config;
+    return config
   },
 };
 
