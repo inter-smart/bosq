@@ -13,22 +13,58 @@ export async function generateMetadata({ params }) {
   const resolvedParams = await params;
   const locale = resolvedParams.locale;
   const slug = resolvedParams.slug;
+
+  const [metaResult, projectResult] = await Promise.all([
+    getMetaData(`project-${slug}`, locale, `projects/${slug}`),
+    getProjectDetails({ slug }),
+  ]);
+
   const {
-    title,
-    description,
+    title: metaTitle,
+    description: metaDescription,
     keywords,
     twitter,
     openGraph,
     alternates,
     other,
-  } = await getMetaData(`project-${slug}`, locale, `projects/${slug}`);
+  } = metaResult;
+
+  const projectData = projectResult?.data;
+  const heroData = projectData?.heroData;
+  const projectInfo = projectData?.projectData;
+
+  const title = heroData?.title || metaTitle;
+  const description =
+    heroData?.description ||
+    (projectInfo?.description
+      ? projectInfo.description.replace(/<[^>]+>/g, "").slice(0, 160)
+      : metaDescription);
+
+  const ogImage =
+    projectInfo?.media?.desktop_path ||
+    projectInfo?.media?.mobile_path ||
+    openGraph?.images?.[0]?.url;
 
   return {
     title,
     description,
     keywords,
-    twitter,
-    openGraph,
+    twitter: {
+      ...twitter,
+      title: twitter?.title === metaTitle ? title : twitter?.title,
+      description:
+        twitter?.description === metaDescription ? description : twitter?.description,
+      images: ogImage ? [ogImage] : twitter?.images,
+    },
+    openGraph: {
+      ...openGraph,
+      title: openGraph?.title === metaTitle ? title : openGraph?.title,
+      description:
+        openGraph?.description === metaDescription ? description : openGraph?.description,
+      images: ogImage
+        ? [{ url: ogImage, width: 1200, height: 630 }]
+        : openGraph?.images,
+    },
     alternates,
     other,
   };
