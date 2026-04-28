@@ -13,6 +13,7 @@ export async function generateMetadata({ params }) {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend/office-chairs?slug=${slug}`,
+      { cache: "no-store" },
     );
 
     // Check if response is ok
