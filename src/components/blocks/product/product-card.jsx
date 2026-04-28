@@ -47,7 +47,7 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
 
   const handleToggleWishlist = async (id) => {
     if (!isAuthenticated) {
-      router.push("/login");
+      router.push("/login?activity=wishlist");
       return;
     }
     // Optimistic update
