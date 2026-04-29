@@ -27,7 +27,7 @@ const MediaQuery = dynamic(() => import("react-responsive"), {
 });
 
 const paymentMethods = [
-  { id: 1, slug: "cod", nameKey: "cod", descKey: "cod_description" },
+  // { id: 1, slug: "cod", nameKey: "cod", descKey: "cod_description" },
   { id: 2, slug: "online", nameKey: "pay_online", descKey: "pay_online_description" },
 ];
 
@@ -484,7 +484,7 @@ const OrderSummary = ({
                 <br />
                 <span className="text-[8px] 2xl:text-[10px] font-light text-[#808080]">{tCommon("inc_tax")}</span>
               </span>
-             AED {displayGrandTotal}
+              AED {displayGrandTotal}
             </Text>
           </div>
 

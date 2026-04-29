@@ -188,7 +188,7 @@ export default function AccountOrders({ locale, orders: initialOrders, paginatio
                           </Button>
                         )}
 
-                        {item?.status?.toLowerCase() === "delivered" && item?.showReturnButton && (
+                        {/* {item?.status?.toLowerCase() === "delivered" && item?.showReturnButton && (
                           <Button
                             variant={"link"}
                             className={cn(btnStyle, "text-red-600 hover:text-red-700")}
@@ -197,9 +197,9 @@ export default function AccountOrders({ locale, orders: initialOrders, paginatio
                           >
                             {t("return_order")}
                           </Button>
-                        )}
+                        )} */}
 
-                        {item?.status?.toLowerCase() === "confirmed" && item?.showCancelButton && (
+                        {/* {item?.status?.toLowerCase() === "confirmed" && item?.showCancelButton && (
                           <Button
                             variant={"link"}
                             className={cn(btnStyle, "text-red-600 hover:text-red-700")}
@@ -212,7 +212,7 @@ export default function AccountOrders({ locale, orders: initialOrders, paginatio
                           >
                             {t("cancel_order")}
                           </Button>
-                        )}
+                        )} */}
 
                         <Button
                           variant={"link"}
