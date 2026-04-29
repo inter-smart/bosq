@@ -1,5 +1,5 @@
 import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { clearAuth } from "@/store/slices/authSlice";
+import { clearAuth, logoutUser } from "@/store/slices/authSlice";
 import { attemptTokenRefresh } from "@/lib/helper";
 
 const rawBaseQuery = fetchBaseQuery({
@@ -16,7 +16,7 @@ export async function baseQueryWithReauth(args, api, extraOptions) {
     if (refreshed) {
       result = await rawBaseQuery(args, api, extraOptions);
     } else {
-      api.dispatch(clearAuth());
+      api.dispatch(logoutUser());
     }
   }
 
