@@ -69,10 +69,10 @@ export default function OrdersDetailModal({ children, order, locale }) {
       doc.setTextColor(100, 100, 100);
       const orderDate = order?.createdAt
         ? new Date(order.createdAt).toLocaleDateString("en-IN", {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          })
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        })
         : "";
       doc.text(`Date: ${orderDate}`, pageWidth - margin, y + 6, {
         align: "right",
@@ -179,8 +179,18 @@ export default function OrdersDetailModal({ children, order, locale }) {
         const productTitle = item?.variant?.title ?? "Unknown Product";
         const sku = item?.variant?.sku ? `SKU: ${item.variant.sku}` : "";
         const t = productTitle.length > 38 ? productTitle.substring(0, 36) + ".." : productTitle;
-        const unitPrice = parseFloat(item?.price ?? item?.line_total ?? 0);
+        const unitPrice = parseFloat(item?.line_total ?? 0);
         const discountAmt = parseFloat(item?.discount_amount ?? 0);
+        const useCouponOverride =
+          (order?.items ?? []).length === 1 &&
+          discountAmt === 0 &&
+          parseFloat(order?.discount_total || "0") > 0;
+        const displayDiscount = useCouponOverride
+          ? parseFloat(order.discount_total)
+          : discountAmt;
+        const lineSubtotal = useCouponOverride
+          ? parseFloat(order?.grand_total)
+          : unitPrice - discountAmt;
 
         doc.setFont("helvetica", "bold");
         doc.text(t, cols.product, y);
@@ -195,10 +205,19 @@ export default function OrdersDetailModal({ children, order, locale }) {
         doc.setFont("helvetica", "normal");
         doc.text(String(item?.quantity ?? 0), cols.qty, y, { align: "center" });
         doc.text(aed(unitPrice), cols.price, y, { align: "center" });
-        const discountValue = !isNaN(discountAmt) && discountAmt > 0 ? aed(discountAmt) : "-";
-        doc.text(discountValue, cols.discount, y, { align: "center" });
+        const hasDiscount =
+          typeof displayDiscount === "number" &&
+          !isNaN(displayDiscount) &&
+          displayDiscount > 0;
+        if (hasDiscount) {
+          doc.setTextColor(180, 30, 30);
+          doc.text(`- ${aed(displayDiscount)}`, cols.discount, y, { align: "center" });
+          doc.setTextColor(20, 20, 20);
+        } else {
+          doc.text("-", cols.discount, y, { align: "center" });
+        }
         doc.setFont("helvetica", "bold");
-        doc.text(aed(item?.line_total), cols.subtotal, y, { align: "right" });
+        doc.text(aed(lineSubtotal), cols.subtotal, y, { align: "right" });
         y += 11;
 
         if (y > 260) {
@@ -225,10 +244,10 @@ export default function OrdersDetailModal({ children, order, locale }) {
       };
 
       if (order?.subtotal != null) drawRow("Subtotal", aed(order.subtotal));
-      if (order?.tax_total != null) drawRow("Tax", aed(order.tax_total));
       if (parseFloat(String(order?.discount_total || 0)) > 0) {
         drawRow("Discount", `- ${aed(order.discount_total)}`, false, [180, 30, 30]);
       }
+      if (order?.tax_total != null) drawRow("Tax", aed(order.tax_total));
       doc.setDrawColor(80, 80, 80);
       doc.line(summaryLabelX, y, summaryValueX, y);
       y += 5;
