@@ -34,6 +34,7 @@ export default function AccountOrders({ locale, orders: initialOrders, paginatio
   const tCommon = useTranslations("common");
   const router = useRouter();
 
+
   const orders = initialOrders ?? [];
   const [cancelTargetId, setCancelTargetId] = useState(null);
   const [cancelOrderId, setCancelOrderId] = useState(null);
@@ -94,10 +95,23 @@ export default function AccountOrders({ locale, orders: initialOrders, paginatio
                   </Text>
                   <Text as="div" size="text3" className={cn(labelStyle, "w-full sm:w-1/3")}>
                     {t("total")} {""}
-                    <span>
-                      {tCommon("aed")} {item?.grand_total}
-                    </span>{" "}
-                    <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc]">{tCommon("inc_tax")}</span>
+                    {item?.coupon_type == "common" ? (
+                      <>
+                        <span className="line-through text-[#bbbcbc] me-1">
+                          {tCommon("aed")} {item?.subtotal}
+                        </span>
+                        {tCommon("aed")} {item?.grand_total}{" "}
+                        <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc]">{tCommon("inc_tax")}</span>
+                        <span className="block text-[10px] 2xl:text-xs text-green-600 font-medium">
+                          -{tCommon("aed")} {item?.discount_total}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        {tCommon("aed")} {item?.grand_total}{" "}
+                        <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc]">{tCommon("inc_tax")}</span>
+                      </>
+                    )}
                   </Text>
                   {item?.est_delivery_details && (
                     <Text as="div" size="text3" className={cn(labelStyle, "w-full sm:w-1/3")}>
@@ -188,7 +202,7 @@ export default function AccountOrders({ locale, orders: initialOrders, paginatio
                           </Button>
                         )}
 
-                        {/* {item?.status?.toLowerCase() === "delivered" && item?.showReturnButton && (
+                        {item?.status?.toLowerCase() === "delivered" && item?.showReturnButton && (
                           <Button
                             variant={"link"}
                             className={cn(btnStyle, "text-red-600 hover:text-red-700")}
@@ -197,9 +211,9 @@ export default function AccountOrders({ locale, orders: initialOrders, paginatio
                           >
                             {t("return_order")}
                           </Button>
-                        )} */}
+                        )}
 
-                        {/* {item?.status?.toLowerCase() === "confirmed" && item?.showCancelButton && (
+                        {item?.status?.toLowerCase() === "confirmed" && item?.showCancelButton && (
                           <Button
                             variant={"link"}
                             className={cn(btnStyle, "text-red-600 hover:text-red-700")}
@@ -212,7 +226,7 @@ export default function AccountOrders({ locale, orders: initialOrders, paginatio
                           >
                             {t("cancel_order")}
                           </Button>
-                        )} */}
+                        )}
 
                         <Button
                           variant={"link"}
