@@ -16,7 +16,7 @@ export async function generateMetadata({ params }) {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend/news-details?slug=${slug}`,
+      `${process.env.API_URL}/api/frontend/news-details?slug=${slug}`,
     );
 
     // Check if response is ok
@@ -25,15 +25,15 @@ export async function generateMetadata({ params }) {
     }
 
     // Parse JSON response
-    const {data} = await response.json();
+    const { data } = await response.json();
 
 
-    
-    
-    
+
+
+
     const isEN = locale === "en";
     const metadata = data?.metaData;
-    console.log("meta data:",metadata)
+    console.log("meta data:", metadata)
 
     const t = await getTranslations("common");
 
@@ -67,7 +67,7 @@ export async function generateMetadata({ params }) {
       : parseOtherMeta(other_meta_ar);
 
 
-      console.log("Metadata for news detail:", title)
+    console.log("Metadata for news detail:", title)
     return {
       title: title,
       description: description,
@@ -131,7 +131,7 @@ export default async function NewsDetailPage({ params }) {
 
   return (
     <>
-      <NewsViewTracker slug={ slug} />
+      <NewsViewTracker slug={slug} />
       <ProductHero
         locale={locale}
         data={heroData}

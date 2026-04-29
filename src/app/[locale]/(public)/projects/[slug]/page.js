@@ -20,7 +20,7 @@ export async function generateMetadata({ params }) {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend/projects/project-details?slug=${slug}`,
+      `${process.env.API_URL}/api/frontend/projects/project-details?slug=${slug}`,
     );
 
     // Check if response is ok
@@ -29,15 +29,15 @@ export async function generateMetadata({ params }) {
     }
 
     // Parse JSON response
-    const {data} = await response.json();
+    const { data } = await response.json();
 
 
-    
-    
-    
+
+
+
     const isEN = locale === "en";
     const metadata = data?.metaData;
-    console.log("meta data:",data)
+    console.log("meta data:", data)
 
     const t = await getTranslations("common");
 
@@ -71,7 +71,7 @@ export async function generateMetadata({ params }) {
       : parseOtherMeta(other_meta_ar);
 
 
-      console.log("Metadata for project detail:", title)
+    console.log("Metadata for project detail:", title)
     return {
       title: title,
       description: description,
@@ -286,10 +286,10 @@ export default async function ProjectDetailPage({ params }) {
   const { data, error } = await getProjectDetails({ slug });
 
 
-  
-   if (error || !data) {
-      return <NotFound />;
-    }
+
+  if (error || !data) {
+    return <NotFound />;
+  }
 
   const {
     heroData,
@@ -327,7 +327,7 @@ export default async function ProjectDetailPage({ params }) {
       )}
 
       <HomeEnquiry
-      isEN={isEn}
+        isEN={isEn}
         locale={locale}
         data={enquiryData}
         projectId={projectData?.id}

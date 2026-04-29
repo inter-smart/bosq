@@ -16,7 +16,7 @@ export async function generateMetadata({ params }) {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/frontend/office-chairs?slug=${slug}`,
+      `${process.env.API_URL}/api/frontend/office-chairs?slug=${slug}`,
     );
 
     // Check if response is ok
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }) {
     }
 
     // Parse JSON response
-    const {data} = await response.json();
+    const { data } = await response.json();
 
 
 
@@ -65,7 +65,7 @@ export async function generateMetadata({ params }) {
       : parseOtherMeta(other_meta_ar);
 
 
-      console.log("Metadata for office chair:", title)
+    console.log("Metadata for office chair:", title)
     return {
       title: title,
       description: description,
@@ -118,9 +118,9 @@ export default async function OfficeChairsPage({ params }) {
   const resolvedParams = await params;
   const { slug, locale } = resolvedParams;
   const response = await getOfficeChairsData(slug);
-  const {data, error} = response?.data;
+  const { data, error } = response?.data;
 
-  if (!data|| error) return <NotFound params={{ locale }} />;
+  if (!data || error) return <NotFound params={{ locale }} />;
 
   return (
     <>
