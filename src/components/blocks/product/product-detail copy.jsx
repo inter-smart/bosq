@@ -219,7 +219,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
                             >
                               <div
                                 className={cn(
-                                  "w-full h-full rounded-[4px] overflow-hidden border transition-all duration-300 bg-white select-none relative",
+                                  "w-full h-full rounded-[4px] overflow-hidden border transition duration-300 bg-white select-none relative",
                                 )}
                               >
                                 {initialData?.stock == 0 && (

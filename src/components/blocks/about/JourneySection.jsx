@@ -98,7 +98,7 @@ export default function JourneySection({ data, locale }) {
                       alt={isEn ? item?.media?.alt : item?.media?.alt_ar}
                       width={415}
                       height={280}
-                      className="w-full h-full object-cover hover:scale-105 transition-all duration-400 ease-in-out"
+                      className="w-full h-full object-cover hover:scale-105 transition duration-400 ease-in-out"
                       quality={90}
                     />
                   </div>
@@ -114,7 +114,7 @@ export default function JourneySection({ data, locale }) {
                     alt={isEn ? item?.media?.alt : item?.media?.alt_ar}
                     width={435}
                     height={580}
-                    className="w-full h-full object-cover hover:scale-105 transition-all duration-400 ease-in-out"
+                    className="w-full h-full object-cover hover:scale-105 transition duration-400 ease-in-out"
                     quality={90}
                   />
                 </div>
@@ -190,7 +190,7 @@ export default function JourneySection({ data, locale }) {
 //                     alt={item?.media?.alt}
 //                     width={415}
 //                     height={280}
-//                     className="w-full h-full object-cover hover:scale-105 transition-all duration-400 ease-in-out"
+//                     className="w-full h-full object-cover hover:scale-105 transition duration-400 ease-in-out"
 //                   />
 //                 </div>
 //               ))}
@@ -205,7 +205,7 @@ export default function JourneySection({ data, locale }) {
 //                   alt={item?.media?.alt}
 //                   width={435}
 //                   height={580}
-//                   className="w-full h-full object-cover hover:scale-105 transition-all duration-400 ease-in-out"
+//                   className="w-full h-full object-cover hover:scale-105 transition duration-400 ease-in-out"
 //                 />
 //               </div>
 //             ))}

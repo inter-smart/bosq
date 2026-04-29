@@ -217,7 +217,7 @@ export default function SearchDialog({ children, locale }) {
                               width={56}
                               height={56}
                               className="w-full h-full object-cover"
-                              quality={80}
+                              quality={90}
                             />
                             {!(item?.stock > 0) && (
                               <div className="absolute inset-0 bg-white/70 flex items-center justify-center">

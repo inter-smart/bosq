@@ -1,3 +1,4 @@
+
 import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin("./src/il8n/request.js");
@@ -8,7 +9,7 @@ const nextConfig = {
   // Image Optimization
   // ─────────────────────────────────────────
   images: {
-    qualities: [75, 85, 100],
+    qualities: [100],
     formats: ["image/avif", "image/webp"],
     dangerouslyAllowLocalIP: true,
     minimumCacheTTL: 60 * 60 * 24 * 7, // cache images 7 days

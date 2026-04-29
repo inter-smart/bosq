@@ -78,7 +78,7 @@ export default function HomeProject({ data, locale, isEN }) {
                   <div
                     key={"product" + index}
                     className={cn(
-                      "flex-[0_0_40px] sm:flex-[0_0_20%] min-w-0 px-0.5 sm:px-1 select-none transition-all duration-600",
+                      "flex-[0_0_40px] sm:flex-[0_0_20%] min-w-0 px-0.5 sm:px-1 select-none transition-[flex-basis,opacity,transform] duration-600",
                       isActive && "flex-[0_0_268px] sm:flex-[0_0_60%]",
                     )}
                   >

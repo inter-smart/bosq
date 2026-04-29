@@ -9,7 +9,7 @@ export default function ProductMediaSlide({ item, onClick, isOutOfStock }) {
       className="flex-[0_0_100%] min-w-0"
       onClick={onClick}
     >
-      <div className={cn("w-full h-full rounded-[4px] overflow-hidden border transition-all duration-300 bg-white select-none relative")}>
+      <div className={cn("w-full h-full rounded-[4px] overflow-hidden border transition duration-300 bg-white select-none relative")}>
         {isOutOfStock && (
           <div className="w-full h-full bg-[#f4f4f4]/90 flex items-center justify-center absolute z-2 inset-0">
             <Button

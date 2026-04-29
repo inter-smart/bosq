@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "motion/react";
 import Image from "@/components/utils/custom-image";
 import Link from "next/link";
@@ -39,10 +39,10 @@ const itemVariants = {
 
 export default function Header({ navigationData, locale, data }) {
   const t = useTranslations("header");
-  const { scrollYProgress } = useScroll();
+  const { scrollY, scrollYProgress } = useScroll();
   const [visible, setVisible] = useState(true);
   const [bg, setBg] = useState(false);
-  const [sheetOpen, setSheetOpen] = useState(true);
+  const [sheetOpen, setSheetOpen] = useState(false);
   const [headerHover, setHeaderHover] = useState(true);
 
   const pathname = usePathname();
@@ -51,12 +51,28 @@ export default function Header({ navigationData, locale, data }) {
   useEffect(() => setSheetOpen(false), [pathname]);
 
   // Handle scroll visibility + background
-  useMotionValueEvent(scrollYProgress, "change", (current) => {
+  const lastScrollY = useRef(0);
+  const lastVisible = useRef(true);
+  const lastBg = useRef(false);
+
+  useMotionValueEvent(scrollY, "change", (current) => {
     if (typeof current === "number") {
-      const direction = current - scrollYProgress.getPrevious();
-      const atTop = scrollYProgress.get() < 0.05;
-      setVisible(atTop || direction < 0);
-      setBg(!atTop && direction < 0);
+      const direction = current - lastScrollY.current;
+      const atTop = current < 50; // Use a fixed pixel threshold for better performance
+      
+      const nextVisible = atTop || direction < 0;
+      const nextBg = !atTop; // simplified logic: show bg if not at top
+
+      if (nextVisible !== lastVisible.current) {
+        setVisible(nextVisible);
+        lastVisible.current = nextVisible;
+      }
+      if (nextBg !== lastBg.current) {
+        setBg(nextBg);
+        lastBg.current = nextBg;
+      }
+      
+      lastScrollY.current = current;
     }
   });
 
@@ -141,7 +157,7 @@ export default function Header({ navigationData, locale, data }) {
                     />
                     {t("login_signup")}
                   </Link>
-                  <div className="w-full h-[calc(100%_-_var(--header-y)} overflow-y-auto">
+                  <div className="w-full h-[calc(100%_-_var(--header-y))] overflow-y-auto">
                     <AnimatePresence mode="wait">
                       {sheetOpen && (
                         <motion.div key="menu-anim" variants={containerVariants} initial="hidden" animate="show" exit="exit">

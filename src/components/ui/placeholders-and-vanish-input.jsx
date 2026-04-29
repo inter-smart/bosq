@@ -45,6 +45,24 @@ export function PlaceholdersAndVanishInput({ placeholders, placeholders_ar, onCh
   const inputRef = useRef(null);
   const [value, setValue] = useState("");
   const [animating, setAnimating] = useState(false);
+  const fontRef = useRef("");
+
+  useEffect(() => {
+    if (!inputRef.current) return;
+    const computedStyles = getComputedStyle(inputRef.current);
+    const fontSize = parseFloat(computedStyles.getPropertyValue("font-size"));
+    fontRef.current = `${fontSize * 2}px ${computedStyles.fontFamily}`;
+
+    const handleResize = () => {
+      if (!inputRef.current) return;
+      const styles = getComputedStyle(inputRef.current);
+      const size = parseFloat(styles.getPropertyValue("font-size"));
+      fontRef.current = `${size * 2}px ${styles.fontFamily}`;
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const draw = useCallback(() => {
     if (!inputRef.current) return;
@@ -56,10 +74,8 @@ export function PlaceholdersAndVanishInput({ placeholders, placeholders_ar, onCh
     canvas.width = 800;
     canvas.height = 800;
     ctx.clearRect(0, 0, 800, 800);
-    const computedStyles = getComputedStyle(inputRef.current);
 
-    const fontSize = parseFloat(computedStyles.getPropertyValue("font-size"));
-    ctx.font = `${fontSize * 2}px ${computedStyles.fontFamily}`;
+    ctx.font = fontRef.current || "40px sans-serif";
     ctx.fillStyle = "#FFF";
     ctx.fillText(value, 16, 40);
 

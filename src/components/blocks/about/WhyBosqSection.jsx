@@ -53,7 +53,7 @@ export default function WhyBosqSection({ data, locale }) {
                                             alt={isEn? item?.media.alt: item?.media.alt_ar}
                                             width={810}
                                             height={420}
-                                            className="w-full h-full object-cover hover:scale-105 transition-all duration-500 ease-in-out"
+                                            className="w-full h-full object-cover hover:scale-105 transition duration-500 ease-in-out"
                                           quality={90}
                                         />
                                     </div>

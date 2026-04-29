@@ -561,7 +561,7 @@ function AccordionItem({ title, children, section }) {
       </button>
       <div
         className={cn(
-          "overflow-hidden transition-all duration-300",
+          "overflow-hidden transition duration-300",
           isOpen ? "max-h-[500px] mt-5" : "max-h-0",
         )}
       >

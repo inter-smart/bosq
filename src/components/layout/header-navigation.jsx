@@ -37,7 +37,7 @@ export default function HeaderNavigation({
   const isEN = locale === "en";
   const getNavigationMenuTriggerStyle = (isActive) => {
     const baseStyle =
-      "text-[20px] lg:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-normal font-medium lg:font-normal text-start lg:text-center w-full h-auto p-[8px_15px] lg:p-[6px_12px] 2xl:p-[10px_15px] 3xl:p-[15px_25px] bg-transparent border border-transparent hover:bg-black/0 focus:bg-black/0 ring-0 hover:border-white/10 data-[state=open]:border-white/10 data-[state=open]:hover:bg-black/0 data-[state=open]:focus:bg-black/0 data-[state=open]:bg-black/0 transition-all duration-200 max-lg:justify-between";
+      "text-[20px] lg:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-normal font-medium lg:font-normal text-start lg:text-center w-full h-auto p-[8px_15px] lg:p-[6px_12px] 2xl:p-[10px_15px] 3xl:p-[15px_25px] bg-transparent border border-transparent hover:bg-black/0 focus:bg-black/0 ring-0 hover:border-white/10 data-[state=open]:border-white/10 data-[state=open]:hover:bg-black/0 data-[state=open]:focus:bg-black/0 data-[state=open]:bg-black/0 transition duration-200 max-lg:justify-between";
 
     const pageTextColor = showDarkHeader
       ? "text-[#282828] lg:data-[state=open]:text-black hover:text-[#282828] focus:text-[#282828]"

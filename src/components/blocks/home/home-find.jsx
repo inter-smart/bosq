@@ -75,13 +75,13 @@ export default function HomeFind({ data, locale, isEN }) {
                         <div
                           key={"project" + index}
                           className={cn(
-                            "flex-[0_0_220px] sm:flex-[0_0_50%] lg:flex-[0_0_33.33%] min-w-0 p-0.5 sm:p-1 xl:p-3 select-none transition-all duration-600 sm:nth-[even]:[&>div]:flex-col-reverse max-sm:[&>div]:flex-col-reverse"
+                            "flex-[0_0_220px] sm:flex-[0_0_50%] lg:flex-[0_0_33.33%] min-w-0 p-0.5 sm:p-1 xl:p-3 select-none transition duration-600 sm:nth-[even]:[&>div]:flex-col-reverse max-sm:[&>div]:flex-col-reverse"
                           )}
                         >
                           <Suspense fallback={<FindCard />}>
                             <div
                               className={cn(
-                                "w-full h-auto flex flex-col justify-between gap-y-1.5 xl:gap-y-3 bg-none p-2 sm:p-2 xl:p-3 2xl:p-4 transition-all duration-600 max-sm:bg-white",
+                                "w-full h-auto flex flex-col justify-between gap-y-1.5 xl:gap-y-3 bg-none p-2 sm:p-2 xl:p-3 2xl:p-4 transition duration-600 max-sm:bg-white",
                                 activeIndex === index &&
                                   "bg-white shadow-[0px_0px_15px_0_rgba(0,0,0,0.1)]"
                               )}
