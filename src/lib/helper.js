@@ -9,9 +9,7 @@ export function getLocale() {
     if (cookieLocale && locales.includes(cookieLocale)) return cookieLocale;
 
     const pathname = window.location.pathname;
-    const locale = locales.find(
-      (l) => pathname === `/${l}` || pathname.startsWith(`/${l}/`),
-    );
+    const locale = locales.find((l) => pathname === `/${l}` || pathname.startsWith(`/${l}/`));
     return locale || defaultLocale;
   }
   return defaultLocale;
@@ -50,8 +48,7 @@ export function parseOtherMeta(htmlString) {
   }
 
   // Extract script tags (for JSON-LD)
-  const scriptRegex =
-    /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
+  const scriptRegex = /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
   let scriptMatch;
 
   while ((scriptMatch = scriptRegex.exec(htmlString)) !== null) {
@@ -96,10 +93,7 @@ export async function fetchFromAPI(endpoint, options = {}) {
       return {
         data: null,
         error: true,
-        message:
-          data?.message ||
-          data?.error?.message ||
-          `Error: ${response.status} ${response.statusText}`,
+        message: data?.message || data?.error?.message || `Error: ${response.status} ${response.statusText}`,
       };
     }
 
@@ -134,7 +128,6 @@ export async function fetchFromAPIWithCredentials(endpoint, options = {}) {
     let response = await fetch(url, defaultOptions);
     let data = await response.json();
 
-    // Attempt silent token refresh on 401 and retry once
     if (response.status === 401) {
       const refreshed = await attemptTokenRefresh();
       if (refreshed) {
@@ -147,10 +140,7 @@ export async function fetchFromAPIWithCredentials(endpoint, options = {}) {
       return {
         data: null,
         error: true,
-        message:
-          data?.message ||
-          data?.error?.message ||
-          `Error: ${response.status} ${response.statusText}`,
+        message: data?.message || data?.error?.message || `Error: ${response.status} ${response.statusText}`,
       };
     }
 
@@ -168,7 +158,38 @@ export async function fetchFromAPIWithCredentials(endpoint, options = {}) {
   }
 }
 
+export async function callLogoutApi(endpoint, options = {}) {
+  const API_BASE_URL = getApiBaseUrl();
+  const url = `${API_BASE_URL}${endpoint}`;
+
+  const defaultOptions = {
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+    ...options,
+  };
+
+  try {
+    let response = await fetch(url, defaultOptions);
+    let data = await response.json();
+
+    console.log("Logout API response:", { response, data });
+  } catch (error) {
+    return {
+      data: null,
+      error: true,
+      message: error?.message || "Network error. Please check your connection.",
+    };
+  }
+}
+
 let _refreshPromise = null;
+
+export function resetRefreshPromise() {
+  _refreshPromise = null;
+}
 
 export async function attemptTokenRefresh() {
   // Deduplicate concurrent refresh calls
@@ -177,13 +198,10 @@ export async function attemptTokenRefresh() {
   _refreshPromise = (async () => {
     try {
       const API_BASE_URL = getApiBaseUrl();
-      const response = await fetch(
-        `${API_BASE_URL}/api/frontend/auth/refresh-token`,
-        {
-          method: "POST",
-          credentials: "include",
-        },
-      );
+      const response = await fetch(`${API_BASE_URL}/api/frontend/auth/refresh-token`, {
+        method: "POST",
+        credentials: "include",
+      });
       return response.ok;
     } catch {
       return false;
