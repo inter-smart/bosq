@@ -3,6 +3,7 @@ import { getMetaData } from "@/lib/api/metaApi";
 import HomeHero from "@/components/blocks/home/home-hero";
 import HomeClient from "@/components/clients/HomeClient";
 import NotFound from "./not-found";
+import { preload } from "react-dom";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -32,6 +33,20 @@ export default async function HomePage({ params }) {
   }
 
   const isEN = locale === "en";
+
+  // Preload LCP image for the first slider to reduce Resource Load Delay
+  const firstSlider = data?.sliders?.[0];
+  if (firstSlider && firstSlider.media_type !== "video") {
+    const mobileSrc = isEN ? firstSlider?.media?.mobile?.path : firstSlider?.media?.mobile?.path_ar;
+    const desktopSrc = isEN ? firstSlider?.media?.desktop?.path : firstSlider?.media?.desktop?.path_ar;
+
+    if (mobileSrc) {
+      preload(mobileSrc, { as: "image", fetchPriority: "high", media: "(max-width: 640px)" });
+    }
+    if (desktopSrc) {
+      preload(desktopSrc, { as: "image", fetchPriority: "high", media: "(min-width: 641px)" });
+    }
+  }
 
   return (
     <>
