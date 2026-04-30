@@ -20,7 +20,9 @@
     "english": "English",
     "arabic": "العربية",
     "user_alt": "user",
-    "search_alt": "search"
+    "search_alt": "search",
+    "close_menu": "Close Menu",
+    "toggle_submenu": "Toggle Submenu"
   },
   "footer": {
     "menu": "Menu",
@@ -163,6 +165,7 @@
     "products": "Products",
     "all_products": "All Products",
     "cancel": "Cancel",
+    "close": "Close",
     "delete": "Delete",
     "edit": "Edit",
     "remove": "Remove",

@@ -20,7 +20,9 @@
     "english": "English",
     "arabic": "العربية",
     "user_alt": "مستخدم",
-    "search_alt": "بحث"
+    "search_alt": "بحث",
+    "close_menu": "إغلاق القائمة",
+    "toggle_submenu": "تبديل القائمة الفرعية"
   },
   "footer": {
     "menu": "القائمة",
@@ -182,6 +184,7 @@
     "products": "المنتجات",
     "all_products": "جميع المنتجات",
     "cancel": "إلغاء",
+    "close": "إغلاق",
     "delete": "حذف",
     "edit": "تعديل",
     "remove": "إزالة",

@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import Link from "next/link";
 import { useState } from "react";
 import { ChevronDownIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 const itemVariants = {
   hidden: { opacity: 0, x: -20 },
@@ -18,7 +19,7 @@ export default function MobileHeaderNavigation({
   onNavigationClick,
   locale,
 }) {
-
+  const t = useTranslations("header");
   const isEN = locale === "en";
   const [openMenu, setOpenMenu] = useState(null);
   const [openSubMenu, setOpenSubMenu] = useState(null);
@@ -57,7 +58,7 @@ export default function MobileHeaderNavigation({
                 <button
                   onClick={() => toggleMenu(i)}
                   className="p-0"
-                  aria-label="Toggle submenu"
+                  aria-label={t("toggle_submenu")}
                 >
                   <ChevronDownIcon
                     className={cn(
@@ -95,6 +96,7 @@ export default function MobileHeaderNavigation({
                           <button
                             onClick={() => toggleSubMenu(subItem.id)}
                             className="p-0"
+                            aria-label={t("toggle_submenu")}
                           >
                             <ChevronDownIcon
                               className={cn(
