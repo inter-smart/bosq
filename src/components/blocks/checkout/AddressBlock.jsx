@@ -25,9 +25,11 @@ import { useDeleteAddressMutation, useUpdateDefaultAddressMutation } from "@/sto
 import { toast } from "sonner";
 import { setSelectedShippingAddress, setSelectedBillingAddress } from "@/store/slices/checkoutSlice";
 import { useTranslations } from "next-intl";
+import { useAppSelector } from "@/store/hooks";
 
 const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress, isFromCheckout }) => {
   const dispatch = useDispatch();
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
   const selectedShippingAddressId = useSelector((state) => state.checkout.selectedShippingAddressId);
   const selectedBillingAddressId = useSelector((state) => state.checkout.selectedBillingAddressId);
 
@@ -40,7 +42,6 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
   const [pendingAction, setPendingAction] = useState(null);
   const [isActionDialogOpen, setIsActionDialogOpen] = useState(false);
 
-
   const tToast = useTranslations("toast");
   const t = useTranslations("address");
   const tCommon = useTranslations("common");
@@ -51,10 +52,10 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
   // Sort addresses: default address first
   const sortedAddresses = data
     ? [...data].sort((a, b) => {
-      if (a.is_default && !b.is_default) return -1;
-      if (!a.is_default && b.is_default) return 1;
-      return 0;
-    })
+        if (a.is_default && !b.is_default) return -1;
+        if (!a.is_default && b.is_default) return 1;
+        return 0;
+      })
     : [];
 
   const isProcessing = (pendingAction?.kind === "delete" && isDeletingAddress) || (pendingAction?.kind === "setDefault" && isUpdatingDefault);
@@ -103,14 +104,16 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
 
     try {
       if (pendingAction.kind === "delete") {
-        await deleteAddress({ id: pendingAction.id, addressType: pendingAction.addressType }).unwrap();
+        await deleteAddress({ id: pendingAction.id, addressType: pendingAction.addressType, isAuthenticated }).unwrap();
         toast.success(`${tToast("delete_address")}`);
       } else {
-        await updateDefaultAddress({ id: pendingAction.id, addressType: pendingAction.addressType }).unwrap();
+        await updateDefaultAddress({ id: pendingAction.id, addressType: pendingAction.addressType, isAuthenticated }).unwrap();
         toast.success(`${tToast("default_address")}`);
       }
     } catch (error) {
-      toast.error(`${tToast("something_went_wrong")}`);
+      console.error("Action error details:", error);
+      toast.error(locale === "en" ? error?.en : error?.ar || "Something went wrong");
+      // toast.error(`${tToast("something_went_wrong")}`);
     } finally {
       setPendingAction(null);
     }
@@ -177,9 +180,7 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
                       selectedAddressId === item.id ? "border-[#f17423]" : item.is_default ? "border-black" : "border-[#a1a1a1]",
                     )}
                   >
-                    {selectedAddressId === item.id && (
-                      <span className="w-2 h-2 2xl:w-2.5 2xl:h-2.5 rounded-full bg-[#f17423]" />
-                    )}
+                    {selectedAddressId === item.id && <span className="w-2 h-2 2xl:w-2.5 2xl:h-2.5 rounded-full bg-[#f17423]" />}
                   </div>
 
                   <Heading as="div" size="heading5" className="font-medium text-[#282828] mb-1 xl:mb-2">
@@ -248,7 +249,14 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
       </div>
 
       {/* Edit Address Dialog */}
-      <AlertDialog dir={locale === "ar" ? "rtl" : "ltr"} open={isEditDialogOpen} onOpenChange={(open) => { setIsEditDialogOpen(open); if (!open) setEditingAddress(null); }}>
+      <AlertDialog
+        dir={locale === "ar" ? "rtl" : "ltr"}
+        open={isEditDialogOpen}
+        onOpenChange={(open) => {
+          setIsEditDialogOpen(open);
+          if (!open) setEditingAddress(null);
+        }}
+      >
         <AlertDialogContent className={"xl:max-w-[768px] 2xl:max-w-[840px] gap-0"}>
           <AlertDialogHeader className={"flex-row items-center justify-between mb-2 2xl:mb-4"}>
             <AlertDialogTitle className="text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-semibold text-[#282828]">
@@ -261,7 +269,15 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
           </AlertDialogHeader>
 
           <div className="max-h-[70vh] mask-[linear-gradient(to_bottom,transparent_0%,white_2%,white_98%,transparent_100%)] overflow-y-auto overflow-x-hidden">
-            <UpdateAddressForm isFromCheckout={isFromCheckout} locale={locale} addressData={editingAddress} onSuccess={() => { setIsEditDialogOpen(false); setEditingAddress(null); }} />
+            <UpdateAddressForm
+              isFromCheckout={isFromCheckout}
+              locale={locale}
+              addressData={editingAddress}
+              onSuccess={() => {
+                setIsEditDialogOpen(false);
+                setEditingAddress(null);
+              }}
+            />
           </div>
         </AlertDialogContent>
       </AlertDialog>
@@ -307,7 +323,13 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
               }}
               disabled={isProcessing}
             >
-              {pendingAction?.kind === "delete" ? (isDeletingAddress ? t("deleting") : tCommon("delete")) : isUpdatingDefault ? tCommon("updating") : t("set_default")}
+              {pendingAction?.kind === "delete"
+                ? isDeletingAddress
+                  ? t("deleting")
+                  : tCommon("delete")
+                : isUpdatingDefault
+                  ? tCommon("updating")
+                  : t("set_default")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -10,11 +10,14 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useDispatch } from "react-redux";
 import { addToCartTogether, fetchCart } from "@/store/slices/cartSlice";
+import { useAppSelector } from "@/store/hooks";
 
 const FrequentBroughtTogether = ({ data, frequentlyEmblaRef, locale }) => {
   // data = { products: [...], totalItems: N, totalPrice: N }
   const products = data?.products || [];
   const dispatch = useDispatch();
+
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
 
   // All items checked by default
   const [selectedIds, setSelectedIds] = useState(() => new Set(products.map((p) => p.id)));
@@ -33,6 +36,7 @@ const FrequentBroughtTogether = ({ data, frequentlyEmblaRef, locale }) => {
       await dispatch(
         addToCartTogether({
           variant_ids: Array.from(selectedIds),
+          isAuthenticated,
         }),
       ).unwrap();
       dispatch(fetchCart());

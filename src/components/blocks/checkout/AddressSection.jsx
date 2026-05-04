@@ -34,7 +34,6 @@ const AddressSection = ({ locale }) => {
   const useSameAddressForShipping = useSelector((state) => state.checkout.useSameAddressForShipping);
   const selectedShippingAddressId = useSelector((state) => state.checkout.selectedShippingAddressId);
   const selectedBillingAddressId = useSelector((state) => state.checkout.selectedBillingAddressId);
-  const user = useSelector((state) => state.auth.user);
 
   const [showShippingAddressForm, setShowShippingAddressForm] = useState(false);
   const [showBillingAddressForm, setShowBillingAddressForm] = useState(false);

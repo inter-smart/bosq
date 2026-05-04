@@ -21,8 +21,6 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
 
   const { isAuthenticated } = useAppSelector((state) => state.auth);
 
-  console.log("isAuthenticated ", isAuthenticated)
-
   const router = useRouter();
 
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -62,9 +60,14 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
         onRemove?.(id);
       }
     } catch (error) {
-      // Revert on failure
       setIsWishlisted(prev);
-      toast.error(`${tToast("wishlist_remove_failed")}`);
+      console.error("Wishlist toggle error:", error);
+      // baseQueryWithReauth already shows a toast for session expiry — skip wishlist-specific error
+      if (error?.error_code !== "SESSION_EXPIRED") {
+        toast.error(`${tToast("wishlist_remove_failed")}`);
+      } else {
+        toast.error(isEn ? "Your session has expired. Please log in again." : "انتهت صلاحية الجلسة. الرجاء تسجيل الدخول مرة أخرى.");
+      }
     }
   };
 

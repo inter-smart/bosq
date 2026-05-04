@@ -9,11 +9,13 @@ import { addToCart, fetchCart } from "@/store/slices/cartSlice";
 import { selectCartIsUpdating } from "@/store/selectors/cart/selectors";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { useAppSelector } from "@/store/hooks";
 
 const PriceAndCart = ({ stock, price, item, locale, quantity, setQuantity }) => {
   const isEn = locale === "en";
 
   const dispatch = useDispatch();
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
   const isUpdating = useSelector(selectCartIsUpdating);
   const t = useTranslations();
 
@@ -26,11 +28,13 @@ const PriceAndCart = ({ stock, price, item, locale, quantity, setQuantity }) => 
           product_id,
           variant_id,
           quantity,
+          isAuthenticated,
         }),
       ).unwrap();
       dispatch(fetchCart());
       toast.success(t("product.item_added_to_cart"));
     } catch (error) {
+      console.error("Error adding to cart:", error);
       toast.error(isEn ? error?.en : error?.ar || "Failed to add item to cart");
     }
   };

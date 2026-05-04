@@ -14,7 +14,6 @@ import { useRouter } from "next/navigation";
 import { buyNow } from "@/store/slices/cartSlice";
 import { toast } from "sonner";
 import { useToggleWishlistMutation } from "@/store/services/wishListApi";
-import { useAuth } from "@/hooks/useAuth";
 
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
@@ -34,6 +33,7 @@ import { useTranslations } from "next-intl";
 import { setIsCheckoutAllowed } from "@/store/slices/checkoutSlice";
 import FrequentBroughtTogether from "./FrequentBroughtTogether";
 import NoProductFound from "./ProductNotFound";
+import { useAppSelector } from "@/store/hooks";
 
 export default function ProductDetailCopy({ locale, initialData, productData, boughtTogetherItems, productSlug }) {
   const router = useRouter();
@@ -110,7 +110,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [wishlist, setWishlist] = useState(initialData?.isWishlisted ?? false);
   const [toggleWishlist, { isLoading: isWishlistLoading }] = useToggleWishlistMutation();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
 
   // Sync wishlist state when variant changes (filter/design selection)
   useEffect(() => {
@@ -144,6 +144,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
           product_id,
           variant_id,
           quantity,
+          isAuthenticated,
         }),
       ).unwrap();
       dispatch(setIsCheckoutAllowed(true));

@@ -31,47 +31,56 @@ export const fetchCart = createAsyncThunk("cart/fetchCart", async (_, { getState
 });
 
 // Add item to cart
-export const addToCart = createAsyncThunk("cart/addToCart", async ({ product_id, variant_id, quantity = 1 }, { getState, rejectWithValue }) => {
-  try {
-    const data = await addToCartAPI({
-      product_id,
-      variant_id,
-      quantity,
-    });
+export const addToCart = createAsyncThunk(
+  "cart/addToCart",
+  async ({ product_id, variant_id, isAuthenticated, quantity = 1 }, { getState, rejectWithValue }) => {
+    try {
+      const data = await addToCartAPI({
+        product_id,
+        variant_id,
+        quantity,
+        isAuthenticated,
+      });
 
-    return data;
-  } catch (error) {
-    return rejectWithValue(
-      error || {
-        en: "Failed to add item to cart",
-        ar: "فشل في إضافة المنتج إلى السلة",
-      },
-    );
-  }
-});
-export const addToCartTogether = createAsyncThunk("cart/addToCartTogether", async ({ variant_ids }, { getState, rejectWithValue }) => {
-  try {
-    const data = await addToCartTogetherAPI({
-      variant_ids,
-    });
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error || {
+          en: "Failed to add item to cart",
+          ar: "فشل في إضافة المنتج إلى السلة",
+        },
+      );
+    }
+  },
+);
+export const addToCartTogether = createAsyncThunk(
+  "cart/addToCartTogether",
+  async ({ variant_ids, isAuthenticated }, { getState, rejectWithValue }) => {
+    try {
+      const data = await addToCartTogetherAPI({
+        variant_ids,
+        isAuthenticated,
+      });
 
-    return data;
-  } catch (error) {
-    return rejectWithValue(
-      error || {
-        en: "Failed to add items to cart",
-        ar: "فشل في إضافة المنتجات إلى السلة",
-      },
-    );
-  }
-});
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error || {
+          en: "Failed to add items to cart",
+          ar: "فشل في إضافة المنتجات إلى السلة",
+        },
+      );
+    }
+  },
+);
 
-export const buyNow = createAsyncThunk("cart/buyNow", async ({ product_id, variant_id, quantity = 1 }, { rejectWithValue }) => {
+export const buyNow = createAsyncThunk("cart/buyNow", async ({ product_id, variant_id, isAuthenticated, quantity = 1 }, { rejectWithValue }) => {
   try {
     const data = await buyNowAPI({
       product_id,
       variant_id,
       quantity,
+      isAuthenticated,
     });
 
     return data;
@@ -86,31 +95,36 @@ export const buyNow = createAsyncThunk("cart/buyNow", async ({ product_id, varia
 });
 
 // Update cart item quantity
-export const updateCartItem = createAsyncThunk("cart/updateCartItem", async ({ itemId, quantity, variant_id }, { getState, rejectWithValue }) => {
-  try {
-    const res = await updateCartItemAPI({
-      itemId,
-      quantity,
-      variant_id,
-    });
+export const updateCartItem = createAsyncThunk(
+  "cart/updateCartItem",
+  async ({ itemId, quantity, variant_id, isAuthenticated }, { getState, rejectWithValue }) => {
+    try {
+      const res = await updateCartItemAPI({
+        itemId,
+        quantity,
+        variant_id,
+        isAuthenticated,
+      });
 
-    return res;
-  } catch (error) {
-    console.log("ERROR", error);
-    return rejectWithValue(
-      error || {
-        en: "Failed to add item to cart",
-        ar: "فشل في إضافة المنتج إلى السلة",
-      },
-    );
-  }
-});
+      return res;
+    } catch (error) {
+      console.log("ERROR", error);
+      return rejectWithValue(
+        error || {
+          en: "Failed to add item to cart",
+          ar: "فشل في إضافة المنتج إلى السلة",
+        },
+      );
+    }
+  },
+);
 
 // Remove item from cart
-export const removeFromCart = createAsyncThunk("cart/removeFromCart", async ({ itemId }, { getState, rejectWithValue }) => {
+export const removeFromCart = createAsyncThunk("cart/removeFromCart", async ({ itemId, isAuthenticated }, { getState, rejectWithValue }) => {
   try {
     const data = await removeCartItemAPI({
       itemId,
+      isAuthenticated,
     });
 
     return data;

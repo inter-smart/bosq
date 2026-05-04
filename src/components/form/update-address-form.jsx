@@ -35,10 +35,19 @@ const errorStyle = cn("text-[#f17423]");
 const textareaStyle = cn(inputStyle, "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none");
 
 import { useTranslations } from "next-intl";
+import { useAppSelector } from "@/store/hooks";
 
-export default function UpdateAddressForm({ locale, addressData, onSuccess, isFromCheckout=false, showShipToDifferent=false, editMode="billing" }) {
+export default function UpdateAddressForm({
+  locale,
+  addressData,
+  onSuccess,
+  isFromCheckout = false,
+  showShipToDifferent = false,
+  editMode = "billing",
+}) {
   const t = useTranslations("form");
   const { executeRecaptcha } = useGoogleReCaptcha();
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
 
   const tErrors = useTranslations("errors");
 
@@ -217,6 +226,7 @@ export default function UpdateAddressForm({ locale, addressData, onSuccess, isFr
           ...values,
           recaptcha_token: recaptchaToken,
           addressType: addressData?.address_type,
+          isAuthenticated,
         },
       }).unwrap();
 
@@ -225,7 +235,7 @@ export default function UpdateAddressForm({ locale, addressData, onSuccess, isFr
       onSuccess?.();
     } catch (err) {
       console.error(err);
-      toast.error(t("updated_failed"));
+      toast.error(locale === "en" ? err?.en : err?.ar || "Something went wrong");
     }
   };
 
@@ -249,225 +259,226 @@ export default function UpdateAddressForm({ locale, addressData, onSuccess, isFr
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-wrap items-start -mx-4 [&>*]:px-4 [&>*]:py-3">
         {/* Billing Address Fields */}
-        {!isShippingMode && <>
-        {/* Full Name */}
-        <FormField
-          control={form.control}
-          name="fullName"
-          render={({ field }) => (
-            <FormItem className="w-full sm:w-1/2">
-              <FormLabel className={labelStyle}>
-                {t("full_name")}
-                <span className={errorStyle}>*</span>
-              </FormLabel>
-              <FormControl>
-                <Input {...field} className={inputStyle} placeholder={t("enter_name")} />
-              </FormControl>
-              <FormMessage className={errorStyle} />
-            </FormItem>
-          )}
-        />
+        {!isShippingMode && (
+          <>
+            {/* Full Name */}
+            <FormField
+              control={form.control}
+              name="fullName"
+              render={({ field }) => (
+                <FormItem className="w-full sm:w-1/2">
+                  <FormLabel className={labelStyle}>
+                    {t("full_name")}
+                    <span className={errorStyle}>*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input {...field} className={inputStyle} placeholder={t("enter_name")} />
+                  </FormControl>
+                  <FormMessage className={errorStyle} />
+                </FormItem>
+              )}
+            />
 
-        {/* Company Name */}
-        <FormField
-          control={form.control}
-          name="companyName"
-          render={({ field }) => (
-            <FormItem className="w-full sm:w-1/2">
-              <FormLabel className={labelStyle}>{t("company_name")}</FormLabel>
-              <FormControl>
-                <Input {...field} className={inputStyle} placeholder={t("enter_company_name")} />
-              </FormControl>
-              <FormMessage className={errorStyle} />
-            </FormItem>
-          )}
-        />
+            {/* Company Name */}
+            <FormField
+              control={form.control}
+              name="companyName"
+              render={({ field }) => (
+                <FormItem className="w-full sm:w-1/2">
+                  <FormLabel className={labelStyle}>{t("company_name")}</FormLabel>
+                  <FormControl>
+                    <Input {...field} className={inputStyle} placeholder={t("enter_company_name")} />
+                  </FormControl>
+                  <FormMessage className={errorStyle} />
+                </FormItem>
+              )}
+            />
 
-        {/* Email */}
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem className="w-full sm:w-1/2">
-              <FormLabel className={labelStyle}>
-                {t("email_address")}
-                <span className={errorStyle}>*</span>
-              </FormLabel>
-              <FormControl>
-                <Input {...field} type="email" className={inputStyle} placeholder={t("enter_email")} />
-              </FormControl>
-              <FormMessage className={errorStyle} />
-            </FormItem>
-          )}
-        />
+            {/* Email */}
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem className="w-full sm:w-1/2">
+                  <FormLabel className={labelStyle}>
+                    {t("email_address")}
+                    <span className={errorStyle}>*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input {...field} type="email" className={inputStyle} placeholder={t("enter_email")} />
+                  </FormControl>
+                  <FormMessage className={errorStyle} />
+                </FormItem>
+              )}
+            />
 
-        {/* Phone */}
-        <FormField
-          control={form.control}
-          name="phone"
-          render={({ field }) => (
-            <FormItem className="w-full sm:w-1/2">
-              <FormLabel className={labelStyle}>
-                {t("phone")}
-                <span className={errorStyle}>*</span>
-              </FormLabel>
-              <FormControl>
-                <PhoneInput
-                  defaultCountry="ae"
-                  {...field}
-                  className={cn(
-                    inputStyle,
-                    "w-full p-0 [&_input]:flex-1 [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px] [--react-international-phone-flag-width:20px] [--react-international-phone-flag-height:20px]",
-                  )}
-                  placeholder={t("enter_mobile")}
-                />
-              </FormControl>
-              <FormMessage className={errorStyle} />
-            </FormItem>
-          )}
-        />
+            {/* Phone */}
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem className="w-full sm:w-1/2">
+                  <FormLabel className={labelStyle}>
+                    {t("phone")}
+                    <span className={errorStyle}>*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <PhoneInput
+                      defaultCountry="ae"
+                      {...field}
+                      className={cn(
+                        inputStyle,
+                        "w-full p-0 [&_input]:flex-1 [--react-international-phone-country-selector-border-color:#e9e9e9] [--react-international-phone-border-color:#e9e9e9] [--react-international-phone-height:35px] 2xl:[--react-international-phone-height:45px] [--react-international-phone-flag-width:20px] [--react-international-phone-flag-height:20px]",
+                      )}
+                      placeholder={t("enter_mobile")}
+                    />
+                  </FormControl>
+                  <FormMessage className={errorStyle} />
+                </FormItem>
+              )}
+            />
 
-        {/* Country */}
-        <FormField
-          control={form.control}
-          name="country"
-          render={({ field }) => (
-            <FormItem className="w-full sm:w-1/2">
-              <FormLabel className={labelStyle}>
-                {t("country")}
-                <span className={errorStyle}>*</span>
-              </FormLabel>
-              <Select
-                dir={locale === "ar" ? "rtl" : "ltr"}
-                onValueChange={(value) => {
-                  field.onChange(value);
-                  form.setValue("state", ""); // Reset state when country changes
-                }}
-                value={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger className={cn(inputStyle, "w-full")}>
-                    <SelectValue placeholder={t("select_country")} />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {countries.map((item) => (
-                    <SelectItem key={item.slug} value={item.slug} className={labelStyle}>
-                      {item.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage className={errorStyle} />
-            </FormItem>
-          )}
-        />
+            {/* Country */}
+            <FormField
+              control={form.control}
+              name="country"
+              render={({ field }) => (
+                <FormItem className="w-full sm:w-1/2">
+                  <FormLabel className={labelStyle}>
+                    {t("country")}
+                    <span className={errorStyle}>*</span>
+                  </FormLabel>
+                  <Select
+                    dir={locale === "ar" ? "rtl" : "ltr"}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      form.setValue("state", ""); // Reset state when country changes
+                    }}
+                    value={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger className={cn(inputStyle, "w-full")}>
+                        <SelectValue placeholder={t("select_country")} />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {countries.map((item) => (
+                        <SelectItem key={item.slug} value={item.slug} className={labelStyle}>
+                          {item.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage className={errorStyle} />
+                </FormItem>
+              )}
+            />
 
-        {/* Street Address */}
-        <FormField
-          control={form.control}
-          name="streetAddress"
-          render={({ field }) => (
-            <FormItem className="w-full sm:w-1/2">
-              <FormLabel className={labelStyle}>
-                {t("street_address")}
-                <span className={errorStyle}>*</span>
-              </FormLabel>
-              <FormControl>
-                <Input {...field} className={inputStyle} placeholder={t("enter_street_address")} />
-              </FormControl>
-              <FormMessage className={errorStyle} />
-            </FormItem>
-          )}
-        />
+            {/* Street Address */}
+            <FormField
+              control={form.control}
+              name="streetAddress"
+              render={({ field }) => (
+                <FormItem className="w-full sm:w-1/2">
+                  <FormLabel className={labelStyle}>
+                    {t("street_address")}
+                    <span className={errorStyle}>*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input {...field} className={inputStyle} placeholder={t("enter_street_address")} />
+                  </FormControl>
+                  <FormMessage className={errorStyle} />
+                </FormItem>
+              )}
+            />
 
-        {/* Apartment */}
-        <FormField
-          control={form.control}
-          name="apartment"
-          render={({ field }) => (
-            <FormItem className="w-full sm:w-1/2">
-              <FormLabel className={labelStyle}>{t("apartment")}</FormLabel>
-              <FormControl>
-                <Input {...field} className={inputStyle} placeholder={t("apartment_placeholder")} />
-              </FormControl>
-              <FormMessage className={errorStyle} />
-            </FormItem>
-          )}
-        />
+            {/* Apartment */}
+            <FormField
+              control={form.control}
+              name="apartment"
+              render={({ field }) => (
+                <FormItem className="w-full sm:w-1/2">
+                  <FormLabel className={labelStyle}>{t("apartment")}</FormLabel>
+                  <FormControl>
+                    <Input {...field} className={inputStyle} placeholder={t("apartment_placeholder")} />
+                  </FormControl>
+                  <FormMessage className={errorStyle} />
+                </FormItem>
+              )}
+            />
 
-        {/* State */}
-        <FormField
-          control={form.control}
-          name="state"
-          render={({ field }) => (
-            <FormItem className="w-full sm:w-1/2">
-              <FormLabel className={labelStyle}>
-                {t("state")}
-                <span className={errorStyle}>*</span>
-              </FormLabel>
-              <Select
-                dir={locale === "ar" ? "rtl" : "ltr"}
-                onValueChange={field.onChange}
-                value={field.value}
-                disabled={!selectedCountry || states.length === 0}
-              >
-                <FormControl>
-                  <SelectTrigger className={cn(inputStyle, "w-full")}>
-                    <SelectValue placeholder={selectedCountry ? t("select_state") : t("select_country_first")} />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {states.map((item) => (
-                    <SelectItem key={item.slug} value={item.slug} className={labelStyle}>
-                      {item.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage className={errorStyle} />
-            </FormItem>
-          )}
-        />
+            {/* State */}
+            <FormField
+              control={form.control}
+              name="state"
+              render={({ field }) => (
+                <FormItem className="w-full sm:w-1/2">
+                  <FormLabel className={labelStyle}>
+                    {t("state")}
+                    <span className={errorStyle}>*</span>
+                  </FormLabel>
+                  <Select
+                    dir={locale === "ar" ? "rtl" : "ltr"}
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    disabled={!selectedCountry || states.length === 0}
+                  >
+                    <FormControl>
+                      <SelectTrigger className={cn(inputStyle, "w-full")}>
+                        <SelectValue placeholder={selectedCountry ? t("select_state") : t("select_country_first")} />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {states.map((item) => (
+                        <SelectItem key={item.slug} value={item.slug} className={labelStyle}>
+                          {item.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage className={errorStyle} />
+                </FormItem>
+              )}
+            />
 
-        {/* Order Notes */}
-        <FormField
-          control={form.control}
-          name="orderNotes"
-          render={({ field }) => (
-            <FormItem className="w-full">
-              <FormLabel className={labelStyle}>{t("order_notes")}</FormLabel>
-              <FormControl>
-                <Textarea {...field} className={textareaStyle} placeholder={t("order_notes_placeholder")} />
-              </FormControl>
-              <FormMessage className={errorStyle} />
-            </FormItem>
-          )}
-        />
+            {/* Order Notes */}
+            <FormField
+              control={form.control}
+              name="orderNotes"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel className={labelStyle}>{t("order_notes")}</FormLabel>
+                  <FormControl>
+                    <Textarea {...field} className={textareaStyle} placeholder={t("order_notes_placeholder")} />
+                  </FormControl>
+                  <FormMessage className={errorStyle} />
+                </FormItem>
+              )}
+            />
 
-        {/* Ship to Different Address Checkbox */}
+            {/* Ship to Different Address Checkbox */}
 
-        {
-          (!isFromCheckout || showShipToDifferent) &&
-        <FormField
-          control={form.control}
-          name="shipToDifferentAddress"
-          render={({ field }) => (
-            <FormItem className="w-full">
-              <FormControl>
-                <div className="flex items-center gap-3">
-                  <Checkbox id="shipToDifferent" checked={field.value} onCheckedChange={field.onChange} />
-                  <Label htmlFor="shipToDifferent" className={labelStyle}>
-                    {t("ship_to_different")}
-                  </Label>
-                </div>
-              </FormControl>
-              <FormMessage className={errorStyle} />
-            </FormItem>
-          )}
-        />
-        }
-        </>}
+            {(!isFromCheckout || showShipToDifferent) && (
+              <FormField
+                control={form.control}
+                name="shipToDifferentAddress"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormControl>
+                      <div className="flex items-center gap-3">
+                        <Checkbox id="shipToDifferent" checked={field.value} onCheckedChange={field.onChange} />
+                        <Label htmlFor="shipToDifferent" className={labelStyle}>
+                          {t("ship_to_different")}
+                        </Label>
+                      </div>
+                    </FormControl>
+                    <FormMessage className={errorStyle} />
+                  </FormItem>
+                )}
+              />
+            )}
+          </>
+        )}
 
         {/* Shipping Address Section - Shows when checkbox is checked (billing mode) or always (shipping mode) */}
         {(isShippingMode || shipToDifferent) && (

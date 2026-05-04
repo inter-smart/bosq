@@ -95,9 +95,7 @@ export default function CartList({ locale, similarProducts }) {
         const ids = new Set((result.data.invalid_items || []).map((i) => i.id));
         setInvalidItemIds(ids);
         toast.error(
-          isEn
-            ? "Some items in your cart are out of stock. Please update your cart."
-            : "بعض المنتجات في سلتك غير متوفرة. يرجى تحديث السلة.",
+          isEn ? "Some items in your cart are out of stock. Please update your cart." : "بعض المنتجات في سلتك غير متوفرة. يرجى تحديث السلة.",
         );
         return;
       }
@@ -182,12 +180,15 @@ export default function CartList({ locale, similarProducts }) {
               <MediaQuery minWidth={640}>
                 {isCartBlocked && (
                   <Text as="div" size="text3" className="text-red-500 text-[11px] 2xl:text-[12px] font-normal text-center mb-2">
-                    {isEn
-                      ? "Some items have stock issues. Please update your cart."
-                      : "بعض المنتجات تجاوزت الكمية المتاحة. يرجى تحديث السلة."}
+                    {isEn ? "Some items have stock issues. Please update your cart." : "بعض المنتجات تجاوزت الكمية المتاحة. يرجى تحديث السلة."}
                   </Text>
                 )}
-                <Button variant={"black"} disabled={isUpdating || isValidating || cartItems.length === 0 || isCartBlocked} className="min-w-full mt-2" asChild>
+                <Button
+                  variant={"black"}
+                  disabled={isUpdating || isValidating || cartItems.length === 0 || isCartBlocked}
+                  className="min-w-full mt-2"
+                  asChild
+                >
                   <div onClick={validateCheckout}>{isValidating ? "Validating..." : isUpdating ? "Updating..." : `${t("checkout")}`}</div>
                 </Button>
               </MediaQuery>
@@ -200,9 +201,7 @@ export default function CartList({ locale, similarProducts }) {
         <div className="w-full py-1 px-4 pb-2 bg-white sticky z-1 bottom-0 left-0 right-0 shadow-[0px_-5px_10px_rgba(0,0,0,0.1)]">
           {isCartBlocked && (
             <Text as="div" size="text3" className="text-red-500 text-[11px] font-normal text-center pt-1 mb-1">
-              {isEn
-                ? "Some items have stock issues. Please update your cart."
-                : "بعض المنتجات تجاوزت الكمية المتاحة. يرجى تحديث السلة."}
+              {isEn ? "Some items have stock issues. Please update your cart." : "بعض المنتجات تجاوزت الكمية المتاحة. يرجى تحديث السلة."}
             </Text>
           )}
           <Button variant={"black"} disabled={isUpdating || isValidating || cartItems.length === 0 || isCartBlocked} className="min-w-full" asChild>

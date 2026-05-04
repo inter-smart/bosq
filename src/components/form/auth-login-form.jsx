@@ -88,10 +88,24 @@ export default function AuthLoginForm({ locale, data }) {
   }, [isAuthenticated]);
 
   useEffect(() => {
-    if (activity && activity === "wishlist")
-      toast.error("Please login to access your wishlist.", {
+    if (!activity) return;
+
+    const messages = {
+      wishlist: {
+        text: "Please login to access your wishlist.",
         id: "wishlist-auth",
-      });
+      },
+      cart: {
+        text: "Please login to access your cart.",
+        id: "cart-auth",
+      },
+    };
+
+    const config = messages[activity];
+
+    if (config) {
+      toast.error(config.text, { id: config.id });
+    }
   }, [activity]);
 
   const onSubmit = async (values) => {
