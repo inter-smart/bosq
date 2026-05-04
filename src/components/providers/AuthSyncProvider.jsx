@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter, usePathname } from "next/navigation";
-import { clearAuth, loginFromBroadcast, fetchUserProfile, logoutUser } from "@/store/slices/authSlice";
+import { clearAuth, loginFromBroadcast, fetchUserProfile } from "@/store/slices/authSlice";
 
 const AUTH_PATHS = ["/login", "/signup", "/forgot-password", "/create-password", "/otp-submission"];
 
@@ -31,7 +31,7 @@ export default function AuthSyncProvider() {
 
     bc.onmessage = (e) => {
       if (e.data.type === "LOGOUT") {
-        dispatch(logoutUser());
+        dispatch(clearAuth());
         router.refresh();
       } else if (e.data.type === "LOGIN") {
         dispatch(loginFromBroadcast(e.data.user));
