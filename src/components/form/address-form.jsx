@@ -252,7 +252,7 @@ export default function AddressForm({ locale, variant = "shipping", onSuccess })
       }, 100);
     } catch (err) {
       console.error(err);
-      toast.error(t("added_failed"));
+      toast.error(locale === "en" ? err?.en : err?.ar || "Something went wrong");
     }
   };
 
