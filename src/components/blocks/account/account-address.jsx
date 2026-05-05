@@ -192,7 +192,7 @@ export default function AccountAddress({ data, locale, addressData }) {
         isAuthenticated: true,
       }).unwrap();
 
-      toast.success(tToast("default_address"));
+      toast.success(tTost("default_address"));
       router.refresh();
     } catch (err) {
       console.error("Set default error:", err);
@@ -211,7 +211,7 @@ export default function AccountAddress({ data, locale, addressData }) {
         isAuthenticated: true,
       }).unwrap();
 
-      toast.success(tToast("delete_address"));
+      toast.success(tTost("delete_address"));
       router.refresh();
     } catch (err) {
       console.error("Delete error:", err);
