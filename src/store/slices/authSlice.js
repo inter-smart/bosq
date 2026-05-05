@@ -75,8 +75,8 @@ export const googleLoginUser = createAsyncThunk("auth/googleLogin", async (token
 
 // Logout user
 export const logoutUser = createAsyncThunk("auth/logout", async (_, { getState }) => {
-  const wasAuthenticated = getState().auth.isAuthenticated;
-  resetRefreshPromise();
+  // const wasAuthenticated = getState().auth.isAuthenticated;
+  // resetRefreshPromise();
   // Call server to clear HTTP-only cookie — always clear local state even if API fails
   try {
     await logoutAPI();
@@ -88,7 +88,7 @@ export const logoutUser = createAsyncThunk("auth/logout", async (_, { getState }
   getPersistor()?.purge();
   // Only broadcast if the user was actually authenticated — prevents re-broadcast loops
   // when logoutUser() is called reactively (e.g. from baseQueryWithReauth on 401).
-  if (wasAuthenticated && typeof window !== "undefined" && "BroadcastChannel" in window) {
+  if (typeof window !== "undefined" && "BroadcastChannel" in window) {
     const bc = new BroadcastChannel("bosq_auth");
     bc.postMessage({ type: "LOGOUT" });
     bc.close();

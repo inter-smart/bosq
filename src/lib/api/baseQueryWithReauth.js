@@ -18,7 +18,7 @@ export async function baseQueryWithReauth(args, api, extraOptions) {
   });
 
   if (result.error?.status === 401) {
-    if (!api.getState().auth.isAuthenticated) return result;
+    // if (!api.getState().auth.isAuthenticated) return result;
 
     const refreshed = await attemptTokenRefresh();
 
