@@ -115,7 +115,9 @@ export default function HomeHero({ data, locale }) {
                         sizes="100vw"
                         className="object-cover"
                         priority={index === 0}
-                        quality={90}
+                        unoptimized={index === 0}
+                        loading={index === 0 ? "eager" : "lazy"}
+                        quality={80}
                       />
                     </div>
                     <div className="absolute -z-2 inset-0 max-sm:hidden">
@@ -138,8 +140,10 @@ export default function HomeHero({ data, locale }) {
                         sizes="(max-width: 1200px) 100vw, 80vw"
                         className="object-cover"
                         priority={index === 0}
+                        unoptimized={index === 0}
+                        loading={index === 0 ? "eager" : "lazy"}
                         fetchPriority={index === 0 ? "high" : "auto"}
-                        quality={90}
+                        quality={80}
                       />
                     </div>
                   </>
@@ -157,7 +161,8 @@ export default function HomeHero({ data, locale }) {
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 80vw"
                       className="object-cover"
                       priority={index === 0}
-                      quality={90}
+                      unoptimized={index === 0}
+                      quality={80}
                     />
                   </div>
                 )}

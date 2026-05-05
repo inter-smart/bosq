@@ -82,8 +82,13 @@ export default async function RootLayout({ children, params }) {
   const dir = localeDirection[resolvedParams.locale];
   const messages = await getMessages({ locale });
 
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
   return (
     <html lang={locale} dir={dir} className={cn(locale === "ar" ? cairo.className : heroNew.className, "antialiased")}>
+      <head>
+        <link rel="preconnect" href={apiBaseUrl} />
+        <link rel="dns-prefetch" href={apiBaseUrl} />
+      </head>
       <body className={locale === "ar" ? "font-cairo" : "font-hero"}>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ReduxProvider>

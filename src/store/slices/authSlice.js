@@ -12,6 +12,7 @@ import {
   fetchFromAPI,
   fetchUserProfileAPI,
   googleLogin as googleLoginAPI,
+  resetRefreshPromise,
 } from "@/lib/helper";
 import { mergeCartAPI } from "@/lib/api/cart/cartApi";
 import { getPersistor } from "../persistorInstance";
@@ -73,7 +74,9 @@ export const googleLoginUser = createAsyncThunk("auth/googleLogin", async (token
 });
 
 // Logout user
-export const logoutUser = createAsyncThunk("auth/logout", async () => {
+export const logoutUser = createAsyncThunk("auth/logout", async (_, { getState }) => {
+  const wasAuthenticated = getState().auth.isAuthenticated;
+  resetRefreshPromise();
   // Call server to clear HTTP-only cookie — always clear local state even if API fails
   try {
     await logoutAPI();
@@ -83,7 +86,9 @@ export const logoutUser = createAsyncThunk("auth/logout", async () => {
   // Explicitly purge persisted auth data from localStorage so stale user/isGoogleUser
   // can't be rehydrated if the tab was closed before redux-persist flushed null values.
   getPersistor()?.purge();
-  if (typeof window !== "undefined" && "BroadcastChannel" in window) {
+  // Only broadcast if the user was actually authenticated — prevents re-broadcast loops
+  // when logoutUser() is called reactively (e.g. from baseQueryWithReauth on 401).
+  if (wasAuthenticated && typeof window !== "undefined" && "BroadcastChannel" in window) {
     const bc = new BroadcastChannel("bosq_auth");
     bc.postMessage({ type: "LOGOUT" });
     bc.close();

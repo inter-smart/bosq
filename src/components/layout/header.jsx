@@ -133,7 +133,7 @@ export default function Header({ navigationData, locale, data }) {
           <div className="flex justify-between items-center gap-x-3 lg:gap-x-8">
             <MediaQuery maxWidth={1023}>
               <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-                <SheetTrigger className="flex items-center gap-x-1.5 2xs:gap-x-2">
+                <SheetTrigger className="flex items-center gap-x-1.5 2xs:gap-x-2" aria-label={t("navigation")}>
                   <Menu size={18} strokeWidth={1} className={cn("size-5", showDarkHeader ? "text-[#282828]" : "text-white")} />
                   <div className={cn("w-[1px] h-5 2xs:h-6", showDarkHeader ? "bg-[#282828]/10" : "bg-white/10")} />
                 </SheetTrigger>
@@ -178,7 +178,7 @@ export default function Header({ navigationData, locale, data }) {
                     )}
                     asChild
                   >
-                    <Button variant="none">
+                    <Button variant="none" aria-label={t("close_menu")}>
                       <X className="size-5 text-white" />
                     </Button>
                   </SheetClose>
@@ -217,7 +217,7 @@ export default function Header({ navigationData, locale, data }) {
                 />
               </MediaQuery>
               <SearchDialog locale={locale}>
-                <Button variant="none" size="none">
+                <Button variant="none" size="none" aria-label={t("search_alt")}>
                   <Image
                     src={showDarkHeader ? "/images/icon-search-dark.svg" : "/images/icon-search.svg"}
                     alt={t("search_alt")}

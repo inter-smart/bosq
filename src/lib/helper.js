@@ -128,7 +128,6 @@ export async function fetchFromAPIWithCredentials(endpoint, options = {}) {
     let response = await fetch(url, defaultOptions);
     let data = await response.json();
 
-    // Attempt silent token refresh on 401 and retry once
     if (response.status === 401) {
       const refreshed = await attemptTokenRefresh();
       if (refreshed) {
@@ -159,7 +158,38 @@ export async function fetchFromAPIWithCredentials(endpoint, options = {}) {
   }
 }
 
+export async function callLogoutApi(endpoint, options = {}) {
+  const API_BASE_URL = getApiBaseUrl();
+  const url = `${API_BASE_URL}${endpoint}`;
+
+  const defaultOptions = {
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+    ...options,
+  };
+
+  try {
+    let response = await fetch(url, defaultOptions);
+    let data = await response.json();
+
+    console.log("Logout API response:", { response, data });
+  } catch (error) {
+    return {
+      data: null,
+      error: true,
+      message: error?.message || "Network error. Please check your connection.",
+    };
+  }
+}
+
 let _refreshPromise = null;
+
+export function resetRefreshPromise() {
+  _refreshPromise = null;
+}
 
 export async function attemptTokenRefresh() {
   // Deduplicate concurrent refresh calls
