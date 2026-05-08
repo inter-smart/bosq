@@ -25,17 +25,9 @@ export default function HomeJourney({ data, locale, isEN }) {
             autoPlay
             loop
             muted
+            poster={data?.thumbnail?.path}
             playsInline
-            className="w-full h-full object-cover absolute -z-2 inset-0 opacity-80 block sm:hidden"
-          >
-            <source src={data?.media?.mobile?.path} type="video/mp4" />
-          </video>
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-full h-full object-cover absolute -z-2 inset-0 opacity-80 hidden sm:block"
+            className="w-full h-full object-cover absolute -z-2 inset-0 opacity-80 block"
           >
             <source src={data?.media?.desktop?.path} type="video/mp4" />
           </video>
