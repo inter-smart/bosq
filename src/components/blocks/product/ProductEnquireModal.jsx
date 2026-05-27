@@ -10,11 +10,14 @@ import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
 import { Text } from "@/components/utils/text";
 
-const ProductEnquireModal = ({ children, data, locale, productId }) => {
-  const [isSheetOpen, setIsSheetOpen] = useState(false);
+const ProductEnquireModal = ({ children, data, locale, productId, open: controlledOpen, onOpenChange: controlledOnOpenChange, onSuccess }) => {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isSheetOpen = controlledOpen !== undefined ? controlledOpen : internalOpen;
+  const setIsSheetOpen = controlledOnOpenChange !== undefined ? controlledOnOpenChange : setInternalOpen;
+
   return (
     <Sheet dir={locale === "ar" ? "rtl" : "ltr"} open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-      <SheetTrigger asChild>{children}</SheetTrigger>
+      {children && <SheetTrigger asChild>{children}</SheetTrigger>}
       <SheetContent
         side={locale === "ar" ? "left" : "right"}
         showCloseButton={false}
@@ -32,7 +35,7 @@ const ProductEnquireModal = ({ children, data, locale, productId }) => {
           <Text as="div" size="text3" className="text-[#282828] mb-2 2xl:mb-4">
             {parse(data?.description)}
           </Text>
-          <ProductEnquiryForm locale={locale} productId={productId} onClose={() => setIsSheetOpen(false)} />
+          <ProductEnquiryForm locale={locale} productId={productId} onClose={() => setIsSheetOpen(false)} onSuccess={onSuccess} />
         </div>
 
         <SheetClose

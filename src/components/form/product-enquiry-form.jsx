@@ -46,7 +46,7 @@ const textareaStyle = cn(
   "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none",
 );
 
-export default function ProductEnquiryForm({ productId, onClose, locale }) {
+export default function ProductEnquiryForm({ productId, onClose, locale, onSuccess }) {
   const { executeRecaptcha } = useGoogleReCaptcha();
   const [submitProductEnquiry, { isLoading }] =
     useSubmitProductEnquiryMutation();
@@ -129,6 +129,7 @@ export default function ProductEnquiryForm({ productId, onClose, locale }) {
         setFormKey((prev) => prev + 1);
         setUploadedFile(null);
         onClose?.();
+        onSuccess?.();
       }, 100);
     } catch (error) {
       const apiError = error?.data;

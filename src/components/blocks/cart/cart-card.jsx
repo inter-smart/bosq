@@ -13,17 +13,26 @@ import { selectCartIsUpdating } from "@/store/selectors/cart/selectors";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { useAppSelector } from "@/store/hooks";
+import ProductEnquireModal from "@/components/blocks/product/ProductEnquireModal";
 
 export default function CartCard({ product, isEn, isValidationFailed = false }) {
   const dispatch = useDispatch();
   const isUpdating = useSelector(selectCartIsUpdating);
   const [quantity, setQuantity] = useState(product?.quantity || 1);
   const [isRemoving, setIsRemoving] = useState(false);
+  const [isEnquireModalOpen, setIsEnquireModalOpen] = useState(false);
 
   const t = useTranslations("cart");
   const tCommon = useTranslations("common");
   const tToast = useTranslations("toast");
+  const tProduct = useTranslations("product");
   const { isAuthenticated } = useAppSelector((state) => state.auth);
+
+  const enq = {
+    title: tProduct("enquire_now"),
+    subtitle: tProduct("enquire_subtitle"),
+    description: tProduct("enquire_description"),
+  };
   // Sync local quantity with product quantity from Redux
   useEffect(() => {
     setQuantity(product?.quantity || 1);
@@ -68,6 +77,10 @@ export default function CartCard({ product, isEn, isValidationFailed = false }) 
 
   const handleIncrement = () => {
     const newQty = quantity + 1;
+    if (newQty > 10) {
+      setIsEnquireModalOpen(true);
+      return;
+    }
     setQuantity(newQty);
     updateQuantity(newQty);
   };
@@ -87,6 +100,11 @@ export default function CartCard({ product, isEn, isValidationFailed = false }) 
   };
 
   const handleBlur = () => {
+    if (quantity > 10) {
+      setIsEnquireModalOpen(true);
+      setQuantity(product?.quantity || 10);
+      return;
+    }
     if (quantity !== product?.quantity && quantity >= 1) {
       updateQuantity(quantity);
     }
@@ -108,6 +126,14 @@ export default function CartCard({ product, isEn, isValidationFailed = false }) 
       <div
         className={`group w-full flex flex-wrap items-center border rounded-[4px] p-3 sm:p-3 xl:p-5 2xl:p-6 hover:shadow-sm transition-shadow ${isQuantityExceedsStock ? "border-red-400" : "border-[#e9e9e9]"}`}
       >
+        <ProductEnquireModal
+          data={enq}
+          locale={isEn ? "en" : "ar"}
+          productId={product.variant_id}
+          open={isEnquireModalOpen}
+          onOpenChange={setIsEnquireModalOpen}
+          onSuccess={handleRemove}
+        />
         <div className="w-[60px] sm:w-[100px] xl:w-[150px] 2xl:w-[200px] aspect-[168/186] rounded-lg bg-white border border-gray-100 sm:border-white max-sm:mb-3 relative z-0">
           {(isProductOutOfStock || isValidationFailed) && (
             <div className="w-full h-full bg-[#f4f4f4]/90 flex items-center justify-center absolute z-2 inset-0">

@@ -9,11 +9,12 @@ import { Text } from "@/components/utils/text";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { buyNow } from "@/store/slices/cartSlice";
 import { toast } from "sonner";
 import { useToggleWishlistMutation } from "@/store/services/wishListApi";
+import { selectCartItems } from "@/store/selectors/cart/selectors";
 
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
@@ -108,9 +109,14 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
   const [isChooseDesignOpen, setIsChooseDesignOpen] = useState(false);
 
   const [isShareOpen, setIsShareOpen] = useState(false);
+  const [isEnquireModalOpen, setIsEnquireModalOpen] = useState(false);
   const [wishlist, setWishlist] = useState(initialData?.isWishlisted ?? false);
   const [toggleWishlist, { isLoading: isWishlistLoading }] = useToggleWishlistMutation();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
+
+  const cartItems = useSelector(selectCartItems) || [];
+  const cartItem = cartItems.find((cItem) => cItem.variant_id === initialData?.id);
+  const quantityInCart = cartItem ? cartItem.quantity : 0;
 
   // Sync wishlist state when variant changes (filter/design selection)
   useEffect(() => {
@@ -133,6 +139,10 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
   };
 
   const handleBuyNow = async () => {
+    if (quantityInCart + quantity > 10) {
+      setIsEnquireModalOpen(true);
+      return;
+    }
     // Note: Since quantity is managed inside PriceAndCart,
     // and this button is outside, we default to 1 or we'd need to lift state.
     // For now, implementing with quantity 1 as requested.
@@ -411,6 +421,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
                       quantity={quantity}
                       setQuantity={setQuantity}
                       locale={locale}
+                      onEnquireTrigger={() => setIsEnquireModalOpen(true)}
                     />
                   )}
 
@@ -425,7 +436,13 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
                     <Button variant={"link"} className={"font-normal underline h-auto "} disabled={initialData?.stock == 0} onClick={handleBuyNow}>
                       {t("product.buy_now")}
                     </Button>
-                    <ProductEnquireModal data={enq} productId={initialData?.id} locale={locale}>
+                    <ProductEnquireModal
+                      data={enq}
+                      productId={initialData?.id}
+                      locale={locale}
+                      open={isEnquireModalOpen}
+                      onOpenChange={setIsEnquireModalOpen}
+                    >
                       <Button variant={"link"} className={"font-normal underline h-auto"}>
                         {t("product.enquire_now")}
                       </Button>

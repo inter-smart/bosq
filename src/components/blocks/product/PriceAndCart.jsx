@@ -6,21 +6,29 @@ import Image from "@/components/utils/custom-image";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, fetchCart } from "@/store/slices/cartSlice";
-import { selectCartIsUpdating } from "@/store/selectors/cart/selectors";
+import { selectCartIsUpdating, selectCartItems } from "@/store/selectors/cart/selectors";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { useAppSelector } from "@/store/hooks";
 
-const PriceAndCart = ({ stock, price, item, locale, quantity, setQuantity }) => {
+const PriceAndCart = ({ stock, price, item, locale, quantity, setQuantity, onEnquireTrigger }) => {
   const isEn = locale === "en";
 
   const dispatch = useDispatch();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
   const isUpdating = useSelector(selectCartIsUpdating);
+  const cartItems = useSelector(selectCartItems) || [];
+  const cartItem = cartItems.find((cItem) => cItem.variant_id === item.id);
+  const quantityInCart = cartItem ? cartItem.quantity : 0;
   const t = useTranslations();
 
   const handleAddToCart = async () => {
     const { product_id, id: variant_id } = item;
+
+    if (quantityInCart + quantity > 10) {
+      onEnquireTrigger?.();
+      return;
+    }
 
     try {
       await dispatch(
@@ -40,8 +48,13 @@ const PriceAndCart = ({ stock, price, item, locale, quantity, setQuantity }) => 
   };
 
   const handleIncrement = () => {
+    const newQty = quantity + 1;
+    if (quantityInCart + newQty > 10) {
+      onEnquireTrigger?.();
+      return;
+    }
     if (quantity < stock) {
-      setQuantity((prev) => prev + 1);
+      setQuantity(newQty);
     }
   };
 
@@ -54,8 +67,20 @@ const PriceAndCart = ({ stock, price, item, locale, quantity, setQuantity }) => 
   const handleChange = (e) => {
     const value = e.target.value.replace(/[^0-9]/, "");
     const numValue = value === "" ? 1 : parseInt(value);
-    // Clamp value between 1 and stock
-    setQuantity(Math.min(Math.max(numValue, 1), stock));
+    setQuantity(numValue);
+  };
+
+  const handleBlur = () => {
+    if (quantityInCart + quantity > 10) {
+      onEnquireTrigger?.();
+      setQuantity(Math.max(10 - quantityInCart, 1));
+      return;
+    }
+    if (quantity > stock) {
+      setQuantity(stock);
+    } else if (quantity < 1) {
+      setQuantity(1);
+    }
   };
 
   return (
@@ -66,6 +91,7 @@ const PriceAndCart = ({ stock, price, item, locale, quantity, setQuantity }) => 
             type="text"
             value={quantity}
             onChange={handleChange}
+            onBlur={handleBlur}
             className="text-[12px] xl:text-[14px] leading-none font-normal text-center text-black w-8/10 overflow-hidden focus:outline-none"
           />
 
