@@ -1,5 +1,7 @@
 // Cart items
 export const selectCartItems = (state) => state.cart.items;
+export const selectCartCharges = (state) => state.cart.items_charges;
+export const selectShippingCharge = (state) => state.cart.shipping_charge;
 
 // Cart item count (total quantity)
 export const selectCartCount = (state) => state.cart.items.length;

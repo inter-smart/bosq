@@ -20,6 +20,8 @@ const OrderSummaryPage = async ({ locale, type }) => {
   const discountTotal = data?.discount_total || "0.00";
   const couponDiscountType = data?.coupon_discount_type || null;
   const couponDiscountValue = data?.coupon_discount_value || null;
+  const deliveryCharge = data?.overall_delivery_charge || "0.00";
+
 
   return (
     <OrderSummary
@@ -33,6 +35,7 @@ const OrderSummaryPage = async ({ locale, type }) => {
       initialDiscountTotal={discountTotal}
       initialCouponDiscountType={couponDiscountType}
       initialCouponDiscountValue={couponDiscountValue}
+      deliveryCharge={deliveryCharge}
       locale={locale}
       type={type}
     />

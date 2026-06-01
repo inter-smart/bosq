@@ -15,6 +15,8 @@ import {
   selectCartIsUpdating,
   selectCartDiscountTotal,
   selectAppliedCoupon,
+  selectCartCharges,
+  selectShippingCharge,
 } from "@/store/selectors/cart/selectors";
 import { fetchCart } from "@/store/slices/cartSlice";
 import CartEmpty from "./cart-empty";
@@ -50,6 +52,8 @@ export default function CartList({ locale, similarProducts }) {
   const grandTotal = useSelector(selectCartGrandTotal);
   const isLoading = useSelector(selectCartIsLoading);
   const isUpdating = useSelector(selectCartIsUpdating);
+  const itemsCharges = useSelector(selectCartCharges);
+  const shippingCharge = useSelector(selectShippingCharge);
 
   const isCartBlocked =
     cartItems.some((item) => item.is_sold_out) ||
@@ -166,7 +170,18 @@ export default function CartList({ locale, similarProducts }) {
                 className="font-normal text-[#282828] my-2 xl:my-3 2xl:my-4 [&_span]:font-light [&_span]:text-[#808080] flex justify-between"
               >
                 <span>{t("shipping_charge")}</span>
-                {tCommon("free")}
+                {
+                  shippingCharge > 0 ? (
+                    <Text as="div" size="text3" className="font-normal text-[#282828] my-2 xl:my-3 2xl:my-4 flex justify-between">
+                      {shippingCharge}
+                    </Text>
+                  ) : (
+                    <Text as="div" size="text3" className="font-normal text-[#282828] my-2 xl:my-3 2xl:my-4 flex justify-between">
+                      {tCommon("free")}
+                    </Text>
+                  )
+                }
+
               </Text>
               <hr />
               <Text as="div" size="text3" className="font-normal text-[#282828] my-2 xl:my-3 2xl:my-4 flex justify-between">

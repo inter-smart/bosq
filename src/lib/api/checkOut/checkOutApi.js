@@ -7,8 +7,6 @@ export const checkoutData = {
 
     type && (url = `/api/frontend/checkout/cart-buynow`);
 
-    console.log("fetching with url", url);
-
     try {
       const data = await fetchApi(url, {}, true);
 

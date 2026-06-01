@@ -6,8 +6,8 @@ import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Plus, X } from "lucide-react";
-import AddAddressBlock from "./AddAddressBlock";
-import AddressBlock from "./AddressBlock";
+import AddAddressBlockCheckout from "./AddAddressBlockCheckout";
+import AddressBlockCheckout from "./AddressBlockCheckout";
 import { useGetAddressesQuery } from "@/store/services/addressApi";
 import { AddressListSkeletonCompact } from "@/components/skeletons/AddressBoxSkeleton";
 import {
@@ -25,7 +25,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import UpdateAddressForm from "@/components/form/update-address-form";
+import UpdateAddressFormCheckout from "@/components/form/update-address-form-checkout";
 
 const AddressSection = ({ locale }) => {
   const dispatch = useDispatch();
@@ -101,7 +101,7 @@ const AddressSection = ({ locale }) => {
           <AddressListSkeletonCompact />
         ) : (
           shippingAddresses.length > 0 && (
-            <AddressBlock
+            <AddressBlockCheckout
               locale={locale}
               variant={"shipping"}
               isFromCheckout={true}
@@ -116,7 +116,7 @@ const AddressSection = ({ locale }) => {
 
       {/* Shipping Address Form */}
       {showShippingAddressForm && (
-        <AddAddressBlock
+        <AddAddressBlockCheckout
           locale={locale}
           variant="billing"
           onCancel={() => setShowShippingAddressForm(false)}
@@ -127,7 +127,7 @@ const AddressSection = ({ locale }) => {
       {/* Billing Address Block - disabled when "Use Same For Billing" is checked on shipping */}
       <div className={cn(useSameAddressForBilling && "opacity-50 pointer-events-none")}>
         {billingAddresses.length > 0 && (
-          <AddressBlock
+          <AddressBlockCheckout
             locale={locale}
             variant={"billing"}
             data={billingAddresses}
@@ -139,7 +139,7 @@ const AddressSection = ({ locale }) => {
 
         {/* Billing Address Form */}
         {showBillingAddressForm && !useSameAddressForBilling && (
-          <AddAddressBlock
+          <AddAddressBlockCheckout
             locale={locale}
             variant="billing"
             onCancel={() => setShowBillingAddressForm(false)}
@@ -178,7 +178,7 @@ const AddressSection = ({ locale }) => {
             </AlertDialogCancel>
           </AlertDialogHeader>
           <div className="max-h-[70vh] mask-[linear-gradient(to_bottom,transparent_0%,white_2%,white_98%,transparent_100%)] overflow-y-auto overflow-x-hidden">
-            <UpdateAddressForm
+            <UpdateAddressFormCheckout
               isFromCheckout={true}
               showShipToDifferent={true}
               locale={locale}

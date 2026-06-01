@@ -22,9 +22,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { resetCart } from "@/store/slices/cartSlice";
 import { useTranslations } from "next-intl";
 
-const MediaQuery = dynamic(() => import("react-responsive"), {
-  ssr: false,
-});
 
 const paymentMethods = [
   // { id: 1, slug: "cod", nameKey: "cod", descKey: "cod_description" },
@@ -42,6 +39,7 @@ const OrderSummary = ({
   initialDiscountTotal,
   initialCouponDiscountType,
   initialCouponDiscountValue,
+  deliveryCharge,
   locale,
   type = "cart",
 }) => {
@@ -69,9 +67,9 @@ const OrderSummary = ({
   const EXPECTED = btoa("allowed");
   const isAllowed = flow === EXPECTED;
 
-  // Order summary state — initialized from server, updated by mutation results
   const [products, setProducts] = useState(initialProducts);
   const [cartId, setCartId] = useState(initialCartId);
+  const [overallDeliveryCharge, setOverallDeliveryCharge] = useState(deliveryCharge);
   const [subTotal, setSubTotal] = useState(initialSubTotal);
   const [grandTotal, setGrandTotal] = useState(initialGrandTotal);
   const [itemsCount, setItemsCount] = useState(initialItemsCount);
@@ -421,7 +419,15 @@ const OrderSummary = ({
               className="font-normal text-[#282828] my-2 xl:my-3 2xl:my-4 [&_span]:font-light [&_span]:text-[#808080] flex justify-between"
             >
               <span>{t("shipping_charge")}</span>
-              {tCommon("free")}
+              {overallDeliveryCharge !== "0.00" ? (
+                <>
+                  <Text as="div" size="text3" className="font-normal text-[#282828]">
+                    {tCommon("aed")} {overallDeliveryCharge}
+                  </Text>
+                </>
+              ) : (
+                tCommon("free")
+              )}
             </Text>
 
             {appliedCoupon && (

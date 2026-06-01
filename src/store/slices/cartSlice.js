@@ -171,6 +171,8 @@ const initialState = {
   subtotal: "0.00",
   discount_total: "0.00",
   tax_total: "0.00",
+  shipping_charge: 0,
+  items_charges: [],
   grand_total: "0.00",
   item_count: 0,
   applied_coupon_code: null,
@@ -214,6 +216,8 @@ const cartSlice = createSlice({
           state.grand_total = action.payload.grand_total || "0.00";
           state.item_count = action.payload.item_count || 0;
           state.applied_coupon_code = action.payload.applied_coupon_code || null;
+          state.shipping_charge = action.payload.shipping_charge || 0;
+          state.items_charges = action.payload.items_charges || [];
         }
       })
       .addCase(fetchCart.rejected, (state, action) => {
@@ -295,6 +299,8 @@ const cartSlice = createSlice({
           state.grand_total = action.payload.grand_total || "0.00";
           state.item_count = action.payload.item_count || 0;
           state.applied_coupon_code = action.payload.applied_coupon_code || null;
+          state.shipping_charge = action.payload.shipping_charge || 0;
+          state.items_charges = action.payload.items_charges || [];
         }
       })
       .addCase(updateCartItem.rejected, (state, action) => {
@@ -317,6 +323,8 @@ const cartSlice = createSlice({
           state.grand_total = action.payload.grand_total || "0.00";
           state.item_count = action.payload.item_count || 0;
           state.applied_coupon_code = action.payload.applied_coupon_code || null;
+          state.shipping_charge = action.payload.shipping_charge || 0;
+          state.items_charges = action.payload.items_charges || [];
         }
       })
       .addCase(removeFromCart.rejected, (state, action) => {
