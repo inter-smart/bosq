@@ -44,6 +44,7 @@ export default function UpdateAddressFormCheckout({
   isFromCheckout = false,
   showShipToDifferent = false,
   editMode = "billing",
+  onStateChange = null,
 }) {
   const t = useTranslations("form");
   const { executeRecaptcha } = useGoogleReCaptcha();
@@ -419,7 +420,13 @@ export default function UpdateAddressFormCheckout({
                   </FormLabel>
                   <Select
                     dir={locale === "ar" ? "rtl" : "ltr"}
-                    onValueChange={field.onChange}
+                    onValueChange={(stateSlug) => {
+                      field.onChange(stateSlug);
+                      if (onStateChange) {
+                        const stateObj = states.find((s) => s.slug === stateSlug);
+                        if (stateObj?.id) onStateChange(stateObj.id);
+                      }
+                    }}
                     value={field.value}
                     disabled={!selectedCountry || states.length === 0}
                   >
@@ -597,7 +604,13 @@ export default function UpdateAddressFormCheckout({
                   </FormLabel>
                   <Select
                     dir={locale === "ar" ? "rtl" : "ltr"}
-                    onValueChange={field.onChange}
+                    onValueChange={(stateSlug) => {
+                      field.onChange(stateSlug);
+                      if (onStateChange) {
+                        const stateObj = shippingStates.find((s) => s.slug === stateSlug);
+                        if (stateObj?.id) onStateChange(stateObj.id);
+                      }
+                    }}
                     value={field.value}
                     disabled={!selectedShippingCountry || shippingStates.length === 0}
                   >

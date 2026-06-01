@@ -21,6 +21,7 @@ import { fetchFromAPIWithCredentials } from "@/lib/helper";
 import { useAddAddressMutation } from "@/store/services/addressApi";
 import { toast } from "sonner";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { useShippingChargeUpdater } from "@/hooks/useShippingChargeUpdater";
 
 // Validation schema
 
@@ -43,6 +44,7 @@ export default function AddressFormCheckout({ locale, variant = "shipping", onSu
     const t = useTranslations("form");
     const { executeRecaptcha } = useGoogleReCaptcha();
     const { isAuthenticated } = useAppSelector((state) => state.auth);
+    const { updateCharge } = useShippingChargeUpdater();
 
     const tErrors = useTranslations("errors");
     setValidationTranslator(tErrors);
@@ -364,9 +366,9 @@ export default function AddressFormCheckout({ locale, variant = "shipping", onSu
                             <Select
                                 dir={locale === "ar" ? "rtl" : "ltr"}
                                 onValueChange={(value) => {
-                                    field.onChange(value);
-                                    form.setValue("state", ""); // Reset state when country changes
-                                }}
+                                field.onChange(value);
+                                form.setValue("state", ""); // Reset state when country changes
+                            }}
                                 value={field.value}
                             >
                                 <FormControl>
@@ -432,7 +434,14 @@ export default function AddressFormCheckout({ locale, variant = "shipping", onSu
                             </FormLabel>
                             <Select
                                 dir={locale === "ar" ? "rtl" : "ltr"}
-                                onValueChange={field.onChange}
+                                onValueChange={(stateSlug) => {
+                                field.onChange(stateSlug);
+                                // Update shipping charge when NOT ship-to-different: billing state governs
+                                if (!shipToDifferent) {
+                                    const stateObj = states.find((s) => s.slug === stateSlug);
+                                    if (stateObj?.id) updateCharge(stateObj.id);
+                                }
+                            }}
                                 value={field.value}
                                 disabled={!selectedCountry || states.length === 0}
                             >
@@ -477,7 +486,24 @@ export default function AddressFormCheckout({ locale, variant = "shipping", onSu
                         <FormItem className="w-full">
                             <FormControl>
                                 <div className="flex items-center gap-3">
-                                    <Checkbox id="shipToDifferent" checked={field.value} onCheckedChange={field.onChange} />
+                                    <Checkbox
+                                        id="shipToDifferent"
+                                        checked={field.value}
+                                        onCheckedChange={(checked) => {
+                                            field.onChange(checked);
+                                            if (checked) {
+                                                // shipping section now governs — use shippingState if already selected
+                                                const shippingStateSlug = form.getValues("shippingState");
+                                                const stateObj = shippingStates.find((s) => s.slug === shippingStateSlug);
+                                                if (stateObj?.id) updateCharge(stateObj.id);
+                                            } else {
+                                                // billing state governs again
+                                                const billingStateSlug = form.getValues("state");
+                                                const stateObj = states.find((s) => s.slug === billingStateSlug);
+                                                if (stateObj?.id) updateCharge(stateObj.id);
+                                            }
+                                        }}
+                                    />
                                     <Label htmlFor="shipToDifferent" className={labelStyle}>
                                         {t("ship_to_different")}
                                     </Label>
@@ -605,7 +631,12 @@ export default function AddressFormCheckout({ locale, variant = "shipping", onSu
                                     </FormLabel>
                                     <Select
                                         dir={locale === "ar" ? "rtl" : "ltr"}
-                                        onValueChange={field.onChange}
+                                        onValueChange={(stateSlug) => {
+                                field.onChange(stateSlug);
+                                // shipping state always governs when ship-to-different is active
+                                const stateObj = shippingStates.find((s) => s.slug === stateSlug);
+                                if (stateObj?.id) updateCharge(stateObj.id);
+                            }}
                                         value={field.value}
                                         disabled={!selectedShippingCountry || shippingStates.length === 0}
                                     >

@@ -45,7 +45,7 @@ const OrderSummary = ({
 }) => {
   const dispatch = useDispatch();
   // Get selected addresses and checkout permission from Redux
-  const { selectedShippingAddressId, selectedBillingAddressId, useSameAddressForBilling, useSameAddressForShipping } = useSelector(
+  const { selectedShippingAddressId, selectedBillingAddressId, useSameAddressForBilling, useSameAddressForShipping, shippingCharge } = useSelector(
     (state) => state.checkout,
   );
 
@@ -317,6 +317,12 @@ const OrderSummary = ({
 
   const displayGrandTotal = grandTotal;
 
+  // shippingCharge from Redux overrides the SSR-rendered prop when set
+  const displayDeliveryCharge = shippingCharge ?? overallDeliveryCharge;
+
+
+  console.log("shiii", shippingCharge, overallDeliveryCharge)
+
   // Check if order can be placed
   const { shippingId, billingId } = getFinalAddressIds();
   const canPlaceOrder = shippingId && billingId;
@@ -419,10 +425,10 @@ const OrderSummary = ({
               className="font-normal text-[#282828] my-2 xl:my-3 2xl:my-4 [&_span]:font-light [&_span]:text-[#808080] flex justify-between"
             >
               <span>{t("shipping_charge")}</span>
-              {overallDeliveryCharge !== "0.00" ? (
+              {displayDeliveryCharge !== "0.00" ? (
                 <>
                   <Text as="div" size="text3" className="font-normal text-[#282828]">
-                    {tCommon("aed")} {overallDeliveryCharge}
+                    {tCommon("aed")} {displayDeliveryCharge}
                   </Text>
                 </>
               ) : (

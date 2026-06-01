@@ -26,12 +26,21 @@ import { toast } from "sonner";
 import { setSelectedShippingAddress, setSelectedBillingAddress } from "@/store/slices/checkoutSlice";
 import { useTranslations } from "next-intl";
 import { useAppSelector } from "@/store/hooks";
+import { useShippingChargeUpdater } from "@/hooks/useShippingChargeUpdater";
 
 const AddressBlockCheckout = ({ locale, variant, data, useSameAddress, setUseSameAddress, isFromCheckout }) => {
   const dispatch = useDispatch();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
   const selectedShippingAddressId = useSelector((state) => state.checkout.selectedShippingAddressId);
   const selectedBillingAddressId = useSelector((state) => state.checkout.selectedBillingAddressId);
+  const useSameAddressForShipping = useSelector((state) => state.checkout.useSameAddressForShipping);
+
+  const { updateCharge } = useShippingChargeUpdater();
+
+  // The address ID that currently governs shipping charge:
+  // - if useSameAddressForShipping is true, billing is used as shipping
+  // - otherwise, the explicitly selected shipping address governs
+  const effectiveShippingAddressId = useSameAddressForShipping ? selectedBillingAddressId : selectedShippingAddressId;
 
   const [deleteAddress, { isLoading: isDeletingAddress }] = useDeleteAddressMutation();
   const [updateDefaultAddress, { isLoading: isUpdatingDefault }] = useUpdateDefaultAddressMutation();
@@ -273,6 +282,7 @@ const AddressBlockCheckout = ({ locale, variant, data, useSameAddress, setUseSam
               isFromCheckout={isFromCheckout}
               locale={locale}
               addressData={editingAddress}
+              onStateChange={editingAddress?.id === effectiveShippingAddressId ? updateCharge : null}
               onSuccess={() => {
                 setIsEditDialogOpen(false);
                 setEditingAddress(null);

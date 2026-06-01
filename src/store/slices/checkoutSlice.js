@@ -8,6 +8,7 @@ const initialState = {
   useSameAddressForBilling: false,
   useSameAddressForShipping: false,
   isCheckOutAllowed: false,
+  shippingCharge: null, // real-time override from state dropdown changes
 };
 
 const checkoutSlice = createSlice({
@@ -54,11 +55,16 @@ const checkoutSlice = createSlice({
         state.useSameAddressForBilling = false;
       }
     },
+    setShippingCharge: (state, action) => {
+      console.log("shippingCharge", action.payload);
+      state.shippingCharge = action.payload;
+    },
     resetCheckout: (state) => {
       state.selectedShippingAddressId = null;
       state.selectedBillingAddressId = null;
       state.useSameAddressForBilling = false;
       state.useSameAddressForShipping = false;
+      state.shippingCharge = null;
     },
   },
 });
@@ -70,6 +76,7 @@ export const {
   setUseSameAddressForShipping,
   resetCheckout,
   setIsCheckoutAllowed,
+  setShippingCharge,
 } = checkoutSlice.actions;
 
 export default checkoutSlice.reducer;

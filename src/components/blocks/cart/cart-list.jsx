@@ -171,17 +171,10 @@ export default function CartList({ locale, similarProducts }) {
               >
                 <span>{t("shipping_charge")}</span>
                 {
-                  shippingCharge > 0 ? (
-                    <Text as="div" size="text3" className="font-normal text-[#282828] my-2 xl:my-3 2xl:my-4 flex justify-between">
-                      {shippingCharge}
-                    </Text>
-                  ) : (
-                    <Text as="div" size="text3" className="font-normal text-[#282828] my-2 xl:my-3 2xl:my-4 flex justify-between">
-                      {tCommon("free")}
-                    </Text>
-                  )
+                  shippingCharge > 0
+                    ? shippingCharge
+                    : tCommon("free")
                 }
-
               </Text>
               <hr />
               <Text as="div" size="text3" className="font-normal text-[#282828] my-2 xl:my-3 2xl:my-4 flex justify-between">

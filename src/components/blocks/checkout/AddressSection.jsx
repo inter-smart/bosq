@@ -26,6 +26,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import UpdateAddressFormCheckout from "@/components/form/update-address-form-checkout";
+import { useShippingChargeUpdater } from "@/hooks/useShippingChargeUpdater";
 
 const AddressSection = ({ locale }) => {
   const dispatch = useDispatch();
@@ -41,9 +42,17 @@ const AddressSection = ({ locale }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const { data, isLoading, isError } = useGetAddressesQuery(undefined, { refetchOnMountOrArgChange: true });
+  const { updateCharge } = useShippingChargeUpdater();
 
   const shippingAddresses = data?.data?.shipping || [];
   const billingAddresses = data?.data?.billing || [];
+
+  // Helper: get the state_id integer from a given address id
+  const getStateIdFromAddressId = (addressId) => {
+    const allAddresses = [...shippingAddresses, ...billingAddresses];
+    const addr = allAddresses.find((a) => a.id === addressId);
+    return addr?.state_id ?? null;
+  };
 
   // Auto-enable "use same address" checkbox when only one type is available
   useEffect(() => {
@@ -69,6 +78,10 @@ const AddressSection = ({ locale }) => {
       const sorted = [...shippingAddresses].sort((a, b) => (b.is_default ? 1 : 0) - (a.is_default ? 1 : 0));
       dispatch(setSelectedShippingAddress((sorted.find((a) => a.is_default) || sorted[0]).id));
     }
+    // Shipping address still governs the charge — fire update with shipping state
+    const governingId = selectedShippingAddressId;
+    const stateId = getStateIdFromAddressId(governingId);
+    if (stateId) updateCharge(stateId);
   };
 
   const handleUseSameForShippingChange = (value) => {
@@ -81,6 +94,18 @@ const AddressSection = ({ locale }) => {
       dispatch(setSelectedBillingAddress(selected.id));
     }
 
+    if (value) {
+      // Billing address is now used for shipping — update charge with billing state
+      const governingId = selectedBillingAddressId;
+      const stateId = getStateIdFromAddressId(governingId);
+      if (stateId) updateCharge(stateId);
+    } else {
+      // Reverted — shipping address governs again
+      const governingId = selectedShippingAddressId;
+      const stateId = getStateIdFromAddressId(governingId);
+      if (stateId) updateCharge(stateId);
+    }
+
     // Open edit modal when unchecking and no shipping addresses exist
     if (!value && shippingAddresses.length === 0) {
       const selectedBilling = billingAddresses.find((a) => a.id === selectedBillingAddressId) || billingAddresses[0];
@@ -90,6 +115,9 @@ const AddressSection = ({ locale }) => {
       }
     }
   };
+
+  // Determine if the address being edited in the modal is the effective shipping address
+  const effectiveShippingAddressId = useSameAddressForShipping ? selectedBillingAddressId : selectedShippingAddressId;
 
   if (isError) return <div>{t("failed_to_load")}</div>;
 
@@ -183,6 +211,7 @@ const AddressSection = ({ locale }) => {
               showShipToDifferent={true}
               locale={locale}
               addressData={editModalAddress}
+              onStateChange={editModalAddress?.id === effectiveShippingAddressId ? updateCharge : null}
               onSuccess={() => {
                 setIsEditModalOpen(false);
                 setEditModalAddress(null);
@@ -196,3 +225,4 @@ const AddressSection = ({ locale }) => {
 };
 
 export default AddressSection;
+
