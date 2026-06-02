@@ -134,10 +134,10 @@ const AddressBlockCheckout = ({ locale, variant, data, useSameAddress, setUseSam
       } else {
         await updateDefaultAddress({ id: pendingAction.id, addressType: pendingAction.addressType, isAuthenticated }).unwrap();
         toast.success(`${tToast("default_address")}`);
-        if (isGoverningBlock) {
-          const promoted = sortedAddresses.find((a) => a.id === pendingAction.id);
-          if (promoted?.state_id) updateCharge(promoted.state_id);
-        }
+        // if (isGoverningBlock) {
+        //   const promoted = sortedAddresses.find((a) => a.id === pendingAction.id);
+        //   if (promoted?.state_id) updateCharge(promoted.state_id);
+        // }
       }
     } catch (error) {
       console.error("Action error details:", error);

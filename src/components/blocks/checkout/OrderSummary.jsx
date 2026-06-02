@@ -22,9 +22,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { resetCart } from "@/store/slices/cartSlice";
 import { useTranslations } from "next-intl";
 
-
 const paymentMethods = [
-  // { id: 1, slug: "cod", nameKey: "cod", descKey: "cod_description" },
+  { id: 1, slug: "cod", nameKey: "cod", descKey: "cod_description" },
   { id: 2, slug: "online", nameKey: "pay_online", descKey: "pay_online_description" },
 ];
 
@@ -312,23 +311,15 @@ const OrderSummary = ({
     }
   };
 
-  const displayDeliveryCharge = Number(
-    shippingCharge ?? overallDeliveryCharge ?? 0
-  );
+  const displayDeliveryCharge = Number(shippingCharge ?? overallDeliveryCharge ?? 0);
 
-  const displayGrandTotal = (
-    Number(grandTotal ?? 0) + displayDeliveryCharge
-  ).toFixed(2);
-
+  const displayGrandTotal = (Number(grandTotal ?? 0) + displayDeliveryCharge).toFixed(2);
 
   console.log(
     "GRND",
-    grandTotal,
-    typeof grandTotal,
+    shippingCharge,
+    overallDeliveryCharge,
     displayDeliveryCharge,
-    typeof displayDeliveryCharge,
-    displayGrandTotal,
-    typeof displayGrandTotal
   );
 
   // Check if order can be placed
@@ -433,7 +424,7 @@ const OrderSummary = ({
               className="font-normal text-[#282828] my-2 xl:my-3 2xl:my-4 [&_span]:font-light [&_span]:text-[#808080] flex justify-between"
             >
               <span>{t("shipping_charge")}</span>
-              {displayDeliveryCharge !== "0.00" ? (
+              {displayDeliveryCharge > 0 ? (
                 <>
                   <Text as="div" size="text3" className="font-normal text-[#282828]">
                     {tCommon("aed")} {displayDeliveryCharge}

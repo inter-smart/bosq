@@ -120,11 +120,21 @@ export default function CartList({ locale, similarProducts }) {
         <div className="flex flex-wrap -mx-2.5 xl:-mx-8 2xl:-mx-10 [&>*]:p-2.5 xl:[&>*]:p-8 2xl:[&>*]:p-10">
           <div className="w-full lg:w-[calc(100%-320px)] xl:w-[calc(100%-460px)] 2xl:w-[calc(100%-540px)] 3xl:w-[calc(100%-668px)] max-sm:mb-2">
             <div className="flex flex-wrap -m-[5px] *:p-[5px]">
-              {cartItems?.map((item, index) => (
-                <div key={`cart-item-${item.id || index}`} className="w-full flex flex-wrap ">
-                  <CartCard product={item} isEn={isEn} isValidationFailed={invalidItemIds.has(item.id)} />
-                </div>
-              ))}
+              {cartItems?.map((item, index) => {
+                const deliveryChargeObj = itemsCharges?.find((charge) => charge.itemId === item.id);
+                const deliveryCharge = deliveryChargeObj?.totalDeliveryCharge;
+
+                return (
+                  <div key={`cart-item-${item.id || index}`} className="w-full flex flex-wrap ">
+                    <CartCard
+                      product={item}
+                      isEn={isEn}
+                      isValidationFailed={invalidItemIds.has(item.id)}
+                      deliveryCharge={deliveryCharge}
+                    />
+                  </div>
+                );
+              })}
             </div>
             <div className="mt-3 xl:mt-6">
               <Button variant={"link"} className={"h-auto! gap-1 has-[>svg]:px-0"} asChild>

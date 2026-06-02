@@ -15,7 +15,7 @@ import { useTranslations } from "next-intl";
 import { useAppSelector } from "@/store/hooks";
 import ProductEnquireModal from "@/components/blocks/product/ProductEnquireModal";
 
-export default function CartCard({ product, isEn, isValidationFailed = false }) {
+export default function CartCard({ product, isEn, isValidationFailed = false, deliveryCharge }) {
   const dispatch = useDispatch();
   const isUpdating = useSelector(selectCartIsUpdating);
   const [quantity, setQuantity] = useState(product?.quantity || 1);
@@ -204,6 +204,11 @@ export default function CartCard({ product, isEn, isValidationFailed = false }) 
           {isQuantityExceedsStock && (
             <Text as="div" size="text3" className="text-red-500 text-[10px] 2xl:text-[11px] font-normal mb-2 2xl:mb-4">
               {isEn ? `Only ${stock} left in stock` : `متاح ${stock} فقط في المخزون`}
+            </Text>
+          )}
+          {deliveryCharge !== undefined && (
+            <Text as="div" size="text3" className="text-[#808080] text-[11px] 2xl:text-[12px] font-normal mb-2">
+              {t("shipping_charge")}: {deliveryCharge > 0 ? `AED ${deliveryCharge}` : tCommon("free")}
             </Text>
           )}
           <hr className="my-1 xl:mb-2 2xl:my-4" />
