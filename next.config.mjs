@@ -156,6 +156,7 @@ const withNextIntl = createNextIntlPlugin("./src/il8n/request.js");
 const nextConfig = {
   images: {
     formats: ["image/webp"], // keep simple
+    dangerouslyAllowLocalIP: true,
     remotePatterns: [
       { protocol: "http", hostname: "localhost", port: "4000", pathname: "/**" },
       { protocol: "http", hostname: "localhost", port: "5000", pathname: "/**" },

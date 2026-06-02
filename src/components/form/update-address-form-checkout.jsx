@@ -36,6 +36,7 @@ const textareaStyle = cn(inputStyle, "leading-tight min-h-[80px] 2xl:min-h-[100p
 
 import { useTranslations } from "next-intl";
 import { useAppSelector } from "@/store/hooks";
+import { useShippingChargeUpdater } from "@/hooks/useShippingChargeUpdater";
 
 export default function UpdateAddressFormCheckout({
   locale,
@@ -49,6 +50,12 @@ export default function UpdateAddressFormCheckout({
   const t = useTranslations("form");
   const { executeRecaptcha } = useGoogleReCaptcha();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const { calculateCharge } = useShippingChargeUpdater();
+
+  // In-form delivery charge preview (not committed to Redux until save)
+  const [previewCharge, setPreviewCharge] = useState(null);
+  const [isCalculatingCharge, setIsCalculatingCharge] = useState(false);
+  const [pendingStateId, setPendingStateId] = useState(null);
 
   const tErrors = useTranslations("errors");
 
@@ -232,6 +239,11 @@ export default function UpdateAddressFormCheckout({
       }).unwrap();
 
       toast.success(t("updated_success"));
+
+      // Commit previewed charge to OrderSummary now that the address is saved
+      if (pendingStateId && onStateChange) {
+        onStateChange(pendingStateId);
+      }
 
       onSuccess?.();
     } catch (err) {
@@ -420,11 +432,15 @@ export default function UpdateAddressFormCheckout({
                   </FormLabel>
                   <Select
                     dir={locale === "ar" ? "rtl" : "ltr"}
-                    onValueChange={(stateSlug) => {
+                    onValueChange={async (stateSlug) => {
                       field.onChange(stateSlug);
-                      if (onStateChange) {
-                        const stateObj = states.find((s) => s.slug === stateSlug);
-                        if (stateObj?.id) onStateChange(stateObj.id);
+                      const stateObj = states.find((s) => s.slug === stateSlug);
+                      if (stateObj?.id) {
+                        setPendingStateId(stateObj.id);
+                        setIsCalculatingCharge(true);
+                        const charge = await calculateCharge(stateObj.id);
+                        setPreviewCharge(charge);
+                        setIsCalculatingCharge(false);
                       }
                     }}
                     value={field.value}
@@ -604,11 +620,15 @@ export default function UpdateAddressFormCheckout({
                   </FormLabel>
                   <Select
                     dir={locale === "ar" ? "rtl" : "ltr"}
-                    onValueChange={(stateSlug) => {
+                    onValueChange={async (stateSlug) => {
                       field.onChange(stateSlug);
-                      if (onStateChange) {
-                        const stateObj = shippingStates.find((s) => s.slug === stateSlug);
-                        if (stateObj?.id) onStateChange(stateObj.id);
+                      const stateObj = shippingStates.find((s) => s.slug === stateSlug);
+                      if (stateObj?.id) {
+                        setPendingStateId(stateObj.id);
+                        setIsCalculatingCharge(true);
+                        const charge = await calculateCharge(stateObj.id);
+                        setPreviewCharge(charge);
+                        setIsCalculatingCharge(false);
                       }
                     }}
                     value={field.value}
@@ -632,6 +652,22 @@ export default function UpdateAddressFormCheckout({
               )}
             />
           </>
+        )}
+
+        {/* Delivery Charge Preview */}
+        {(previewCharge !== null || isCalculatingCharge) && (
+          <div className="w-full">
+            <div className="flex items-center justify-between px-3 py-2.5 rounded bg-[#f5f5f5] border border-[#e0e0e0]">
+              <span className="text-[11px] xl:text-[12px] text-[#808080]">{t("estimated_delivery")}</span>
+              {isCalculatingCharge ? (
+                <span className="text-[11px] xl:text-[12px] text-[#808080] animate-pulse">{t("calculating")}</span>
+              ) : (
+                <span className="text-[11px] xl:text-[12px] font-semibold text-[#282828]">
+                  {previewCharge === "0.00" ? t("free") : `AED ${previewCharge}`}
+                </span>
+              )}
+            </div>
+          </div>
         )}
 
         {/* Submit Button */}

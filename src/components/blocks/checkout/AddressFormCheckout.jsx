@@ -44,7 +44,12 @@ export default function AddressFormCheckout({ locale, variant = "shipping", onSu
     const t = useTranslations("form");
     const { executeRecaptcha } = useGoogleReCaptcha();
     const { isAuthenticated } = useAppSelector((state) => state.auth);
-    const { updateCharge } = useShippingChargeUpdater();
+    const { updateCharge, calculateCharge } = useShippingChargeUpdater();
+
+    // Local state for in-form delivery charge preview (not dispatched until save)
+    const [previewCharge, setPreviewCharge] = useState(null);
+    const [isCalculatingCharge, setIsCalculatingCharge] = useState(false);
+    const [pendingStateId, setPendingStateId] = useState(null);
 
     const tErrors = useTranslations("errors");
     setValidationTranslator(tErrors);
@@ -246,10 +251,17 @@ export default function AddressFormCheckout({ locale, variant = "shipping", onSu
 
             toast.success(t("added_success"));
 
+            // Commit the previewed charge to OrderSummary on successful save
+            if (pendingStateId) {
+                updateCharge(pendingStateId);
+            }
+
             setTimeout(() => {
                 form.reset(defaultValues);
                 form.clearErrors();
                 setFormKey((prev) => prev + 1);
+                setPreviewCharge(null);
+                setPendingStateId(null);
                 onSuccess?.();
             }, 100);
         } catch (err) {
@@ -434,12 +446,17 @@ export default function AddressFormCheckout({ locale, variant = "shipping", onSu
                             </FormLabel>
                             <Select
                                 dir={locale === "ar" ? "rtl" : "ltr"}
-                                onValueChange={(stateSlug) => {
+                                onValueChange={async (stateSlug) => {
                                 field.onChange(stateSlug);
-                                // Update shipping charge when NOT ship-to-different: billing state governs
                                 if (!shipToDifferent) {
                                     const stateObj = states.find((s) => s.slug === stateSlug);
-                                    if (stateObj?.id) updateCharge(stateObj.id);
+                                    if (stateObj?.id) {
+                                        setPendingStateId(stateObj.id);
+                                        setIsCalculatingCharge(true);
+                                        const charge = await calculateCharge(stateObj.id);
+                                        setPreviewCharge(charge);
+                                        setIsCalculatingCharge(false);
+                                    }
                                 }
                             }}
                                 value={field.value}
@@ -489,18 +506,23 @@ export default function AddressFormCheckout({ locale, variant = "shipping", onSu
                                     <Checkbox
                                         id="shipToDifferent"
                                         checked={field.value}
-                                        onCheckedChange={(checked) => {
+                                        onCheckedChange={async (checked) => {
                                             field.onChange(checked);
-                                            if (checked) {
-                                                // shipping section now governs — use shippingState if already selected
-                                                const shippingStateSlug = form.getValues("shippingState");
-                                                const stateObj = shippingStates.find((s) => s.slug === shippingStateSlug);
-                                                if (stateObj?.id) updateCharge(stateObj.id);
+                                            // Recalculate preview for the now-governing state
+                                            const slug = checked
+                                                ? form.getValues("shippingState")
+                                                : form.getValues("state");
+                                            const list = checked ? shippingStates : states;
+                                            const stateObj = list.find((s) => s.slug === slug);
+                                            if (stateObj?.id) {
+                                                setPendingStateId(stateObj.id);
+                                                setIsCalculatingCharge(true);
+                                                const charge = await calculateCharge(stateObj.id);
+                                                setPreviewCharge(charge);
+                                                setIsCalculatingCharge(false);
                                             } else {
-                                                // billing state governs again
-                                                const billingStateSlug = form.getValues("state");
-                                                const stateObj = states.find((s) => s.slug === billingStateSlug);
-                                                if (stateObj?.id) updateCharge(stateObj.id);
+                                                setPreviewCharge(null);
+                                                setPendingStateId(null);
                                             }
                                         }}
                                     />
@@ -631,12 +653,17 @@ export default function AddressFormCheckout({ locale, variant = "shipping", onSu
                                     </FormLabel>
                                     <Select
                                         dir={locale === "ar" ? "rtl" : "ltr"}
-                                        onValueChange={(stateSlug) => {
-                                field.onChange(stateSlug);
-                                // shipping state always governs when ship-to-different is active
-                                const stateObj = shippingStates.find((s) => s.slug === stateSlug);
-                                if (stateObj?.id) updateCharge(stateObj.id);
-                            }}
+                                        onValueChange={async (stateSlug) => {
+                                            field.onChange(stateSlug);
+                                            const stateObj = shippingStates.find((s) => s.slug === stateSlug);
+                                            if (stateObj?.id) {
+                                                setPendingStateId(stateObj.id);
+                                                setIsCalculatingCharge(true);
+                                                const charge = await calculateCharge(stateObj.id);
+                                                setPreviewCharge(charge);
+                                                setIsCalculatingCharge(false);
+                                            }
+                                        }}
                                         value={field.value}
                                         disabled={!selectedShippingCountry || shippingStates.length === 0}
                                     >
@@ -658,6 +685,22 @@ export default function AddressFormCheckout({ locale, variant = "shipping", onSu
                             )}
                         />
                     </>
+                )}
+
+                {/* Delivery Charge Preview */}
+                {(previewCharge !== null || isCalculatingCharge) && (
+                    <div className="w-full">
+                        <div className="flex items-center justify-between px-3 py-2.5 rounded bg-[#f5f5f5] border border-[#e0e0e0]">
+                            <span className="text-[11px] xl:text-[12px] text-[#808080]">{t("estimated_delivery")}</span>
+                            {isCalculatingCharge ? (
+                                <span className="text-[11px] xl:text-[12px] text-[#808080] animate-pulse">{t("calculating")}</span>
+                            ) : (
+                                <span className="text-[11px] xl:text-[12px] font-semibold text-[#282828]">
+                                    {previewCharge === "0.00" ? t("free") : `AED ${previewCharge}`}
+                                </span>
+                            )}
+                        </div>
+                    </div>
                 )}
 
                 {/* Submit Button */}

@@ -158,7 +158,10 @@
     "shipping_country_required": "Shipping country is required",
     "shipping_state_required": "Shipping state is required",
     "shipping_street_address_required": "Shipping street address is required",
-    "shipping_address": "Shipping Address"
+    "shipping_address": "Shipping Address",
+    "estimated_delivery": "Estimated Delivery",
+    "calculating": "Calculating...",
+    "free": "Free"
   },
   "common": {
     "home": "Home",
@@ -384,7 +387,7 @@
     "track_order": "Track Order",
     "reorder": "Reorder",
     "no_wishlist_title": "You haven't wishlisted any product yet",
-    "no_wishlist_description": "Your wishlist is empty \u2014 start adding your favorites!",
+    "no_wishlist_description": "Your wishlist is empty — start adding your favorites!",
     "wishlist_count": "Wishlist ( {count} Items )",
     "showing_items": "Showing {start}-{end} of {total} items",
     "no_coupons_title": "No Coupons Available",

@@ -56,7 +56,6 @@ const checkoutSlice = createSlice({
       }
     },
     setShippingCharge: (state, action) => {
-      console.log("shippingCharge", action.payload);
       state.shippingCharge = action.payload;
     },
     resetCheckout: (state) => {

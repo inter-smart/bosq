@@ -78,10 +78,6 @@ const AddressSection = ({ locale }) => {
       const sorted = [...shippingAddresses].sort((a, b) => (b.is_default ? 1 : 0) - (a.is_default ? 1 : 0));
       dispatch(setSelectedShippingAddress((sorted.find((a) => a.is_default) || sorted[0]).id));
     }
-    // Shipping address still governs the charge — fire update with shipping state
-    const governingId = selectedShippingAddressId;
-    const stateId = getStateIdFromAddressId(governingId);
-    if (stateId) updateCharge(stateId);
   };
 
   const handleUseSameForShippingChange = (value) => {
@@ -92,18 +88,6 @@ const AddressSection = ({ locale }) => {
       const sorted = [...billingAddresses].sort((a, b) => (b.is_default ? 1 : 0) - (a.is_default ? 1 : 0));
       const selected = sorted.find((a) => a.is_default) || sorted[0];
       dispatch(setSelectedBillingAddress(selected.id));
-    }
-
-    if (value) {
-      // Billing address is now used for shipping — update charge with billing state
-      const governingId = selectedBillingAddressId;
-      const stateId = getStateIdFromAddressId(governingId);
-      if (stateId) updateCharge(stateId);
-    } else {
-      // Reverted — shipping address governs again
-      const governingId = selectedShippingAddressId;
-      const stateId = getStateIdFromAddressId(governingId);
-      if (stateId) updateCharge(stateId);
     }
 
     // Open edit modal when unchecking and no shipping addresses exist
@@ -118,6 +102,16 @@ const AddressSection = ({ locale }) => {
 
   // Determine if the address being edited in the modal is the effective shipping address
   const effectiveShippingAddressId = useSameAddressForShipping ? selectedBillingAddressId : selectedShippingAddressId;
+
+  // Reactively update shipping charge in OrderSummary whenever the effective shipping address or data changes
+  useEffect(() => {
+    if (isLoading || !data?.data) return;
+    const allAddresses = [...(data.data.shipping || []), ...(data.data.billing || [])];
+    const activeAddress = allAddresses.find((a) => a.id === effectiveShippingAddressId);
+    if (activeAddress?.state_id) {
+      updateCharge(activeAddress.state_id);
+    }
+  }, [effectiveShippingAddressId, data, isLoading, updateCharge]);
 
   if (isError) return <div>{t("failed_to_load")}</div>;
 

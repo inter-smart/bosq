@@ -312,16 +312,24 @@ const OrderSummary = ({
     }
   };
 
-  // Sum discount_amount from each item in the cart
-  const itemsDiscountTotal = (products?.reduce((sum, item) => sum + parseFloat(item.discount_amount || "0"), 0) ?? 0).toFixed(2);
+  const displayDeliveryCharge = Number(
+    shippingCharge ?? overallDeliveryCharge ?? 0
+  );
 
-  const displayGrandTotal = grandTotal;
+  const displayGrandTotal = (
+    Number(grandTotal ?? 0) + displayDeliveryCharge
+  ).toFixed(2);
 
-  // shippingCharge from Redux overrides the SSR-rendered prop when set
-  const displayDeliveryCharge = shippingCharge ?? overallDeliveryCharge;
 
-
-  console.log("shiii", shippingCharge, overallDeliveryCharge)
+  console.log(
+    "GRND",
+    grandTotal,
+    typeof grandTotal,
+    displayDeliveryCharge,
+    typeof displayDeliveryCharge,
+    displayGrandTotal,
+    typeof displayGrandTotal
+  );
 
   // Check if order can be placed
   const { shippingId, billingId } = getFinalAddressIds();
