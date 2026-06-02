@@ -46,6 +46,7 @@ export default function UpdateAddressFormCheckout({
   showShipToDifferent = false,
   editMode = "billing",
   onStateChange = null,
+  isCurrentlySelected = false,
 }) {
   const t = useTranslations("form");
   const { executeRecaptcha } = useGoogleReCaptcha();
@@ -444,7 +445,7 @@ export default function UpdateAddressFormCheckout({
                         const stateObj = states.find((s) => s.slug === stateSlug);
                         if (stateObj?.id) {
                           setPendingStateId(stateObj.id);
-                          if (addressData?.is_default) {
+                          if (isCurrentlySelected) {
                             setIsCalculatingCharge(true);
                             const charge = await calculateCharge(stateObj.id);
                             setPreviewCharge(charge);
@@ -504,7 +505,7 @@ export default function UpdateAddressFormCheckout({
                           checked={field.value}
                           onCheckedChange={async (checked) => {
                             field.onChange(checked);
-                            if (addressData?.is_default) {
+                            if (isCurrentlySelected) {
                               const slug = checked ? form.getValues("shippingState") : form.getValues("state");
                               const list = checked ? shippingStates : states;
                               const stateObj = list.find((s) => s.slug === slug);
@@ -656,7 +657,7 @@ export default function UpdateAddressFormCheckout({
                       const stateObj = shippingStates.find((s) => s.slug === stateSlug);
                       if (stateObj?.id) {
                         setPendingStateId(stateObj.id);
-                        if (addressData?.is_default) {
+                        if (isCurrentlySelected) {
                           setIsCalculatingCharge(true);
                           const charge = await calculateCharge(stateObj.id);
                           setPreviewCharge(charge);

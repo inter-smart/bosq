@@ -206,6 +206,7 @@ const AddressSection = ({ locale }) => {
               locale={locale}
               addressData={editModalAddress}
               onStateChange={editModalAddress?.id === effectiveShippingAddressId ? updateCharge : null}
+              isCurrentlySelected={true}
               onSuccess={() => {
                 setIsEditModalOpen(false);
                 setEditModalAddress(null);

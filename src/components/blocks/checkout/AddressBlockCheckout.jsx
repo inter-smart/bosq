@@ -41,6 +41,9 @@ const AddressBlockCheckout = ({ locale, variant, data, useSameAddress, setUseSam
   // - if useSameAddressForShipping is true, billing is used as shipping
   // - otherwise, the explicitly selected shipping address governs
   const effectiveShippingAddressId = useSameAddressForShipping ? selectedBillingAddressId : selectedShippingAddressId;
+  const isGoverningBlock =
+    (variant === "shipping" && !useSameAddressForShipping) ||
+    (variant === "billing" && useSameAddressForShipping);
 
   const [deleteAddress, { isLoading: isDeletingAddress }] = useDeleteAddressMutation();
   const [updateDefaultAddress, { isLoading: isUpdatingDefault }] = useUpdateDefaultAddressMutation();
@@ -71,6 +74,14 @@ const AddressBlockCheckout = ({ locale, variant, data, useSameAddress, setUseSam
 
   // Stable key: re-run only when the set of address IDs changes
   const addressIdKey = sortedAddresses.map((a) => a.id).join(",");
+
+  // Sync shipping charge whenever the governing address changes (including on mount/re-entry)
+  useEffect(() => {
+    if (!isGoverningBlock || !effectiveShippingAddressId) return;
+    const governing = sortedAddresses.find((a) => a.id === effectiveShippingAddressId);
+    if (governing?.state_id) updateCharge(governing.state_id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [effectiveShippingAddressId]);
 
   // Auto-select when:
   // 1. No address is selected yet, OR
@@ -115,9 +126,18 @@ const AddressBlockCheckout = ({ locale, variant, data, useSameAddress, setUseSam
       if (pendingAction.kind === "delete") {
         await deleteAddress({ id: pendingAction.id, addressType: pendingAction.addressType, isAuthenticated }).unwrap();
         toast.success(`${tToast("delete_address")}`);
+        if (isGoverningBlock && pendingAction.id === effectiveShippingAddressId) {
+          const remaining = sortedAddresses.filter((a) => a.id !== pendingAction.id);
+          const next = remaining[0];
+          if (next?.state_id) updateCharge(next.state_id);
+        }
       } else {
         await updateDefaultAddress({ id: pendingAction.id, addressType: pendingAction.addressType, isAuthenticated }).unwrap();
         toast.success(`${tToast("default_address")}`);
+        if (isGoverningBlock) {
+          const promoted = sortedAddresses.find((a) => a.id === pendingAction.id);
+          if (promoted?.state_id) updateCharge(promoted.state_id);
+        }
       }
     } catch (error) {
       console.error("Action error details:", error);
@@ -133,6 +153,10 @@ const AddressBlockCheckout = ({ locale, variant, data, useSameAddress, setUseSam
       dispatch(setSelectedShippingAddress(addressId));
     } else {
       dispatch(setSelectedBillingAddress(addressId));
+    }
+    if (isGoverningBlock) {
+      const address = sortedAddresses.find((a) => a.id === addressId);
+      if (address?.state_id) updateCharge(address.state_id);
     }
   };
 
@@ -283,6 +307,7 @@ const AddressBlockCheckout = ({ locale, variant, data, useSameAddress, setUseSam
               locale={locale}
               addressData={editingAddress}
               onStateChange={editingAddress?.id === effectiveShippingAddressId ? updateCharge : null}
+              isCurrentlySelected={editingAddress?.id === selectedAddressId}
               onSuccess={() => {
                 setIsEditDialogOpen(false);
                 setEditingAddress(null);
