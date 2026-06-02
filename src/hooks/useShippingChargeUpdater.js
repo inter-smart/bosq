@@ -7,16 +7,18 @@ export function useShippingChargeUpdater() {
   const dispatch = useDispatch();
   const [getShippingCharge] = useGetShippingChargeMutation();
 
-  /** Calls API and dispatches result to Redux → updates OrderSummary. */
+  /** Calls API and dispatches result to Redux → updates OrderSummary. Returns the charge value. */
   const updateCharge = useCallback(
     async (stateId) => {
-      if (!stateId) return;
+      if (!stateId) return null;
       try {
         const result = await getShippingCharge({ state_id: stateId }).unwrap();
         const charge = result?.data?.overall_delivery_charge;
         if (charge !== undefined) dispatch(setShippingCharge(charge));
+        return charge ?? null;
       } catch (err) {
         console.error("Failed to update shipping charge:", err);
+        return null;
       }
     },
     [dispatch, getShippingCharge],

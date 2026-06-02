@@ -36,23 +36,20 @@ const AddressSection = ({ locale }) => {
   const selectedShippingAddressId = useSelector((state) => state.checkout.selectedShippingAddressId);
   const selectedBillingAddressId = useSelector((state) => state.checkout.selectedBillingAddressId);
 
+  const { updateCharge } = useShippingChargeUpdater();
+  const effectiveShippingAddressId = useSameAddressForShipping ? selectedBillingAddressId : selectedShippingAddressId;
+
   const [showShippingAddressForm, setShowShippingAddressForm] = useState(false);
   const [showBillingAddressForm, setShowBillingAddressForm] = useState(false);
   const [editModalAddress, setEditModalAddress] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const { data, isLoading, isError } = useGetAddressesQuery(undefined, { refetchOnMountOrArgChange: true });
-  const { updateCharge } = useShippingChargeUpdater();
 
   const shippingAddresses = data?.data?.shipping || [];
   const billingAddresses = data?.data?.billing || [];
 
-  // Helper: get the state_id integer from a given address id
-  const getStateIdFromAddressId = (addressId) => {
-    const allAddresses = [...shippingAddresses, ...billingAddresses];
-    const addr = allAddresses.find((a) => a.id === addressId);
-    return addr?.state_id ?? null;
-  };
+
 
   // Auto-enable "use same address" checkbox when only one type is available
   useEffect(() => {
@@ -71,53 +68,58 @@ const AddressSection = ({ locale }) => {
     }
   }, [shippingAddresses.length, billingAddresses.length, isLoading, dispatch, useSameAddressForBilling, useSameAddressForShipping]);
 
+
+  const handleSameTypeChange = (value, type) => {
+    if (type === "shipping") {
+      handleUseSameForBillingChange(value);
+    } else {
+      handleUseSameForShippingChange(value);
+    }
+
+  }
+
   const handleUseSameForBillingChange = (value) => {
     dispatch(setUseSameAddressForBilling(value));
     // Auto-select first shipping address if none is selected
-    if (value && shippingAddresses.length > 0 && !selectedShippingAddressId) {
+    if (value && shippingAddresses.length > 0) {
       const sorted = [...shippingAddresses].sort((a, b) => (b.is_default ? 1 : 0) - (a.is_default ? 1 : 0));
-      dispatch(setSelectedShippingAddress((sorted.find((a) => a.is_default) || sorted[0]).id));
+      const addressToSet = sorted.find((a) => a.is_default) || sorted[0];
+      dispatch(setSelectedShippingAddress(addressToSet.id));
+      updateCharge(addressToSet?.state_id);
     }
   };
 
   const handleUseSameForShippingChange = (value) => {
     dispatch(setUseSameAddressForShipping(value));
 
-    // Auto-select first billing address if none is selected
-    if (value && billingAddresses.length > 0 && !selectedBillingAddressId) {
+    if (value && billingAddresses.length > 0) {
+      // Checking: shipping uses billing address → charge based on billing's state
       const sorted = [...billingAddresses].sort((a, b) => (b.is_default ? 1 : 0) - (a.is_default ? 1 : 0));
-      const selected = sorted.find((a) => a.is_default) || sorted[0];
-      dispatch(setSelectedBillingAddress(selected.id));
-    }
-
-    // Open edit modal when unchecking and no shipping addresses exist
-    if (!value && shippingAddresses.length === 0) {
-      const selectedBilling = billingAddresses.find((a) => a.id === selectedBillingAddressId) || billingAddresses[0];
-      if (selectedBilling) {
-        setEditModalAddress(selectedBilling);
-        setIsEditModalOpen(true);
+      const addressToSet = sorted.find((a) => a.is_default) || sorted[0];
+      dispatch(setSelectedBillingAddress(addressToSet.id));
+      updateCharge(addressToSet?.state_id);
+    } else if (!value) {
+      if (shippingAddresses.length > 0) {
+        // Unchecking with shipping addresses: revert charge to default shipping address's state
+        const sorted = [...shippingAddresses].sort((a, b) => (b.is_default ? 1 : 0) - (a.is_default ? 1 : 0));
+        const addressToSet = sorted.find((a) => a.is_default) || sorted[0];
+        dispatch(setSelectedShippingAddress(addressToSet.id));
+        updateCharge(addressToSet?.state_id);
+      } else {
+        // Unchecking with no shipping addresses: open edit modal to add one
+        const selectedBilling = billingAddresses.find((a) => a.id === selectedBillingAddressId) || billingAddresses[0];
+        if (selectedBilling) {
+          setEditModalAddress(selectedBilling);
+          setIsEditModalOpen(true);
+        }
       }
     }
   };
-
-  // Determine if the address being edited in the modal is the effective shipping address
-  const effectiveShippingAddressId = useSameAddressForShipping ? selectedBillingAddressId : selectedShippingAddressId;
-
-  // Reactively update shipping charge in OrderSummary whenever the effective shipping address or data changes
-  useEffect(() => {
-    if (isLoading || !data?.data) return;
-    const allAddresses = [...(data.data.shipping || []), ...(data.data.billing || [])];
-    const activeAddress = allAddresses.find((a) => a.id === effectiveShippingAddressId);
-    if (activeAddress?.state_id) {
-      updateCharge(activeAddress.state_id);
-    }
-  }, [effectiveShippingAddressId, data, isLoading, updateCharge]);
 
   if (isError) return <div>{t("failed_to_load")}</div>;
 
   return (
     <>
-      {/* Shipping Address Block - disabled when "Use Same For Shipping" is checked on billing */}
       <div className={cn(useSameAddressForShipping && "opacity-50 pointer-events-none")}>
         {isLoading ? (
           <AddressListSkeletonCompact />
@@ -129,14 +131,12 @@ const AddressSection = ({ locale }) => {
               isFromCheckout={true}
               data={shippingAddresses}
               useSameAddress={useSameAddressForBilling}
-              setUseSameAddress={handleUseSameForBillingChange}
+              setUseSameAddress={handleSameTypeChange}
               disabled={useSameAddressForShipping}
             />
           )
         )}
       </div>
-
-      {/* Shipping Address Form */}
       {showShippingAddressForm && (
         <AddAddressBlockCheckout
           locale={locale}
@@ -154,7 +154,7 @@ const AddressSection = ({ locale }) => {
             variant={"billing"}
             data={billingAddresses}
             useSameAddress={useSameAddressForShipping}
-            setUseSameAddress={handleUseSameForShippingChange}
+            setUseSameAddress={handleSameTypeChange}
             disabled={useSameAddressForBilling}
           />
         )}

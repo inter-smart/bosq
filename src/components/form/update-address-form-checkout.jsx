@@ -57,6 +57,8 @@ export default function UpdateAddressFormCheckout({
   const [isCalculatingCharge, setIsCalculatingCharge] = useState(false);
   const [pendingStateId, setPendingStateId] = useState(null);
 
+  const { updateCharge } = useShippingChargeUpdater();
+
   const tErrors = useTranslations("errors");
 
   // ✅ inject translator (once per render is fine)
@@ -240,9 +242,13 @@ export default function UpdateAddressFormCheckout({
 
       toast.success(t("updated_success"));
 
-      // Commit previewed charge to OrderSummary now that the address is saved
-      if (pendingStateId && onStateChange) {
-        onStateChange(pendingStateId);
+      if (onStateChange) {
+        const govSlug = values.shipToDifferentAddress ? values.shippingState : values.state;
+        const govList = values.shipToDifferentAddress ? shippingStates : states;
+        const govState = govList.find((s) => s.slug === govSlug);
+        if (govState?.id) {
+          onStateChange(govState.id);
+        }
       }
 
       onSuccess?.();
@@ -434,13 +440,17 @@ export default function UpdateAddressFormCheckout({
                     dir={locale === "ar" ? "rtl" : "ltr"}
                     onValueChange={async (stateSlug) => {
                       field.onChange(stateSlug);
-                      const stateObj = states.find((s) => s.slug === stateSlug);
-                      if (stateObj?.id) {
-                        setPendingStateId(stateObj.id);
-                        setIsCalculatingCharge(true);
-                        const charge = await calculateCharge(stateObj.id);
-                        setPreviewCharge(charge);
-                        setIsCalculatingCharge(false);
+                      if (!shipToDifferent) {
+                        const stateObj = states.find((s) => s.slug === stateSlug);
+                        if (stateObj?.id) {
+                          setPendingStateId(stateObj.id);
+                          if (addressData?.is_default) {
+                            setIsCalculatingCharge(true);
+                            const charge = await calculateCharge(stateObj.id);
+                            setPreviewCharge(charge);
+                            setIsCalculatingCharge(false);
+                          }
+                        }
                       }
                     }}
                     value={field.value}
@@ -489,7 +499,28 @@ export default function UpdateAddressFormCheckout({
                   <FormItem className="w-full">
                     <FormControl>
                       <div className="flex items-center gap-3">
-                        <Checkbox id="shipToDifferent" checked={field.value} onCheckedChange={field.onChange} />
+                        <Checkbox
+                          id="shipToDifferent"
+                          checked={field.value}
+                          onCheckedChange={async (checked) => {
+                            field.onChange(checked);
+                            if (addressData?.is_default) {
+                              const slug = checked ? form.getValues("shippingState") : form.getValues("state");
+                              const list = checked ? shippingStates : states;
+                              const stateObj = list.find((s) => s.slug === slug);
+                              if (stateObj?.id) {
+                                setPendingStateId(stateObj.id);
+                                setIsCalculatingCharge(true);
+                                const charge = await calculateCharge(stateObj.id);
+                                setPreviewCharge(charge);
+                                setIsCalculatingCharge(false);
+                              } else {
+                                setPreviewCharge(null);
+                                setPendingStateId(null);
+                              }
+                            }
+                          }}
+                        />
                         <Label htmlFor="shipToDifferent" className={labelStyle}>
                           {t("ship_to_different")}
                         </Label>
@@ -625,10 +656,12 @@ export default function UpdateAddressFormCheckout({
                       const stateObj = shippingStates.find((s) => s.slug === stateSlug);
                       if (stateObj?.id) {
                         setPendingStateId(stateObj.id);
-                        setIsCalculatingCharge(true);
-                        const charge = await calculateCharge(stateObj.id);
-                        setPreviewCharge(charge);
-                        setIsCalculatingCharge(false);
+                        if (addressData?.is_default) {
+                          setIsCalculatingCharge(true);
+                          const charge = await calculateCharge(stateObj.id);
+                          setPreviewCharge(charge);
+                          setIsCalculatingCharge(false);
+                        }
                       }
                     }}
                     value={field.value}

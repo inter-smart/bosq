@@ -61,10 +61,10 @@ const AddressBlockCheckout = ({ locale, variant, data, useSameAddress, setUseSam
   // Sort addresses: default address first
   const sortedAddresses = data
     ? [...data].sort((a, b) => {
-        if (a.is_default && !b.is_default) return -1;
-        if (!a.is_default && b.is_default) return 1;
-        return 0;
-      })
+      if (a.is_default && !b.is_default) return -1;
+      if (!a.is_default && b.is_default) return 1;
+      return 0;
+    })
     : [];
 
   const isProcessing = (pendingAction?.kind === "delete" && isDeletingAddress) || (pendingAction?.kind === "setDefault" && isUpdatingDefault);
@@ -150,7 +150,7 @@ const AddressBlockCheckout = ({ locale, variant, data, useSameAddress, setUseSam
               <Checkbox
                 id={variant === "shipping" ? "sameForBilling" : "sameForShipping"}
                 checked={useSameAddress}
-                onCheckedChange={setUseSameAddress}
+                onCheckedChange={(e) => setUseSameAddress(e, variant)}
                 className={"border-white data-[state=checked]:bg-white data-[state=checked]:text-black"}
               />
               <Label htmlFor={variant === "shipping" ? "sameForBilling" : "sameForShipping"}>

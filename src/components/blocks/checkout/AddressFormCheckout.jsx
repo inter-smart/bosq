@@ -508,7 +508,6 @@ export default function AddressFormCheckout({ locale, variant = "shipping", onSu
                                         checked={field.value}
                                         onCheckedChange={async (checked) => {
                                             field.onChange(checked);
-                                            // Recalculate preview for the now-governing state
                                             const slug = checked
                                                 ? form.getValues("shippingState")
                                                 : form.getValues("state");
