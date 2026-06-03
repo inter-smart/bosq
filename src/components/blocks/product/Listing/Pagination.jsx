@@ -39,6 +39,7 @@ const ProductListPagination = ({ pagination, isEn, label = "products", labelAr =
     (page) => {
       const newPage = Math.max(1, Math.min(page, totalPages));
       setCurrentPage(newPage === 1 ? null : newPage); // Remove page param if page 1
+      window.scrollTo({ top: 0, behavior: "smooth" });
     },
     [totalPages, setCurrentPage],
   );
