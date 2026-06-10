@@ -306,7 +306,7 @@ export default function ProductEnquiryForm({ productId, onClose, locale }) {
                         id="file-upload"
                         type="file"
                         className="hidden"
-                        accept=".pdf,.doc,.docx,.png,.jpeg,.jpg"
+                        accept=".jpg, .png, .webp, .jpeg"
                         onChange={handleFileChange}
                       />
                     </label>
