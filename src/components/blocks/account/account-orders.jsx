@@ -28,6 +28,15 @@ import {
 const labelStyle = cn("text-[#282828] my-0.5 2xl:my-1 [&>span]:font-medium");
 const btnStyle = cn("underline underline-offset-1 text-[#282828] h-auto! px-1 xl:px-1.5 gap-0.5");
 
+function formatOrderDate(dateStr, isEn) {
+  if (!dateStr) return "";
+  return new Date(dateStr).toLocaleDateString(isEn ? "en-AE" : "ar-AE", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
 export default function AccountOrders({ locale, orders: initialOrders, pagination }) {
   const isEn = locale === "en";
   const t = useTranslations("account");
@@ -107,7 +116,7 @@ export default function AccountOrders({ locale, orders: initialOrders, paginatio
                   )}
                   <Text as="div" size="text3" className={cn(labelStyle, "w-full sm:w-1/3")}>
                     {t("order_date")} {""}
-                    <span>{item?.createdAt}</span>
+                    <span>{formatOrderDate(item?.createdAt, isEn)}</span>
                   </Text>
                   <Text as="div" size="text3" className={cn(labelStyle, "w-full sm:w-1/3")}>
                     {t("payment")} {""}
