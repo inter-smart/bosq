@@ -7,7 +7,7 @@ import ClinetSection from "@/components/blocks/about/ClinetSection";
 import NewsSection from "@/components/blocks/about/NewsSection";
 import { getAboutData } from "@/lib/api/about";
 import { getMetaData } from "@/lib/api/metaApi";
-import NotFound from "../../../not-found";
+import { notFound } from "next/navigation";
 
 
 
@@ -36,8 +36,8 @@ export default async function AboutPage({ params }) {
   const { data, error } = await getAboutData.getCmsData();
 
   if (error || !data) {
-     return <NotFound />;
-   }
+    return notFound();
+  }
 
   const {
     heroData,

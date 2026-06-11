@@ -2,7 +2,7 @@ import CustomizationInfo from "@/components/blocks/customization/customization-i
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getCustomizationCms } from "@/lib/api/customization";
 import { getMetaData } from "@/lib/api/metaApi";
-import NotFound from "../../../not-found";
+import { notFound } from "next/navigation";
 
 
 export async function generateMetadata({ params }) {
@@ -26,17 +26,17 @@ export default async function CustomizationPage({ params }) {
   const resolvedParams = await params;
   const { locale } = resolvedParams;
 
-  const slug = locale === "en"? "Customize Your Chair" : "تخصيص الكرسي الخاص بك";
+  const slug = locale === "en" ? "Customize Your Chair" : "تخصيص الكرسي الخاص بك";
 
-  const {data, error} = await getCustomizationCms.getCmsData();
+  const { data, error } = await getCustomizationCms.getCmsData();
 
   if (!data || error) {
-    return <NotFound />
+    return notFound();
   }
 
 
 
-  const { heroData, customizationData, FeaturesSection, processSection, optionsSection,requestCustomQuote, states, enquiryDropdowns  } = data;
+  const { heroData, customizationData, FeaturesSection, processSection, optionsSection, requestCustomQuote, states, enquiryDropdowns } = data;
 
 
   return (

@@ -2,7 +2,7 @@ import NewsInfo from "@/components/blocks/news/news-info";
 import NewsViewTracker from "@/components/blocks/news/news-view-tracker";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getNewsData } from "@/lib/api/news";
-import NotFound from "../../../../not-found";
+import { notFound } from "next/navigation";
 
 import { getTranslations } from "next-intl/server";
 import { DefaultOgImage } from "@/lib/api/constants";
@@ -119,12 +119,11 @@ export default async function NewsDetailPage({ params }) {
   const { slug } = resolvedParams;
   const locale = resolvedParams.locale;
 
-  const slugData = locale === "en" ? "News" : "تفاصيل المقالة";
 
   const { data, error } = await getNewsData.getNewsDetailsData(slug);
 
   if (!data || error) {
-    return <NotFound params={{ locale }} />;
+    return notFound();
   }
 
   const { heroData, newsData, popularNewsData, relatedNewsData } = data;

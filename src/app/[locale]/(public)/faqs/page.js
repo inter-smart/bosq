@@ -2,7 +2,7 @@ import FaqInfo from "@/components/blocks/faq/faq-info";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getFaqData } from "@/lib/api/CMS/basicGet";
 import { getMetaData } from "@/lib/api/metaApi";
-import NotFound from "../../../not-found";
+import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -35,7 +35,7 @@ export default async function FaqsPage({ params }) {
   const { data, error } = await getFaqData();
 
   if (!data || error) {
-    return <NotFound />;
+    return notFound();
   }
 
   const slug = locale === "en" ? "FAQs" : "الأسئلة الشائعة";

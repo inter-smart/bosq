@@ -1,6 +1,6 @@
 import { getAuthData } from "@/lib/api/CMS/basicGet";
 import ForgotPasswordClient from "@/components/form/forgot-password-client";
-import NotFound from "../../../not-found";
+import { notFound } from "next/navigation";
 
 export default async function ForgotPasswordPage({ params }) {
   const resolvedParams = await params;
@@ -9,7 +9,7 @@ export default async function ForgotPasswordPage({ params }) {
   const { data, error } = await getAuthData();
 
   if (error) {
-    return <NotFound />;
+    return notFound();
   }
 
   const { authPageData } = data;

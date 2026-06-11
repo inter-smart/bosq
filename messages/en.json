@@ -581,5 +581,11 @@
     "phone_all_zeros": "Phone number cannot contain only zeros",
     "select_region": "Please select a region",
     "select_option": "Please select an option"
+  },
+
+  "page_not_found":{
+    "title": "Oops! Page not found",
+    "description": "We're sorry, but the page you are looking for doesn't exist or has been moved. We apologize for the inconvenience!",
+    "ctaText": "Go to Home page"
   }
 }

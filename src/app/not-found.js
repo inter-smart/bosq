@@ -4,6 +4,9 @@ import Link from "next/link";
 import parse from "html-react-parser";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { getTranslations } from "next-intl/server";
+
+
 
 const local_data = {
   title: "Oops! Page not found",
@@ -12,10 +15,13 @@ const local_data = {
   ctaText: "View Product",
 };
 
-export default function NotFound({ params, data = local_data }) {
+export default async function NotFound({ params }) {
+  
+  const t = await getTranslations("page_not_found");
+
   const locale = params?.locale || "en";
   return (
-    <div className="w-full mt-(--header-y) py-12 sm:py-20 xl:py-40 2xl:py-60">
+    <div className="w-full py-12 sm:py-20 xl:py-40 2xl:py-60 h-screen flex items-center justify-center">
       <div className="container">
         <div className="w-full max-w-[320px] sm:max-w-[368px] xl:max-w-[400px] 2xl:max-w-[600px] mx-auto flex flex-col">
           <Heading
@@ -23,7 +29,7 @@ export default function NotFound({ params, data = local_data }) {
             size="heading1"
             className="text-center text-black mb-2 xl:mb-3"
           >
-            {parse(data?.title)}
+            {t("title")}
             <span
               className={cn(
                 "w-1.5 2xl:w-2 aspect-square rounded-full bg-[#f17423] inline-block translate-x-1 xl:translate-x-2 ",
@@ -38,7 +44,7 @@ export default function NotFound({ params, data = local_data }) {
             size="text1"
             className="text-center text-[#282828] mb-4 xl:mb-6"
           >
-            {parse(data?.description)}
+            {t("description")}
           </Text>
           <Button
             variant={"black"}
@@ -46,7 +52,7 @@ export default function NotFound({ params, data = local_data }) {
             className="min-w-[168px] xl:min-w-[190px] 2xl:min-w-[220px] mx-auto"
             asChild
           >
-            <Link href={`/${locale}`}>Go to Home page</Link>
+            <Link href={`/${locale}`}>{t("ctaText")}</Link>
           </Button>
         </div>
       </div>

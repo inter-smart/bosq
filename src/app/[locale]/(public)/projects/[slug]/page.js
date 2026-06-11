@@ -4,11 +4,11 @@ import ProjectDetail from "@/components/blocks/project/project-detail";
 import ProjectSolution from "@/components/blocks/project/project-solution";
 import ProjectSpecialized from "@/components/blocks/project/project-specialized";
 import { getProjectDetails } from "@/lib/api/CMS/basicGet";
-import NotFound from "../../../../not-found";
 
 import { getTranslations } from "next-intl/server";
 import { DefaultOgImage } from "@/lib/api/constants";
 import { parseOtherMeta } from "@/lib/helper";
+import { notFound } from "next/navigation";
 
 
 
@@ -288,7 +288,7 @@ export default async function ProjectDetailPage({ params }) {
 
 
   if (error || !data) {
-    return <NotFound />;
+    return notFound();
   }
 
   const {

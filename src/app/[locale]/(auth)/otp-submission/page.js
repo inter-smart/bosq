@@ -1,7 +1,7 @@
 import AuthLayout from "@/components/blocks/auth/auth-layout";
 import AuthOtpForm from "@/components/form/auth-otp-form";
 import { getAuthData } from "@/lib/api/CMS/basicGet";
-import NotFound from "../../../not-found";
+import { notFound } from "next/navigation";
 
 const local_data = {
   media: {
@@ -22,7 +22,7 @@ export default async function OtpSubmissionPage({ params }) {
   const { data, error } = await getAuthData();
 
   if (error) {
-    return <NotFound />
+    return notFound();
   }
 
   const { authPageData } = data;

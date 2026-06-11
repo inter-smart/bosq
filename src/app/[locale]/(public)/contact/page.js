@@ -1,8 +1,8 @@
 import ContactInfo from "@/components/blocks/contact/contact-info";
 import { getContactData } from "@/lib/api/contact";
 import { getMetaData } from "@/lib/api/metaApi";
-import NotFound from "../../../not-found";
 import ProductHero from "@/components/blocks/product/product-hero";
+import { notFound } from "next/navigation";
 
 
 
@@ -32,8 +32,8 @@ export default async function ContactPage({ params }) {
 
   const slug = locale === "en" ? "Contact" : "اتصل بنا";
   if (error || !data) {
-     return <NotFound />;
-   }
+    return notFound();
+  }
 
   const { heroData, contactData } = data;
 

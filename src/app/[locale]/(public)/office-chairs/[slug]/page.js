@@ -1,7 +1,7 @@
 import ChairsListing from "@/components/blocks/office-chair-landing/ChairsListing";
 import LandingHero from "@/components/blocks/office-chair-landing/LandingHero";
 import { getOfficeChairsData } from "@/lib/api/CMS/basicGet";
-import NotFound from "../../../../not-found";
+import { notFound } from "next/navigation";
 
 
 import { getTranslations } from "next-intl/server";
@@ -120,7 +120,7 @@ export default async function OfficeChairsPage({ params }) {
   const response = await getOfficeChairsData(slug);
   const { data, error } = response?.data;
 
-  if (!data || error) return <NotFound params={{ locale }} />;
+  if (!data || error) return notFound()
 
   return (
     <>

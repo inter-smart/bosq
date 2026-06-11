@@ -3,7 +3,7 @@ import AccountOrders from "@/components/blocks/account/account-orders";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getMetaData } from "@/lib/api/metaApi";
 import { ProfileData } from "@/lib/api/profile/profileApi";
-import NotFound from "../../../../not-found";
+import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -42,7 +42,7 @@ export default async function OrdersPage({ params, searchParams }) {
   const pagination = data?.pagination;
 
   if (!data || error) {
-    return <NotFound />;
+    return notFound();
   }
   return (
     <>

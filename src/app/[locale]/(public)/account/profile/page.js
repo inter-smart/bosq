@@ -3,7 +3,7 @@ import AccountProfile from "@/components/blocks/account/account-profile";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getMetaData } from "@/lib/api/metaApi";
 import { ProfileData } from "@/lib/api/profile/profileApi";
-import NotFound from "../../../../not-found";
+import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -51,7 +51,7 @@ export default async function ProfilePage({ params }) {
   const { data, error } = await ProfileData.getMyProfile();
 
   if (!data || error) {
-    return <NotFound />;
+    return notFound();
   }
 
   console.log("PROFILE DATA", data);

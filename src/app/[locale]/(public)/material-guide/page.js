@@ -1,7 +1,7 @@
 import ProductHero from "@/components/blocks/product/product-hero";
 import MaterialInfoSection from "@/components/blocks/material-guide/Material-info-section";
 import { getMaterialData } from "@/lib/api/CMS/basicGet";
-import NotFound from "../../../not-found";
+import { notFound } from "next/navigation";
 
 
 
@@ -13,9 +13,9 @@ export default async function MaterialGuidePage({ params }) {
 
 
   if (!data || error) {
-    return <NotFound />
+    return notFound();
   }
-  
+
   const { heroData, materialsInfo, extraMaterialsInfo } = data;
 
   const slug = locale === "en" ? "Material Guide" : "سياسة الخصوصية";

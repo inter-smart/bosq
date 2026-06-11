@@ -3,7 +3,7 @@ import ProjectHero from "@/components/blocks/project/project-hero";
 import ProjectList from "@/components/blocks/project/project-list";
 import { getProjectData, getProjectListBySlug } from "@/lib/api/CMS/basicGet";
 import { getMetaData } from "@/lib/api/metaApi";
-import NotFound from "../../../not-found";
+import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -33,11 +33,11 @@ export default async function ProjectsPage({ params, searchParams }) {
   const slug = resolvedSearchParams.slug ?? "all";
   const limit = resolvedSearchParams.limit ? parseInt(resolvedSearchParams.limit) : 6;
   const { data, error } = await getProjectData();
-// make arabic 
-  const breadCrumpData = locale==="en"? "projects" : "المشاريع"
+  // make arabic 
+  const breadCrumpData = locale === "en" ? "projects" : "المشاريع"
 
- if (error || !data) {
-    return <NotFound />;
+  if (error || !data) {
+    return notFound();
   }
 
   return (

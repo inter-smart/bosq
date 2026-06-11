@@ -2,7 +2,7 @@ import ProductHero from "@/components/blocks/product/product-hero";
 import SustainabilityInfo from "@/components/blocks/sustainability/sustainability-info";
 import { getSustainabilityData, sustainabilityData } from "@/lib/api/CMS/basicGet";
 import { getMetaData } from "@/lib/api/metaApi";
-import NotFound from "../../../not-found";
+import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -28,7 +28,7 @@ export default async function SustainabilityPage({ params }) {
 
 
   if (!data || error) {
-    return <NotFound />
+    return notFound();
   }
 
   const slug = locale === "en" ? "sustainability" : "الاستدامة";
