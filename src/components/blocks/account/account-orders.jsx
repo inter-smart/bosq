@@ -24,6 +24,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { orderStatusTranslate, paymentStatusTranslate } from "@/lib/helper";
 
 const labelStyle = cn("text-[#282828] my-0.5 2xl:my-1 [&>span]:font-medium");
 const btnStyle = cn("underline underline-offset-1 text-[#282828] h-auto! px-1 xl:px-1.5 gap-0.5");
@@ -74,6 +75,8 @@ export default function AccountOrders({ locale, orders: initialOrders, paginatio
     }
   };
 
+
+
   return (
     <>
       {orders?.length === 0 ? (
@@ -120,11 +123,11 @@ export default function AccountOrders({ locale, orders: initialOrders, paginatio
                   </Text>
                   <Text as="div" size="text3" className={cn(labelStyle, "w-full sm:w-1/3")}>
                     {t("payment")} {""}
-                    <span>{item?.payment_status}</span>
+                    <span>{paymentStatusTranslate(item?.payment_status, isEn)}</span>
                   </Text>
                   <Text as="div" size="text3" className={cn(labelStyle, "w-full sm:w-1/3")}>
                     {t("order_status")} {""}
-                    <span>{item?.status}</span>
+                    <span>{orderStatusTranslate(item?.status, isEn)}</span>
                   </Text>
                 </div>
                 <div>
