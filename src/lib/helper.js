@@ -31,10 +31,10 @@ export function parseOtherMeta(htmlString) {
     const attributes = match[1];
 
     // Parse attributes
-    const nameMatch = attributes.match(/name=["']([^"']+)["']/);
-    const propertyMatch = attributes.match(/property=["']([^"']+)["']/);
-    const httpEquivMatch = attributes.match(/http-equiv=["']([^"']+)["']/);
-    const contentMatch = attributes.match(/content=["']([^"']+)["']/);
+    const nameMatch = attributes.match(/name=["']([^"']+)["']/i);
+    const propertyMatch = attributes.match(/property=["']([^"']+)["']/i);
+    const httpEquivMatch = attributes.match(/http-equiv=["']([^"']+)["']/i);
+    const contentMatch = attributes.match(/content=["']([^"']+)["']/i);
 
     const content = contentMatch ? contentMatch[1] : "";
 

@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { OrderEmpty } from "./order-empty";
 import { useReorderOrderMutation } from "@/store/services/orderApi";
+import { useTranslations } from "next-intl";
 
 const btnStyle = cn("underline underline-offset-1 text-[#282828] h-auto! px-1 xl:px-1.5 gap-0.5");
 
@@ -17,13 +18,17 @@ export default function AccountCancelled({ data, locale }) {
   const router = useRouter();
   const [reorderOrder, { isLoading: isReordering }] = useReorderOrderMutation();
 
+  const t = useTranslations("account");
+  const tCommon = useTranslations("common");
+  const tToast = useTranslations("toast");
+
   const handleReorder = async (orderId, variantId, quantity) => {
     try {
       await reorderOrder({ orderId, variantId, quantity }).unwrap();
-      toast.success("Items added to cart");
+      toast.success(tToast("items_added_to_cart"));
       router.push(`/${locale}/cart`);
     } catch (error) {
-      toast.error(typeof error?.en === "string" ? error.en : "Failed to reorder");
+      toast.error(typeof error?.[locale] === "string" ? error[locale] : t("failed_to_reorder"));
     }
   };
 
@@ -32,14 +37,14 @@ export default function AccountCancelled({ data, locale }) {
       {data?.length === 0 ? (
         <div className="w-full border border-[#e9e9e9] sm:rounded-e-lg py-3 xl:py-6 3xl:py-9 px-3 xl:px-4 3xl:px-5">
           <OrderEmpty
-            title={"You haven't cancelled any orders yet"}
-            description={"Once you place your first order, you'll be able to track your deliveries and manage returns from here."}
+            title={t("cancelled_order_title")}
+            description={t("cancelled_order_description")}
           />
         </div>
       ) : (
         <div className="w-full border border-[#e9e9e9] sm:rounded-e-lg py-3 xl:py-6 3xl:py-9 px-3 xl:px-4 3xl:px-5">
           <Heading as="h2" size={"heading5"} className="font-semibold text-[#282828] mb-2 xl:mb-4">
-            Cancelled Orders
+            {t("cancelled_orders")}
           </Heading>
 
           <div className="flex flex-wrap -mx-2 xl:-mx-7 2xl:-mx-10 [&>*]:px-2 [&>*]:py-1 xl:[&>*]:px-7 xl:[&>*]:py-1.5 2xl:[&>*]:px-10 2xl:[&>*]:py-2">
@@ -58,13 +63,13 @@ export default function AccountCancelled({ data, locale }) {
                   </div>
                   <div className="w-[calc(100%-80px)] xl:w-[calc(100%-80px)] 2xl:w-[calc(100%-100px)] px-3 xl:px-6 2xl:px-8 *:my-0.5 2xl:*:my-1">
                     <Text as="div" size="text3" className="truncate text-[#282828] [&>span]:font-medium">
-                      Order ID: <span>{item?.order_number}</span>
+                      {t("order_id")} <span>{item?.order_number}</span>
                     </Text>
                     <Heading as="div" size="heading5" className="truncate text-[#282828] max-lg:font-medium">
                       {item?.name}
                     </Heading>
                     <Text as="div" size="text3" className="text-[#282828]">
-                      Qty: {""}
+                      {t("qty")} {""}
                       {item?.quantity}
                     </Text>
                     {parseFloat(String(item.discount_amount || 0)) > 0 ? (
@@ -73,15 +78,15 @@ export default function AccountCancelled({ data, locale }) {
                           {item?.formatted_total}
                         </Text>
                         <Text as="div" size="text3" className="text-green-600 font-medium">
-                          -AED {item?.discount_amount}
+                          -{tCommon("aed")} {item?.discount_amount}
                         </Text>
                         <Text as="div" size="text3" className="font-normal text-[#282828]">
-                          AED {item?.final_amount}
+                          {tCommon("aed")} {item?.final_amount}
                         </Text>
                       </>
                     ) : (
                       <Text as="div" size="text3" className="font-normal text-[#282828] mt-2 xl:mt-3">
-                        AED {item?.formatted_total} <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc]">Inc Tax</span>
+                        {tCommon("aed")} {item?.formatted_total} <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc]">{tCommon("inc_tax")}</span>
                       </Text>
                     )}
                   </div>
@@ -89,7 +94,7 @@ export default function AccountCancelled({ data, locale }) {
                   <div className="w-full flex justify-between items-end gap-5 mt-2 xl:mt-4">
                     <div>
                       <Text as="div" size="text3" className="text-[#8d8d8d]">
-                        Cancelled on {item?.formatted_cancelled_date}
+                        {t("cancelled_on")} {item?.formatted_cancelled_date}
                       </Text>
                       {item?.cancelledReason && (
                         <Text as="div" size="text3" className="font-normal text-[#282828]">
@@ -106,7 +111,7 @@ export default function AccountCancelled({ data, locale }) {
                           disabled={isReordering}
                         >
                           <Image src={"/images/icon-reorder.svg"} alt={"icon-reorder"} width={10} height={10} className="w-2 xl:w-2.5" quality={90} />
-                          Reorder
+                          {t("reorder")}
                         </Button>
                       )}
                     </div>
