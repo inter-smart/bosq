@@ -1,3 +1,4 @@
+
 "use client";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/utils/heading";
@@ -14,6 +15,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getExternalLink, getTarget } from "@/lib/helper";
 
 export default function HomeFind({ data, locale, isEN }) {
+
   const [emblaRef] = useEmblaCarousel(
     { loop: false, align: "start", direction: !isEN? "rtl" : "ltr" },
     [Autoplay({ delay: 6000, stopOnInteraction: true })]
@@ -120,7 +122,7 @@ export default function HomeFind({ data, locale, isEN }) {
                                   )}
                                   asChild
                                 >
-                                  <Link href={getExternalLink(item?.button?.link)} target={getTarget(item?.button?.link)}>
+                                  <Link href={getExternalLink(item?.button?.link, locale)} target={getTarget(item?.button?.link)}>
                                     {!isEN? item?.button?.label_ar : item?.button?.label}
                                   </Link>
                                 </Button>

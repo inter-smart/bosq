@@ -51,7 +51,7 @@ export default async function HomePage({ params }) {
   return (
     <>
       <HomeHero data={data.sliders} locale={locale} />
-      <HomeClient data={data} locale={locale} isEN={isEN} />
+      <HomeClient data={data} locale={locale} />
     </>
   );
 }

@@ -317,9 +317,7 @@ export async function fetchUserProfileAPI() {
   });
 }
 
-export const getExternalLink = (link) => {
-  const locale = getLocale();
-
+export const getExternalLink = (link, locale) => {
   return link.startsWith("/") ? `/${locale}${link}` : link;
 };
 

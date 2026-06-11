@@ -199,7 +199,7 @@ export default function HomeHero({ data, locale }) {
                       >
                         {/* implement external url  */}
                         <Link
-                          href={getExternalLink(item?.button?.link)}
+                          href={getExternalLink(item?.button?.link, locale)}
                           target={getTarget(item?.button?.link)}
                         >
                           {isEn ? item?.button?.label : item?.button?.label_ar}
