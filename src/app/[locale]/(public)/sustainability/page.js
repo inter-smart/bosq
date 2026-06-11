@@ -1,6 +1,6 @@
 import ProductHero from "@/components/blocks/product/product-hero";
 import SustainabilityInfo from "@/components/blocks/sustainability/sustainability-info";
-import { getSustainabilityData, sustainabilityData } from "@/lib/api/CMS/basicGet";
+import { getSustainabilityData } from "@/lib/api/CMS/basicGet";
 import { getMetaData } from "@/lib/api/metaApi";
 import { notFound } from "next/navigation";
 

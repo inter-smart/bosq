@@ -3,16 +3,6 @@ import AuthOtpForm from "@/components/form/auth-otp-form";
 import { getAuthData } from "@/lib/api/CMS/basicGet";
 import { notFound } from "next/navigation";
 
-const local_data = {
-  media: {
-    type: "image",
-    alt: "hero",
-    path: "/images/auth-login-2.jpg",
-  },
-  title: "Recover your Password",
-  description:
-    "<p>Enter the verification code we just sent you on your mail address.</p>",
-};
 
 export default async function OtpSubmissionPage({ params }) {
   const resolvedParams = await params;

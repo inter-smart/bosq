@@ -11,7 +11,7 @@ import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 import { useState } from "react";
 
-export default function ProjectDetail({ data, locale, projectData }) {
+export default function ProjectDetail({ locale, projectData }) {
   const [openProject, setOpenProject] = useState(false);
   const [indexProject, setIndexProject] = useState(0);
 

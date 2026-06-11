@@ -253,7 +253,7 @@ export default function OrdersDetailModal({ children, order, locale }) {
       if (parseFloat(String(order?.discount_total || 0)) > 0) {
         drawRow("Discount", `- ${aed(order.discount_total)}`, false, [180, 30, 30]);
       }
-      if (order?.tax_total != null) drawRow("Tax", aed(order.tax_total));
+      if (order?.tax_total != null && order?.tax_total > 0) drawRow("Tax", aed(order.tax_total));
       doc.setDrawColor(80, 80, 80);
       doc.line(summaryLabelX, y, summaryValueX, y);
       y += 5;

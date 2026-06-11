@@ -3,15 +3,6 @@ import AuthLogin from "@/components/blocks/auth/auth-login";
 import { getAuthData } from "@/lib/api/CMS/basicGet";
 import { notFound } from "next/navigation";
 
-const local_data = {
-  media: {
-    type: "image",
-    alt: "hero",
-    path: "/images/auth-login-2.jpg",
-  },
-  title: "Welcome Back",
-  description: "<p>Please Enter Your Details to Login.</p>",
-};
 
 export default async function LoginPage({ params }) {
   const resolvedParams = await params;

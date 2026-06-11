@@ -2,7 +2,6 @@ import BlogInfo from "@/components/blocks/blog/blog-info";
 import BlogViewTracker from "@/components/blocks/blog/blog-view-tracker";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getBlogsData } from "@/lib/api/blog";
-import { getMetaData } from "@/lib/api/metaApi";
 import { notFound } from "next/navigation";
 
 import { getTranslations } from "next-intl/server";

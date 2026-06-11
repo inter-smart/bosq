@@ -1,7 +1,7 @@
 import ProductHero from "@/components/blocks/product/product-hero";
 import ProjectHero from "@/components/blocks/project/project-hero";
 import ProjectList from "@/components/blocks/project/project-list";
-import { getProjectData, getProjectListBySlug } from "@/lib/api/CMS/basicGet";
+import { getProjectData } from "@/lib/api/CMS/basicGet";
 import { getMetaData } from "@/lib/api/metaApi";
 import { notFound } from "next/navigation";
 

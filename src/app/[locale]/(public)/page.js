@@ -4,7 +4,6 @@ import HomeHero from "@/components/blocks/home/home-hero";
 import HomeClient from "@/components/clients/HomeClient";
 import { preload } from "react-dom";
 import { notFound } from "next/navigation";
-import NotFound from "../not-found";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -30,7 +29,7 @@ export default async function HomePage({ params }) {
   const { data, error } = await getHomeData.getCmsData();
 
   if (error || !data) {
-    return <NotFound />
+    return  notFound();
   }
 
   const isEN = locale === "en";
