@@ -3,7 +3,7 @@ import AccountSettings from "@/components/blocks/account/account-settings";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getMetaData } from "@/lib/api/metaApi";
 import { ProfileData } from "@/lib/api/profile/profileApi";
-import NotFound from "../../not-found";
+import NotFound from "../../../../not-found";
 import AccountGuard from "@/components/blocks/account/account-guard";
 
 export async function generateMetadata({ params }) {

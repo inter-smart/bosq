@@ -3,7 +3,7 @@ import BlogViewTracker from "@/components/blocks/blog/blog-view-tracker";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getBlogsData } from "@/lib/api/blog";
 import { getMetaData } from "@/lib/api/metaApi";
-import NotFound from "../../not-found";
+import NotFound from "../../../../not-found";
 
 import { getTranslations } from "next-intl/server";
 import { DefaultOgImage } from "@/lib/api/constants";

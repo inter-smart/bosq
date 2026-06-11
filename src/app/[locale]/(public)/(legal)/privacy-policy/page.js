@@ -2,7 +2,7 @@ import PrivacyInfo from "@/components/blocks/legal/privacy-info";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getPolicyCms } from "@/lib/api/privacyPolicy";
 import { getMetaData } from "@/lib/api/metaApi";
-import NotFound from "../../not-found";
+import NotFound from "../../../../not-found";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;

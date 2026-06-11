@@ -2,7 +2,7 @@ import NewsHero from "@/components/blocks/news/news-hero";
 import NewsList from "@/components/blocks/news/news-list";
 import { getNewsData } from "@/lib/api/news";
 import { getMetaData } from "@/lib/api/metaApi";
-import NotFound from "../not-found";
+import NotFound from "../../../not-found";
 
 
 

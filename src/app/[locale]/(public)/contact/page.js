@@ -1,7 +1,7 @@
 import ContactInfo from "@/components/blocks/contact/contact-info";
 import { getContactData } from "@/lib/api/contact";
 import { getMetaData } from "@/lib/api/metaApi";
-import NotFound from "../not-found";
+import NotFound from "../../../not-found";
 import ProductHero from "@/components/blocks/product/product-hero";
 
 

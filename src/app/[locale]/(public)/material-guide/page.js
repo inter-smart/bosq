@@ -1,7 +1,7 @@
 import ProductHero from "@/components/blocks/product/product-hero";
 import MaterialInfoSection from "@/components/blocks/material-guide/Material-info-section";
 import { getMaterialData } from "@/lib/api/CMS/basicGet";
-import NotFound from "../not-found";
+import NotFound from "../../../not-found";
 
 
 

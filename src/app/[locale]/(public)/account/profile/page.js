@@ -3,7 +3,7 @@ import AccountProfile from "@/components/blocks/account/account-profile";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getMetaData } from "@/lib/api/metaApi";
 import { ProfileData } from "@/lib/api/profile/profileApi";
-import NotFound from "../../not-found";
+import NotFound from "../../../../not-found";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;

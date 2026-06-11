@@ -1,7 +1,7 @@
 import AuthLayout from "@/components/blocks/auth/auth-layout";
 import AuthPasswordForm from "@/components/form/auth-password-form";
 import { getAuthData } from "@/lib/api/CMS/basicGet";
-import NotFound from "../../(public)/not-found";
+import NotFound from "../../../not-found";
 
 export default async function CreatePasswordPage({ params }) {
   const resolvedParams = await params;

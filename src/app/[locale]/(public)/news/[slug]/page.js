@@ -2,7 +2,7 @@ import NewsInfo from "@/components/blocks/news/news-info";
 import NewsViewTracker from "@/components/blocks/news/news-view-tracker";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getNewsData } from "@/lib/api/news";
-import NotFound from "../../not-found";
+import NotFound from "../../../../not-found";
 
 import { getTranslations } from "next-intl/server";
 import { DefaultOgImage } from "@/lib/api/constants";

@@ -2,7 +2,7 @@ import CustomizationInfo from "@/components/blocks/customization/customization-i
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getCustomizationCms } from "@/lib/api/customization";
 import { getMetaData } from "@/lib/api/metaApi";
-import NotFound from "../not-found";
+import NotFound from "../../../not-found";
 
 
 export async function generateMetadata({ params }) {

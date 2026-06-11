@@ -1,7 +1,7 @@
 import AuthLayout from "@/components/blocks/auth/auth-layout";
 import AuthLogin from "@/components/blocks/auth/auth-login";
 import { getAuthData } from "@/lib/api/CMS/basicGet";
-import NotFound from "../../(public)/not-found";
+import NotFound from "../../../not-found";
 
 const local_data = {
   media: {

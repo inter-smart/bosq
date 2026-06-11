@@ -3,7 +3,7 @@ import ProductHero from "@/components/blocks/product/product-hero";
 import ProductSimilar from "@/components/blocks/product/product-similar";
 import { getMetaData } from "@/lib/api/metaApi";
 import { ProductData } from "@/lib/api/products/ResourcesApi";
-import NotFound from "../../../not-found";
+import NotFound from "../../../../../not-found";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;

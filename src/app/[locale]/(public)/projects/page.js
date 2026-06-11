@@ -3,7 +3,7 @@ import ProjectHero from "@/components/blocks/project/project-hero";
 import ProjectList from "@/components/blocks/project/project-list";
 import { getProjectData, getProjectListBySlug } from "@/lib/api/CMS/basicGet";
 import { getMetaData } from "@/lib/api/metaApi";
-import NotFound from "../not-found";
+import NotFound from "../../../not-found";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;

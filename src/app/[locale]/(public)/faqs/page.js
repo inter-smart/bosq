@@ -2,7 +2,7 @@ import FaqInfo from "@/components/blocks/faq/faq-info";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getFaqData } from "@/lib/api/CMS/basicGet";
 import { getMetaData } from "@/lib/api/metaApi";
-import NotFound from "../not-found";
+import NotFound from "../../../not-found";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;

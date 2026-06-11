@@ -2,7 +2,7 @@ import BlogHero from "@/components/blocks/blog/blog-hero";
 import BlogList from "@/components/blocks/blog/blog-list";
 import { getBlogsData } from "@/lib/api/blog";
 import { getMetaData } from "@/lib/api/metaApi";
-import NotFound from "../not-found";
+import NotFound from "../../../not-found";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;

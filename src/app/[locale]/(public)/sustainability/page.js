@@ -2,7 +2,7 @@ import ProductHero from "@/components/blocks/product/product-hero";
 import SustainabilityInfo from "@/components/blocks/sustainability/sustainability-info";
 import { getSustainabilityData, sustainabilityData } from "@/lib/api/CMS/basicGet";
 import { getMetaData } from "@/lib/api/metaApi";
-import NotFound from "../not-found";
+import NotFound from "../../../not-found";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
