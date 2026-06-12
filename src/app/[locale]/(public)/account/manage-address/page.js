@@ -27,56 +27,9 @@ export async function generateMetadata({ params }) {
 
 const local_data = {
   heroData: {
-    title: "My Profile",
-    description: null,
-  },
-
-  address: {
     title: "Manage Address",
     title_ar: "إدارة العنوان",
-    description: "<p>The following addresses will be used on the checkout page by default.</p>",
-    description_ar: "<p>سيتم استخدام العناوين التالية في صفحة الدفع بشكل افتراضي.</p>",
-
-    // Shipping information
-    shippingAddress: [
-      {
-        is_default: true,
-        full_name: "John Doe",
-        company: "ACME Corporation",
-        address_line_1: "123 Business Tower, Downtown, Dubai",
-        address_line_2: "United Arab Emirates",
-        city: "Dubai",
-        state: "Dubai",
-        country: "United Arab Emirates",
-        country_code: "AE",
-        postcode: "00000",
-        phone: "+971 50 123 4567",
-      },
-      {
-        full_name: "John Doe",
-        company: "ACME Corporation",
-        address_line_1: "123 Business Tower, Downtown, Dubai",
-        address_line_2: "United Arab Emirates",
-        city: "Dubai",
-        state: "Dubai",
-        country: "United Arab Emirates",
-        country_code: "AE",
-        postcode: "00000",
-        phone: "+971 50 123 4567",
-      },
-      {
-        full_name: "John Doe",
-        company: "ACME Corporation",
-        address_line_1: "123 Business Tower, Downtown, Dubai",
-        address_line_2: "United Arab Emirates",
-        city: "Dubai",
-        state: "Dubai",
-        country: "United Arab Emirates",
-        country_code: "AE",
-        postcode: "00000",
-        phone: "+971 50 123 4567",
-      },
-    ],
+    description: null,
   },
 };
 
@@ -90,13 +43,13 @@ export default async function ManageAddressPage({ params }) {
     return notFound();
   }
 
-  const slug = locale === "en" ? "my-profile" : locale === "ar" ? "ملفي-الشخصي" : "my-profile";
+  const slug = locale === "en" ? "Manage Address" : "إدارة العنوان"
 
   return (
     <>
       <ProductHero locale={locale} data={local_data?.heroData} slug={slug} />
       <AccountLayout locale={locale}>
-        <AccountAddress locale={locale} data={local_data?.address} addressData={data?.address} />
+        <AccountAddress locale={locale} addressData={data?.address} />
       </AccountLayout>
     </>
   );

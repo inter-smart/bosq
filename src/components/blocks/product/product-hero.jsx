@@ -16,6 +16,11 @@ export default function ProductHero({ data, locale, slug, link, type = "", slugD
   const isEn = locale === "en";
   const t = useTranslations();
 
+  console.log("data", data);
+  console.log("data", isEn);
+  console.log("data", locale);
+
+
   return (
     <section className="w-full pt-[calc(var(--header-y)_+_20px)] sm:pt-[calc(var(--header-y)_+_10px)] pb-1 sm:pb-2.5">
       <div className="container">
@@ -37,7 +42,7 @@ export default function ProductHero({ data, locale, slug, link, type = "", slugD
                 <BreadcrumbSeparator>/</BreadcrumbSeparator>
               </>
             )}
-             {type === "news" && (
+            {type === "news" && (
               <>
                 <BreadcrumbItem>
                   <BreadcrumbLink href={`/${locale}/news`}>
@@ -47,7 +52,7 @@ export default function ProductHero({ data, locale, slug, link, type = "", slugD
                 <BreadcrumbSeparator>/</BreadcrumbSeparator>
               </>
             )}
-             {type === "blog" && (
+            {type === "blog" && (
               <>
                 <BreadcrumbItem>
                   <BreadcrumbLink href={`/${locale}/blogs`}>

@@ -26,7 +26,8 @@ export async function generateMetadata({ params }) {
 }
 
 const heroData = {
-  title: "My Profile",
+  title: "Cancelled Orders",
+  title_ar: "الطلبات الملغاة",
   description: null,
 };
 

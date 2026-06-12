@@ -23,7 +23,8 @@ export async function generateMetadata({ params }) {
 
 const local_data = {
   heroData: {
-    title: "My Profile",
+    title: "Account Settings",
+    title_ar: "إعدادات الحساب",
     description: null,
   },
 };
@@ -38,11 +39,11 @@ export default async function SettingsPage({ params }) {
     return notFound();
   }
 
-  console.log(error);
+  const slug = locale === "en" ? "Account Settings" : "إعدادات الحساب";
 
   return (
     <>
-      <ProductHero locale={locale} data={local_data?.heroData} slug={"My Profile"} />
+      <ProductHero locale={locale} data={local_data?.heroData} slug={slug} />
 
       <AccountLayout locale={locale}>
         <AccountSettings locale={locale} data={data} />

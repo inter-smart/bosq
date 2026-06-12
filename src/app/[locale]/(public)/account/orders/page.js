@@ -23,8 +23,8 @@ export async function generateMetadata({ params }) {
 
 const local_data = {
   heroData: {
-    title: "My Profile",
-    title_ar: "ملفي الشخصي",
+    title: "My Orders",
+    title_ar: "طلباتي",
     description: null,
   },
 };

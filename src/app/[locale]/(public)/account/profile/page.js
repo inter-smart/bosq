@@ -56,9 +56,11 @@ export default async function ProfilePage({ params }) {
 
   console.log("PROFILE DATA", data);
 
+  const slug = locale === "en" ? "My Profile" : "ملفي الشخصي";
+
   return (
     <>
-      <ProductHero locale={locale} data={local_data?.heroData} slug={locale === "en" ? "My Profile" : "ملفي الشخصي"} />
+      <ProductHero locale={locale} data={local_data?.heroData} slug={slug} />
       <AccountLayout locale={locale}>
         <AccountProfile locale={locale} data={data ? data : local_data?.userData} />
       </AccountLayout>

@@ -117,7 +117,7 @@ function AddressCard({ item, isDeleting, onEdit, onSetDefault, onDelete, t, c })
   );
 }
 
-export default function AccountAddress({ data, locale, addressData }) {
+export default function AccountAddress({ locale, addressData }) {
   const t = useTranslations("address");
   const a = useTranslations("account");
   const c = useTranslations("common");
