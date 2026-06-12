@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Text } from "@/components/utils/text";
 import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import dynamic from "next/dynamic";
@@ -109,6 +109,8 @@ const OrderSummary = ({
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("cod");
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+  const isPlacingOrderRef = useRef(false);
 
   const tToast = useTranslations("toast");
 
@@ -261,6 +263,9 @@ const OrderSummary = ({
   };
 
   const confirmPlaceOrder = async () => {
+    if (isPlacingOrderRef.current) return;
+    isPlacingOrderRef.current = true;
+    setIsPlacingOrder(true);
     const { shippingId, billingId } = getFinalAddressIds();
 
     const address = {
@@ -276,12 +281,13 @@ const OrderSummary = ({
         coupon_code: appliedCoupon || null,
       }).unwrap();
 
+      setShowConfirmDialog(false);
+
       const internalOrderId = orderData.data?.id;
       const orderCode = orderData.data?.order_id;
       const requiresPayment = orderData.data?.requires_payment;
 
       !type && dispatch(resetCart());
-      setShowConfirmDialog(false);
 
       if (requiresPayment && selectedPaymentMethod === "online") {
         // Get payment URL from N-Genius and redirect the user there
@@ -308,6 +314,9 @@ const OrderSummary = ({
       }
 
       toast.error(locale === "en" ? error?.en || tToast("order_failed") : error?.ar || tToast("order_failed"));
+    } finally {
+      isPlacingOrderRef.current = false;
+      setIsPlacingOrder(false);
     }
   };
 
@@ -666,8 +675,8 @@ const OrderSummary = ({
             >
               {tCommon("cancel")}
             </Button>
-            <Button onClick={confirmPlaceOrder} className="mt-0 px-6 py-2 h-auto text-sm font-medium bg-black hover:bg-black/90 text-white border-0">
-              {tCheckout("confirm_order")}
+            <Button onClick={confirmPlaceOrder} disabled={isPlacingOrder} className="mt-0 px-6 py-2 h-auto text-sm font-medium bg-black hover:bg-black/90 text-white border-0">
+              {isPlacingOrder ? tCommon("loading") : tCheckout("confirm_order")}
             </Button>
           </DialogFooter>
         </DialogContent>

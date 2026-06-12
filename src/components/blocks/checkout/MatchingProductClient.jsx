@@ -4,7 +4,6 @@ import MatchingProductDialog from "@/components/common/matching-product-dialog";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/utils/text";
 import { Plus } from "lucide-react";
-import Link from "next/link";
 import { useTranslations } from "next-intl";
 
 const MatchingProductClient = ({ data, locale }) => {
@@ -22,8 +21,8 @@ const MatchingProductClient = ({ data, locale }) => {
               <Text as="div" size="text3" className="font-medium text-[#282828]">
                 {t("add_complementary_title")}
               </Text>
-              <Text as="div" size="text3" className="text-[#282828] [&>a]:font-medium">
-                {t("save_bundles")} • <Link href="#">{t("click_to_view")}</Link>
+              <Text as="div" size="text3" className="text-[#282828] [&>span]:font-medium">
+                {t("save_bundles")} • <span className="underline cursor-pointer">{t("click_to_view")}</span>
               </Text>
             </div>
           </div>
