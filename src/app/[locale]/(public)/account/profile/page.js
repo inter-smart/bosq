@@ -54,8 +54,6 @@ export default async function ProfilePage({ params }) {
     return notFound();
   }
 
-  console.log("PROFILE DATA", data);
-
   const slug = locale === "en" ? "My Profile" : "ملفي الشخصي";
 
   return (
