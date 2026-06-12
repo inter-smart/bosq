@@ -42,6 +42,7 @@ export default function AccountOrders({ locale, orders: initialOrders, paginatio
   const isEn = locale === "en";
   const t = useTranslations("account");
   const tCommon = useTranslations("common");
+  const tCart = useTranslations("cart");
   const router = useRouter();
 
   const orders = initialOrders ?? [];
@@ -110,6 +111,10 @@ export default function AccountOrders({ locale, orders: initialOrders, paginatio
                       {tCommon("aed")} {item?.grand_total}
                     </span>{" "}
                     <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc]">{tCommon("inc_tax")}</span>
+                  </Text>
+                  <Text as="div" size="text3" className={cn(labelStyle, "w-full sm:w-1/3")}>
+                    {tCart("shipping_charge")} {""}
+                    <span>{parseFloat(item?.shipping_total || 0) > 0 ? `${tCommon("aed")} ${item?.shipping_total}` : tCommon("free")}</span>
                   </Text>
                   {item?.est_delivery_details && (
                     <Text as="div" size="text3" className={cn(labelStyle, "w-full sm:w-1/3")}>

@@ -24,6 +24,7 @@ export default function OrdersDetailModal({ children, order, locale }) {
 
   const t = useTranslations("account");
   const tCommon = useTranslations("common");
+  const tCart = useTranslations("cart");
   const tToast = useTranslations("toast");
 
   const handleReorder = async () => {
@@ -254,6 +255,8 @@ export default function OrdersDetailModal({ children, order, locale }) {
         drawRow("Discount", `- ${aed(order.discount_total)}`, false, [180, 30, 30]);
       }
       if (order?.tax_total != null && order?.tax_total > 0) drawRow("Tax", aed(order.tax_total));
+      const shippingVal = parseFloat(String(order?.shipping_total || 0));
+      drawRow("Shipping", shippingVal > 0 ? aed(shippingVal) : "Free");
       doc.setDrawColor(80, 80, 80);
       doc.line(summaryLabelX, y, summaryValueX, y);
       y += 5;
@@ -376,6 +379,11 @@ export default function OrdersDetailModal({ children, order, locale }) {
                     <hr className="mt-1.5 my-2" />
                   </div>
                 ))}
+
+                <Text as="div" size="text3" className={labelStyle}>
+                  {tCart("shipping_charge")} {""}
+                  <span>{parseFloat(order?.shipping_total || 0) > 0 ? `${tCommon("aed")} ${order?.shipping_total}` : tCommon("free")}</span>
+                </Text>
 
                 <Text as="div" size="text3" className={cn(labelStyle, "font-bold mb-1! [&>span]:font-bold")}>
                   {t("total_amount")} {""}
