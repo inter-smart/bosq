@@ -313,12 +313,12 @@ export default function OrdersDetailModal({ children, order, locale }) {
 
                 <Text as="div" size="text3" className={labelStyle}>
                   {t("order_status")} {""}
-                  <span>{orderStatusTranslate(order?.status, locale==="en")}</span>
+                  <span>{orderStatusTranslate(order?.status, locale === "en")}</span>
                 </Text>
 
                 <Text as="div" size="text3" className={labelStyle}>
                   {t("payment")} {""}
-                  <span>{paymentStatusTranslate(order?.payment_status, locale==="en")}</span>
+                  <span>{paymentStatusTranslate(order?.payment_status, locale === "en")}</span>
                 </Text>
 
                 {order?.est_delivery_details && (
@@ -344,7 +344,7 @@ export default function OrdersDetailModal({ children, order, locale }) {
                     <div className="w-full flex justify-between">
                       <div className="w-7/10">
                         <Text as="div" size="text3" className="line-clamp-2 text-[#282828] max-lg:font-medium">
-                          {item?.variant?.title}
+                          {locale === "en" ? item?.variant?.title : item?.variant?.title_ar}
                         </Text>
                         <Text as="div" size="text3" className="text-[#282828] mt-0.5 2xl:mt-1">
                           <span className="text-[90%]">
