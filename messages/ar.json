@@ -286,7 +286,9 @@
   },
   "auth": {
     "continue_with_google": "المتابعة مع جوجل",
+    "or": "او",
     "google_success": "تم تسجيل الدخول باستخدام Google بنجاح!",
+    "continue_browsing": "متابعة التصفح",
     "google_error": "فشل تسجيل الدخول باستخدام Google. يرجى المحاولة مرة أخرى.",
     "new_here": "جديد هنا؟",
     "create_account": "إنشاء حساب",
@@ -428,7 +430,22 @@
     "password_max_length": "لا يمكن أن تتجاوز كلمة المرور 100 حرف",
     "password_regex": "يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل وحرف صغير واحد ورقم واحد",
     "confirm_password_placeholder": "أكد كلمة المرور الخاصة بك",
-    "new_password_placeholder": "اختر كلمة مرور قوية"
+    "new_password_placeholder": "اختر كلمة مرور قوية",
+    "cancelled_order_title": "لم تقم بإلغاء أي طلبات بعد.",
+    "cancelled_order_description": "بمجرد تقديم طلبك الأول، ستتمكن من تتبع شحناتك وإدارة عمليات الإرجاع من هنا.",
+    "failed_to_reorder": "فشل إعادة الطلب",
+    "cancelled_on": "تم الإلغاء في",
+    "order_details": "تفاصيل الطلب",
+    "order_information": "معلومات الطلب",
+    "products_count": "المنتجات ({count} منتج)",
+    "total_amount": "المبلغ الإجمالي :",
+    "billing_address": "عنوان الفواتير",
+    "shipping_address": "عنوان الشحن",
+    "download_invoice": "تحميل الفاتورة",
+    "downloading": "جاري التحميل...",
+    "failed_to_download_invoice": "فشل تحميل الفاتورة. يرجى المحاولة مرة أخرى.",
+    "invoice_downloaded_success": "تم تحميل الفاتورة بنجاح",
+    "adding": "جاري الإضافة..."
   },
   "product": {
     "adding": "جارٍ الإضافة...",
@@ -464,6 +481,7 @@
   },
   "toast": {
     "added_to_cart": "تمت إضافة المنتج إلى السلة",
+    "items_added_to_cart": "تمت إضافة المنتجات إلى السلة",
     "failed_to_add_cart": "فشل في إضافة المنتج إلى السلة",
     "default_address": "تم تعيين العنوان الافتراضي بنجاح",
     "failed_default_address": "فشل في تعيين العنوان الافتراضي",
@@ -492,6 +510,8 @@
     "logout_failed": "فشل في تسجيل الخروج",
     "accept_terms": "يرجى قبول الشروط والأحكام للمتابعة",
     "order_failed": "فشل في تقديم الطلب",
+    "no_address_selected": "يرجى إضافة عنوان واحد على الأقل للمتابعة",
+    "address_conflict": "تأكد من اختيار عناوين مختلفة للشحن والفواتير أو حدد خيار 'استخدام نفس العنوان'",
     "select_shipping_address": "يرجى اختيار عنوان الشحن",
     "select_billing_address": "يرجى اختيار عنوان الفواتير",
     "select_shipping_or_same": "يرجى اختيار عنوان شحن أو تحديد 'استخدام نفس العنوان للشحن' في قسم الفواتير",
@@ -565,5 +585,11 @@
     "file_size_exceeded": "يجب ألا يتجاوز حجم الصورة {size} ميجابايت",
     "select_region": "يرجى اختيار المنطقة",
     "select_option": "اختر خيارًا"
+  },
+
+  "page_not_found": {
+    "title": "يا للأسف! الصفحة غير موجودة",
+    "description": "نأسف، ولكن الصفحة التي تبحث عنها غير موجودة أو تم نقلها. نعتذر عن أي إزعاج!",
+    "ctaText": "الذهاب إلى الصفحة الرئيسية"
   }
 }

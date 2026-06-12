@@ -2,7 +2,7 @@ import NewsHero from "@/components/blocks/news/news-hero";
 import NewsList from "@/components/blocks/news/news-list";
 import { getNewsData } from "@/lib/api/news";
 import { getMetaData } from "@/lib/api/metaApi";
-import NotFound from "../not-found";
+import { notFound } from "next/navigation";
 
 
 
@@ -35,7 +35,7 @@ export default async function NewsPage({ params, searchParams }) {
   ]);
 
   if (cmsResult.error) {
-    return <NotFound />
+    return notFound();
   }
 
   

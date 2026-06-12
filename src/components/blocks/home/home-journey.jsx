@@ -83,7 +83,7 @@ export default function HomeJourney({ data, locale, isEN }) {
             asChild
           >
             <Link
-              href={getExternalLink(data?.link)}
+              href={getExternalLink(data?.link, locale)}
               target={getTarget(data?.link)}
             >
               {t("view_details")}

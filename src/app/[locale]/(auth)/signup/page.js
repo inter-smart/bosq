@@ -1,7 +1,7 @@
 import AuthLayout from "@/components/blocks/auth/auth-layout";
 import AuthSignup from "@/components/blocks/auth/auth-signup";
 import { getAuthData } from "@/lib/api/CMS/basicGet";
-import NotFound from "../../(public)/not-found";
+import { notFound } from "next/navigation";
 
 export default async function SignupPage({ params }) {
   const resolvedParams = await params;
@@ -10,7 +10,7 @@ export default async function SignupPage({ params }) {
   const { data, error } = await getAuthData();
 
   if (error) {
-    <NotFound />
+    return notFound();
   }
 
   const { authPageData } = data;

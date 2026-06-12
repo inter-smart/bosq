@@ -11,6 +11,8 @@ import { toast } from "sonner";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useReorderOrderMutation } from "@/store/services/orderApi";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
+import { orderStatusTranslate, paymentStatusTranslate } from "@/lib/helper";
 
 const labelStyle = cn("text-[#282828] my-2 xl:my-2.5 2xl:my-4 [&>span]:font-normal flex justify-between");
 
@@ -20,13 +22,17 @@ export default function OrdersDetailModal({ children, order, locale }) {
 
   const [Loading, setLoading] = useState(false);
 
+  const t = useTranslations("account");
+  const tCommon = useTranslations("common");
+  const tToast = useTranslations("toast");
+
   const handleReorder = async () => {
     try {
       await reorderOrder({ orderId: order?.id }).unwrap();
-      toast.success("Items added to cart");
+      toast.success(tToast("items_added_to_cart"));
       router.push(`/${locale}/cart`);
     } catch (error) {
-      toast.error(typeof error?.en === "string" ? error.en : "Failed to reorder");
+      toast.error(typeof error?.[locale] === "string" ? error[locale] : t("failed_to_reorder"));
     }
   };
 
@@ -247,7 +253,7 @@ export default function OrdersDetailModal({ children, order, locale }) {
       if (parseFloat(String(order?.discount_total || 0)) > 0) {
         drawRow("Discount", `- ${aed(order.discount_total)}`, false, [180, 30, 30]);
       }
-      if (order?.tax_total != null) drawRow("Tax", aed(order.tax_total));
+      if (order?.tax_total != null && order?.tax_total > 0) drawRow("Tax", aed(order.tax_total));
       doc.setDrawColor(80, 80, 80);
       doc.line(summaryLabelX, y, summaryValueX, y);
       y += 5;
@@ -263,10 +269,10 @@ export default function OrdersDetailModal({ children, order, locale }) {
       doc.text("Thank you for shopping with BOSQ. For queries, contact support.", pageWidth / 2, pageHeight - 12, { align: "center" });
 
       doc.save(`invoice-${order?.order_id || "BOSQ"}.pdf`);
-      toast.success("Invoice downloaded successfully");
+      toast.success(t("invoice_downloaded_success"));
     } catch (error) {
       console.error("PDF Download Error:", error);
-      toast.error("Failed to download invoice. Please try again.");
+      toast.error(t("failed_to_download_invoice"));
     } finally {
       setLoading(false);
     }
@@ -278,9 +284,9 @@ export default function OrdersDetailModal({ children, order, locale }) {
       <DialogContent className={"xl:max-w-[576px] 2xl:max-w-[840px] gap-0"}>
         <DialogHeader className={"flex-row items-center justify-between mb-1 2xl:mb-3"}>
           <DialogTitle className="text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-semibold text-[#282828]">
-            Order Details
+            {t("order_details")}
           </DialogTitle>
-          <DialogDescription className={"sr-only"}>Order Details go here.</DialogDescription>
+          <DialogDescription className={"sr-only"}>{t("order_details")}</DialogDescription>
         </DialogHeader>
 
         <div className="w-full max-h-[60vh] xl:max-h-[70vh] mask-[linear-gradient(to_bottom,transparent_0%,white_2%,white_98%,transparent_100%)]">
@@ -292,32 +298,32 @@ export default function OrdersDetailModal({ children, order, locale }) {
                   size="none"
                   className="text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-bold text-[#282828] mb-2 xl:mb-3 2xl:mb-5"
                 >
-                  Order Information
+                  {t("order_information")}
                 </Heading>
 
                 <Text as="div" size="text3" className={labelStyle}>
-                  Order ID: {""}
+                  {t("order_id")} {""}
                   <span>{order?.order_id}</span>
                 </Text>
 
                 <Text as="div" size="text3" className={labelStyle}>
-                  Order Date: {""}
+                  {t("order_date")} {""}
                   <span>{order?.createdAt}</span>
                 </Text>
 
                 <Text as="div" size="text3" className={labelStyle}>
-                  Order Status: {""}
-                  <span>{order?.status}</span>
+                  {t("order_status")} {""}
+                  <span>{orderStatusTranslate(order?.status, locale==="en")}</span>
                 </Text>
 
                 <Text as="div" size="text3" className={labelStyle}>
-                  Payment: {""}
-                  <span>{order?.payment_status}</span>
+                  {t("payment")} {""}
+                  <span>{paymentStatusTranslate(order?.payment_status, locale==="en")}</span>
                 </Text>
 
                 {order?.est_delivery_details && (
                   <Text as="div" size="text3" className={labelStyle}>
-                    Est. Delivery: {""}
+                    {t("est_delivery")} {""}
                     <span>{order?.est_delivery_details}</span>
                   </Text>
                 )}
@@ -330,7 +336,7 @@ export default function OrdersDetailModal({ children, order, locale }) {
                   size="none"
                   className="text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-bold text-[#282828] mb-2 xl:mb-3 2xl:mb-5"
                 >
-                  Products ({order?.items_count} Items)
+                  {t("products_count", { count: order?.items_count })}
                 </Heading>
 
                 {order?.items?.map((item, index) => (
@@ -342,7 +348,7 @@ export default function OrdersDetailModal({ children, order, locale }) {
                         </Text>
                         <Text as="div" size="text3" className="text-[#282828] mt-0.5 2xl:mt-1">
                           <span className="text-[90%]">
-                            Qty: {""}
+                            {t("qty")} {""}
                             {item?.quantity}
                           </span>
                         </Text>
@@ -351,18 +357,18 @@ export default function OrdersDetailModal({ children, order, locale }) {
                         {item?.is_coupon_applied ? (
                           <>
                             <Text as="div" size="text3" className="font-normal text-[#bbbcbc] line-through mt-0.5">
-                              AED {item?.line_total}
+                              {tCommon("aed")} {item?.line_total}
                             </Text>
                             <Text as="div" size="text3" className="font-normal text-[#282828]">
-                              AED {item?.final_amount}
+                              {tCommon("aed")} {item?.final_amount}
                             </Text>
                             <Text as="div" size="text3" className="text-green-600 font-medium">
-                              -AED {item?.discount_amount}
+                              -{tCommon("aed")} {item?.discount_amount}
                             </Text>
                           </>
                         ) : (
                           <Text as="div" size="text3" className="font-normal text-[#282828] mt-0.5">
-                            AED {item?.line_total}
+                            {tCommon("aed")} {item?.line_total}
                           </Text>
                         )}
                       </div>
@@ -372,8 +378,8 @@ export default function OrdersDetailModal({ children, order, locale }) {
                 ))}
 
                 <Text as="div" size="text3" className={cn(labelStyle, "font-bold mb-1! [&>span]:font-bold")}>
-                  Total Amount : {""}
-                  <span>AED {order?.grand_total}</span>
+                  {t("total_amount")} {""}
+                  <span>{tCommon("aed")} {order?.grand_total}</span>
                 </Text>
               </div>
             </div>
@@ -386,7 +392,7 @@ export default function OrdersDetailModal({ children, order, locale }) {
                     size="none"
                     className="text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-bold text-[#282828] mb-2 2xl:mb-3"
                   >
-                    Billing Address
+                    {t("billing_address")}
                   </Heading>
                   <Text as="div" size="text3" className={cn("m-0!", labelStyle)}>
                     {order?.billing_address && parse(order?.billing_address)}
@@ -403,7 +409,7 @@ export default function OrdersDetailModal({ children, order, locale }) {
                     size="none"
                     className="text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-bold text-[#282828] mb-2 2xl:mb-3"
                   >
-                    Shipping Address
+                    {t("shipping_address")}
                   </Heading>
                   <Text as="div" size="text3" className={cn("m-0!", labelStyle)}>
                     {order?.shipping_address && parse(order?.shipping_address)}
@@ -416,7 +422,7 @@ export default function OrdersDetailModal({ children, order, locale }) {
 
         <DialogFooter className={"sm:justify-center mt-2 xl:mt-4 2xl:mt-10"}>
           <Button variant={"black"} disabled={Loading} onClick={handleDownloadInvoice} className="min-w-[120px] xl:min-w-[155px] 2xl:min-w-[200px]">
-            {Loading ? "Downloading..." : "Download Invoice"}
+            {Loading ? t("downloading") : t("download_invoice")}
           </Button>
           <Button
             variant={"white"}
@@ -424,7 +430,7 @@ export default function OrdersDetailModal({ children, order, locale }) {
             onClick={handleReorder}
             className="min-w-[60px] xl:min-w-[80px] 2xl:min-w-[120px] border border-black hover:border-[#f17423]"
           >
-            {isReordering ? "Adding..." : "Reorder"}
+            {isReordering ? t("adding") : t("reorder")}
           </Button>
         </DialogFooter>
       </DialogContent>

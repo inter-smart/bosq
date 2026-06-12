@@ -161,11 +161,15 @@ export function PlaceholdersAndVanishInput({ placeholders, placeholders_ar, onCh
   };
 
   const vanishAndSubmit = () => {
+    if (animating) return;
+
+    const val = inputRef.current?.value || "";
+    if (!val.trim()) return;
+
     setAnimating(true);
     draw();
 
-    const value = inputRef.current?.value || "";
-    if (value && inputRef.current) {
+    if (inputRef.current) {
       const maxX = newDataRef.current.reduce((prev, current) => (current.x > prev ? current.x : prev), 0);
       animate(maxX);
     }

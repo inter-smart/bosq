@@ -207,7 +207,7 @@ export default function CartList({ locale, similarProducts }) {
                   className="min-w-full mt-2"
                   asChild
                 >
-                  <div onClick={validateCheckout}>{isValidating ? "Validating..." : isUpdating ? "Updating..." : `${t("checkout")}`}</div>
+                  <div onClick={validateCheckout}>{isValidating ? `${t("validating")}` : isUpdating ? `${t("updating")}` : `${t("checkout")}`}</div>
                 </Button>
               </MediaQuery>
             </div>

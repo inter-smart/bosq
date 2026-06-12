@@ -2,8 +2,7 @@ import BlogInfo from "@/components/blocks/blog/blog-info";
 import BlogViewTracker from "@/components/blocks/blog/blog-view-tracker";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getBlogsData } from "@/lib/api/blog";
-import { getMetaData } from "@/lib/api/metaApi";
-import NotFound from "../../not-found";
+import { notFound } from "next/navigation";
 
 import { getTranslations } from "next-intl/server";
 import { DefaultOgImage } from "@/lib/api/constants";
@@ -11,9 +10,6 @@ import { parseOtherMeta } from "@/lib/helper";
 
 export async function generateMetadata({ params }) {
   const { slug, locale } = await params;
-
-
-
 
   try {
     const response = await fetch(
@@ -123,7 +119,7 @@ export default async function BlogDetailPage({ params }) {
   const { data, error } = await getBlogsData.getBlogDetailsData(slug);
 
   if (!data || error) {
-    return <NotFound params={{ locale }} />;
+    return notFound();
   }
 
   const { heroData, blogData, popularBlogData, relatedBlogData } = data;

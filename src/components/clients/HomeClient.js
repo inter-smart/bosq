@@ -23,6 +23,9 @@ export default function HomeClient({ data, locale }) {
     state,
   } = data;
 
+
+
+
   const isEN = locale === "en";
 
   return (

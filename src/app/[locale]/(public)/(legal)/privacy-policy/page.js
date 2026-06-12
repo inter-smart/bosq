@@ -2,7 +2,7 @@ import PrivacyInfo from "@/components/blocks/legal/privacy-info";
 import ProductHero from "@/components/blocks/product/product-hero";
 import { getPolicyCms } from "@/lib/api/privacyPolicy";
 import { getMetaData } from "@/lib/api/metaApi";
-import NotFound from "../../not-found";
+import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -23,12 +23,12 @@ export async function generateMetadata({ params }) {
 export default async function PrivacyPolicyPage({ params }) {
   const resolvedParams = await params;
   const { locale } = resolvedParams;
-  
-  const {data} = await getPolicyCms.getCmsData();
+
+  const { data } = await getPolicyCms.getCmsData();
 
 
-  if(!data) {
-    return <NotFound params={params} />
+  if (!data) {
+    return notFound();
   }
 
   const { heroData, privacyPolicyData } = data;
@@ -37,7 +37,7 @@ export default async function PrivacyPolicyPage({ params }) {
     privacyPolicyData,
   };
 
-  const slug = locale === "en"? "Privacy Policy" : "سياسة الخصوصية";
+  const slug = locale === "en" ? "Privacy Policy" : "سياسة الخصوصية";
 
   return (
     <>

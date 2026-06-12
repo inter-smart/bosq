@@ -2,8 +2,8 @@ import { getHomeData } from "@/lib/api/home";
 import { getMetaData } from "@/lib/api/metaApi";
 import HomeHero from "@/components/blocks/home/home-hero";
 import HomeClient from "@/components/clients/HomeClient";
-import NotFound from "./not-found";
 import { preload } from "react-dom";
+import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -29,7 +29,7 @@ export default async function HomePage({ params }) {
   const { data, error } = await getHomeData.getCmsData();
 
   if (error || !data) {
-    return <NotFound />;
+    return  notFound();
   }
 
   const isEN = locale === "en";
@@ -51,7 +51,7 @@ export default async function HomePage({ params }) {
   return (
     <>
       <HomeHero data={data.sliders} locale={locale} />
-      <HomeClient data={data} locale={locale} isEN={isEN} />
+      <HomeClient data={data} locale={locale} />
     </>
   );
 }

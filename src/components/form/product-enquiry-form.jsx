@@ -7,14 +7,7 @@ import { z } from "zod";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useSubmitProductEnquiryMutation } from "@/store/services/productEnquiryApi";
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -31,9 +24,7 @@ import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 // Styles
-const labelStyle = cn(
-  "text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]",
-);
+const labelStyle = cn("text-[12px] md:text-[12px] xl:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-none font-light text-[#282828]");
 
 const inputStyle = cn(
   "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] 3xl:text-[16px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1",
@@ -41,15 +32,11 @@ const inputStyle = cn(
 
 const errorStyle = cn("text-[#f17423]");
 
-const textareaStyle = cn(
-  inputStyle,
-  "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none",
-);
+const textareaStyle = cn(inputStyle, "leading-tight min-h-[80px] 2xl:min-h-[100px] py-[15px] resize-none");
 
 export default function ProductEnquiryForm({ productId, onClose, locale, onSuccess }) {
   const { executeRecaptcha } = useGoogleReCaptcha();
-  const [submitProductEnquiry, { isLoading }] =
-    useSubmitProductEnquiryMutation();
+  const [submitProductEnquiry, { isLoading }] = useSubmitProductEnquiryMutation();
   const [selectedCountry, setSelectedCountry] = useState("ae");
   const [formKey, setFormKey] = useState(0);
   const [success, setSuccess] = useState(null);
@@ -114,11 +101,7 @@ export default function ProductEnquiryForm({ productId, onClose, locale, onSucce
       const data = await submitProductEnquiry(formData).unwrap();
 
       if (!data?.success) {
-        return toast.error(
-          isEN
-            ? data.message.en
-            : data.message.ar || tToast("submission_failed"),
-        );
+        return toast.error(isEN ? data.message.en : data.message.ar || tToast("submission_failed"));
       }
       toast.success(isEN ? data.message.en : data.message.ar);
       setSuccess(isEN ? data.message.en : data.message.ar);
@@ -136,10 +119,8 @@ export default function ProductEnquiryForm({ productId, onClose, locale, onSucce
 
       toast.error(
         isEN
-          ? apiError?.message?.en ||
-          tErrors("invalid_content", { field: "form" })
-          : apiError?.message?.ar ||
-          tErrors("invalid_content", { field: "form" }),
+          ? apiError?.message?.en || tErrors("invalid_content", { field: "form" })
+          : apiError?.message?.ar || tErrors("invalid_content", { field: "form" }),
       );
     }
   };
@@ -163,10 +144,7 @@ export default function ProductEnquiryForm({ productId, onClose, locale, onSucce
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-wrap items-start -mx-4 [&>*]:px-4 [&>*]:py-2"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-wrap items-start -mx-4 [&>*]:px-4 [&>*]:py-2">
         {/* Full Name */}
         <FormField
           control={form.control}
@@ -178,11 +156,7 @@ export default function ProductEnquiryForm({ productId, onClose, locale, onSucce
                 <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  className={inputStyle}
-                  placeholder={t("enter_name")}
-                />
+                <Input {...field} className={inputStyle} placeholder={t("enter_name")} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -200,12 +174,7 @@ export default function ProductEnquiryForm({ productId, onClose, locale, onSucce
                 <span className={errorStyle}>*</span>
               </FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  type="email"
-                  className={inputStyle}
-                  placeholder={t("enter_email_id")}
-                />
+                <Input {...field} type="email" className={inputStyle} placeholder={t("enter_email_id")} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -263,11 +232,7 @@ export default function ProductEnquiryForm({ productId, onClose, locale, onSucce
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>{t("city")}</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  className={inputStyle}
-                  placeholder={t("enter_city")}
-                />
+                <Input {...field} className={inputStyle} placeholder={t("enter_city")} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -284,48 +249,16 @@ export default function ProductEnquiryForm({ productId, onClose, locale, onSucce
               <FormControl>
                 <div className="max-w-full space-y-2">
                   {!uploadedFile ? (
-                    <label
-                      htmlFor="file-upload"
-                      className={cn(
-                        inputStyle,
-                        "flex items-center justify-between gap-x-1 border cursor-pointer",
-                      )}
-                    >
-                      <span className="text-[#aeaeae]">
-                        {t("choose_image")}
-                      </span>
-                      <Image
-                        src="/images/icon-attachment.svg"
-                        alt="icon-attachment"
-                        width={20}
-                        height={20}
-                        className="w-2 xl:w-3"
-                        unoptimized
-                      />
+                    <label htmlFor="file-upload" className={cn(inputStyle, "flex items-center justify-between gap-x-1 border cursor-pointer")}>
+                      <span className="text-[#aeaeae]">{t("choose_image")}</span>
+                      <Image src="/images/icon-attachment.svg" alt="icon-attachment" width={20} height={20} className="w-2 xl:w-3" unoptimized />
 
-                      <input
-                        id="file-upload"
-                        type="file"
-                        className="hidden"
-                        accept="image/*"
-                        onChange={handleFileChange}
-                      />
+                      <input id="file-upload" type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
                     </label>
                   ) : (
-                    <div
-                      className={cn(
-                        inputStyle,
-                        "flex items-center justify-between gap-x-1 border",
-                      )}
-                    >
-                      <span className="line-clamp-1 flex-1 pr-2">
-                        {uploadedFile.name}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={handleFileRemove}
-                        className="text-red-500 hover:text-red-700 transition-colors"
-                      >
+                    <div className={cn(inputStyle, "flex items-center justify-between gap-x-1 border")}>
+                      <span className="line-clamp-1 flex-1 pr-2">{uploadedFile.name}</span>
+                      <button type="button" onClick={handleFileRemove} className="text-red-500 hover:text-red-700 transition-colors">
                         <X className="size-3 xl:size-4" />
                       </button>
                     </div>
@@ -345,11 +278,7 @@ export default function ProductEnquiryForm({ productId, onClose, locale, onSucce
             <FormItem className="w-full">
               <FormLabel className={labelStyle}>{t("message")}</FormLabel>
               <FormControl>
-                <Textarea
-                  {...field}
-                  className={textareaStyle}
-                  placeholder={t("form_placeholder_inquiry")}
-                />
+                <Textarea {...field} className={textareaStyle} placeholder={t("form_placeholder_inquiry")} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -358,12 +287,7 @@ export default function ProductEnquiryForm({ productId, onClose, locale, onSucce
 
         {/* Submit */}
         <div className="w-full mt-2 flex flex-col gap-2">
-          <Button
-            type="submit"
-            variant={"black"}
-            disabled={isLoading}
-            className="min-w-full"
-          >
+          <Button type="submit" variant={"black"} disabled={isLoading} className="min-w-full">
             {isLoading ? t("submitting") : t("submit_enquiry")}
           </Button>
         </div>

@@ -122,7 +122,7 @@ function CardComp({ data, variant, locale, isEN }) {
           asChild
         >
           <Link
-            href={getExternalLink(data?.button?.link)}
+            href={getExternalLink(data?.button?.link, locale)}
             target={getTarget(data?.button?.link)}
           >
             {isEN ? data?.button?.label : data?.button?.label_ar}

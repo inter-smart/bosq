@@ -177,6 +177,14 @@ const OrderSummary = ({
     }
   };
 
+
+const handleCouponKeyDown = (e) => {
+  if (e.key === "Enter" && !e.repeat && !appliedCoupon) {
+    e.preventDefault();
+    handleApplyCoupon();
+  }
+};
+
   // Handle coupon removal
   const handleRemoveCoupon = async () => {
     try {
@@ -467,6 +475,7 @@ const OrderSummary = ({
                     placeholder={tCheckout("coupon_placeholder")}
                     value={couponCode}
                     onChange={(e) => setCouponCode(e.target.value)}
+                    onKeyDown={(e)=>handleCouponKeyDown(e)}
                     // disabled={!!appliedCoupon}
                     className={
                       "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1 flex-1"

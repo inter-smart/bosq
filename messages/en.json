@@ -286,7 +286,9 @@
   "auth": {
     "continue_with_google": "Continue with Google",
     "new_here": "New here?",
+    "or": "or",
     "create_account": "Create an Account",
+    "continue_browsing": "Continue Browsing",
     "already_have_account": "Already have an account?",
     "google_success": "Signed in with Google successfully!",
     "google_error": "Google sign-in failed. Please try again.",
@@ -427,7 +429,22 @@
     "password_max_length": "Password cannot exceed 100 characters",
     "password_regex": "Password must contain at least one uppercase letter, one lowercase letter, and one number",
     "confirm_password_placeholder": "Confirm your password",
-    "new_password_placeholder": "Choose a strong password"
+    "new_password_placeholder": "Choose a strong password",
+    "cancelled_order_title": "You haven't cancelled any orders yet",
+    "cancelled_order_description": "Once you place your first order, you'll be able to track your deliveries and manage returns from here.",
+    "failed_to_reorder": "Failed to reorder",
+    "cancelled_on": "Cancelled on",
+    "order_details": "Order Details",
+    "order_information": "Order Information",
+    "products_count": "Products ({count} Items)",
+    "total_amount": "Total Amount :",
+    "billing_address": "Billing Address",
+    "shipping_address": "Shipping Address",
+    "download_invoice": "Download Invoice",
+    "downloading": "Downloading...",
+    "failed_to_download_invoice": "Failed to download invoice. Please try again.",
+    "invoice_downloaded_success": "Invoice downloaded successfully",
+    "adding": "Adding..."
   },
   "product": {
     "adding": "Adding...",
@@ -463,6 +480,7 @@
   },
   "toast": {
     "added_to_cart": "Item added to cart",
+    "items_added_to_cart": "Items added to cart",
     "failed_to_add_cart": "Failed to add item to cart",
     "default_address": "Default address set successfully",
     "failed_default_address": "Failed to set default address",
@@ -566,5 +584,11 @@
     "phone_all_zeros": "Phone number cannot contain only zeros",
     "select_region": "Please select a region",
     "select_option": "Please select an option"
+  },
+
+  "page_not_found":{
+    "title": "Oops! Page not found",
+    "description": "We're sorry, but the page you are looking for doesn't exist or has been moved. We apologize for the inconvenience!",
+    "ctaText": "Go to Home page"
   }
 }

@@ -31,10 +31,10 @@ export function parseOtherMeta(htmlString) {
     const attributes = match[1];
 
     // Parse attributes
-    const nameMatch = attributes.match(/name=["']([^"']+)["']/);
-    const propertyMatch = attributes.match(/property=["']([^"']+)["']/);
-    const httpEquivMatch = attributes.match(/http-equiv=["']([^"']+)["']/);
-    const contentMatch = attributes.match(/content=["']([^"']+)["']/);
+    const nameMatch = attributes.match(/name=["']([^"']+)["']/i);
+    const propertyMatch = attributes.match(/property=["']([^"']+)["']/i);
+    const httpEquivMatch = attributes.match(/http-equiv=["']([^"']+)["']/i);
+    const contentMatch = attributes.match(/content=["']([^"']+)["']/i);
 
     const content = contentMatch ? contentMatch[1] : "";
 
@@ -317,9 +317,7 @@ export async function fetchUserProfileAPI() {
   });
 }
 
-export const getExternalLink = (link) => {
-  const locale = getLocale();
-
+export const getExternalLink = (link, locale) => {
   return link.startsWith("/") ? `/${locale}${link}` : link;
 };
 
@@ -327,3 +325,44 @@ export const getTarget = (link) => {
   // return link.startsWith("/") ? "_self" : "_blank";
   return "_self";
 };
+
+
+
+export const paymentStatusTranslate = (status, isEn) => {
+    if (!status) return "-";
+    switch (status.toLowerCase().trim()) {
+      case "pending":
+        return isEn ? "Pending" : "قيد الانتظار";
+      case "paid":
+        return isEn ? "Paid" : "مدفوع";
+      case "failed":
+        return isEn ? "Failed" : "فشل";
+      case "refunded":
+        return isEn ? "Refunded" : "مسترد";
+      case "cancelled":
+        return isEn ? "Cancelled" : "تم الإلغاء";
+    }
+  };
+
+  export const orderStatusTranslate = (status, isEn) => {
+
+    console.log("orderStatusTranslate", status, isEn);
+
+    if (!status) return "-";
+    switch (status.toLowerCase().trim()) {
+      case "pending":
+        return isEn ? "Pending" : "قيد الانتظار";
+      case "confirmed":
+        return isEn ? "Confirmed" : "تم التأكيد";
+      case "packed":
+        return isEn ? "Packed" : "تم التعبئة";
+      case "shipped":
+        return isEn ? "Shipped" : "تم الشحن";
+      case "delivered":
+        return isEn ? "Delivered" : "تم التوصيل";
+      case "cancelled":
+        return isEn ? "Cancelled" : "تم الإلغاء";
+      case "returned":
+        return isEn ? "Returned" : "تم الإرجاع";
+    }
+  };

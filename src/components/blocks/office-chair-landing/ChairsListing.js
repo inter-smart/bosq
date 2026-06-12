@@ -85,7 +85,7 @@ export default function ChairsListing({ data, locale = "en" }) {
                 className="min-w-[120px] sm:min-w-[120px] xl:min-w-[145px] 2xl:min-w-[218px] mt-[15px] xl:mt-[20px] 2xl:mt-[35px]"
               >
                 <Link
-                  href={getExternalLink(ctaHref)}
+                  href={getExternalLink(ctaHref, locale)}
                   target={getTarget(ctaHref)}
                 >
                   {ctaLabel}
