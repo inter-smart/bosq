@@ -200,18 +200,20 @@ const AddressSection = ({ locale }) => {
             </AlertDialogCancel>
           </AlertDialogHeader>
           <div className="max-h-[70vh] mask-[linear-gradient(to_bottom,transparent_0%,white_2%,white_98%,transparent_100%)] overflow-y-auto overflow-x-hidden">
-            <UpdateAddressFormCheckout
-              isFromCheckout={true}
-              showShipToDifferent={true}
-              locale={locale}
-              addressData={editModalAddress}
-              onStateChange={editModalAddress?.id === effectiveShippingAddressId ? updateCharge : null}
-              isCurrentlySelected={true}
-              onSuccess={() => {
-                setIsEditModalOpen(false);
-                setEditModalAddress(null);
-              }}
-            />
+            {isEditModalOpen && editModalAddress && (
+              <UpdateAddressFormCheckout
+                isFromCheckout={true}
+                showShipToDifferent={true}
+                locale={locale}
+                addressData={editModalAddress}
+                onStateChange={editModalAddress?.id === effectiveShippingAddressId ? updateCharge : null}
+                isCurrentlySelected={true}
+                onSuccess={() => {
+                  setIsEditModalOpen(false);
+                  setEditModalAddress(null);
+                }}
+              />
+            )}
           </div>
         </AlertDialogContent>
       </AlertDialog>

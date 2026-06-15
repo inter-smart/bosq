@@ -182,7 +182,7 @@ export default function CartList({ locale, similarProducts }) {
                 <span>{t("shipping_charge")}</span>
                 {
                   shippingCharge > 0
-                    ? shippingCharge
+                    ? `AED ${shippingCharge}`
                     : tCommon("free")
                 }
               </Text>

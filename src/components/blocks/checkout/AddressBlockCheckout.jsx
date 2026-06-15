@@ -302,17 +302,19 @@ const AddressBlockCheckout = ({ locale, variant, data, useSameAddress, setUseSam
           </AlertDialogHeader>
 
           <div className="max-h-[70vh] mask-[linear-gradient(to_bottom,transparent_0%,white_2%,white_98%,transparent_100%)] overflow-y-auto overflow-x-hidden">
-            <UpdateAddressFormCheckout
-              isFromCheckout={isFromCheckout}
-              locale={locale}
-              addressData={editingAddress}
-              onStateChange={editingAddress?.id === effectiveShippingAddressId ? updateCharge : null}
-              isCurrentlySelected={editingAddress?.id === selectedAddressId}
-              onSuccess={() => {
-                setIsEditDialogOpen(false);
-                setEditingAddress(null);
-              }}
-            />
+            {isEditDialogOpen && editingAddress && (
+              <UpdateAddressFormCheckout
+                isFromCheckout={isFromCheckout}
+                locale={locale}
+                addressData={editingAddress}
+                onStateChange={editingAddress?.id === effectiveShippingAddressId ? updateCharge : null}
+                isCurrentlySelected={editingAddress?.id === selectedAddressId}
+                onSuccess={() => {
+                  setIsEditDialogOpen(false);
+                  setEditingAddress(null);
+                }}
+              />
+            )}
           </div>
         </AlertDialogContent>
       </AlertDialog>

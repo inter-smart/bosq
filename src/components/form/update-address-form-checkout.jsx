@@ -121,22 +121,22 @@ export default function UpdateAddressFormCheckout({
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      fullName: addressData?.fullName || "",
-      companyName: addressData?.companyName || "",
+      fullName: addressData?.name || "",
+      companyName: addressData?.company_name || "",
       email: addressData?.email || "",
       phone: addressData?.phone || "",
-      streetAddress: addressData?.streetAddress || "",
+      streetAddress: addressData?.street_address || "",
       apartment: addressData?.apartment || "",
-      country: addressData?.country || "",
-      state: addressData?.state || "",
-      orderNotes: addressData?.orderNotes || "",
+      country: addressData?.country?.slug || "",
+      state: addressData?.state?.slug || "",
+      orderNotes: addressData?.order_notes || "",
       shipToDifferentAddress: addressData?.shipToDifferentAddress || false,
-      shippingFullName: addressData?.shippingFullName || "",
-      shippingCompanyName: addressData?.shippingCompanyName || "",
-      shippingCountry: addressData?.shippingCountry || "",
-      shippingState: addressData?.shippingState || "",
-      shippingStreetAddress: addressData?.shippingStreetAddress || "",
-      shippingApartment: addressData?.shippingApartment || "",
+      shippingFullName: addressData?.shipping_address?.name || "",
+      shippingCompanyName: addressData?.shipping_address?.company_name || "",
+      shippingCountry: addressData?.shipping_address?.country?.slug || "",
+      shippingState: addressData?.shipping_address?.state?.slug || "",
+      shippingStreetAddress: addressData?.shipping_address?.street_address || "",
+      shippingApartment: addressData?.shipping_address?.apartment || "",
     },
   });
 
@@ -225,7 +225,7 @@ export default function UpdateAddressFormCheckout({
         shippingApartment: shippingAddr?.apartment || "",
       });
     }
-  }, [addressData, countries, form]);
+  }, [addressData, form]);
 
   const onSubmit = async (values) => {
     try {
@@ -259,19 +259,7 @@ export default function UpdateAddressFormCheckout({
     }
   };
 
-  // Set state value after states list loads from the API
-  useEffect(() => {
-    if (addressData?.state?.slug && states.length > 0) {
-      form.setValue("state", addressData.state.slug);
-    }
-  }, [states, addressData, form]);
 
-  // Set shipping state value after shipping states list loads
-  useEffect(() => {
-    if (addressData?.shipping_address?.state?.slug && shippingStates.length > 0) {
-      form.setValue("shippingState", addressData.shipping_address.state.slug);
-    }
-  }, [shippingStates, addressData, form]);
 
   const isShippingMode = editMode === "shipping";
 
