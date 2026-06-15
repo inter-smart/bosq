@@ -76,8 +76,6 @@ export default function AccountOrders({ locale, orders: initialOrders, paginatio
     }
   };
 
-
-
   return (
     <>
       {orders?.length === 0 ? (

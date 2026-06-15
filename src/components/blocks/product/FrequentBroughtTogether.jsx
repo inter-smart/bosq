@@ -33,14 +33,22 @@ const FrequentBroughtTogether = ({ data, frequentlyEmblaRef, locale }) => {
 
   const addToCart = async () => {
     try {
-      await dispatch(
+      const result = await dispatch(
         addToCartTogether({
           variant_ids: Array.from(selectedIds),
           isAuthenticated,
         }),
       ).unwrap();
       dispatch(fetchCart());
-      toast.success(locale === "en" ? "Items added to cart successfully" : "تم إضافة المنتجات إلى السلة بنجاح");
+      const skipped = result?.skipped_variant_ids ?? [];
+      const total = selectedIds.size;
+      if (skipped.length > 0 && skipped.length === total) {
+        toast.error(locale === "en" ? "All selected items are out of stock." : "جميع المنتجات المحددة غير متوفرة في المخزون.");
+      } else if (skipped.length > 0) {
+        toast.warning(locale === "en" ? "Some items are out of stock and were not added to your cart." : "بعض المنتجات غير متوفرة في المخزون ولم تُضف إلى سلة التسوق.");
+      } else {
+        toast.success(locale === "en" ? "Items added to cart successfully" : "تم إضافة المنتجات إلى السلة بنجاح");
+      }
     } catch (error) {
       toast.error(locale == "en" ? error?.en : error?.ar || "Failed to add item to cart");
     }
@@ -101,7 +109,7 @@ const FrequentBroughtTogether = ({ data, frequentlyEmblaRef, locale }) => {
             size="none"
             className="text-[10px] xl:text-[8px] 2xl:text-[10px] 3xl:text-[12px] leading-normal font-light truncate text-[#bbbcbc] mb-0.5"
           >
-            Total ({totalItems} {totalItems === 1 ? "item" : "items"})
+            {locale === "en" ? `Total (${totalItems} ${totalItems === 1 ? "item" : "items"})` : `الإجمالي (${totalItems} ${totalItems === 1 ? "عنصر" : "عناصر"})`}
           </Heading>
           <Text
             as="div"
@@ -119,7 +127,7 @@ const FrequentBroughtTogether = ({ data, frequentlyEmblaRef, locale }) => {
             disabled={totalItems === 0}
           >
             <Image src={"/images/icon-cart.svg"} alt={"icon-cart"} width={15} height={15} className="w-[15px]" quality={90} />
-            Add to Cart
+            {locale === "en" ? "Add to Cart" : "أضف إلى السلة"}
           </Button>
         </div>
       </div>

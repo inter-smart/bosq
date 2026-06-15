@@ -28,17 +28,17 @@ export default function FrequentlyBoughtCard({ product, locale, selected = true,
           </motion.button>
 
           <Image
-            src={product?.variant_image}
-            alt={locale === "ar" ? title_ar : title}
+            src={product?.variant_image || product?.media_path || product?.media?.path || "/images/placeholder.jpg"}
+            alt={locale === "ar" ? title_ar || product?.name_ar || product?.name : title || product?.name || "test"}
             width={550}
             height={440}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             quality={90}
           />
-          {product?.hover_image && (
+          {(product?.hover_image || product?.hover_media_path || product?.hoverMedia?.path) && (
             <Image
-              src={product?.hover_image}
-              alt={locale === "ar" ? title_ar : title}
+              src={product?.hover_image || product?.hover_media_path || product?.hoverMedia?.path}
+              alt={locale === "ar" ? title_ar || product?.name_ar || product?.name : title || product?.name || "test"}
               width={550}
               height={440}
               quality={100}
@@ -70,7 +70,7 @@ export default function FrequentlyBoughtCard({ product, locale, selected = true,
             className="text-[11px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-normal truncate text-[#282828]"
           >
             <Link href={productUrl}>
-              AED {product?.price} <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc] ">Inc Tax</span>
+              AED {product?.price} <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc] ">{locale === "ar" ? "شامل الضريبة" : "Inc Tax"}</span>
             </Link>
           </Text>
         </div>

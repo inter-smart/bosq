@@ -255,7 +255,7 @@ const cartSlice = createSlice({
       })
       .addCase(addToCartTogether.fulfilled, (state, action) => {
         state.isUpdating = false;
-        if (action.payload) {
+        if (action.payload?.items) {
           state.items = action.payload.items || [];
           state.subtotal = action.payload.subtotal || "0.00";
           state.discount_total = action.payload.discount_total || "0.00";

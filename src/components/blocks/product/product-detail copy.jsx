@@ -479,7 +479,7 @@ export default function ProductDetailCopy({ locale, initialData, productData, bo
                       <hr className="my-3 sm:my-3 2xl:my-5 mx-[-5px]" />
 
                       <Heading as="div" size="heading5" className="font-normal text-[#282828] mb-3 2xl:mb-4 mt-2.5 2xl:mt-4">
-                        Frequently Bought Together
+                        {t("product.frequently_bought_together")}
                       </Heading>
                       <FrequentBroughtTogether data={boughtTogetherItems} frequentlyEmblaRef={frequentlyEmblaRef} locale={locale} />
 

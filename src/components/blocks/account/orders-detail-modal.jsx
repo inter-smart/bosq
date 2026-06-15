@@ -29,8 +29,17 @@ export default function OrdersDetailModal({ children, order, locale }) {
 
   const handleReorder = async () => {
     try {
-      await reorderOrder({ orderId: order?.id }).unwrap();
-      toast.success(tToast("items_added_to_cart"));
+      const result = await reorderOrder({ orderId: order?.id }).unwrap();
+      const skipped = result?.data?.skipped_variant_ids ?? [];
+      if (skipped.length > 0 && skipped.length === order?.items?.length) {
+        toast.error(t("all_items_out_of_stock"));
+        return;
+      }
+      if (skipped.length > 0) {
+        toast.warning(t("some_items_out_of_stock"));
+      } else {
+        toast.success(tToast("items_added_to_cart"));
+      }
       router.push(`/${locale}/cart`);
     } catch (error) {
       toast.error(typeof error?.[locale] === "string" ? error[locale] : t("failed_to_reorder"));
