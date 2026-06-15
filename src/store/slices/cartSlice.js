@@ -62,6 +62,8 @@ export const addToCartTogether = createAsyncThunk(
         isAuthenticated,
       });
 
+      console.log("DATA------>", data);
+
       return data;
     } catch (error) {
       return rejectWithValue(

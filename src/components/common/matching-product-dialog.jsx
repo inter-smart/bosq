@@ -31,6 +31,7 @@ import { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { setShippingCharge, setSelectedShippingAddress, setSelectedBillingAddress } from "@/store/slices/checkoutSlice";
 
 export default function MatchingProductDialog({ children, locale, data }) {
   const t = useTranslations("checkout");
@@ -69,11 +70,20 @@ export default function MatchingProductDialog({ children, locale, data }) {
 
   const addToCart = async () => {
     try {
-      await dispatch(
+      const cartData = await dispatch(
         addToCartTogether({
           variant_ids: Array.from(selectedIds),
         }),
       ).unwrap();
+
+      const { updatedCharge } = cartData || {};
+
+      if (updatedCharge !== undefined) dispatch(setShippingCharge(updatedCharge));
+
+      // Reset address selections so checkout auto-selects the default address
+      dispatch(setSelectedShippingAddress(null));
+      dispatch(setSelectedBillingAddress(null));
+
       toast.success(locale === "en" ? "Items added to cart successfully" : "تم إضافة المنتجات إلى السلة بنجاح");
       dispatch(fetchCart());
       router.refresh();
