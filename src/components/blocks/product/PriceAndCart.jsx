@@ -10,11 +10,14 @@ import { selectCartIsUpdating, selectCartItems } from "@/store/selectors/cart/se
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { useAppSelector } from "@/store/hooks";
+import { useRouter } from "next/navigation";
 
 const PriceAndCart = ({ stock, price, item, locale, quantity, setQuantity, onEnquireTrigger }) => {
   const isEn = locale === "en";
 
   const dispatch = useDispatch();
+  const router = useRouter();
+
   const { isAuthenticated } = useAppSelector((state) => state.auth);
   const isUpdating = useSelector(selectCartIsUpdating);
   const cartItems = useSelector(selectCartItems) || [];
@@ -77,8 +80,13 @@ const PriceAndCart = ({ stock, price, item, locale, quantity, setQuantity, onEnq
       dispatch(fetchCart());
       toast.success(t("product.item_added_to_cart"));
     } catch (error) {
-      console.error("Error adding to cart:", error);
-      toast.error(isEn ? error?.en : error?.ar || "Failed to add item to cart");
+      if (error.requiresLogin) {
+        router.push(`/${locale}/login`);
+        toast.error(locale === "en" ? error?.message?.en : error?.message?.ar || "Failed to add item to cart");
+      } else {
+
+        toast.error(locale === "en" ? error?.en : error?.ar || "Failed to add item to cart");
+      }
     }
   };
 

@@ -14,9 +14,11 @@ import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { useAppSelector } from "@/store/hooks";
 import ProductEnquireModal from "@/components/blocks/product/ProductEnquireModal";
+import { useRouter } from "next/navigation";
 
 export default function CartCard({ product, isEn, isValidationFailed = false, deliveryCharge }) {
   const dispatch = useDispatch();
+  const router = useRouter();
   const isUpdating = useSelector(selectCartIsUpdating);
   const [quantity, setQuantity] = useState(product?.quantity || 1);
   const [isRemoving, setIsRemoving] = useState(false);
@@ -55,8 +57,15 @@ export default function CartCard({ product, isEn, isValidationFailed = false, de
           ).unwrap();
           toast.success(`${tToast("quantity_updated")} `);
         } catch (error) {
+
           setQuantity(product?.quantity);
-          toast.error(isEn ? error?.en : error?.ar || "Failed to add item to cart");
+          if (error.requiresLogin) {
+            router.push(`/${isEn ? "en" : "ar"}/login`);
+            toast.error(isEn ? error?.message?.en : error?.message?.ar || "Failed to add item to cart");
+          } else {
+
+            toast.error(isEn ? error?.en : error?.ar || "Failed to add item to cart");
+          }
         }
       }
     },
@@ -69,7 +78,12 @@ export default function CartCard({ product, isEn, isValidationFailed = false, de
       await dispatch(removeFromCart({ itemId: product.id, isAuthenticated })).unwrap();
       toast.success(`${tToast("item_removed")}`);
     } catch (error) {
-      toast.error(isEn ? error?.en : error?.ar || "Failed to add item to cart");
+      if (error.requiresLogin) {
+        router.push(`/${isEn ? "en" : "ar"}/login`);
+        toast.error(isEn ? error?.message?.en : error?.message?.ar || "Failed to remove item from cart");
+      } else {
+        toast.error(isEn ? error?.en : error?.ar || "Failed to remove item from cart");
+      }
     } finally {
       setIsRemoving(false);
     }

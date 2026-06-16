@@ -9,8 +9,11 @@ import {
   mergeCartAPI,
   buyNowAPI,
   addToCartTogetherAPI,
+  addBundleAPI,
 } from "@/lib/api/cart/cartApi";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { logoutUser } from "./authSlice";
+
 
 // Async Thunks
 
@@ -33,7 +36,7 @@ export const fetchCart = createAsyncThunk("cart/fetchCart", async (_, { getState
 // Add item to cart
 export const addToCart = createAsyncThunk(
   "cart/addToCart",
-  async ({ product_id, variant_id, isAuthenticated, quantity = 1 }, { getState, rejectWithValue }) => {
+  async ({ product_id, variant_id, isAuthenticated, quantity = 1 }, { dispatch, rejectWithValue }) => {
     try {
       const data = await addToCartAPI({
         product_id,
@@ -44,39 +47,97 @@ export const addToCart = createAsyncThunk(
 
       return data;
     } catch (error) {
-      return rejectWithValue(
-        error || {
-          en: "Failed to add item to cart",
-          ar: "فشل في إضافة المنتج إلى السلة",
-        },
-      );
+
+
+      if (error?.requiresLogin) {
+        dispatch(logoutUser());
+        return rejectWithValue({
+          message: error?.message || {
+            en: "Failed to add item to cart",
+            ar: "فشل في إضافة المنتج إلى السلة",
+          },
+          requiresLogin: error?.requiresLogin,
+        });
+      } else {
+        return rejectWithValue(
+          error || {
+            en: "Failed to add items to cart",
+            ar: "فشل في إضافة المنتجات إلى السلة",
+          },
+        );
+      }
     }
   },
 );
 export const addToCartTogether = createAsyncThunk(
   "cart/addToCartTogether",
-  async ({ variant_ids, isAuthenticated }, { getState, rejectWithValue }) => {
+  async ({ variant_ids, isAuthenticated }, { dispatch, rejectWithValue }) => {
     try {
       const data = await addToCartTogetherAPI({
         variant_ids,
         isAuthenticated,
       });
 
-      console.log("DATA------>", data);
 
       return data;
     } catch (error) {
-      return rejectWithValue(
-        error || {
-          en: "Failed to add items to cart",
-          ar: "فشل في إضافة المنتجات إلى السلة",
-        },
-      );
+
+      if (error?.requiresLogin) {
+        dispatch(logoutUser());
+        return rejectWithValue({
+          message: error?.message || {
+            en: "Failed to add item to cart",
+            ar: "فشل في إضافة المنتج إلى السلة",
+          },
+          requiresLogin: error?.requiresLogin,
+        });
+      } else {
+        return rejectWithValue(
+          error || {
+            en: "Failed to add items to cart",
+            ar: "فشل في إضافة المنتجات إلى السلة",
+          },
+        );
+      }
     }
   },
 );
 
-export const buyNow = createAsyncThunk("cart/buyNow", async ({ product_id, variant_id, isAuthenticated, quantity = 1 }, { rejectWithValue }) => {
+export const addBundle = createAsyncThunk(
+  "cart/addBundle",
+  async ({ variant_ids, isAuthenticated }, { dispatch, rejectWithValue }) => {
+    try {
+      const data = await addBundleAPI({
+        variant_ids,
+        isAuthenticated,
+      });
+
+
+      return data;
+    } catch (error) {
+
+      if (error?.requiresLogin) {
+        dispatch(logoutUser());
+        return rejectWithValue({
+          message: error?.message || {
+            en: "Failed to add item to cart",
+            ar: "فشل في إضافة المنتج إلى السلة",
+          },
+          requiresLogin: error?.requiresLogin,
+        });
+      } else {
+        return rejectWithValue(
+          error || {
+            en: "Failed to add items to cart",
+            ar: "فشل في إضافة المنتجات إلى السلة",
+          },
+        );
+      }
+    }
+  }
+);
+
+export const buyNow = createAsyncThunk("cart/buyNow", async ({ product_id, variant_id, isAuthenticated, quantity = 1 }, { dispatch, rejectWithValue }) => {
   try {
     const data = await buyNowAPI({
       product_id,
@@ -87,19 +148,34 @@ export const buyNow = createAsyncThunk("cart/buyNow", async ({ product_id, varia
 
     return data;
   } catch (error) {
-    return rejectWithValue(
-      error || {
-        en: "Failed to buy item",
-        ar: "فشل في شراء المنتج",
-      },
-    );
+
+    if (error?.requiresLogin) {
+      dispatch(logoutUser());
+      return rejectWithValue({
+        message: error?.message || {
+          en: "Failed to buy item",
+          ar: "فشل في شراء المنتج",
+        },
+        requiresLogin: error?.requiresLogin,
+      });
+
+    } else {
+      return rejectWithValue(
+        error || {
+          en: "Failed to buy item",
+          ar: "فشل في شراء المنتج",
+        },
+      );
+    }
+
+
   }
 });
 
 // Update cart item quantity
 export const updateCartItem = createAsyncThunk(
   "cart/updateCartItem",
-  async ({ itemId, quantity, variant_id, isAuthenticated }, { getState, rejectWithValue }) => {
+  async ({ itemId, quantity, variant_id, isAuthenticated }, { dispatch, rejectWithValue }) => {
     try {
       const res = await updateCartItemAPI({
         itemId,
@@ -110,19 +186,31 @@ export const updateCartItem = createAsyncThunk(
 
       return res;
     } catch (error) {
-      console.log("ERROR", error);
-      return rejectWithValue(
-        error || {
-          en: "Failed to add item to cart",
-          ar: "فشل في إضافة المنتج إلى السلة",
-        },
-      );
+
+
+      if (error?.requiresLogin) {
+        dispatch(logoutUser());
+        return rejectWithValue({
+          message: error?.message || {
+            en: "Failed to add item to cart",
+            ar: "فشل في إضافة المنتج إلى السلة",
+          },
+          requiresLogin: error?.requiresLogin,
+        });
+      } else {
+        return rejectWithValue(
+          error || {
+            en: "Failed to add item to cart",
+            ar: "فشل في إضافة المنتج إلى السلة",
+          },
+        );
+      }
     }
   },
 );
 
 // Remove item from cart
-export const removeFromCart = createAsyncThunk("cart/removeFromCart", async ({ itemId, isAuthenticated }, { getState, rejectWithValue }) => {
+export const removeFromCart = createAsyncThunk("cart/removeFromCart", async ({ itemId, isAuthenticated }, { dispatch, rejectWithValue }) => {
   try {
     const data = await removeCartItemAPI({
       itemId,
@@ -131,28 +219,50 @@ export const removeFromCart = createAsyncThunk("cart/removeFromCart", async ({ i
 
     return data;
   } catch (error) {
-    return rejectWithValue(
-      error || {
-        en: "Failed to add item to cart",
-        ar: "فشل في إضافة المنتج إلى السلة",
-      },
-    );
+    if (error?.requiresLogin) {
+      dispatch(logoutUser());
+      return rejectWithValue({
+        message: error?.message || {
+          en: "Failed to remove item from cart",
+          ar: "فشل في إزالة المنتج من السلة",
+        },
+        requiresLogin: error?.requiresLogin,
+      });
+    } else {
+      return rejectWithValue(
+        error || {
+          en: "Failed to remove item from cart",
+          ar: "فشل في إزالة المنتج من السلة",
+        },
+      );
+    }
   }
 });
 
 // Clear cart
-export const clearCart = createAsyncThunk("cart/clearCart", async (_, { getState, rejectWithValue }) => {
+export const clearCart = createAsyncThunk("cart/clearCart", async (_, { dispatch, rejectWithValue }) => {
   try {
     const data = await clearCartAPI();
 
     return data;
   } catch (error) {
-    return rejectWithValue(
-      error || {
-        en: "Failed to add item to cart",
-        ar: "فشل في إضافة المنتج إلى السلة",
-      },
-    );
+    if (error?.requiresLogin) {
+      dispatch(logoutUser());
+      return rejectWithValue({
+        message: error?.message || {
+          en: "Failed to clear cart",
+          ar: "فشل في إفراغ السلة",
+        },
+        requiresLogin: error?.requiresLogin,
+      });
+    } else {
+      return rejectWithValue(
+        error || {
+          en: "Failed to clear cart",
+          ar: "فشل في إفراغ السلة",
+        },
+      );
+    }
   }
 });
 
@@ -247,7 +357,7 @@ const cartSlice = createSlice({
       })
       .addCase(addToCart.rejected, (state, action) => {
         state.isUpdating = false;
-        state.error = action.payload || "Failed to add item to cart";
+        state.error = action.payload?.message || action?.payload || "Failed to add item to cart";
       })
 
       // Add to cart together
@@ -269,7 +379,30 @@ const cartSlice = createSlice({
       })
       .addCase(addToCartTogether.rejected, (state, action) => {
         state.isUpdating = false;
-        state.error = action.payload || "Failed to add items to cart";
+        state.error = action.payload?.message || action?.payload || "Failed to add items to cart";
+      })
+
+      // Add bundle to cart
+      .addCase(addBundle.pending, (state) => {
+        state.isUpdating = true;
+        state.error = null;
+      })
+      .addCase(addBundle.fulfilled, (state, action) => {
+        state.isUpdating = false;
+        if (action.payload?.items) {
+          state.items = action.payload.items || [];
+          state.subtotal = action.payload.subtotal || "0.00";
+          state.discount_total = action.payload.discount_total || "0.00";
+          state.tax_total = action.payload.tax_total || "0.00";
+          state.grand_total = action.payload.grand_total || "0.00";
+          state.item_count = action.payload.item_count || 0;
+          state.applied_coupon_code = action.payload.applied_coupon_code || null;
+        }
+      })
+      .addCase(addBundle.rejected, (state, action) => {
+        console.log("ADD BUNDLE REJECTED", action.payload);
+        state.isUpdating = false;
+        state.error = action.payload?.message || action?.payload || "Failed to add items to cart";
       })
 
       // Buy now
@@ -283,7 +416,7 @@ const cartSlice = createSlice({
       })
       .addCase(buyNow.rejected, (state, action) => {
         state.isUpdating = false;
-        state.error = action.payload || "Failed to buy item";
+        state.error = action.payload?.message || action?.payload || "Failed to buy item";
       })
 
       // Update cart item
@@ -307,7 +440,7 @@ const cartSlice = createSlice({
       })
       .addCase(updateCartItem.rejected, (state, action) => {
         state.isUpdating = false;
-        state.error = action.payload || "Failed to update cart item";
+        state.error = action.payload?.message || action?.payload || "Failed to update cart item";
       })
 
       // Remove from cart
@@ -330,8 +463,9 @@ const cartSlice = createSlice({
         }
       })
       .addCase(removeFromCart.rejected, (state, action) => {
+        console.log("CART REMOVE ERROR", action.payload);
         state.isUpdating = false;
-        state.error = action.payload || "Failed to remove item from cart";
+        state.error = action.payload?.message || action?.payload || "Failed to remove item from cart";
       })
 
       // Clear cart

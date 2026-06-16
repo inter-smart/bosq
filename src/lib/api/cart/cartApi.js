@@ -23,6 +23,14 @@ export async function addToCartTogetherAPI({ variant_ids, isAuthenticated }) {
   });
 }
 
+// Add bundle to cart
+export async function addBundleAPI({ variant_ids, isAuthenticated }) {
+  return fetchWithCredentials("/api/frontend/cart/bundle-together", {
+    method: "POST",
+    body: JSON.stringify({ variant_ids, isAuthenticated }),
+  });
+}
+
 // Buy now (add to cart and redirect to checkout)
 export async function buyNowAPI({ product_id, variant_id, isAuthenticated, quantity = 1 }) {
   return fetchWithCredentials("/api/frontend/cart/buynow", {

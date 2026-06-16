@@ -10,6 +10,11 @@ export const commonApi = createApi({
       transformErrorResponse: (response) => {
         const message = response?.data?.message;
 
+
+        let redirectToLogin = response?.data?.status_code === 401;
+
+
+
         if (!message) {
           return { en: "Failed to validate cart", ar: "فشل في التحقق من السلة" };
         }
@@ -18,7 +23,10 @@ export const commonApi = createApi({
           return { en: message, ar: message };
         }
 
-        return message;
+        return {
+          message,
+          redirectToLogin,
+        }
       },
     }),
   }),

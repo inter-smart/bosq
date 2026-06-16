@@ -26,7 +26,7 @@ import FrequentlyBoughtCard from "../blocks/product/frequently-bought-card";
 import Image from "@/components/utils/custom-image";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
-import { addToCartTogether, fetchCart } from "@/store/slices/cartSlice";
+import { addBundle, addToCartTogether, fetchCart } from "@/store/slices/cartSlice";
 import { useMemo, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -35,6 +35,7 @@ import { setShippingCharge, setSelectedShippingAddress, setSelectedBillingAddres
 
 export default function MatchingProductDialog({ children, locale, data }) {
   const t = useTranslations("checkout");
+
 
   const [frequentlyEmblaRef, frequentlyEmblaApi] = useEmblaCarousel({ loop: false, align: "start", direction: locale === "ar" ? "rtl" : "ltr" }, [
     Autoplay({ delay: 3000, stopOnInteraction: true }),
@@ -71,7 +72,7 @@ export default function MatchingProductDialog({ children, locale, data }) {
   const addToCart = async () => {
     try {
       const cartData = await dispatch(
-        addToCartTogether({
+        addBundle({
           variant_ids: Array.from(selectedIds),
         }),
       ).unwrap();
@@ -88,7 +89,12 @@ export default function MatchingProductDialog({ children, locale, data }) {
       dispatch(fetchCart());
       router.refresh();
     } catch (error) {
-      toast.error(locale == "en" ? error?.en : error?.ar || "Failed to add item to cart");
+      if (error?.requiresLogin) {
+        router.push(`/${locale}/login`);
+        toast.error(locale == "en" ? error?.message?.en : error?.message?.ar || "Failed to add item to cart");
+      } else {
+        toast.error(locale == "en" ? error?.en : error?.ar || "Failed to add item to cart");
+      }
     }
   };
 

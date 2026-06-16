@@ -110,7 +110,10 @@ export default function CartList({ locale, similarProducts }) {
       const encoded = btoa("allowed");
       router.push(`/${locale}/checkout?flow=${encoded}`);
     } catch (error) {
-      toast.error(isEn ? error?.en : error?.ar || "Failed to validate cart");
+      if (error?.redirectToLogin) {
+        router.push(`/${locale}/login`);
+      }
+      toast.error(isEn ? error?.message?.en : error?.message?.ar || "Failed to validate cart");
     }
   };
 

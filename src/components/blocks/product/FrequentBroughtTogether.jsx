@@ -11,11 +11,13 @@ import { toast } from "sonner";
 import { useDispatch } from "react-redux";
 import { addToCartTogether, fetchCart } from "@/store/slices/cartSlice";
 import { useAppSelector } from "@/store/hooks";
+import { useRouter } from "next/navigation";
 
 const FrequentBroughtTogether = ({ data, frequentlyEmblaRef, locale }) => {
   // data = { products: [...], totalItems: N, totalPrice: N }
   const products = data?.products || [];
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const { isAuthenticated } = useAppSelector((state) => state.auth);
 
@@ -50,7 +52,12 @@ const FrequentBroughtTogether = ({ data, frequentlyEmblaRef, locale }) => {
         toast.success(locale === "en" ? "Items added to cart successfully" : "تم إضافة المنتجات إلى السلة بنجاح");
       }
     } catch (error) {
-      toast.error(locale == "en" ? error?.en : error?.ar || "Failed to add item to cart");
+      if (error.requiresLogin) {
+        router.push(`/${locale}/login`);
+        toast.error(locale === "en" ? error?.message?.en : error?.message?.ar || "Failed to add item to cart");
+      } else {
+        toast.error(locale === "en" ? error?.en : error?.ar || "Failed to add item to cart");
+      }
     }
   };
 

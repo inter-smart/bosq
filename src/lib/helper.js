@@ -231,6 +231,7 @@ export async function fetchWithCredentials(endpoint, options = {}) {
 
   if (!response.ok || data?.success === false) {
     let message = data?.message || data?.error;
+    const status_code = data?.status_code;
 
     if (typeof message === "string") {
       message = {
@@ -249,7 +250,16 @@ export async function fetchWithCredentials(endpoint, options = {}) {
       };
     }
 
-    throw message; // ✅ ALWAYS object now
+    if (status_code === 401) {
+      throw {
+        message: message,
+        requiresLogin: true,
+      };
+
+    } else {
+      throw message;
+    }
+
   }
 
   return data?.data;
@@ -329,40 +339,40 @@ export const getTarget = (link) => {
 
 
 export const paymentStatusTranslate = (status, isEn) => {
-    if (!status) return "-";
-    switch (status.toLowerCase().trim()) {
-      case "pending":
-        return isEn ? "Pending" : "قيد الانتظار";
-      case "paid":
-        return isEn ? "Paid" : "مدفوع";
-      case "failed":
-        return isEn ? "Failed" : "فشل";
-      case "refunded":
-        return isEn ? "Refunded" : "مسترد";
-      case "cancelled":
-        return isEn ? "Cancelled" : "تم الإلغاء";
-    }
-  };
+  if (!status) return "-";
+  switch (status.toLowerCase().trim()) {
+    case "pending":
+      return isEn ? "Pending" : "قيد الانتظار";
+    case "paid":
+      return isEn ? "Paid" : "مدفوع";
+    case "failed":
+      return isEn ? "Failed" : "فشل";
+    case "refunded":
+      return isEn ? "Refunded" : "مسترد";
+    case "cancelled":
+      return isEn ? "Cancelled" : "تم الإلغاء";
+  }
+};
 
-  export const orderStatusTranslate = (status, isEn) => {
+export const orderStatusTranslate = (status, isEn) => {
 
-    console.log("orderStatusTranslate", status, isEn);
+  console.log("orderStatusTranslate", status, isEn);
 
-    if (!status) return "-";
-    switch (status.toLowerCase().trim()) {
-      case "pending":
-        return isEn ? "Pending" : "قيد الانتظار";
-      case "confirmed":
-        return isEn ? "Confirmed" : "تم التأكيد";
-      case "packed":
-        return isEn ? "Packed" : "تم التعبئة";
-      case "shipped":
-        return isEn ? "Shipped" : "تم الشحن";
-      case "delivered":
-        return isEn ? "Delivered" : "تم التوصيل";
-      case "cancelled":
-        return isEn ? "Cancelled" : "تم الإلغاء";
-      case "returned":
-        return isEn ? "Returned" : "تم الإرجاع";
-    }
-  };
+  if (!status) return "-";
+  switch (status.toLowerCase().trim()) {
+    case "pending":
+      return isEn ? "Pending" : "قيد الانتظار";
+    case "confirmed":
+      return isEn ? "Confirmed" : "تم التأكيد";
+    case "packed":
+      return isEn ? "Packed" : "تم التعبئة";
+    case "shipped":
+      return isEn ? "Shipped" : "تم الشحن";
+    case "delivered":
+      return isEn ? "Delivered" : "تم التوصيل";
+    case "cancelled":
+      return isEn ? "Cancelled" : "تم الإلغاء";
+    case "returned":
+      return isEn ? "Returned" : "تم الإرجاع";
+  }
+};
