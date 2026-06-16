@@ -304,7 +304,7 @@ export default function OrdersDetailModal({ children, order, locale }) {
         <div className="w-full max-h-[60vh] xl:max-h-[70vh] mask-[linear-gradient(to_bottom,transparent_0%,white_2%,white_98%,transparent_100%)]">
           <div className="h-full overflow-auto flex flex-wrap -mx-1 xl:-mx-1.5 2xl:-mx-2.5 [&>*]:p-1 xl:[&>*]:p-1.5 2xl:[&>*]:p-2.5">
             <div className="w-full sm:w-1/2">
-              <div className="w-full bg-[#f2f2f2] border border-[#dedede] p-2.5 xl:p-3.5 2xl:p-5">
+              <div className="w-full h-full bg-[#f2f2f2] border border-[#dedede] p-2.5 xl:p-3.5 2xl:p-5">
                 <Heading
                   as="div"
                   size="none"
@@ -342,7 +342,7 @@ export default function OrdersDetailModal({ children, order, locale }) {
               </div>
             </div>
             <div className="w-full sm:w-1/2">
-              <div className="w-full bg-[#f2f2f2] border border-[#dedede] p-2 xl:p-3 2xl:p-5">
+              <div className="w-full h-full bg-[#f2f2f2] border border-[#dedede] p-2 xl:p-3 2xl:p-5">
                 <Heading
                   as="div"
                   size="none"
@@ -353,7 +353,7 @@ export default function OrdersDetailModal({ children, order, locale }) {
 
                 {order?.items?.map((item, index) => (
                   <div key={"order-item" + index} className="w-full">
-                    <div className="w-full flex justify-between">
+                    <div className="w-full flex gap-2 justify-between">
                       <div className="w-7/10">
                         <Text as="div" size="text3" className="line-clamp-2 text-[#282828] max-lg:font-medium">
                           {locale === "en" ? item?.variant?.title : item?.variant?.title_ar}
@@ -365,21 +365,21 @@ export default function OrdersDetailModal({ children, order, locale }) {
                           </span>
                         </Text>
                       </div>
-                      <div className="text-end">
+                      <div className="text-end shrink-0 min-w-fit">
                         {item?.is_coupon_applied ? (
                           <>
-                            <Text as="div" size="text3" className="font-normal text-[#bbbcbc] line-through mt-0.5">
+                            <Text as="div" size="text3" className="font-normal text-[#bbbcbc] line-through mt-0.5 whitespace-nowrap">
                               {tCommon("aed")} {item?.line_total}
                             </Text>
-                            <Text as="div" size="text3" className="font-normal text-[#282828]">
+                            <Text as="div" size="text3" className="font-normal text-[#282828] whitespace-nowrap">
                               {tCommon("aed")} {item?.final_amount}
                             </Text>
-                            <Text as="div" size="text3" className="text-green-600 font-medium">
+                            <Text as="div" size="text3" className="text-green-600 font-medium whitespace-nowrap">
                               -{tCommon("aed")} {item?.discount_amount}
                             </Text>
                           </>
                         ) : (
-                          <Text as="div" size="text3" className="font-normal text-[#282828] mt-0.5">
+                          <Text as="div" size="text3" className="font-normal text-[#282828] mt-0.5 whitespace-nowrap">
                             {tCommon("aed")} {item?.line_total}
                           </Text>
                         )}
@@ -403,7 +403,7 @@ export default function OrdersDetailModal({ children, order, locale }) {
 
             {order?.billing_address && (
               <div className="w-full sm:w-1/2">
-                <div className="w-full bg-white border border-[#dedede] p-2.5 xl:p-3.5 2xl:p-5">
+                <div className="w-full h-full bg-white border border-[#dedede] p-2.5 xl:p-3.5 2xl:p-5">
                   <Heading
                     as="div"
                     size="none"
@@ -420,7 +420,7 @@ export default function OrdersDetailModal({ children, order, locale }) {
 
             {order?.shipping_address && (
               <div className="w-full sm:w-1/2">
-                <div className="w-full bg-white border border-[#dedede] p-2.5 xl:p-3.5 2xl:p-5">
+                <div className="w-full h-full bg-white border border-[#dedede] p-2.5 xl:p-3.5 2xl:p-5">
                   <Heading
                     as="div"
                     size="none"

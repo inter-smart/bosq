@@ -76,7 +76,7 @@ export default function AccountProfile({ data, locale }) {
                 {tAccount("default_address")}
               </Heading>
 
-              <Text as="div" size="text3" className="leading-relaxed text-[#282828]">
+              <Text as="div" size="text3" className="leading-relaxed mr-2 text-[#282828]">
                 {parse(data?.address)}
               </Text>
             </>
