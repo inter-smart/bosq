@@ -147,7 +147,7 @@ export default function AccountOrders({ locale, orders: initialOrders, paginatio
               <div className="flex flex-wrap -mx-2 xl:-mx-7 2xl:-mx-10 [&>*]:px-2 [&>*]:py-1 xl:[&>*]:px-7 xl:[&>*]:py-1.5 2xl:[&>*]:px-10 2xl:[&>*]:py-2">
                 {item?.items?.map((orderItem, idx) => (
                   <div key={"order-item" + idx} className="w-full sm:w-1/2">
-                    <div className="w-full bg-[#f2f2f2] flex flex-wrap items-start px-3 xl:px-4 2xl:px-5 3xl:px-6 py-3 xl:py-4 2xl:py-5 3xl:py-6 pt-4 xl:pt-6 2xl:pt-8 3xl:pt-10 ">
+                    <div className="w-full h-full bg-[#f2f2f2] flex flex-wrap items-start px-3 xl:px-4 2xl:px-5 3xl:px-6 py-3 xl:py-4 2xl:py-5 3xl:py-6 pt-4 xl:pt-6 2xl:pt-8 3xl:pt-10 ">
                       <div className="w-[80px] xl:w-[80px] 2xl:w-[100px] aspect-square overflow-hidden rounded-[4px] border border-[#fbfbfb] bg-white">
                         <Image
                           src={orderItem?.variant?.media_path}
