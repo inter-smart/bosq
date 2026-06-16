@@ -355,7 +355,7 @@ export default function OrdersDetailModal({ children, order, locale }) {
                   <div key={"order-item" + index} className="w-full">
                     <div className="w-full flex gap-2 justify-between">
                       <div className="w-7/10">
-                        <Text as="div" size="text3" className="line-clamp-2 text-[#282828] max-lg:font-medium">
+                        <Text as="div" size="text3" className="line-clamp-3 text-[#282828] max-lg:font-medium">
                           {locale === "en" ? item?.variant?.title : item?.variant?.title_ar}
                         </Text>
                         <Text as="div" size="text3" className="text-[#282828] mt-0.5 2xl:mt-1">
