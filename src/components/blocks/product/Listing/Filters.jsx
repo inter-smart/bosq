@@ -408,7 +408,20 @@ const ProductListFilters = ({ filterData, isEn }) => {
 
   // Apply filters (converts IDs to slugs, updates URL)
   const applyFilters = useCallback(() => {
+    // If a parent category's subcategory is also selected, only the
+    // subcategory should be sent as a filter — drop the redundant parent.
+    const parentIdsWithSelectedChild = new Set(
+      filterData?.categories
+        ?.filter(
+          (cat) =>
+            cat.parent_id !== null &&
+            tempFilters.subCategories.includes(cat.id),
+        )
+        .map((cat) => cat.parent_id),
+    );
+
     const categorySlugs = tempFilters.categories
+      .filter((id) => !parentIdsWithSelectedChild.has(id))
       .map((id) => slugMaps.categoryIdToSlug[id])
       .filter(Boolean);
     const subcategorySlugs = tempFilters.subCategories
@@ -460,7 +473,7 @@ const ProductListFilters = ({ filterData, isEn }) => {
       router.push(`?${params.toString()}`);
     });
     setIsSheetOpen(false);
-  }, [tempFilters, slugMaps, sort, router]);
+  }, [tempFilters, slugMaps, sort, router, filterData]);
 
   // Sort change handler
   const handleSortChange = useCallback(

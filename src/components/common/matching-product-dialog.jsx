@@ -35,6 +35,7 @@ import { setShippingCharge, setSelectedShippingAddress, setSelectedBillingAddres
 
 export default function MatchingProductDialog({ children, locale, data }) {
   const t = useTranslations("checkout");
+  const tProduct = useTranslations("product");
 
 
   const [frequentlyEmblaRef, frequentlyEmblaApi] = useEmblaCarousel({ loop: false, align: "start", direction: locale === "ar" ? "rtl" : "ltr" }, [
@@ -176,7 +177,7 @@ export default function MatchingProductDialog({ children, locale, data }) {
                   onClick={addToCart}
                 >
                   <Image src={"/images/icon-cart.svg"} alt={"icon-cart"} width={15} height={15} className="w-[15px]" quality={90} />
-                  Add to Cart
+                  {tProduct("add_to_cart")}
                 </Button>
               </div>
             </div>
