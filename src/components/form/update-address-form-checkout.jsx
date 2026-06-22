@@ -37,6 +37,7 @@ const textareaStyle = cn(inputStyle, "leading-tight min-h-[80px] 2xl:min-h-[100p
 import { useTranslations } from "next-intl";
 import { useAppSelector } from "@/store/hooks";
 import { useShippingChargeUpdater } from "@/hooks/useShippingChargeUpdater";
+import { useRouter } from "next/navigation";
 
 export default function UpdateAddressFormCheckout({
   locale,
@@ -49,6 +50,7 @@ export default function UpdateAddressFormCheckout({
   isCurrentlySelected = false,
 }) {
   const t = useTranslations("form");
+  const router = useRouter();
   const { executeRecaptcha } = useGoogleReCaptcha();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
   const { calculateCharge } = useShippingChargeUpdater();
@@ -255,11 +257,13 @@ export default function UpdateAddressFormCheckout({
       onSuccess?.();
     } catch (err) {
       console.error(err);
-      toast.error(locale === "en" ? err?.en : err?.ar || "Something went wrong");
+      const msg = err?.message || { en: "Something went wrong", ar: "حدث خطأ ما" };
+      toast.error(locale === "en" ? msg.en : msg.ar);
+      if (err?.redirectToLogin) {
+        router.push(`/${locale}/login`);
+      }
     }
   };
-
-
 
   const isShippingMode = editMode === "shipping";
 

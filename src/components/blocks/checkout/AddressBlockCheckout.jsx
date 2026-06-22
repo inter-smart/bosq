@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { Heading } from "@/components/utils/heading";
 import parse from "html-react-parser";
@@ -30,6 +31,7 @@ import { useShippingChargeUpdater } from "@/hooks/useShippingChargeUpdater";
 
 const AddressBlockCheckout = ({ locale, variant, data, useSameAddress, setUseSameAddress, isFromCheckout }) => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
   const selectedShippingAddressId = useSelector((state) => state.checkout.selectedShippingAddressId);
   const selectedBillingAddressId = useSelector((state) => state.checkout.selectedBillingAddressId);
@@ -141,8 +143,11 @@ const AddressBlockCheckout = ({ locale, variant, data, useSameAddress, setUseSam
       }
     } catch (error) {
       console.error("Action error details:", error);
-      toast.error(locale === "en" ? error?.en : error?.ar || "Something went wrong");
-      // toast.error(`${tToast("something_went_wrong")}`);
+      const msg = error?.message || { en: "Something went wrong", ar: "حدث خطأ ما" };
+      toast.error(locale === "en" ? msg.en : msg.ar);
+      if (error?.redirectToLogin) {
+        router.push(`/${locale}/login`);
+      }
     } finally {
       setPendingAction(null);
     }
