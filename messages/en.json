@@ -189,7 +189,8 @@
     "go_to_home": "Go to Home page",
     "items_count": "{count} items",
     "not_found_title": "Oops! Page not found",
-    "not_found_description": "We're sorry, but the page you are looking for doesn't exist or has been moved. We apologize for the inconvenience!"
+    "not_found_description": "We're sorry, but the page you are looking for doesn't exist or has been moved. We apologize for the inconvenience!",
+    "image_alt": "Product Image"
   },
   "cart": {
     "title": "Shopping Cart",
@@ -589,7 +590,7 @@
     "select_option": "Please select an option"
   },
 
-  "page_not_found":{
+  "page_not_found": {
     "title": "Oops! Page not found",
     "description": "We're sorry, but the page you are looking for doesn't exist or has been moved. We apologize for the inconvenience!",
     "ctaText": "Go to Home page"
