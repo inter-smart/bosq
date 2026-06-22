@@ -29,6 +29,8 @@ const errorStyle = cn("text-[#f17423]");
 
 export default function PersonalInformationForm({ data, locale, isGoogleUser }) {
   const t = useTranslations("account");
+  const tForm = useTranslations("form");
+  
   const tToast = useTranslations("toast");
   const { executeRecaptcha } = useGoogleReCaptcha();
   const tErrors = useTranslations("errors");
@@ -38,9 +40,9 @@ export default function PersonalInformationForm({ data, locale, isGoogleUser }) 
 
   // Validation schema
   const formSchema = z.object({
-    firstName: commonValidations.name("First name"),
-    lastName: commonValidations.name("Last name"),
-    displayName: commonValidations.name("Display name"),
+    firstName: commonValidations.name(tForm("first_name")),
+    lastName: commonValidations.name(tForm("last_name")),
+    displayName: commonValidations.name(t("display_name")),
     email: commonValidations.email(),
     phone: commonValidations.phone(),
   });

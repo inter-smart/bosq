@@ -376,3 +376,13 @@ export const orderStatusTranslate = (status, isEn) => {
       return isEn ? "Returned" : "تم الإرجاع";
   }
 };
+
+
+export function formatOrderDate(dateStr, isEn) {
+  if (!dateStr) return "";
+  return new Date(dateStr).toLocaleDateString(isEn ? "en-AE" : "ar-AE", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}

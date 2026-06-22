@@ -30,7 +30,7 @@ export default function LandingHero({ data, locale, slug, link }) {
                   <>
                     <BreadcrumbSeparator>/</BreadcrumbSeparator>
 
-                    <BreadcrumbPage className={"capitalize"}>{slug}</BreadcrumbPage>
+                    <BreadcrumbPage className={"capitalize"}>{isEn ? data?.title : data?.title_ar}</BreadcrumbPage>
                   </>
                 )}
               </BreadcrumbItem>
