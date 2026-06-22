@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { useReorderOrderMutation } from "@/store/services/orderApi";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { orderStatusTranslate, paymentStatusTranslate } from "@/lib/helper";
+import { formatOrderDate, orderStatusTranslate, paymentStatusTranslate } from "@/lib/helper";
 
 const labelStyle = cn("text-[#282828] my-2 xl:my-2.5 2xl:my-4 [&>span]:font-normal flex justify-between");
 
@@ -21,6 +21,8 @@ export default function OrdersDetailModal({ children, order, locale }) {
   const [reorderOrder, { isLoading: isReordering }] = useReorderOrderMutation();
 
   const [Loading, setLoading] = useState(false);
+
+  const isEn = locale === "en";
 
   const t = useTranslations("account");
   const tCommon = useTranslations("common");
@@ -320,7 +322,7 @@ export default function OrdersDetailModal({ children, order, locale }) {
 
                 <Text as="div" size="text3" className={labelStyle}>
                   {t("order_date")} {""}
-                  <span>{order?.createdAt}</span>
+                  <span>{formatOrderDate(order?.createdAt, isEn)}</span>
                 </Text>
 
                 <Text as="div" size="text3" className={labelStyle}>

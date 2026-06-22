@@ -95,10 +95,9 @@ export default async function OfficeChairsPage({ params }) {
   const resolvedParams = await params;
   const { slug, locale } = resolvedParams;
   const response = await getOfficeChairsData(slug);
-  const data = response?.data;
+  const {data} = response?.data;
   const error = response?.error;
 
-  console.log("data", data);
   console.log("error", error);
 
   if (!data || error) return notFound();
