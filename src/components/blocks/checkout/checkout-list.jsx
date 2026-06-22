@@ -18,7 +18,7 @@ export default function CheckoutList({ locale, type }) {
               <AuthBoard locale={locale} />
 
               {/* Shipping Address Block */}
-              <AddressSection locale={locale} />
+              <AddressSection locale={locale} type={type} />
             </div>
 
             {/* Order Summary Sidebar */}

@@ -29,7 +29,7 @@ import { useTranslations } from "next-intl";
 import { useAppSelector } from "@/store/hooks";
 import { useShippingChargeUpdater } from "@/hooks/useShippingChargeUpdater";
 
-const AddressBlockCheckout = ({ locale, variant, data, useSameAddress, setUseSameAddress, isFromCheckout }) => {
+const AddressBlockCheckout = ({ locale, variant, type, data, useSameAddress, setUseSameAddress, isFromCheckout }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
@@ -43,9 +43,7 @@ const AddressBlockCheckout = ({ locale, variant, data, useSameAddress, setUseSam
   // - if useSameAddressForShipping is true, billing is used as shipping
   // - otherwise, the explicitly selected shipping address governs
   const effectiveShippingAddressId = useSameAddressForShipping ? selectedBillingAddressId : selectedShippingAddressId;
-  const isGoverningBlock =
-    (variant === "shipping" && !useSameAddressForShipping) ||
-    (variant === "billing" && useSameAddressForShipping);
+  const isGoverningBlock = (variant === "shipping" && !useSameAddressForShipping) || (variant === "billing" && useSameAddressForShipping);
 
   const [deleteAddress, { isLoading: isDeletingAddress }] = useDeleteAddressMutation();
   const [updateDefaultAddress, { isLoading: isUpdatingDefault }] = useUpdateDefaultAddressMutation();
@@ -66,10 +64,10 @@ const AddressBlockCheckout = ({ locale, variant, data, useSameAddress, setUseSam
   // Sort addresses: default address first
   const sortedAddresses = data
     ? [...data].sort((a, b) => {
-      if (a.is_default && !b.is_default) return -1;
-      if (!a.is_default && b.is_default) return 1;
-      return 0;
-    })
+        if (a.is_default && !b.is_default) return -1;
+        if (!a.is_default && b.is_default) return 1;
+        return 0;
+      })
     : [];
 
   const isProcessing = (pendingAction?.kind === "delete" && isDeletingAddress) || (pendingAction?.kind === "setDefault" && isUpdatingDefault);
@@ -81,7 +79,7 @@ const AddressBlockCheckout = ({ locale, variant, data, useSameAddress, setUseSam
   useEffect(() => {
     if (!isGoverningBlock || !effectiveShippingAddressId) return;
     const governing = sortedAddresses.find((a) => a.id === effectiveShippingAddressId);
-    if (governing?.state_id) updateCharge(governing.state_id);
+    if (governing?.state_id) updateCharge(governing.state_id, type ? type : "cart");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [effectiveShippingAddressId]);
 
@@ -131,7 +129,7 @@ const AddressBlockCheckout = ({ locale, variant, data, useSameAddress, setUseSam
         if (isGoverningBlock && pendingAction.id === effectiveShippingAddressId) {
           const remaining = sortedAddresses.filter((a) => a.id !== pendingAction.id);
           const next = remaining[0];
-          if (next?.state_id) updateCharge(next.state_id);
+          if (next?.state_id) updateCharge(next.state_id, type ? type : "cart");
         }
       } else {
         await updateDefaultAddress({ id: pendingAction.id, addressType: pendingAction.addressType, isAuthenticated }).unwrap();
@@ -161,7 +159,7 @@ const AddressBlockCheckout = ({ locale, variant, data, useSameAddress, setUseSam
     }
     if (isGoverningBlock) {
       const address = sortedAddresses.find((a) => a.id === addressId);
-      if (address?.state_id) updateCharge(address.state_id);
+      if (address?.state_id) updateCharge(address.state_id, type ? type : "cart");
     }
   };
 
@@ -310,6 +308,7 @@ const AddressBlockCheckout = ({ locale, variant, data, useSameAddress, setUseSam
             {isEditDialogOpen && editingAddress && (
               <UpdateAddressFormCheckout
                 isFromCheckout={isFromCheckout}
+                type={type}
                 locale={locale}
                 addressData={editingAddress}
                 onStateChange={editingAddress?.id === effectiveShippingAddressId ? updateCharge : null}

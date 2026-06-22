@@ -28,7 +28,7 @@ import {
 import UpdateAddressFormCheckout from "@/components/form/update-address-form-checkout";
 import { useShippingChargeUpdater } from "@/hooks/useShippingChargeUpdater";
 
-const AddressSection = ({ locale }) => {
+const AddressSection = ({ locale, type }) => {
   const dispatch = useDispatch();
   const t = useTranslations("address");
   const useSameAddressForBilling = useSelector((state) => state.checkout.useSameAddressForBilling);
@@ -49,8 +49,6 @@ const AddressSection = ({ locale }) => {
   const shippingAddresses = data?.data?.shipping || [];
   const billingAddresses = data?.data?.billing || [];
 
-
-
   // Auto-enable "use same address" checkbox when only one type is available
   useEffect(() => {
     if (isLoading) return;
@@ -68,15 +66,13 @@ const AddressSection = ({ locale }) => {
     }
   }, [shippingAddresses.length, billingAddresses.length, isLoading, dispatch, useSameAddressForBilling, useSameAddressForShipping]);
 
-
   const handleSameTypeChange = (value, type) => {
     if (type === "shipping") {
       handleUseSameForBillingChange(value);
     } else {
       handleUseSameForShippingChange(value);
     }
-
-  }
+  };
 
   const handleUseSameForBillingChange = (value) => {
     dispatch(setUseSameAddressForBilling(value));
@@ -85,7 +81,7 @@ const AddressSection = ({ locale }) => {
       const sorted = [...shippingAddresses].sort((a, b) => (b.is_default ? 1 : 0) - (a.is_default ? 1 : 0));
       const addressToSet = sorted.find((a) => a.is_default) || sorted[0];
       dispatch(setSelectedShippingAddress(addressToSet.id));
-      updateCharge(addressToSet?.state_id);
+      updateCharge(addressToSet?.state_id, type ? type : "cart");
     }
   };
 
@@ -97,14 +93,14 @@ const AddressSection = ({ locale }) => {
       const sorted = [...billingAddresses].sort((a, b) => (b.is_default ? 1 : 0) - (a.is_default ? 1 : 0));
       const addressToSet = sorted.find((a) => a.is_default) || sorted[0];
       dispatch(setSelectedBillingAddress(addressToSet.id));
-      updateCharge(addressToSet?.state_id);
+      updateCharge(addressToSet?.state_id, type ? type : "cart");
     } else if (!value) {
       if (shippingAddresses.length > 0) {
         // Unchecking with shipping addresses: revert charge to default shipping address's state
         const sorted = [...shippingAddresses].sort((a, b) => (b.is_default ? 1 : 0) - (a.is_default ? 1 : 0));
         const addressToSet = sorted.find((a) => a.is_default) || sorted[0];
         dispatch(setSelectedShippingAddress(addressToSet.id));
-        updateCharge(addressToSet?.state_id);
+        updateCharge(addressToSet?.state_id, type ? type : "cart");
       } else {
         // Unchecking with no shipping addresses: open edit modal to add one
         const selectedBilling = billingAddresses.find((a) => a.id === selectedBillingAddressId) || billingAddresses[0];
@@ -128,6 +124,7 @@ const AddressSection = ({ locale }) => {
             <AddressBlockCheckout
               locale={locale}
               variant={"shipping"}
+              type={type}
               isFromCheckout={true}
               data={shippingAddresses}
               useSameAddress={useSameAddressForBilling}
@@ -141,6 +138,7 @@ const AddressSection = ({ locale }) => {
         <AddAddressBlockCheckout
           locale={locale}
           variant="billing"
+          type={type}
           onCancel={() => setShowShippingAddressForm(false)}
           onSuccess={() => setShowShippingAddressForm(false)}
         />
@@ -152,6 +150,7 @@ const AddressSection = ({ locale }) => {
           <AddressBlockCheckout
             locale={locale}
             variant={"billing"}
+            type={type}
             data={billingAddresses}
             useSameAddress={useSameAddressForShipping}
             setUseSameAddress={handleSameTypeChange}
@@ -164,6 +163,7 @@ const AddressSection = ({ locale }) => {
           <AddAddressBlockCheckout
             locale={locale}
             variant="billing"
+            type={type}
             onCancel={() => setShowBillingAddressForm(false)}
             onSuccess={() => setShowBillingAddressForm(false)}
           />
@@ -204,6 +204,7 @@ const AddressSection = ({ locale }) => {
               <UpdateAddressFormCheckout
                 isFromCheckout={true}
                 showShipToDifferent={true}
+                type={type}
                 locale={locale}
                 addressData={editModalAddress}
                 onStateChange={editModalAddress?.id === effectiveShippingAddressId ? updateCharge : null}
@@ -222,4 +223,3 @@ const AddressSection = ({ locale }) => {
 };
 
 export default AddressSection;
-

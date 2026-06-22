@@ -48,6 +48,7 @@ export default function UpdateAddressFormCheckout({
   editMode = "billing",
   onStateChange = null,
   isCurrentlySelected = false,
+  type,
 }) {
   const t = useTranslations("form");
   const router = useRouter();
@@ -250,7 +251,7 @@ export default function UpdateAddressFormCheckout({
         const govList = values.shipToDifferentAddress ? shippingStates : states;
         const govState = govList.find((s) => s.slug === govSlug);
         if (govState?.id) {
-          onStateChange(govState.id);
+          onStateChange(govState.id, type ? type : "cart");
         }
       }
 
@@ -439,7 +440,7 @@ export default function UpdateAddressFormCheckout({
                           setPendingStateId(stateObj.id);
                           if (isCurrentlySelected) {
                             setIsCalculatingCharge(true);
-                            const charge = await calculateCharge(stateObj.id);
+                            const charge = await calculateCharge(stateObj.id, type ? type : "cart");
                             setPreviewCharge(charge);
                             setIsCalculatingCharge(false);
                           }
@@ -504,7 +505,7 @@ export default function UpdateAddressFormCheckout({
                               if (stateObj?.id) {
                                 setPendingStateId(stateObj.id);
                                 setIsCalculatingCharge(true);
-                                const charge = await calculateCharge(stateObj.id);
+                                const charge = await calculateCharge(stateObj.id, type ? type : "cart");
                                 setPreviewCharge(charge);
                                 setIsCalculatingCharge(false);
                               } else {
@@ -651,7 +652,7 @@ export default function UpdateAddressFormCheckout({
                         setPendingStateId(stateObj.id);
                         if (isCurrentlySelected) {
                           setIsCalculatingCharge(true);
-                          const charge = await calculateCharge(stateObj.id);
+                          const charge = await calculateCharge(stateObj.id, type ? type : "cart");
                           setPreviewCharge(charge);
                           setIsCalculatingCharge(false);
                         }
