@@ -436,7 +436,7 @@ export default function Footer({
 
         <div className="flex flex-wrap justify-center sm:justify-between -mx-[5px] lg:-mx-[10px] [&>*]:p-[5px] lg:[&>*]:p-[10px]">
           <Text as="div" size="text3" className="text-white">
-            {t("copyright")}
+            {t("copyright", { year: new Date().getFullYear() })}
           </Text>
           <Text
             as="div"
