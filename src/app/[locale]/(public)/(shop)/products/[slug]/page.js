@@ -9,7 +9,15 @@ export async function generateMetadata({ params }) {
   const resolvedParams = await params;
   const locale = resolvedParams.locale;
   const slug = resolvedParams.slug;
-  const { title, description, keywords, twitter, openGraph, alternates, other } = await getMetaData(`product-${slug}`, locale, `products/${slug}`);
+  const {
+    title,
+    description,
+    keywords,
+    twitter,
+    openGraph,
+    alternates,
+    other,
+  } = await getMetaData(`product-${slug}`, locale, `products/${slug}`);
 
   return {
     title,
@@ -25,7 +33,7 @@ export async function generateMetadata({ params }) {
 export default async function ProductDetailPage({ params, searchParams }) {
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
-  const { locale, slug } = resolvedParams;
+  const { locale } = resolvedParams;
 
   const variantSku = resolvedSearchParams?.sku || null;
   const model = resolvedSearchParams?.model || null;
@@ -39,15 +47,26 @@ export default async function ProductDetailPage({ params, searchParams }) {
     }
   });
 
-  const { data, error } = await ProductData.getProductDetailsBySlug(slug, variantSku, model, attributeFilters);
+  const { data, error } = await ProductData.getProductDetailsBySlug(
+    variantSku,
+    model,
+    attributeFilters,
+  );
 
   if (error || !data) {
     return notFound();
   }
 
+  const slug = locale === "en" ? data?.product?.title : data?.product?.title_ar;
+
   return (
     <>
-      <ProductHero locale={locale} data={data?.heroData} slug={slug} type="product" />
+      <ProductHero
+        locale={locale}
+        data={data?.product}
+        slug={slug}
+        type="product"
+      />
       <ProductDetailCopy
         locale={locale}
         initialData={data?.initialVariant}
@@ -55,7 +74,9 @@ export default async function ProductDetailPage({ params, searchParams }) {
         productSlug={slug}
         boughtTogetherItems={data?.boughtTogetherVariants}
       />
-      {data?.similarVariants?.length > 0 && <ProductSimilar locale={locale} data={data?.similarVariants} />}
+      {data?.similarVariants?.length > 0 && (
+        <ProductSimilar locale={locale} data={data?.similarVariants} />
+      )}
     </>
   );
 }
