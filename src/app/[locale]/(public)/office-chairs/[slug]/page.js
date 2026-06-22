@@ -3,7 +3,6 @@ import LandingHero from "@/components/blocks/office-chair-landing/LandingHero";
 import { getOfficeChairsData } from "@/lib/api/CMS/basicGet";
 import { notFound } from "next/navigation";
 
-
 import { getTranslations } from "next-intl/server";
 import { DefaultOgImage } from "@/lib/api/constants";
 import { parseOtherMeta } from "@/lib/helper";
@@ -11,13 +10,8 @@ import { parseOtherMeta } from "@/lib/helper";
 export async function generateMetadata({ params }) {
   const { slug, locale } = await params;
 
-
-
-
   try {
-    const response = await fetch(
-      `${process.env.API_URL}/api/frontend/office-chairs?slug=${slug}`,
-    );
+    const response = await fetch(`${process.env.API_URL}/api/frontend/office-chairs?slug=${slug}`);
 
     // Check if response is ok
     if (!response.ok) {
@@ -26,9 +20,6 @@ export async function generateMetadata({ params }) {
 
     // Parse JSON response
     const { data } = await response.json();
-
-
-
 
     const isEN = locale === "en";
     const metadata = data?.data?.metaData;
@@ -42,16 +33,7 @@ export async function generateMetadata({ params }) {
       };
     }
 
-    const {
-      meta_title,
-      meta_description,
-      meta_keywords,
-      other_meta,
-      meta_title_ar,
-      meta_description_ar,
-      meta_keywords_ar,
-      other_meta_ar,
-    } = metadata;
+    const { meta_title, meta_description, meta_keywords, other_meta, meta_title_ar, meta_description_ar, meta_keywords_ar, other_meta_ar } = metadata;
 
     // Select language-specific metadata
     const title = isEN ? meta_title : meta_title_ar;
@@ -60,12 +42,9 @@ export async function generateMetadata({ params }) {
 
     // Use blog's own image or fallback
     const ogImage = DefaultOgImage;
-    const { other } = isEN
-      ? parseOtherMeta(other_meta)
-      : parseOtherMeta(other_meta_ar);
+    const { other } = isEN ? parseOtherMeta(other_meta) : parseOtherMeta(other_meta_ar);
 
-
-    console.log("Metadata for office chair:", title)
+    console.log("Metadata for office chair:", title);
     return {
       title: title,
       description: description,
@@ -112,15 +91,17 @@ export async function generateMetadata({ params }) {
   }
 }
 
-
-
 export default async function OfficeChairsPage({ params }) {
   const resolvedParams = await params;
   const { slug, locale } = resolvedParams;
   const response = await getOfficeChairsData(slug);
-  const { data, error } = response?.data;
+  const data = response?.data;
+  const error = response?.error;
 
-  if (!data || error) return notFound()
+  console.log("data", data);
+  console.log("error", error);
+
+  if (!data || error) return notFound();
 
   return (
     <>
