@@ -30,7 +30,6 @@ const AuthBoard = ({ locale }) => {
         router.push(`/${locale}`);
       }
     } catch (err) {
-      console.log("LOG OUT ERROR", err);
     } finally {
       setIsLoggingOut(false);
       setShowLogoutDialog(false);
@@ -46,7 +45,6 @@ const AuthBoard = ({ locale }) => {
         window.location.reload();
       }
     } catch (err) {
-      console.log("LOG OUT ERROR", err);
     } finally {
       setIsLoggingOut(false);
       setShowLogoutDialog(false);

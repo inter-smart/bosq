@@ -31,7 +31,6 @@ export const loginUser = createAsyncThunk("auth/login", async (credentials, { re
     try {
       await mergeCartAPI();
     } catch (mergeError) {
-      console.error("Cart merge failed:", mergeError);
     }
 
     const user = data.user || null;
@@ -58,7 +57,6 @@ export const googleLoginUser = createAsyncThunk("auth/googleLogin", async (token
     try {
       await mergeCartAPI();
     } catch (mergeError) {
-      console.error("Cart merge failed:", mergeError);
     }
 
     const user = data.user || null;

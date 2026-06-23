@@ -285,7 +285,6 @@ export default function OrdersDetailModal({ children, order, locale }) {
       doc.save(`invoice-${order?.order_id || "BOSQ"}.pdf`);
       toast.success(t("invoice_downloaded_success"));
     } catch (error) {
-      console.error("PDF Download Error:", error);
       toast.error(t("failed_to_download_invoice"));
     } finally {
       setLoading(false);

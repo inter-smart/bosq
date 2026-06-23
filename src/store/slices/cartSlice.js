@@ -14,7 +14,6 @@ import {
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { logoutUser } from "./authSlice";
 
-
 // Async Thunks
 
 // Fetch cart
@@ -47,8 +46,6 @@ export const addToCart = createAsyncThunk(
 
       return data;
     } catch (error) {
-
-
       if (error?.requiresLogin) {
         dispatch(logoutUser());
         return rejectWithValue({
@@ -78,10 +75,8 @@ export const addToCartTogether = createAsyncThunk(
         isAuthenticated,
       });
 
-
       return data;
     } catch (error) {
-
       if (error?.requiresLogin) {
         dispatch(logoutUser());
         return rejectWithValue({
@@ -103,74 +98,68 @@ export const addToCartTogether = createAsyncThunk(
   },
 );
 
-export const addBundle = createAsyncThunk(
-  "cart/addBundle",
-  async ({ variant_ids, isAuthenticated }, { dispatch, rejectWithValue }) => {
+export const addBundle = createAsyncThunk("cart/addBundle", async ({ variant_ids, isAuthenticated }, { dispatch, rejectWithValue }) => {
+  try {
+    const data = await addBundleAPI({
+      variant_ids,
+      isAuthenticated,
+    });
+
+    return data;
+  } catch (error) {
+    if (error?.requiresLogin) {
+      dispatch(logoutUser());
+      return rejectWithValue({
+        message: error?.message || {
+          en: "Failed to add item to cart",
+          ar: "فشل في إضافة المنتج إلى السلة",
+        },
+        requiresLogin: error?.requiresLogin,
+      });
+    } else {
+      return rejectWithValue(
+        error || {
+          en: "Failed to add items to cart",
+          ar: "فشل في إضافة المنتجات إلى السلة",
+        },
+      );
+    }
+  }
+});
+
+export const buyNow = createAsyncThunk(
+  "cart/buyNow",
+  async ({ product_id, variant_id, isAuthenticated, quantity = 1 }, { dispatch, rejectWithValue }) => {
     try {
-      const data = await addBundleAPI({
-        variant_ids,
+      const data = await buyNowAPI({
+        product_id,
+        variant_id,
+        quantity,
         isAuthenticated,
       });
 
-
       return data;
     } catch (error) {
-
       if (error?.requiresLogin) {
         dispatch(logoutUser());
         return rejectWithValue({
           message: error?.message || {
-            en: "Failed to add item to cart",
-            ar: "فشل في إضافة المنتج إلى السلة",
+            en: "Failed to buy item",
+            ar: "فشل في شراء المنتج",
           },
           requiresLogin: error?.requiresLogin,
         });
       } else {
         return rejectWithValue(
           error || {
-            en: "Failed to add items to cart",
-            ar: "فشل في إضافة المنتجات إلى السلة",
+            en: "Failed to buy item",
+            ar: "فشل في شراء المنتج",
           },
         );
       }
     }
-  }
+  },
 );
-
-export const buyNow = createAsyncThunk("cart/buyNow", async ({ product_id, variant_id, isAuthenticated, quantity = 1 }, { dispatch, rejectWithValue }) => {
-  try {
-    const data = await buyNowAPI({
-      product_id,
-      variant_id,
-      quantity,
-      isAuthenticated,
-    });
-
-    return data;
-  } catch (error) {
-
-    if (error?.requiresLogin) {
-      dispatch(logoutUser());
-      return rejectWithValue({
-        message: error?.message || {
-          en: "Failed to buy item",
-          ar: "فشل في شراء المنتج",
-        },
-        requiresLogin: error?.requiresLogin,
-      });
-
-    } else {
-      return rejectWithValue(
-        error || {
-          en: "Failed to buy item",
-          ar: "فشل في شراء المنتج",
-        },
-      );
-    }
-
-
-  }
-});
 
 // Update cart item quantity
 export const updateCartItem = createAsyncThunk(
@@ -186,8 +175,6 @@ export const updateCartItem = createAsyncThunk(
 
       return res;
     } catch (error) {
-
-
       if (error?.requiresLogin) {
         dispatch(logoutUser());
         return rejectWithValue({
@@ -333,7 +320,6 @@ const cartSlice = createSlice({
         }
       })
       .addCase(fetchCart.rejected, (state, action) => {
-        console.log("CART EROR", action.payload);
         state.isLoading = false;
         state.error = action.payload || "Failed to fetch cart";
       })
@@ -400,7 +386,6 @@ const cartSlice = createSlice({
         }
       })
       .addCase(addBundle.rejected, (state, action) => {
-        console.log("ADD BUNDLE REJECTED", action.payload);
         state.isUpdating = false;
         state.error = action.payload?.message || action?.payload || "Failed to add items to cart";
       })
@@ -463,7 +448,6 @@ const cartSlice = createSlice({
         }
       })
       .addCase(removeFromCart.rejected, (state, action) => {
-        console.log("CART REMOVE ERROR", action.payload);
         state.isUpdating = false;
         state.error = action.payload?.message || action?.payload || "Failed to remove item from cart";
       })

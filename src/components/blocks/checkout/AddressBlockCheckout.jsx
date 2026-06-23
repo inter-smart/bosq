@@ -140,7 +140,6 @@ const AddressBlockCheckout = ({ locale, variant, type, data, useSameAddress, set
         // }
       }
     } catch (error) {
-      console.error("Action error details:", error);
       const msg = error?.message || { en: "Something went wrong", ar: "حدث خطأ ما" };
       toast.error(locale === "en" ? msg.en : msg.ar);
       if (error?.redirectToLogin) {

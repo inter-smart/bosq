@@ -35,7 +35,6 @@ export async function fetchApi(endpoint, options = {}, passCookie = false) {
 
     return res.json();
   } catch (error) {
-    console.log("API Client Error:", error.message);
     throw error;
   }
 }

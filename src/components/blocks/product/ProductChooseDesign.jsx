@@ -47,7 +47,6 @@ const ProductChooseDesign = ({
         const json = await res.json();
         setModels(json?.data?.models || []);
       } catch (error) {
-        console.error("Failed to load design models", error);
       } finally {
         setIsModelLoading(false);
       }

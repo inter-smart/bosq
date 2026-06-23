@@ -162,7 +162,6 @@ export default function UpdateAddressFormCheckout({
           setCountries(data);
         }
       } catch (error) {
-        console.error("Error fetching countries:", error);
       }
     };
     fetchCountries();
@@ -181,7 +180,6 @@ export default function UpdateAddressFormCheckout({
           setStates(data);
         }
       } catch (error) {
-        console.error("Error fetching states:", error);
       }
     };
     fetchStates();
@@ -200,7 +198,6 @@ export default function UpdateAddressFormCheckout({
           setShippingStates(data);
         }
       } catch (error) {
-        console.error("Error fetching shipping states:", error);
       }
     };
     fetchShippingStates();
@@ -257,7 +254,6 @@ export default function UpdateAddressFormCheckout({
 
       onSuccess?.();
     } catch (err) {
-      console.error(err);
       const msg = err?.message || { en: "Something went wrong", ar: "حدث خطأ ما" };
       toast.error(locale === "en" ? msg.en : msg.ar);
       if (err?.redirectToLogin) {

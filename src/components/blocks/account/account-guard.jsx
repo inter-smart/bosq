@@ -26,9 +26,6 @@ const AccountGuard = ({ children }) => {
         }
       })
       .catch((err) => {
-        if (process.env.NODE_ENV === "development") {
-          console.error("[AccountGuard] status check failed:", err);
-        }
       });
   }, []);
 

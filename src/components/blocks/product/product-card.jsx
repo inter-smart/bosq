@@ -62,7 +62,6 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
       }
     } catch (error) {
       setIsWishlisted(prev);
-      console.error("Wishlist toggle error:", error);
       // baseQueryWithReauth already shows a toast for session expiry — skip wishlist-specific error
       if (error?.error_code !== "SESSION_EXPIRED") {
         toast.error(`${tToast("wishlist_remove_failed")}`);

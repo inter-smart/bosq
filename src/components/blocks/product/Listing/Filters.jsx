@@ -65,8 +65,6 @@ const baseFiltersParser = {
 };
 
 const ProductListFilters = ({ filterData, isEn }) => {
-  console.log(filterData);
-
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -406,9 +404,6 @@ const ProductListFilters = ({ filterData, isEn }) => {
     });
     return filters;
   }, [filterData, getAttributeValuesFromUrl, isEn, getAttributeValueLabel]);
-
-  console.log("activeAttributeFilters", activeAttributeFilters);
-  console.log("activeAttributeFilters", activeAttributeFilters);
 
   // Apply filters (converts IDs to slugs, updates URL)
   const applyFilters = useCallback(() => {

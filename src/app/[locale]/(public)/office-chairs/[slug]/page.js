@@ -44,7 +44,6 @@ export async function generateMetadata({ params }) {
     const ogImage = DefaultOgImage;
     const { other } = isEN ? parseOtherMeta(other_meta) : parseOtherMeta(other_meta_ar);
 
-    console.log("Metadata for office chair:", title);
     return {
       title: title,
       description: description,
@@ -87,7 +86,6 @@ export async function generateMetadata({ params }) {
       },
     };
   } catch (error) {
-    console.error("Error generating metadata:", error);
   }
 }
 
@@ -97,8 +95,6 @@ export default async function OfficeChairsPage({ params }) {
   const response = await getOfficeChairsData(slug);
   const {data} = response?.data;
   const error = response?.error;
-
-  console.log("error", error);
 
   if (!data || error) return notFound();
 

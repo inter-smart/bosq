@@ -155,7 +155,6 @@ export const addressApi = createApi({
       }),
 
       transformErrorResponse: (response) => {
-        console.error("Delete address error response:", response);
         return formatErrorMessage(response, ERROR_MESSAGES.DELETE);
       },
 

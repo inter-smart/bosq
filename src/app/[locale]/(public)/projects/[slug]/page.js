@@ -37,7 +37,6 @@ export async function generateMetadata({ params }) {
 
     const isEN = locale === "en";
     const metadata = data?.metaData;
-    console.log("meta data:", data)
 
     const t = await getTranslations("common");
 
@@ -113,7 +112,6 @@ export async function generateMetadata({ params }) {
       },
     };
   } catch (error) {
-    console.error("Error generating metadata:", error);
   }
 }
 

@@ -507,7 +507,6 @@ function NewsletterForm({ placeholders, placeholders_ar, locale }) {
       }
       toast.success(isEn ? data?.message?.en : data?.message?.ar);
     } catch (err) {
-      console.error(err);
       toast.error(
         isEn
           ? "Something went wrong. Please try again."

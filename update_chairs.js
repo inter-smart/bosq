@@ -603,4 +603,3 @@ const regex = /coupons:\s*\[[\s\S]*?\],\s*\},/g;
 const newContent = content.replace(regex, `coupons: ${newProductsStr},\n  },`);
 
 fs.writeFileSync(pagePath, newContent, 'utf8');
-console.log('Update successful');

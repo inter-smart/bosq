@@ -8,9 +8,6 @@ export function cn(...inputs) {
 export const saveVariantToStorage = ({ label, url, STORAGE_KEY }) => {
   if (typeof window === "undefined") return;
 
-  console.log(label);
-  console.log(url);
-
   // Basic validation (prevent bad writes)
   if (!label || !url) return;
 
@@ -37,10 +34,7 @@ export const saveVariantToStorage = ({ label, url, STORAGE_KEY }) => {
     parsed = parsed.slice(0, 10);
 
     localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
-
-    console.log(parsed);
   } catch (error) {
-    console.error("Failed to store variant:", error);
   }
 };
 

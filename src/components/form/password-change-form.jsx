@@ -93,7 +93,6 @@ export default function PasswordChangeForm({ locale }) {
         toast.success((isEn ? message?.en : message?.ar) || t("password_changed_successfully"));
       }
     } catch (err) {
-      console.error(err);
       toast.error(isEn ? err?.en : err?.ar );
     } finally {
       setLoading(false);

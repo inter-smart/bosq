@@ -70,7 +70,6 @@ export default function HeaderNavigation({
   };
 
   const handleNavigation = (slug) => {
-    console.log("Navigating to:", slug);
   };
 
   return (

@@ -42,7 +42,6 @@ import { useAppSelector } from "@/store/hooks";
 import { Heading } from "@/components/utils/heading";
 
 export default function AddressFormCheckout({ locale, variant = "shipping", type, onSuccess }) {
-  console.log("type", type);
   const t = useTranslations("form");
   const router = useRouter();
   const { executeRecaptcha } = useGoogleReCaptcha();
@@ -191,7 +190,6 @@ export default function AddressFormCheckout({ locale, variant = "shipping", type
           setCountries(data);
         }
       } catch (error) {
-        console.error("Error fetching countries:", error);
       }
     };
     fetchCountries();
@@ -210,7 +208,6 @@ export default function AddressFormCheckout({ locale, variant = "shipping", type
           setStates(data);
         }
       } catch (error) {
-        console.error("Error fetching states:", error);
       }
     };
     fetchStates();
@@ -229,7 +226,6 @@ export default function AddressFormCheckout({ locale, variant = "shipping", type
           setShippingStates(data);
         }
       } catch (error) {
-        console.error("Error fetching shipping states:", error);
       }
     };
     fetchShippingStates();
@@ -268,7 +264,6 @@ export default function AddressFormCheckout({ locale, variant = "shipping", type
         onSuccess?.();
       }, 100);
     } catch (err) {
-      console.error(err);
       const msg = err?.message || { en: "Something went wrong", ar: "حدث خطأ ما" };
       toast.error(locale === "en" ? msg.en : msg.ar);
       if (err?.redirectToLogin) {

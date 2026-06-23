@@ -9,12 +9,10 @@ const placeholders = [
 
 export default function SearchInput({ locale }) {
   const handleChange = (e) => {
-    console.log(e.target.value);
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log("submitted");
   };
 
   return (

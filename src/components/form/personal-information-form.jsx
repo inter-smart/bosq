@@ -58,7 +58,6 @@ export default function PersonalInformationForm({ data, locale, isGoogleUser }) 
     },
   });
 
-  console.log("datasL", data);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(null);
 
@@ -94,7 +93,6 @@ export default function PersonalInformationForm({ data, locale, isGoogleUser }) 
 
       toast.success(isEn ? result?.message?.en : result?.message?.ar);
     } catch (err) {
-      console.error(err);
       toast.error(isEn ? err?.en : err?.ar);
     }
     setLoading(false);

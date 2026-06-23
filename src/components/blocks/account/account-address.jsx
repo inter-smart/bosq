@@ -272,8 +272,6 @@ export default function AccountAddress({ locale, addressData }) {
       toast.success(tTost("default_address"));
       router.refresh();
     } catch (err) {
-      console.error("Set default error:", err);
-
       handleAuthError(err, {
         en: "Failed to set default address",
         ar: "فشل تعيين العنوان الافتراضي",
@@ -294,8 +292,6 @@ export default function AccountAddress({ locale, addressData }) {
       toast.success(tTost("delete_address"));
       router.refresh();
     } catch (err) {
-      console.error("Delete error:", err);
-
       handleAuthError(err, {
         en: "Failed to delete address",
         ar: "فشل حذف العنوان",

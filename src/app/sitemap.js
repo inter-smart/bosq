@@ -12,7 +12,6 @@ async function fetchApi(endpoint) {
     if (!res.ok) return null;
     return await res.json();
   } catch (error) {
-    console.error(`Error fetching ${endpoint}:`, error);
     return null;
   }
 }

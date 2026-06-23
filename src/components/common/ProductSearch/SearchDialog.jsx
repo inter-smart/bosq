@@ -24,12 +24,10 @@ export default function SearchDialog({ children, locale, data }) {
   const categories = data?.categories;
 
   const handleChange = (e) => {
-    console.log(e.target.value);
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log("submitted");
   };
 
   return (

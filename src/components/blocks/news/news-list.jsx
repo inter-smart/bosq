@@ -19,8 +19,6 @@ export default function NewsList({ locale, data }) {
   const pagination = data?.pagination || {};
   const isEn = locale === "en";
 
-  console.log("pagination:", data?.pagination)
-
   const { totalCount = 0, totalPages = 1, currentPage = 1 } = pagination;
 
   const startItem = (currentPage - 1) * ITEMS_PER_PAGE + 1;

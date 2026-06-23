@@ -20,8 +20,6 @@ export function OrderEmpty({
   title,
   description,
 }) {
-  console.log(mediaUrl, title, description);
-
   const t = useTranslations("cart");
 
   return (

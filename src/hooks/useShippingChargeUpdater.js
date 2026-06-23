@@ -17,7 +17,6 @@ export function useShippingChargeUpdater() {
         if (charge !== undefined) dispatch(setShippingCharge(charge));
         return charge ?? null;
       } catch (err) {
-        console.error("Failed to update shipping charge:", err);
         return null;
       }
     },
@@ -32,7 +31,6 @@ export function useShippingChargeUpdater() {
         const result = await getShippingCharge({ state_id: stateId, type }).unwrap();
         return result?.data?.overall_delivery_charge ?? null;
       } catch (err) {
-        console.error("Failed to calculate shipping charge preview:", err);
         return null;
       }
     },

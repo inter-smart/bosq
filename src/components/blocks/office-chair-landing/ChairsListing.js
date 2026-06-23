@@ -22,8 +22,6 @@ export default function ChairsListing({ data, locale = "en" }) {
   const ctaLabel = isEn ? data?.cta?.label : data?.cta?.label_ar;
   const ctaHref = data?.cta?.href;
 
-  console.log("ctaLabel", ctaLabel);
-
   const heroImage = data?.heroImage;
   const heroTitle = isEn ? data?.heroTitle : data?.heroTitle_ar;
 

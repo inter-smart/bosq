@@ -142,9 +142,7 @@ export default function ContactEnquiryForm({ locale }) {
         }, 100);
       }
     } catch (err) {
-      console.error(err);
       toast.error(err);
-      console.log(err);
     }
 
     setLoading(false);

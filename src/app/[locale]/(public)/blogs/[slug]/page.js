@@ -30,7 +30,6 @@ export async function generateMetadata({ params }) {
 
     const isEN = locale === "en";
     const metadata = data?.metaData;
-    console.log("meta data:", metadata)
 
     const t = await getTranslations("common");
 
@@ -64,7 +63,6 @@ export async function generateMetadata({ params }) {
       : parseOtherMeta(other_meta_ar);
 
 
-    console.log("Metadata for blog detail:", title)
     return {
       title: title,
       description: description,
@@ -107,7 +105,6 @@ export async function generateMetadata({ params }) {
       },
     };
   } catch (error) {
-    console.error("Error generating metadata:", error);
   }
 }
 

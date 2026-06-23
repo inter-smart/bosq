@@ -172,7 +172,6 @@ const OrderSummary = ({
       updateSummaryFromResponse(result?.data);
       toast.success(`${tToast("coupon_success")}`);
     } catch (error) {
-      console.log("Apply coupon error:", error);
       toast.error(locale === "en" ? error?.en || "Failed to apply coupon" : error?.ar || "Failed to apply coupon");
     }
   };
@@ -310,7 +309,6 @@ const OrderSummary = ({
         router.push(`/${locale}/order/success?orderId=${orderCode}`);
       }
     } catch (error) {
-      console.log("error", error);
       setShowConfirmDialog(false);
 
       if (error?.error_code === "STOCK_VALIDATION_ERROR") {
@@ -330,8 +328,6 @@ const OrderSummary = ({
   const displayDeliveryCharge = Number(shippingCharge ?? overallDeliveryCharge ?? 0);
 
   const displayGrandTotal = (Number(grandTotal ?? 0) + displayDeliveryCharge).toFixed(2);
-
-  console.log("GRND", shippingCharge, overallDeliveryCharge, displayDeliveryCharge);
 
   // Check if order can be placed
   const { shippingId, billingId } = getFinalAddressIds();

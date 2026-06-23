@@ -51,8 +51,6 @@ const sortByOptions = [
 export default function ProductList({ data, locale, filterData }) {
   const isEn = locale === "en";
 
-  console.log(filterData);
-
   // UI States
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [sortBy, setSortBy] = useState("default");
@@ -110,8 +108,6 @@ export default function ProductList({ data, locale, filterData }) {
   // Apply filters from sheet
   const applyFilters = useCallback(() => {
     setFilters({ ...tempFilters });
-
-    console.log(tempFilters);
 
     setIsSheetOpen(false);
   }, [tempFilters]);
@@ -287,13 +283,9 @@ export default function ProductList({ data, locale, filterData }) {
       params.append("limit", ITEMS_PER_PAGE.toString());
 
       const { data, error } = await ProductDataClient.getProductList(params.toString());
-      if (error) {
-        console.log(error);
-      }
       setProducts(data?.products || []);
       setPagination(data?.pagination || { total: 0, page: 1, limit: 12, totalPages: 0 });
     } catch (error) {
-      console.error("Error fetching products:", error);
     }
   }, [filters, sortBy, currentPage]);
 

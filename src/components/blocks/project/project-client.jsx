@@ -79,8 +79,6 @@ export default function ProjectClient({ locale, data, projects, slug, currentLim
     ];
   }, [data?.list]);
 
-
-  console.log("categories", categories)
   return (
     <section className="w-full block py-[30px] sm:py-[40px] xl:py-[60px] 2xl:py-[80px]">
       <div className="container">

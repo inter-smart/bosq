@@ -41,7 +41,6 @@ export default function RecaptchaProvider({ children }) {
   }, [siteKey]);
 
   if (!siteKey) {
-    console.error("RECAPTCHA_SITE_KEY is not defined");
     return <>{children}</>;
   }
 

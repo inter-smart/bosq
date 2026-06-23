@@ -56,7 +56,6 @@ export function parseOtherMeta(htmlString) {
       const jsonContent = scriptMatch[1].trim();
       scripts.push(JSON.parse(jsonContent));
     } catch (e) {
-      console.error("Failed to parse JSON-LD:", e);
     }
   }
 
@@ -174,8 +173,6 @@ export async function callLogoutApi(endpoint, options = {}) {
   try {
     let response = await fetch(url, defaultOptions);
     let data = await response.json();
-
-    console.log("Logout API response:", { response, data });
   } catch (error) {
     return {
       data: null,
@@ -255,11 +252,9 @@ export async function fetchWithCredentials(endpoint, options = {}) {
         message: message,
         requiresLogin: true,
       };
-
     } else {
       throw message;
     }
-
   }
 
   return data?.data;
@@ -336,8 +331,6 @@ export const getTarget = (link) => {
   return "_self";
 };
 
-
-
 export const paymentStatusTranslate = (status, isEn) => {
   if (!status) return "-";
   switch (status.toLowerCase().trim()) {
@@ -355,9 +348,6 @@ export const paymentStatusTranslate = (status, isEn) => {
 };
 
 export const orderStatusTranslate = (status, isEn) => {
-
-  console.log("orderStatusTranslate", status, isEn);
-
   if (!status) return "-";
   switch (status.toLowerCase().trim()) {
     case "pending":
@@ -376,7 +366,6 @@ export const orderStatusTranslate = (status, isEn) => {
       return isEn ? "Returned" : "تم الإرجاع";
   }
 };
-
 
 export function formatOrderDate(dateStr, isEn) {
   if (!dateStr) return "";

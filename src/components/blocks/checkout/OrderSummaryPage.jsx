@@ -4,11 +4,6 @@ import OrderSummary from "./OrderSummary";
 const OrderSummaryPage = async ({ locale, type }) => {
   const { data, error } = await checkoutData.getCartSummary(type);
 
-
-  if (error) {
-    console.error("Cart summary fetch failed:", error);
-  }
-
   const products = data?.items || [];
   const cartId = data?.id || null;
   const subTotal = data?.sub_total || 0;
@@ -20,9 +15,6 @@ const OrderSummaryPage = async ({ locale, type }) => {
   const couponDiscountType = data?.coupon_discount_type || null;
   const couponDiscountValue = data?.coupon_discount_value || null;
   const deliveryCharge = data?.overall_delivery_charge || "0.00";
-
-  console.log(deliveryCharge)
-
 
   return (
     <OrderSummary

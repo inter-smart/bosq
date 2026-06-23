@@ -30,7 +30,6 @@ export const ProfileData = {
 
       return sendSuccess(data?.data);
     } catch (error) {
-      console.error("Error fetching orders:", error);
       return sendError(error);
     }
   },
@@ -46,7 +45,6 @@ export const ProfileData = {
 
       return sendSuccess(data?.data);
     } catch (error) {
-      console.error("Error fetching cancelled orders:", error);
       return sendError(error);
     }
   },

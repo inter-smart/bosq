@@ -45,8 +45,6 @@ export default async function CancelledOrdersPage({ params }) {
 
   const cancelledItems = allOrders;
 
-  console.log(cancelledItems);
-
   const slug = locale === "en" ? "Cancelled Orders" : "الطلبات الملغاة";
 
   return (

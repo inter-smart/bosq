@@ -24,7 +24,6 @@ export async function apiClient(endpoint, options = {}) {
 
     return res.json();
   } catch (error) {
-    console.error("API Client Error:", error);
     throw error;
   }
 }

@@ -111,7 +111,6 @@ const AddressBlock = ({ locale, variant, data, useSameAddress, setUseSameAddress
         toast.success(`${tToast("default_address")}`);
       }
     } catch (error) {
-      console.error("Action error details:", error);
       toast.error(locale === "en" ? error?.en : error?.ar || "Something went wrong");
       // toast.error(`${tToast("something_went_wrong")}`);
     } finally {

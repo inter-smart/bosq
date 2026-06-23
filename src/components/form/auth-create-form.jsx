@@ -103,7 +103,6 @@ export default function AuthCreateForm({ locale }) {
         toast.error(errorMsg);
       }
     } catch (err) {
-      console.error(err);
       setSuccess(err.message);
     }
   };

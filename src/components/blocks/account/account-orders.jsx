@@ -211,7 +211,6 @@ export default function AccountOrders({ locale, orders: initialOrders, paginatio
                             variant={"link"}
                             className={cn(btnStyle, "text-red-600 hover:text-red-700")}
                             onClick={() => {
-                              console.log("Clicked item:", orderItem);
                               setCancelOrderId(item.id);
                               setCancelTargetId(orderItem.id);
                             }}
