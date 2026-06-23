@@ -34,6 +34,7 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
 
   const tToast = useTranslations("toast");
   const t = useTranslations("common");
+  const tProduct = useTranslations("product");
   const handleWishlistClick = (e) => {
     e.stopPropagation();
     handleToggleWishlist(product?.variant_id || product?.id);
@@ -101,7 +102,7 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
                   disabled={true}
                   className="min-w-[100px] xl:min-w-[120px] 2xl:min-w-[200px] disabled:opacity-100 rounded-[2px] m-auto"
                 >
-                  Out of Stock
+                  {t("out_of_stock")}
                 </Button>
               </div>
             )}
@@ -149,7 +150,7 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
               className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-normal truncate text-[#282828] mb-3 xl:mb-4 2xl:mb-6"
             >
               <Link href={productUrl}>
-                AED {product?.price} <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc] ">Inc Tax</span>
+                AED {product?.price} <span className="text-[8px] 2xl:text-[10px] font-light text-[#bbbcbc] ">{t("inc_tax")}</span>
               </Link>
             </Text>
             <div className="flex items-center gap-0.5 xl:gap-1">
@@ -164,7 +165,7 @@ export default function ProductCard({ product, isEn, locale = "en", onRemove }) 
                     ></Link>
                   ))}
                   <div className="text-[8px] 2xl:text-[10px] leading-normal font-light text-[#28288] pt-0.5">
-                    <Link href={productUrl}>+ More</Link>
+                    <Link href={productUrl}>{tProduct("more_colors")}</Link>
                   </div>
                 </>
               ) : (

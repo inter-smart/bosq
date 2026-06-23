@@ -39,7 +39,11 @@ export default async function ProductDetailPage({ params, searchParams }) {
     }
   });
 
-  const { data, error } = await ProductData.getProductDetailsBySlug(slug, variantSku, model, attributeFilters);
+  const { data, error } = await ProductData.getProductDetailsBySlug(
+    variantSku,
+    model,
+    attributeFilters,
+  );
 
   if (error || !data) {
     return notFound();
@@ -47,6 +51,11 @@ export default async function ProductDetailPage({ params, searchParams }) {
 
   const heroSlug = locale === "en" ? data?.product?.title : data?.product?.title_ar;
 
+  const slugify = data?.product?.title
+    ? locale === "en"
+      ? data?.product?.title
+      : data?.product?.title_ar
+    : slug;
   return (
     <>
       <ProductHero locale={locale} data={data?.product} slug={heroSlug} type="product" />

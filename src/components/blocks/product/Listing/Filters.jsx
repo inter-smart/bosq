@@ -195,17 +195,20 @@ const ProductListFilters = ({ filterData, isEn }) => {
   const getCategoryNameBySlug = useCallback(
     (slug) => {
       const id = slugMaps.categorySlugToId[slug];
-      return filterData?.categories?.find((c) => c.id === id)?.name;
+      const category = filterData?.categories?.find((c) => c.id === id);
+      return isEn ? category?.name : category?.name_ar;
     },
-    [filterData, slugMaps],
+    [filterData, slugMaps, isEn],
   );
 
   const getSubcategoryNameBySlug = useCallback(
     (slug) => {
       const id = slugMaps.subcategorySlugToId[slug];
-      return filterData?.categories?.find((c) => c.id === id)?.name;
+      const subCategory = filterData?.categories?.find((c) => c.id === id);
+      console.log("subcategory ", subcategory)
+      return isEn ? subCategory?.name : subCategory?.name_ar;
     },
-    [filterData, slugMaps],
+    [filterData, slugMaps, isEn],
   );
 
   const getSectorNameBySlug = useCallback(
@@ -228,8 +231,7 @@ const ProductListFilters = ({ filterData, isEn }) => {
     (attrSlug, valSlug) => {
       const attr = filterData?.attributes?.find((a) => a.slug === attrSlug);
       const val = attr?.values?.find((v) => v.slug === valSlug);
-      return val ? (isEn ? val.value : val.value_ar) : valSlug;
-    },
+      return val ? (isEn ? val.value : val.value_ar) : valSlug;    },
     [filterData, isEn],
   );
 
@@ -405,6 +407,9 @@ const ProductListFilters = ({ filterData, isEn }) => {
     });
     return filters;
   }, [filterData, getAttributeValuesFromUrl, isEn, getAttributeValueLabel]);
+
+  console.log("activeAttributeFilters", activeAttributeFilters);
+  console.log("activeAttributeFilters", activeAttributeFilters);
 
   // Apply filters (converts IDs to slugs, updates URL)
   const applyFilters = useCallback(() => {
