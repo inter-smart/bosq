@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/utils/heading";
@@ -24,7 +24,11 @@ import UpdateAddressForm from "@/components/form/update-address-form";
 import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
-import { useUpdateDefaultAddressMutation, useDeleteAddressMutation, useLazyGetAddressByIdQuery } from "@/store/services/addressApi";
+import {
+  useUpdateDefaultAddressMutation,
+  useDeleteAddressMutation,
+  useLazyGetAddressByIdQuery,
+} from "@/store/services/addressApi";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
@@ -34,10 +38,18 @@ function ShippingCard({ item, onEdit, t, c }) {
   return (
     <div className="w-full sm:w-1/2 lg:w-1/3 flex">
       <div className="w-full bg-white border border-[#dedede] p-2.5 xl:p-3.5 2xl:p-5 transition hover:shadow-sm relative flex flex-col">
-        <Heading as="div" size="heading5" className="font-medium text-[#282828] mb-1 xl:mb-2">
+        <Heading
+          as="div"
+          size="heading5"
+          className="font-medium text-[#282828] mb-1 xl:mb-2"
+        >
           {item?.shippingFullName}
         </Heading>
-        <Text as="div" size="text3" className="text-[#282828] mb-2 xl:mb-2.5 flex-1">
+        <Text
+          as="div"
+          size="text3"
+          className="text-[#282828] mb-2 xl:mb-2.5 flex-1"
+        >
           {item?.shipping_address && parse(item?.shipping_address)}
         </Text>
         <div className="flex gap-0.5 xl:gap-1 flex-wrap mt-auto">
@@ -46,7 +58,14 @@ function ShippingCard({ item, onEdit, t, c }) {
             onClick={() => onEdit(item)}
             className="min-w-[45px] xl:min-w-[50px] 2xl:min-w-[70px] h-[20px] lg:h-[22px] 2xl:h-[24px] 3xl:h-[26px] bg-white gap-1 border border-[#e9e9e9] hover:text-black hover:bg-white hover:border-[#f17423]"
           >
-            <Image src={"/images/icon-edit.svg"} alt={"icon-edit"} width={10} height={10} className="w-2 xl:w-2.5" quality={90} />
+            <Image
+              src={"/images/icon-edit.svg"}
+              alt={"icon-edit"}
+              width={10}
+              height={10}
+              className="w-2 xl:w-2.5"
+              quality={90}
+            />
             {c("edit")}
           </Button>
         </div>
@@ -55,7 +74,15 @@ function ShippingCard({ item, onEdit, t, c }) {
   );
 }
 
-function AddressCard({ item, isDeleting, onEdit, onSetDefault, onDelete, t, c }) {
+function AddressCard({
+  item,
+  isDeleting,
+  onEdit,
+  onSetDefault,
+  onDelete,
+  t,
+  c,
+}) {
   return (
     <div className="w-full sm:w-1/2 lg:w-1/3 flex">
       <div
@@ -64,14 +91,26 @@ function AddressCard({ item, isDeleting, onEdit, onSetDefault, onDelete, t, c })
           item.is_default ? "border-[#f17423]" : "border-[#dedede]",
         )}
       >
-        <Heading as="div" size="heading5" className="font-medium text-[#282828] mb-1 xl:mb-2">
+        <Heading
+          as="div"
+          size="heading5"
+          className="font-medium text-[#282828] mb-1 xl:mb-2"
+        >
           {item?.fullName}
         </Heading>
         <Text as="div" size="text3" className="text-[#282828] mb-1 xl:mb-2">
           {item?.streetAddress && parse(item?.streetAddress)}
         </Text>
-        <Text as="div" size="text3" className="font-medium text-[#282828] mb-2 xl:mb-2.5 flex-1">
-          <a href={`tel:${item?.phone}`} target="_blank" rel="noopener noreferrer">
+        <Text
+          as="div"
+          size="text3"
+          className="font-medium text-[#282828] mb-2 xl:mb-2.5 flex-1"
+        >
+          <a
+            href={`tel:${item?.phone}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {item?.phone}
           </a>
         </Text>
@@ -81,7 +120,14 @@ function AddressCard({ item, isDeleting, onEdit, onSetDefault, onDelete, t, c })
             onClick={() => onEdit(item)}
             className="min-w-[45px] xl:min-w-[50px] 2xl:min-w-[70px] h-[20px] lg:h-[22px] 2xl:h-[24px] 3xl:h-[26px] bg-white gap-1 border border-[#e9e9e9] hover:text-black hover:bg-white hover:border-[#f17423]"
           >
-            <Image src={"/images/icon-edit.svg"} alt={"icon-edit"} width={10} height={10} className="w-2 xl:w-2.5" quality={90} />
+            <Image
+              src={"/images/icon-edit.svg"}
+              alt={"icon-edit"}
+              width={10}
+              height={10}
+              className="w-2 xl:w-2.5"
+              quality={90}
+            />
             {c("edit")}
           </Button>
           {item.is_default ? (
@@ -107,7 +153,14 @@ function AddressCard({ item, isDeleting, onEdit, onSetDefault, onDelete, t, c })
             disabled={isDeleting === item?.id}
             className="min-w-[55px] xl:min-w-[60px] 2xl:min-w-[85px] h-[20px] lg:h-[22px] 2xl:h-[24px] 3xl:h-[26px] bg-white gap-1 border border-[#e9e9e9] hover:text-red-600 hover:bg-white hover:border-red-600"
           >
-            <Image src={"/images/icon-delete.svg"} alt={"icon-delete"} width={10} height={10} className="w-2 xl:w-2.5" quality={90} />
+            <Image
+              src={"/images/icon-delete.svg"}
+              alt={"icon-delete"}
+              width={10}
+              height={10}
+              className="w-2 xl:w-2.5"
+              quality={90}
+            />
             {isDeleting === item?.id ? t("deleting") : c("delete")}
           </Button>
         </div>
@@ -132,6 +185,8 @@ export default function AccountAddress({ locale, addressData }) {
   const [deleteAddress] = useDeleteAddressMutation();
   const [getAddressById] = useLazyGetAddressByIdQuery();
 
+  const addFormRef = useRef(null);
+
   const handleAuthError = (err, fallback) => {
     const msg = err?.message || fallback;
     toast.error(locale === "en" ? msg.en : msg.ar);
@@ -151,7 +206,9 @@ export default function AccountAddress({ locale, addressData }) {
   const billingAddresses = addressData ? sortByDefault(addressData) : [];
 
   // Shipping entries are those billing records that have an embedded shipping_address
-  const shippingAddresses = addressData ? addressData.filter((a) => a.shipping_address) : [];
+  const shippingAddresses = addressData
+    ? addressData.filter((a) => a.shipping_address)
+    : [];
 
   const handleEditClick = async (address) => {
     setEditMode("billing");
@@ -162,7 +219,10 @@ export default function AccountAddress({ locale, addressData }) {
       setEditingAddress(data);
     } catch (err) {
       if (err?.redirectToLogin) {
-        handleAuthError(err, { en: "Failed to edit address", ar: "فشل تعديل العنوان" });
+        handleAuthError(err, {
+          en: "Failed to edit address",
+          ar: "فشل تعديل العنوان",
+        });
       } else {
         setEditingAddress(address); // Fallback to list data
       }
@@ -181,7 +241,10 @@ export default function AccountAddress({ locale, addressData }) {
       setEditingAddress(data);
     } catch (err) {
       if (err?.redirectToLogin) {
-        handleAuthError(err, { en: "Failed to edit address", ar: "فشل تعديل العنوان" });
+        handleAuthError(err, {
+          en: "Failed to edit address",
+          ar: "فشل تعديل العنوان",
+        });
       } else {
         setEditingAddress(address); // Fallback to list data
       }
@@ -211,7 +274,10 @@ export default function AccountAddress({ locale, addressData }) {
     } catch (err) {
       console.error("Set default error:", err);
 
-      handleAuthError(err, { en: "Failed to set default address", ar: "فشل تعيين العنوان الافتراضي" });
+      handleAuthError(err, {
+        en: "Failed to set default address",
+        ar: "فشل تعيين العنوان الافتراضي",
+      });
     }
   };
 
@@ -230,20 +296,36 @@ export default function AccountAddress({ locale, addressData }) {
     } catch (err) {
       console.error("Delete error:", err);
 
-      handleAuthError(err, { en: "Failed to delete address", ar: "فشل حذف العنوان" });
+      handleAuthError(err, {
+        en: "Failed to delete address",
+        ar: "فشل حذف العنوان",
+      });
     } finally {
       setDeletingId(null);
     }
   };
 
-  console.log("addressdata: ", addressData);
+  const handleShowAddForm = () => {
+    setShowAddForm((prev) => {
+      if (!prev) {
+        setTimeout(() => {
+          addFormRef.current?.scrollIntoView({ behavior: "smooth" });
+        }, 5);
+      }
+      return !prev;
+    });
+  };
 
   return (
     <>
       {!addressData || addressData?.length === 0 ? (
         // Show form when no addresses exist
-        <div className="w-full border border-[#e9e9e9] sm:rounded-e-lg py-3 xl:py-6 3xl:py-9 px-3 xl:px-4 3xl:px-5">
-          <Heading as="h4" size="heading5" className="font-normal text-[#282828] mb-3 xl:mb-5 2xl:mb-8">
+        <div ref={addFormRef} className="w-full border border-[#e9e9e9] sm:rounded-e-lg py-3 xl:py-6 3xl:py-9 px-3 xl:px-4 3xl:px-5">
+          <Heading
+            as="h4"
+            size="heading5"
+            className="font-normal text-[#282828] mb-3 xl:mb-5 2xl:mb-8"
+          >
             {t("add_new")}
           </Heading>
           <AddressForm
@@ -258,7 +340,11 @@ export default function AccountAddress({ locale, addressData }) {
         <div className="w-full border border-[#e9e9e9] sm:rounded-e-lg py-3 xl:py-6 3xl:py-9 px-3 xl:px-4 3xl:px-5">
           <div className="flex flex-wrap gap-4 justify-between mb-4 xl:mb-5">
             <div className="flex-1">
-              <Heading as="h2" size={"heading5"} className="font-semibold text-[#282828] mb-1 xl:mb-3">
+              <Heading
+                as="h2"
+                size={"heading5"}
+                className="font-semibold text-[#282828] mb-1 xl:mb-3"
+              >
                 {a("manage_address")}
               </Heading>
 
@@ -272,8 +358,11 @@ export default function AccountAddress({ locale, addressData }) {
                 <Button
                   variant={"black"}
                   disabled={false}
-                  onClick={() => setShowAddForm((prev) => !prev)}
-                  className={cn("min-w-[130px] xl:min-w-[155px] 2xl:min-w-[240px]", showAddForm && "bg-[#f17423]")}
+                  onClick={handleShowAddForm}
+                  className={cn(
+                    "min-w-[130px] xl:min-w-[155px] 2xl:min-w-[240px]",
+                    showAddForm && "bg-[#f17423]",
+                  )}
                 >
                   <Plus className="size-3" />
                   {t("add_new")}
@@ -285,7 +374,11 @@ export default function AccountAddress({ locale, addressData }) {
           {/* Billing Address Section */}
           {billingAddresses.length > 0 && (
             <div className="mb-5 xl:mb-7 2xl:mb-10">
-              <Heading as="h3" size="heading5" className="font-semibold text-[#282828] mb-2 xl:mb-3">
+              <Heading
+                as="h3"
+                size="heading5"
+                className="font-semibold text-[#282828] mb-2 xl:mb-3"
+              >
                 {t("billing")}
               </Heading>
               <div className="flex flex-wrap -mx-2 xl:-mx-3 2xl:-mx-4 [&>*]:px-2 [&>*]:py-1 xl:[&>*]:px-3 xl:[&>*]:py-1.5 2xl:[&>*]:px-4 2xl:[&>*]:py-2">
@@ -308,12 +401,22 @@ export default function AccountAddress({ locale, addressData }) {
           {/* Shipping Address Section */}
           {shippingAddresses.length > 0 && (
             <div className="mb-5 xl:mb-7 2xl:mb-10">
-              <Heading as="h3" size="heading5" className="font-semibold text-[#282828] mb-2 xl:mb-3">
+              <Heading
+                as="h3"
+                size="heading5"
+                className="font-semibold text-[#282828] mb-2 xl:mb-3"
+              >
                 {t("shipping")}
               </Heading>
               <div className="flex flex-wrap -mx-2 xl:-mx-3 2xl:-mx-4 [&>*]:px-2 [&>*]:py-1 xl:[&>*]:px-3 xl:[&>*]:py-1.5 2xl:[&>*]:px-4 2xl:[&>*]:py-2">
                 {shippingAddresses.map((item, index) => (
-                  <ShippingCard key={"shipping-item-" + index} item={item} onEdit={handleShippingEditClick} t={t} c={c} />
+                  <ShippingCard
+                    key={"shipping-item-" + index}
+                    item={item}
+                    onEdit={handleShippingEditClick}
+                    t={t}
+                    c={c}
+                  />
                 ))}
               </div>
             </div>
@@ -324,7 +427,7 @@ export default function AccountAddress({ locale, addressData }) {
               <Button
                 variant={"black"}
                 disabled={false}
-                onClick={() => setShowAddForm((prev) => !prev)}
+                onClick={handleShowAddForm}
                 className="min-w-[140px] xl:min-w-[155px] 2xl:min-w-[240px] ml-auto"
               >
                 <Plus className="size-3" />
@@ -334,8 +437,15 @@ export default function AccountAddress({ locale, addressData }) {
           </MediaQuery>
 
           {showAddForm && (
-            <div className="w-full bg-white border border-[#dedede] p-2.5 xl:p-3.5 2xl:p-5 mb-5 xl:mb-10 2xl:mb-12">
-              <Heading as="h4" size="heading5" className="font-normal text-[#282828] mb-3 xl:mb-4 2xl:mb-6">
+            <div
+              ref={addFormRef}
+              className="w-full bg-white border border-[#dedede] p-2.5 xl:p-3.5 2xl:p-5 mb-5 xl:mb-10 2xl:mb-12"
+            >
+              <Heading
+                as="h4"
+                size="heading5"
+                className="font-normal text-[#282828] mb-3 xl:mb-4 2xl:mb-6"
+              >
                 {t("add_new")}
               </Heading>
               <AddressForm
@@ -349,13 +459,23 @@ export default function AccountAddress({ locale, addressData }) {
           )}
         </div>
       )}
-      <AlertDialog dir={locale === "ar" ? "rtl" : "ltr"} open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <AlertDialogContent className={"xl:max-w-[768px] 2xl:max-w-[840px] gap-0"}>
-          <AlertDialogHeader className={"flex-row items-center justify-between mb-2 2xl:mb-4"}>
+      <AlertDialog
+        dir={locale === "ar" ? "rtl" : "ltr"}
+        open={isEditDialogOpen}
+        onOpenChange={setIsEditDialogOpen}
+      >
+        <AlertDialogContent
+          className={"xl:max-w-[768px] 2xl:max-w-[840px] gap-0"}
+        >
+          <AlertDialogHeader
+            className={"flex-row items-center justify-between mb-2 2xl:mb-4"}
+          >
             <AlertDialogTitle className="text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-semibold text-[#282828]">
               {t("edit_title")}
             </AlertDialogTitle>
-            <AlertDialogDescription className={"sr-only"}>{t("edit_description")}</AlertDialogDescription>
+            <AlertDialogDescription className={"sr-only"}>
+              {t("edit_description")}
+            </AlertDialogDescription>
             <AlertDialogCancel className={"h-auto! p-0!"}>
               <X className="size-5 text-black" />
             </AlertDialogCancel>
@@ -366,7 +486,12 @@ export default function AccountAddress({ locale, addressData }) {
                 <span className="text-sm text-gray-500">{t("loading")}</span>
               </div>
             ) : (
-              <UpdateAddressForm locale={locale} addressData={editingAddress} onSuccess={handleEditSuccess} editMode={editMode} />
+              <UpdateAddressForm
+                locale={locale}
+                addressData={editingAddress}
+                onSuccess={handleEditSuccess}
+                editMode={editMode}
+              />
             )}
           </div>
         </AlertDialogContent>

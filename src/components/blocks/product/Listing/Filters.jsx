@@ -205,7 +205,6 @@ const ProductListFilters = ({ filterData, isEn }) => {
     (slug) => {
       const id = slugMaps.subcategorySlugToId[slug];
       const subCategory = filterData?.categories?.find((c) => c.id === id);
-      console.log("subcategory ", subcategory)
       return isEn ? subCategory?.name : subCategory?.name_ar;
     },
     [filterData, slugMaps, isEn],
