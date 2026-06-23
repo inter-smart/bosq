@@ -24,7 +24,7 @@ import { useTranslations } from "next-intl";
 
 const paymentMethods = [
   { id: 1, slug: "cod", nameKey: "cod", descKey: "cod_description" },
-  { id: 2, slug: "online", nameKey: "pay_online", descKey: "pay_online_description" },
+  // { id: 2, slug: "online", nameKey: "pay_online", descKey: "pay_online_description" },
 ];
 
 const OrderSummary = ({
@@ -177,13 +177,12 @@ const OrderSummary = ({
     }
   };
 
-
-const handleCouponKeyDown = (e) => {
-  if (e.key === "Enter" && !e.repeat && !appliedCoupon) {
-    e.preventDefault();
-    handleApplyCoupon();
-  }
-};
+  const handleCouponKeyDown = (e) => {
+    if (e.key === "Enter" && !e.repeat && !appliedCoupon) {
+      e.preventDefault();
+      handleApplyCoupon();
+    }
+  };
 
   // Handle coupon removal
   const handleRemoveCoupon = async () => {
@@ -332,12 +331,7 @@ const handleCouponKeyDown = (e) => {
 
   const displayGrandTotal = (Number(grandTotal ?? 0) + displayDeliveryCharge).toFixed(2);
 
-  console.log(
-    "GRND",
-    shippingCharge,
-    overallDeliveryCharge,
-    displayDeliveryCharge,
-  );
+  console.log("GRND", shippingCharge, overallDeliveryCharge, displayDeliveryCharge);
 
   // Check if order can be placed
   const { shippingId, billingId } = getFinalAddressIds();
@@ -475,7 +469,7 @@ const handleCouponKeyDown = (e) => {
                     placeholder={tCheckout("coupon_placeholder")}
                     value={couponCode}
                     onChange={(e) => setCouponCode(e.target.value)}
-                    onKeyDown={(e)=>handleCouponKeyDown(e)}
+                    onKeyDown={(e) => handleCouponKeyDown(e)}
                     // disabled={!!appliedCoupon}
                     className={
                       "text-[12px] md:text-[12px] xl:text-[11px] 2xl:text-[14px] leading-none font-light text-black placeholder:text-[#aeaeae] h-[35px] 2xl:h-[45px] bg-white border-[#e9e9e9] rounded-[4px] px-[15px] focus-visible:ring-1 flex-1"
@@ -684,7 +678,11 @@ const handleCouponKeyDown = (e) => {
             >
               {tCommon("cancel")}
             </Button>
-            <Button onClick={confirmPlaceOrder} disabled={isPlacingOrder} className="mt-0 px-6 py-2 h-auto text-sm font-medium bg-black hover:bg-black/90 text-white border-0">
+            <Button
+              onClick={confirmPlaceOrder}
+              disabled={isPlacingOrder}
+              className="mt-0 px-6 py-2 h-auto text-sm font-medium bg-black hover:bg-black/90 text-white border-0"
+            >
               {isPlacingOrder ? tCommon("loading") : tCheckout("confirm_order")}
             </Button>
           </DialogFooter>
