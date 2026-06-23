@@ -59,7 +59,7 @@ export default function Header({ navigationData, locale, data }) {
     if (typeof current === "number") {
       const direction = current - lastScrollY.current;
       const atTop = current < 50; // Use a fixed pixel threshold for better performance
-      
+
       const nextVisible = atTop || direction < 0;
       const nextBg = !atTop; // simplified logic: show bg if not at top
 
@@ -71,7 +71,7 @@ export default function Header({ navigationData, locale, data }) {
         setBg(nextBg);
         lastBg.current = nextBg;
       }
-      
+
       lastScrollY.current = current;
     }
   });
@@ -243,7 +243,7 @@ export default function Header({ navigationData, locale, data }) {
                   />
                 </Link>
               </Button>
-              {locale == "ar" ? (
+              {/* {locale == "ar" ? (
                 <Button
                   variant="link"
                   onClick={() => switchLocale("en")}
@@ -283,7 +283,7 @@ export default function Header({ navigationData, locale, data }) {
                   />
                   {t("arabic")}
                 </Button>
-              )}
+              )} */}
             </div>
           </div>
         </div>
