@@ -6,8 +6,9 @@ import React from "react";
 import { useTranslations } from "next-intl";
 import AddressFormCheckout from "./AddressFormCheckout";
 
-const AddAddressBlockCheckout = ({ locale, variant = "shipping", onCancel, onSuccess }) => {
+const AddAddressBlockCheckout = ({ locale, variant = "shipping", type, onCancel, onSuccess }) => {
   const t = useTranslations("address");
+  console.log("type", type);
   return (
     <div className="w-full h-auto block p-3 lg:p-4 xl:p-4 2xl:p-7 rounded-[4px] border border-[#e0e0e0] mb-1 xl:mb-2.5 2xl:mb-4">
       <div className="flex justify-between items-center mb-3 xl:mb-5 2xl:mb-8">
@@ -20,7 +21,7 @@ const AddAddressBlockCheckout = ({ locale, variant = "shipping", onCancel, onSuc
           </Button>
         )}
       </div>
-      <AddressFormCheckout locale={locale} variant={variant} onSuccess={onSuccess} />
+      <AddressFormCheckout locale={locale} variant={variant} onSuccess={onSuccess} type={type} />
     </div>
   );
 };

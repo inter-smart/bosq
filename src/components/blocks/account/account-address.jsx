@@ -22,10 +22,9 @@ import {
 } from "@/components/ui/alert-dialog";
 import UpdateAddressForm from "@/components/form/update-address-form";
 import dynamic from "next/dynamic";
-import { fetchFromAPIWithCredentials } from "@/lib/helper";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
-import { useUpdateDefaultAddressMutation, useDeleteAddressMutation } from "@/store/services/addressApi";
+import { useUpdateDefaultAddressMutation, useDeleteAddressMutation, useLazyGetAddressByIdQuery } from "@/store/services/addressApi";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
@@ -131,6 +130,15 @@ export default function AccountAddress({ locale, addressData }) {
   const [deletingId, setDeletingId] = useState(null);
   const [updateDefaultAddress] = useUpdateDefaultAddressMutation();
   const [deleteAddress] = useDeleteAddressMutation();
+  const [getAddressById] = useLazyGetAddressByIdQuery();
+
+  const handleAuthError = (err, fallback) => {
+    const msg = err?.message || fallback;
+    toast.error(locale === "en" ? msg.en : msg.ar);
+    if (err?.redirectToLogin) {
+      router.push(`/${locale}/login`);
+    }
+  };
 
   const sortByDefault = (arr) =>
     [...arr].sort((a, b) => {
@@ -149,16 +157,18 @@ export default function AccountAddress({ locale, addressData }) {
     setEditMode("billing");
     setIsLoadingEdit(true);
     setIsEditDialogOpen(true);
-
-    // Fetch full address data from GET /api/frontend/address/:id
-    const { data, error } = await fetchFromAPIWithCredentials(`/api/frontend/address/${address.id}`);
-
-    if (!error && data) {
+    try {
+      const data = await getAddressById(address.id).unwrap();
       setEditingAddress(data);
-    } else {
-      setEditingAddress(address); // Fallback to list data
+    } catch (err) {
+      if (err?.redirectToLogin) {
+        handleAuthError(err, { en: "Failed to edit address", ar: "فشل تعديل العنوان" });
+      } else {
+        setEditingAddress(address); // Fallback to list data
+      }
+    } finally {
+      setIsLoadingEdit(false);
     }
-    setIsLoadingEdit(false);
   };
 
   const handleShippingEditClick = async (address) => {
@@ -166,14 +176,18 @@ export default function AccountAddress({ locale, addressData }) {
     setIsLoadingEdit(true);
     setIsEditDialogOpen(true);
 
-    const { data, error } = await fetchFromAPIWithCredentials(`/api/frontend/address/${address.id}`);
-
-    if (!error && data) {
+    try {
+      const data = await getAddressById(address.id).unwrap();
       setEditingAddress(data);
-    } else {
-      setEditingAddress(address);
+    } catch (err) {
+      if (err?.redirectToLogin) {
+        handleAuthError(err, { en: "Failed to edit address", ar: "فشل تعديل العنوان" });
+      } else {
+        setEditingAddress(address); // Fallback to list data
+      }
+    } finally {
+      setIsLoadingEdit(false);
     }
-    setIsLoadingEdit(false);
   };
 
   const handleEditSuccess = () => {
@@ -197,7 +211,7 @@ export default function AccountAddress({ locale, addressData }) {
     } catch (err) {
       console.error("Set default error:", err);
 
-      toast.error(locale === "en" ? err?.en || "Failed to set default address" : err?.ar || "فشل تعيين العنوان الافتراضي");
+      handleAuthError(err, { en: "Failed to set default address", ar: "فشل تعيين العنوان الافتراضي" });
     }
   };
 
@@ -216,7 +230,7 @@ export default function AccountAddress({ locale, addressData }) {
     } catch (err) {
       console.error("Delete error:", err);
 
-      toast.error(locale === "en" ? err?.en || "Failed to delete address" : err?.ar || "فشل حذف العنوان");
+      handleAuthError(err, { en: "Failed to delete address", ar: "فشل حذف العنوان" });
     } finally {
       setDeletingId(null);
     }

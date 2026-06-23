@@ -149,10 +149,10 @@ export const orderApi = createApi({
       },
     }),
     getShippingCharge: builder.mutation({
-      query: ({ state_id }) => ({
+      query: ({ state_id, type }) => ({
         url: `/api/frontend/checkout/shipping-charge`,
         method: "POST",
-        body: { state_id },
+        body: { state_id, type },
       }),
     }),
   }),

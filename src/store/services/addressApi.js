@@ -7,21 +7,25 @@ import { baseQueryWithReauth } from "@/lib/api/baseQueryWithReauth";
  */
 const formatErrorMessage = (response, fallback) => {
   const message = response?.data?.message;
+  const redirectToLogin = response?.data?.status_code === 401;
 
-  if (!message) return fallback;
+  if (!message) return { message: fallback, redirectToLogin };
 
   if (typeof message === "string") {
-    return { en: message, ar: message };
+    return { message: { en: message, ar: message }, redirectToLogin };
   }
 
   if (typeof message === "object" && message !== null) {
     return {
-      en: message.en || fallback.en,
-      ar: message.ar || fallback.ar,
+      message: {
+        en: message.en || fallback.en,
+        ar: message.ar || fallback.ar,
+      },
+      redirectToLogin,
     };
   }
 
-  return fallback;
+  return { message: fallback, redirectToLogin };
 };
 
 /**
@@ -63,6 +67,20 @@ export const addressApi = createApi({
       query: () => "/api/frontend/checkout/cart-addresss",
       providesTags: ["Address"],
       keepUnusedDataFor: 0,
+
+      transformErrorResponse: (response) => {
+        return formatErrorMessage(response, ERROR_MESSAGES.FETCH);
+      },
+    }),
+
+    /**
+     * 📥 Get Address By Id
+     */
+    getAddressById: builder.query({
+      query: (id) => `/api/frontend/address/${id}`,
+      providesTags: ["Address"],
+      keepUnusedDataFor: 0,
+      transformResponse: (response) => response?.data,
 
       transformErrorResponse: (response) => {
         return formatErrorMessage(response, ERROR_MESSAGES.FETCH);
@@ -146,5 +164,11 @@ export const addressApi = createApi({
   }),
 });
 
-export const { useGetAddressesQuery, useAddAddressMutation, useUpdateAddressMutation, useUpdateDefaultAddressMutation, useDeleteAddressMutation } =
-  addressApi;
+export const {
+  useGetAddressesQuery,
+  useLazyGetAddressByIdQuery,
+  useAddAddressMutation,
+  useUpdateAddressMutation,
+  useUpdateDefaultAddressMutation,
+  useDeleteAddressMutation,
+} = addressApi;

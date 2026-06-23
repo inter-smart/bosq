@@ -37,6 +37,7 @@ const textareaStyle = cn(inputStyle, "leading-tight min-h-[80px] 2xl:min-h-[100p
 import { useTranslations } from "next-intl";
 import { useAppSelector } from "@/store/hooks";
 import { useShippingChargeUpdater } from "@/hooks/useShippingChargeUpdater";
+import { useRouter } from "next/navigation";
 
 export default function UpdateAddressFormCheckout({
   locale,
@@ -47,8 +48,10 @@ export default function UpdateAddressFormCheckout({
   editMode = "billing",
   onStateChange = null,
   isCurrentlySelected = false,
+  type,
 }) {
   const t = useTranslations("form");
+  const router = useRouter();
   const { executeRecaptcha } = useGoogleReCaptcha();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
   const { calculateCharge } = useShippingChargeUpdater();
@@ -248,18 +251,20 @@ export default function UpdateAddressFormCheckout({
         const govList = values.shipToDifferentAddress ? shippingStates : states;
         const govState = govList.find((s) => s.slug === govSlug);
         if (govState?.id) {
-          onStateChange(govState.id);
+          onStateChange(govState.id, type ? type : "cart");
         }
       }
 
       onSuccess?.();
     } catch (err) {
       console.error(err);
-      toast.error(locale === "en" ? err?.en : err?.ar || "Something went wrong");
+      const msg = err?.message || { en: "Something went wrong", ar: "حدث خطأ ما" };
+      toast.error(locale === "en" ? msg.en : msg.ar);
+      if (err?.redirectToLogin) {
+        router.push(`/${locale}/login`);
+      }
     }
   };
-
-
 
   const isShippingMode = editMode === "shipping";
 
@@ -435,7 +440,7 @@ export default function UpdateAddressFormCheckout({
                           setPendingStateId(stateObj.id);
                           if (isCurrentlySelected) {
                             setIsCalculatingCharge(true);
-                            const charge = await calculateCharge(stateObj.id);
+                            const charge = await calculateCharge(stateObj.id, type ? type : "cart");
                             setPreviewCharge(charge);
                             setIsCalculatingCharge(false);
                           }
@@ -500,7 +505,7 @@ export default function UpdateAddressFormCheckout({
                               if (stateObj?.id) {
                                 setPendingStateId(stateObj.id);
                                 setIsCalculatingCharge(true);
-                                const charge = await calculateCharge(stateObj.id);
+                                const charge = await calculateCharge(stateObj.id, type ? type : "cart");
                                 setPreviewCharge(charge);
                                 setIsCalculatingCharge(false);
                               } else {
@@ -647,7 +652,7 @@ export default function UpdateAddressFormCheckout({
                         setPendingStateId(stateObj.id);
                         if (isCurrentlySelected) {
                           setIsCalculatingCharge(true);
-                          const charge = await calculateCharge(stateObj.id);
+                          const charge = await calculateCharge(stateObj.id, type ? type : "cart");
                           setPreviewCharge(charge);
                           setIsCalculatingCharge(false);
                         }

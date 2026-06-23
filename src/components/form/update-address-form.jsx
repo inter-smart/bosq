@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { z } from "zod";
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -46,6 +47,7 @@ export default function UpdateAddressForm({
   editMode = "billing",
 }) {
   const t = useTranslations("form");
+  const router = useRouter();
   const { executeRecaptcha } = useGoogleReCaptcha();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
 
@@ -235,7 +237,11 @@ export default function UpdateAddressForm({
       onSuccess?.();
     } catch (err) {
       console.error(err);
-      toast.error(locale === "en" ? err?.en : err?.ar || "Something went wrong");
+      const msg = err?.message || { en: "Something went wrong", ar: "حدث خطأ ما" };
+      toast.error(locale === "en" ? msg.en : msg.ar);
+      if (err?.redirectToLogin) {
+        router.push(`/${locale}/login`);
+      }
     }
   };
 

@@ -9,10 +9,10 @@ export function useShippingChargeUpdater() {
 
   /** Calls API and dispatches result to Redux → updates OrderSummary. Returns the charge value. */
   const updateCharge = useCallback(
-    async (stateId) => {
+    async (stateId, type) => {
       if (!stateId) return null;
       try {
-        const result = await getShippingCharge({ state_id: stateId }).unwrap();
+        const result = await getShippingCharge({ state_id: stateId, type }).unwrap();
         const charge = result?.data?.overall_delivery_charge;
         if (charge !== undefined) dispatch(setShippingCharge(charge));
         return charge ?? null;
@@ -26,10 +26,10 @@ export function useShippingChargeUpdater() {
 
   /** Calls API and returns the charge value WITHOUT dispatching (for in-form preview). */
   const calculateCharge = useCallback(
-    async (stateId) => {
+    async (stateId, type) => {
       if (!stateId) return null;
       try {
-        const result = await getShippingCharge({ state_id: stateId }).unwrap();
+        const result = await getShippingCharge({ state_id: stateId, type }).unwrap();
         return result?.data?.overall_delivery_charge ?? null;
       } catch (err) {
         console.error("Failed to calculate shipping charge preview:", err);
