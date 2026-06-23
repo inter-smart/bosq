@@ -12,6 +12,7 @@ const nextConfig = {
       { protocol: "http", hostname: "localhost", port: "4000", pathname: "/**" },
       { protocol: "http", hostname: "localhost", port: "5000", pathname: "/**" },
       { protocol: "https", hostname: "crm.intersmarthosting.in", pathname: "/**" },
+      { protocol: "https", hostname: "backend.bosq.ae", pathname: "/**" },
       { protocol: "https", hostname: "images.unsplash.com", pathname: "/**" },
       { protocol: "https", hostname: "picsum.photos", pathname: "/**" },
     ],
