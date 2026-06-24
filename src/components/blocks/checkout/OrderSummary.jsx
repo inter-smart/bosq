@@ -24,7 +24,7 @@ import { useTranslations } from "next-intl";
 
 const paymentMethods = [
   { id: 1, slug: "cod", nameKey: "cod", descKey: "cod_description" },
-  // { id: 2, slug: "online", nameKey: "pay_online", descKey: "pay_online_description" },
+  { id: 2, slug: "online", nameKey: "pay_online", descKey: "pay_online_description" },
 ];
 
 const OrderSummary = ({
@@ -548,7 +548,10 @@ const OrderSummary = ({
             <Checkbox id="agree" checked={termsAccepted} onCheckedChange={setTermsAccepted} />
             <Label htmlFor="agree">
               <Text as="span" size="text3" className="leading-tight text-[#282828] [&_a]:underline">
-                {tCheckout("terms_agree")} <Link href={`/${locale}/terms-and-conditions`} target="_blank" rel="noopener noreferrer">{tCheckout("terms_and_conditions")}</Link>
+                {tCheckout("terms_agree")}{" "}
+                <Link href={`/${locale}/terms-and-conditions`} target="_blank" rel="noopener noreferrer">
+                  {tCheckout("terms_and_conditions")}
+                </Link>
               </Text>
             </Label>
           </div>
