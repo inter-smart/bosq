@@ -548,7 +548,7 @@ const OrderSummary = ({
             <Checkbox id="agree" checked={termsAccepted} onCheckedChange={setTermsAccepted} />
             <Label htmlFor="agree">
               <Text as="span" size="text3" className="leading-tight text-[#282828] [&_a]:underline">
-                {tCheckout("terms_agree")} <Link href={`/${locale}/terms-and-conditions`}>{tCheckout("terms_and_conditions")}</Link>
+                {tCheckout("terms_agree")} <Link href={`/${locale}/terms-and-conditions`} target="_blank" rel="noopener noreferrer">{tCheckout("terms_and_conditions")}</Link>
               </Text>
             </Label>
           </div>
