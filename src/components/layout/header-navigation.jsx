@@ -43,7 +43,7 @@ export default function HeaderNavigation({
       ? "text-[#282828] lg:data-[state=open]:text-black hover:text-[#282828] focus:text-[#282828]"
       : "text-[#282828] lg:text-white lg:data-[state=open]:text-white hover:text-white focus:text-white";
 
-    const activeColor = isActive ? "text-[#f17423]" : "";
+    const activeColor = isActive ? "text-[#f17423] hover:text-[#f17423] focus:text-[#f17423] lg:data-[state=open]:text-[#f17423]" : "";
 
     return cn(baseStyle, pageTextColor, activeColor);
   };
@@ -51,7 +51,7 @@ export default function HeaderNavigation({
     return cn(
       "text-[14px] lg:text-[14px] 2xl:text-[17px] 3xl:text-[22px] leading-normal font-normal text-start hover:bg-black/0 px-0 py-2 2xl:py-3 transition-colors duration-200",
       isActive
-        ? "text-[#f17423]"
+        ? "text-[#f17423] focus:text-[#f17423]"
         : isHovered
           ? "text-black underline"
           : "text-black/80 lg:text-black group-hover:text-black/50",
@@ -62,7 +62,7 @@ export default function HeaderNavigation({
     return cn(
       "text-[12px] lg:text-[12px] 2xl:text-[14px] 3xl:text-[18px] leading-normal font-normal text-start hover:bg-black/0 px-0 py-2 transition-colors duration-200",
       isActive
-        ? "text-[#f17423]"
+        ? "text-[#f17423] focus:text-[#f17423]"
         : isHovered
           ? "text-black underline"
           : "text-black/60 lg:text-black group-hover:text-black/50",
@@ -81,7 +81,7 @@ export default function HeaderNavigation({
     >
       <NavigationMenuList className="xl:gap-x-3 2xl:gap-x-4 max-lg:flex-col max-lg:[&>div]:w-full">
         {menuItems?.map((item, i) => {
-          const isActive = pathname === item.slug;
+          const isActive = pathname === item.slug || (item.slug && item.slug !== '/' && pathname.startsWith(item.slug + '/'));
           return item?.hasSubmenu ? (
                 <NavigationMenuItem key={i} value={"toplevel" + i}>
                   <NavigationMenuTrigger
@@ -109,7 +109,7 @@ export default function HeaderNavigation({
                           }}
                         >
                           {item?.items?.slice(0, 8).map((subItem, i) => {
-                            const isSubActive = pathname === subItem.slug;
+                            const isSubActive = pathname === subItem.slug || (subItem.slug && subItem.slug !== '/' && pathname.startsWith(subItem.slug + '/'));
                             const hasSubSubItems =
                               subItem?.items && subItem.items.length > 0;
                             const isSubHovered =
@@ -163,7 +163,7 @@ export default function HeaderNavigation({
                                     <ul>
                                       {subItem.items.map((subSubItem) => {
                                         const isSubSubActive =
-                                          pathname === subSubItem.slug;
+                                          pathname === subSubItem.slug || (subSubItem.slug && subSubItem.slug !== '/' && pathname.startsWith(subSubItem.slug + '/'));
                                         const isSubSubHovered =
                                           hoveredSubSubmenu?.id ===
                                           subSubItem.id;

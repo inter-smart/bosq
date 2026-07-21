@@ -291,6 +291,7 @@ const AddressBlockCheckout = ({ locale, variant, type, data, useSameAddress, set
           setIsEditDialogOpen(open);
           if (!open) setEditingAddress(null);
         }}
+        modal={false}
       >
         <AlertDialogContent className={"xl:max-w-[768px] 2xl:max-w-[840px] gap-0"}>
           <AlertDialogHeader className={"flex-row items-center justify-between mb-2 2xl:mb-4"}>
@@ -331,6 +332,7 @@ const AddressBlockCheckout = ({ locale, variant, type, data, useSameAddress, set
             setPendingAction(null);
           }
         }}
+        modal={false}
       >
         <AlertDialogContent size="none" className=" gap-4 p-6">
           <AlertDialogHeader className="space-y-2">

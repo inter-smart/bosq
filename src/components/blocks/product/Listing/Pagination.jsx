@@ -15,7 +15,12 @@ import {
 
 const ITEMS_PER_PAGE = 12;
 
-const ProductListPagination = ({ pagination, isEn, label = "products", labelAr = "منتج" }) => {
+const ProductListPagination = ({
+  pagination,
+  isEn,
+  label = "products",
+  labelAr = "منتج",
+}) => {
   const [isPending, startTransition] = useTransition();
 
   // Use nuqs for page state - synced with URL
@@ -95,7 +100,12 @@ const ProductListPagination = ({ pagination, isEn, label = "products", labelAr =
   if (total === 0) return null;
 
   return (
-    <div className={cn("w-full flex flex-col sm:flex-row sm:justify-between items-center gap-4 mt-5 xl:mt-10 2xl:mt-16", isPending && "opacity-50 pointer-events-none")}>
+    <div
+      className={cn(
+        "w-full flex flex-col sm:flex-row sm:justify-between items-center gap-4 mt-5 xl:mt-10 2xl:mt-16",
+        isPending && "opacity-50 pointer-events-none",
+      )}
+    >
       <div className="text-[12px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-normal text-[#bbb]">
         {isEn
           ? `Showing ${startIndex + 1}-${Math.min(endIndex, total)} of ${total} ${label}`
@@ -111,7 +121,11 @@ const ProductListPagination = ({ pagination, isEn, label = "products", labelAr =
                     e.preventDefault();
                     goToPrevious();
                   }}
-                  className={cn("cursor-pointer", currentPage === 1 && "pointer-events-none opacity-50")}
+                  className={cn(
+                    "cursor-pointer",
+                    currentPage === 1 && "pointer-events-none opacity-50",
+                    isEn ? "rotate-0" : "rotate-180",
+                  )}
                 />
               </PaginationItem>
               {paginationItems.map((item, index) => (
@@ -138,7 +152,12 @@ const ProductListPagination = ({ pagination, isEn, label = "products", labelAr =
                     e.preventDefault();
                     goToNext();
                   }}
-                  className={cn("cursor-pointer", currentPage === totalPages && "pointer-events-none opacity-50")}
+                  className={cn(
+                    "cursor-pointer",
+                    currentPage === totalPages &&
+                      "pointer-events-none opacity-50",
+                    isEn ? "rotate-0" : "rotate-180",
+                  )}
                 />
               </PaginationItem>
             </PaginationContent>

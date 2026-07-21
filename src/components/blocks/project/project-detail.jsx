@@ -69,17 +69,17 @@ export default function ProjectDetail({ locale, projectData }) {
                   : "sm:float-right sm:ml-15 xl:ml-24 2xl:ml-28 3xl:ml-80 sm:mr-0",
               )}
             >
-              <div className="flex flex-wrap -m-3 xl:-m-5 2xl:-m-7 [&>*]:p-3 xl:[&>*]:p-5 2xl:[&>*]:p-7">
+              <div className="flex flex-wrap -m-3 xl:-m-5 2xl:-m-7 [&>*]:p-3 xl:[&>*]:p-5 2xl:[&>*]:p-7 mb-4 2xl:mb-5">
                 {features?.map((item, index) => (
                   <div key={`project-info-${index}`} className="w-1/2">
                     <Text
                       as="div"
-                      size="text3"
+                      size="text1"
                       className="font-medium text-[#282828] mb-1 2xl:mb-2"
                     >
                       {item?.label}
                     </Text>
-                    <Text as="div" size="text3" className="text-[#282828]">
+                    <Text as="div" size="text2" className="text-[#282828]">
                       {item?.value}
                     </Text>
                   </div>

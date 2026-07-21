@@ -228,7 +228,8 @@ const ProductListFilters = ({ filterData, isEn }) => {
     (attrSlug, valSlug) => {
       const attr = filterData?.attributes?.find((a) => a.slug === attrSlug);
       const val = attr?.values?.find((v) => v.slug === valSlug);
-      return val ? (isEn ? val.value : val.value_ar) : valSlug;    },
+      return val ? (isEn ? val.value : val.value_ar) : valSlug;
+    },
     [filterData, isEn],
   );
 
@@ -862,7 +863,7 @@ const ProductListFilters = ({ filterData, isEn }) => {
             {isEn ? "Sort by" : "الترتيب حسب"}:
           </span>
           <Select value={sort} onValueChange={handleSortChange}>
-            <SelectTrigger className="text-[10px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-tight font-medium truncate text-black w-[80px] sm:w-[110px] 2xl:w-[130px] border-none bg-transparent p-0 [&>svg]:hidden focus-visible:ring-0 rounded-none shadow-none">
+            <SelectTrigger className="text-[10px] xl:text-[10px] 2xl:text-[12px] 3xl:text-[14px] leading-tight font-medium truncate text-black w-[80px] sm:w-[110px] 2xl:w-[130px] border-none bg-transparent p-0 [&>svg]:hidden focus-visible:ring-0 rounded-none shadow-none data-[state=open]:[&>span>img]:rotate-180">
               <SelectValue placeholder="Default" />
               <SelectIcon>
                 <Image
@@ -870,7 +871,9 @@ const ProductListFilters = ({ filterData, isEn }) => {
                   alt="Dropdown"
                   width={20}
                   height={20}
-                  className="w-[10px] xl:w-[15px] block"
+                  className={cn(
+                    "w-[10px] xl:w-[15px] block transition-transform duration-300",
+                  )}
                   quality={90}
                 />
               </SelectIcon>

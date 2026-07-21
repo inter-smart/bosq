@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/utils/heading";
@@ -22,13 +22,9 @@ import {
 } from "@/components/ui/alert-dialog";
 import UpdateAddressForm from "@/components/form/update-address-form";
 import dynamic from "next/dynamic";
+import { fetchFromAPIWithCredentials } from "@/lib/helper";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
-import {
-  useUpdateDefaultAddressMutation,
-  useDeleteAddressMutation,
-  useLazyGetAddressByIdQuery,
-} from "@/store/services/addressApi";
 
 const MediaQuery = dynamic(() => import("react-responsive"), {
   ssr: false,
@@ -169,7 +165,7 @@ function AddressCard({
   );
 }
 
-export default function AccountAddress({ locale, addressData }) {
+export default function AccountAddress({ data, locale, addressData }) {
   const t = useTranslations("address");
   const a = useTranslations("account");
   const c = useTranslations("common");
@@ -180,20 +176,8 @@ export default function AccountAddress({ locale, addressData }) {
   const [editMode, setEditMode] = useState("billing"); // "billing" | "shipping"
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isLoadingEdit, setIsLoadingEdit] = useState(false);
-  const [deletingId, setDeletingId] = useState(null);
-  const [updateDefaultAddress] = useUpdateDefaultAddressMutation();
-  const [deleteAddress] = useDeleteAddressMutation();
-  const [getAddressById] = useLazyGetAddressByIdQuery();
-
-  const addFormRef = useRef(null);
-
-  const handleAuthError = (err, fallback) => {
-    const msg = err?.message || fallback;
-    toast.error(locale === "en" ? msg.en : msg.ar);
-    if (err?.redirectToLogin) {
-      router.push(`/${locale}/login`);
-    }
-  };
+  const [isDeleting, setIsDeleting] = useState(null);
+  const [isDeleteItem, setisDeleteItem] = useState(false);
 
   const sortByDefault = (arr) =>
     [...arr].sort((a, b) => {
@@ -214,21 +198,18 @@ export default function AccountAddress({ locale, addressData }) {
     setEditMode("billing");
     setIsLoadingEdit(true);
     setIsEditDialogOpen(true);
-    try {
-      const data = await getAddressById(address.id).unwrap();
+
+    // Fetch full address data from GET /api/frontend/address/:id
+    const { data, error } = await fetchFromAPIWithCredentials(
+      `/api/frontend/address/${address.id}`,
+    );
+
+    if (!error && data) {
       setEditingAddress(data);
-    } catch (err) {
-      if (err?.redirectToLogin) {
-        handleAuthError(err, {
-          en: "Failed to edit address",
-          ar: "فشل تعديل العنوان",
-        });
-      } else {
-        setEditingAddress(address); // Fallback to list data
-      }
-    } finally {
-      setIsLoadingEdit(false);
+    } else {
+      setEditingAddress(address); // Fallback to list data
     }
+    setIsLoadingEdit(false);
   };
 
   const handleShippingEditClick = async (address) => {
@@ -236,21 +217,16 @@ export default function AccountAddress({ locale, addressData }) {
     setIsLoadingEdit(true);
     setIsEditDialogOpen(true);
 
-    try {
-      const data = await getAddressById(address.id).unwrap();
+    const { data, error } = await fetchFromAPIWithCredentials(
+      `/api/frontend/address/${address.id}`,
+    );
+
+    if (!error && data) {
       setEditingAddress(data);
-    } catch (err) {
-      if (err?.redirectToLogin) {
-        handleAuthError(err, {
-          en: "Failed to edit address",
-          ar: "فشل تعديل العنوان",
-        });
-      } else {
-        setEditingAddress(address); // Fallback to list data
-      }
-    } finally {
-      setIsLoadingEdit(false);
+    } else {
+      setEditingAddress(address);
     }
+    setIsLoadingEdit(false);
   };
 
   const handleEditSuccess = () => {
@@ -261,62 +237,55 @@ export default function AccountAddress({ locale, addressData }) {
     }, 50);
   };
 
-  const handleSetDefault = async (addressId, addressType) => {
+  const handleSetDefault = async (addressId) => {
     try {
-      await updateDefaultAddress({
-        id: addressId,
-        addressType,
-        isAuthenticated: true,
-      }).unwrap();
+      const { error } = await fetchFromAPIWithCredentials(
+        `/api/frontend/address/${addressId}/default`,
+        {
+          method: "PUT",
+        },
+      );
 
-      toast.success(tTost("default_address"));
-      router.refresh();
-    } catch (err) {
-      handleAuthError(err, {
-        en: "Failed to set default address",
-        ar: "فشل تعيين العنوان الافتراضي",
-      });
+      if (!error) {
+        router.refresh();
+      }
+
+      toast.success(`${tTost("default_address")}`);
+    } catch (error) {
+      toast.error(`${tTost("failed_default_address")}`);
     }
   };
 
   const handleDelete = async (addressId) => {
+    setIsDeleting(addressId);
+    setisDeleteItem(true);
     try {
-      setDeletingId(addressId);
+      const { data, error, message } = await fetchFromAPIWithCredentials(
+        `/api/frontend/address/${addressId}`,
+        {
+          method: "DELETE",
+        },
+      );
 
-      await deleteAddress({
-        id: addressId,
-        addressType: "billing",
-        isAuthenticated: true,
-      }).unwrap();
+      if (!error) {
+        router.refresh();
+      }
+      setIsDeleting(null);
+      setisDeleteItem(false);
 
-      toast.success(tTost("delete_address"));
-      router.refresh();
-    } catch (err) {
-      handleAuthError(err, {
-        en: "Failed to delete address",
-        ar: "فشل حذف العنوان",
-      });
-    } finally {
-      setDeletingId(null);
+      toast.success(`${tTost("delete_address")}`);
+    } catch (error) {
+      toast.error(`${tTost("failed_delete_address")}`);
     }
   };
 
-  const handleShowAddForm = () => {
-    setShowAddForm((prev) => {
-      if (!prev) {
-        setTimeout(() => {
-          addFormRef.current?.scrollIntoView({ behavior: "smooth" });
-        }, 5);
-      }
-      return !prev;
-    });
-  };
+  console.log("addressdata: ", addressData);
 
   return (
     <>
       {!addressData || addressData?.length === 0 ? (
         // Show form when no addresses exist
-        <div ref={addFormRef} className="w-full border border-[#e9e9e9] sm:rounded-e-lg py-3 xl:py-6 3xl:py-9 px-3 xl:px-4 3xl:px-5">
+        <div className="w-full border border-[#e9e9e9] sm:rounded-e-lg py-3 xl:py-6 3xl:py-9 px-3 xl:px-4 3xl:px-5">
           <Heading
             as="h4"
             size="heading5"
@@ -354,7 +323,7 @@ export default function AccountAddress({ locale, addressData }) {
                 <Button
                   variant={"black"}
                   disabled={false}
-                  onClick={handleShowAddForm}
+                  onClick={() => setShowAddForm((prev) => !prev)}
                   className={cn(
                     "min-w-[130px] xl:min-w-[155px] 2xl:min-w-[240px]",
                     showAddForm && "bg-[#f17423]",
@@ -382,7 +351,7 @@ export default function AccountAddress({ locale, addressData }) {
                   <AddressCard
                     key={"billing-item-" + index}
                     item={item}
-                    isDeleting={deletingId}
+                    isDeleting={isDeleting}
                     onEdit={handleEditClick}
                     onSetDefault={handleSetDefault}
                     onDelete={handleDelete}
@@ -423,7 +392,7 @@ export default function AccountAddress({ locale, addressData }) {
               <Button
                 variant={"black"}
                 disabled={false}
-                onClick={handleShowAddForm}
+                onClick={() => setShowAddForm((prev) => !prev)}
                 className="min-w-[140px] xl:min-w-[155px] 2xl:min-w-[240px] ml-auto"
               >
                 <Plus className="size-3" />
@@ -433,10 +402,7 @@ export default function AccountAddress({ locale, addressData }) {
           </MediaQuery>
 
           {showAddForm && (
-            <div
-              ref={addFormRef}
-              className="w-full bg-white border border-[#dedede] p-2.5 xl:p-3.5 2xl:p-5 mb-5 xl:mb-10 2xl:mb-12"
-            >
+            <div className="w-full bg-white border border-[#dedede] p-2.5 xl:p-3.5 2xl:p-5 mb-5 xl:mb-10 2xl:mb-12">
               <Heading
                 as="h4"
                 size="heading5"
@@ -467,7 +433,7 @@ export default function AccountAddress({ locale, addressData }) {
             className={"flex-row items-center justify-between mb-2 2xl:mb-4"}
           >
             <AlertDialogTitle className="text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-semibold text-[#282828]">
-              {t("edit_title")}
+              {t("edit_title")}sfdsf
             </AlertDialogTitle>
             <AlertDialogDescription className={"sr-only"}>
               {t("edit_description")}

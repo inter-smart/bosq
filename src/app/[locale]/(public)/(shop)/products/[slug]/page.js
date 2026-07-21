@@ -1,4 +1,4 @@
-import ProductDetailCopy from "@/components/blocks/product/product-detail copy";
+import ProductDetail from "@/components/blocks/product/product-detail";
 import ProductHero from "@/components/blocks/product/product-hero";
 import ProductSimilar from "@/components/blocks/product/product-similar";
 import { getMetaData } from "@/lib/api/metaApi";
@@ -50,7 +50,7 @@ export default async function ProductDetailPage({ params, searchParams }) {
   return (
     <>
       <ProductHero locale={locale} data={data?.product} slug={heroSlug} type="product" />
-      <ProductDetailCopy
+      <ProductDetail
         locale={locale}
         initialData={data?.initialVariant}
         productData={data?.product}

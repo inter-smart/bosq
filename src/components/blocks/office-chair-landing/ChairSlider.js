@@ -35,7 +35,7 @@ export default function ChairSlider({ locale, data }) {
                     )}
                 </div>
                 <div className="overflow-hidden" ref={emblaRef}>
-                    <div className="flex touch-pan-y touch-pinch-zoom -mx-1 sm:-mx-[5px] xl:-mx-[7.5px] 2xl:-mx-[10px] *:px-1 sm:*:px-[5px] xl:*:p-x-[7.5px] 2xl:*:px-[10px]">
+                    <div className="flex touch-pan-y touch-pinch-zoom -mx-0.5 sm:-mx-[4.5px] xl:-mx-[7px] 2xl:-mx-[9.5px] *:px-1 sm:*:px-[5px] xl:*:p-x-[7.5px] 2xl:*:px-[10px]">
                         {products?.map((item, index) => (
                             <div key={"product" + index} className="flex-[0_0_176px] sm:flex-[0_0_33.333%] min-w-0 select-none">
                                 <ProductCard product={item} locale={locale} isEn={locale === "en"} />

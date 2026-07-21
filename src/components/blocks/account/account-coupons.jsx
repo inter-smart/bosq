@@ -72,7 +72,7 @@ export default function AccountCoupons({ locale, couponData }) {
                     <Text
                       as="div"
                       size="none"
-                      className="text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#282828] mb-1"
+                      className="text-[13px] sm:text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[14px] leading-normal font-light text-[#282828] mb-1"
                     >
                       {parse(isEn ? item?.title : item?.title_ar)}
                     </Text>
