@@ -83,10 +83,10 @@ export default function Footer({
                       <Image
                         src={item?.media?.path}
                         alt={isEn ? item?.media?.alt : item?.media?.alt_ar}
-                        width={10}
-                        height={10}
+                        width={20}
+                        height={20}
                         unoptimized
-                        className="w-[15px] lg:w-[13px] xl:w-[15px] 2xl:w-[17px] aspect-square block hover:scale-110 transition"
+                        className="w-[15px] lg:w-[14px] xl:w-[16px] 2xl:w-[18px] aspect-square object-contain block hover:scale-110 transition"
                       />
                     </a>
                   </Button>

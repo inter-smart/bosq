@@ -14,9 +14,21 @@ import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { useGetAddressesQuery } from "@/store/services/addressApi";
-import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { Heading } from "@/components/utils/heading";
-import { useApplyCouponMutation, useRemoveCouponMutation, usePlaceOrderMutation, useInitiatePaymentMutation } from "@/store/services/orderApi";
+import {
+  useApplyCouponMutation,
+  useRemoveCouponMutation,
+  usePlaceOrderMutation,
+  useInitiatePaymentMutation,
+} from "@/store/services/orderApi";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { resetCart } from "@/store/slices/cartSlice";
@@ -44,9 +56,13 @@ const OrderSummary = ({
 }) => {
   const dispatch = useDispatch();
   // Get selected addresses and checkout permission from Redux
-  const { selectedShippingAddressId, selectedBillingAddressId, useSameAddressForBilling, useSameAddressForShipping, shippingCharge } = useSelector(
-    (state) => state.checkout,
-  );
+  const {
+    selectedShippingAddressId,
+    selectedBillingAddressId,
+    useSameAddressForBilling,
+    useSameAddressForShipping,
+    shippingCharge,
+  } = useSelector((state) => state.checkout);
 
   const { user } = useAuth();
 
@@ -68,15 +84,22 @@ const OrderSummary = ({
 
   const [products, setProducts] = useState(initialProducts);
   const [cartId, setCartId] = useState(initialCartId);
-  const [overallDeliveryCharge, setOverallDeliveryCharge] = useState(deliveryCharge);
+  const [overallDeliveryCharge, setOverallDeliveryCharge] =
+    useState(deliveryCharge);
   const [subTotal, setSubTotal] = useState(initialSubTotal);
   const [grandTotal, setGrandTotal] = useState(initialGrandTotal);
   const [itemsCount, setItemsCount] = useState(initialItemsCount);
   const [totalItems, setTotalItems] = useState(initialTotalItems);
   const [appliedCoupon, setAppliedCoupon] = useState(initialCouponStatus);
-  const [discountTotal, setDiscountTotal] = useState(initialDiscountTotal ?? "0.00");
-  const [couponDiscountType, setCouponDiscountType] = useState(initialCouponDiscountType ?? null);
-  const [couponDiscountValue, setCouponDiscountValue] = useState(initialCouponDiscountValue ?? null);
+  const [discountTotal, setDiscountTotal] = useState(
+    initialDiscountTotal ?? "0.00",
+  );
+  const [couponDiscountType, setCouponDiscountType] = useState(
+    initialCouponDiscountType ?? null,
+  );
+  const [couponDiscountValue, setCouponDiscountValue] = useState(
+    initialCouponDiscountValue ?? null,
+  );
   const [couponScopeType, setCouponScopeType] = useState(null);
 
   // Sync local state when server props update (e.g. after login → cart merge → navigation)
@@ -122,7 +145,9 @@ const OrderSummary = ({
   }, [isAllowed, router, locale]);
 
   // Fetch addresses to display in confirmation dialog
-  const { data: addressData } = useGetAddressesQuery(undefined, { refetchOnMountOrArgChange: true });
+  const { data: addressData } = useGetAddressesQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
   const allShippingAddresses = addressData?.data?.shipping || [];
   const allBillingAddresses = addressData?.data?.billing || [];
 
@@ -137,10 +162,13 @@ const OrderSummary = ({
     if (data.id) setCartId(data.id);
     if (data.sub_total !== undefined) setSubTotal(data.sub_total);
     if (data.grand_total !== undefined) setGrandTotal(data.grand_total);
-    if (data.discount_total !== undefined) setDiscountTotal(data.discount_total);
+    if (data.discount_total !== undefined)
+      setDiscountTotal(data.discount_total);
     // if (data.coupon_discount_type !== undefined) setCouponDiscountType(data.coupon_discount_type);
-    if (data.coupon_discount_value !== undefined) setCouponDiscountValue(data.coupon_discount_value);
-    if (data.coupon_scope_type !== undefined) setCouponScopeType(data.coupon_scope_type);
+    if (data.coupon_discount_value !== undefined)
+      setCouponDiscountValue(data.coupon_discount_value);
+    if (data.coupon_scope_type !== undefined)
+      setCouponScopeType(data.coupon_scope_type);
     // if (data.item_count !== undefined) setItemsCount(data.item_count);
     // if (data.items) setTotalItems(data.items.length);
 
@@ -157,7 +185,9 @@ const OrderSummary = ({
     // Reset per-item discounts and scope when coupon is removed
     if (!data.applied_coupon_code) {
       setCouponScopeType(null);
-      setProducts((prev) => prev.map((item) => ({ ...item, discount_amount: "0.00" })));
+      setProducts((prev) =>
+        prev.map((item) => ({ ...item, discount_amount: "0.00" })),
+      );
     }
 
     setAppliedCoupon(data.applied_coupon_code || null);
@@ -168,11 +198,18 @@ const OrderSummary = ({
     if (!couponCode.trim()) return;
 
     try {
-      const result = await applyCoupon({ coupon_code: couponCode, cart_type: type }).unwrap();
+      const result = await applyCoupon({
+        coupon_code: couponCode,
+        cart_type: type,
+      }).unwrap();
       updateSummaryFromResponse(result?.data);
       toast.success(`${tToast("coupon_success")}`);
     } catch (error) {
-      toast.error(locale === "en" ? error?.en || "Failed to apply coupon" : error?.ar || "Failed to apply coupon");
+      toast.error(
+        locale === "en"
+          ? error?.en || "Failed to apply coupon"
+          : error?.ar || "Failed to apply coupon",
+      );
     }
   };
 
@@ -186,7 +223,10 @@ const OrderSummary = ({
   // Handle coupon removal
   const handleRemoveCoupon = async () => {
     try {
-      const result = await removeCoupon({ coupon_code: appliedCoupon || couponCode, cart_type: type }).unwrap();
+      const result = await removeCoupon({
+        coupon_code: appliedCoupon || couponCode,
+        cart_type: type,
+      }).unwrap();
       updateSummaryFromResponse(result?.data);
       setCouponCode("");
       toast.success(`${tToast("coupon_removed")}`);
@@ -216,7 +256,11 @@ const OrderSummary = ({
 
   // Find address details by ID from both lists
   const findAddress = (id) => {
-    return [...allShippingAddresses, ...allBillingAddresses].find((addr) => addr.id === id) || null;
+    return (
+      [...allShippingAddresses, ...allBillingAddresses].find(
+        (addr) => addr.id === id,
+      ) || null
+    );
   };
 
   // Get the selected payment method label
@@ -297,7 +341,10 @@ const OrderSummary = ({
 
       if (requiresPayment && selectedPaymentMethod === "online") {
         // Get payment URL from N-Genius and redirect the user there
-        const paymentData = await initiatePayment({ orderId: internalOrderId, locale }).unwrap();
+        const paymentData = await initiatePayment({
+          orderId: internalOrderId,
+          locale,
+        }).unwrap();
         const paymentUrl = paymentData.data?.payment_url;
         if (paymentUrl) {
           window.location.href = paymentUrl;
@@ -318,16 +365,24 @@ const OrderSummary = ({
         return;
       }
 
-      toast.error(locale === "en" ? error?.en || tToast("order_failed") : error?.ar || tToast("order_failed"));
+      toast.error(
+        locale === "en"
+          ? error?.en || tToast("order_failed")
+          : error?.ar || tToast("order_failed"),
+      );
     } finally {
       isPlacingOrderRef.current = false;
       setIsPlacingOrder(false);
     }
   };
 
-  const displayDeliveryCharge = Number(shippingCharge ?? overallDeliveryCharge ?? 0);
+  const displayDeliveryCharge = Number(
+    shippingCharge ?? overallDeliveryCharge ?? 0,
+  );
 
-  const displayGrandTotal = (Number(grandTotal ?? 0) + displayDeliveryCharge).toFixed(2);
+  const displayGrandTotal = (
+    Number(grandTotal ?? 0) + displayDeliveryCharge
+  ).toFixed(2);
 
   // Check if order can be placed
   const { shippingId, billingId } = getFinalAddressIds();
@@ -340,14 +395,24 @@ const OrderSummary = ({
           {/* Order Summary */}
 
           <div className="w-full bg-[#f4f4f4] border border-[#e0e0e0] rounded-[4px] p-3 sm:p-4 xl:px-7 2xl:px-8 xl:py-4 2xl:py-6 mb-2 xl:mb-4">
-            <Text as="div" size="text3" className="text-[#808080] mb-1 xl:mb-2 2xl:mb-3">
+            <Text
+              as="div"
+              size="text3"
+              className="text-[#808080] mb-1 xl:mb-2 2xl:mb-3"
+            >
               {tCommon("items_count", { count: totalItems })}
             </Text>
             <button
               onClick={() => setCheckoutList((prev) => !prev)}
               className="text-[10px] 2xl:text-[12px] leading-none font-light truncate text-black mb-2 xl:mb-2.5 flex hover:underline"
             >
-              {tCheckout("show_details")} <ChevronDown className={cn("size-3 transition", checkoutList && "rotate-180")} />
+              {tCheckout("show_details")}{" "}
+              <ChevronDown
+                className={cn(
+                  "size-3 transition",
+                  checkoutList && "rotate-180",
+                )}
+              />
             </button>
 
             {/* Cart Items List */}
@@ -361,19 +426,29 @@ const OrderSummary = ({
                 couponScopeType &&
                 couponScopeType !== "common" &&
                 (() => {
-                  const discountedCount = products?.filter((item) => parseFloat(item.discount_amount) > 0).length ?? 0;
+                  const discountedCount =
+                    products?.filter(
+                      (item) => parseFloat(item.discount_amount) > 0,
+                    ).length ?? 0;
                   if (discountedCount === 0) return null;
                   return (
                     <div className="flex items-center gap-1 bg-green-50 border border-green-200 rounded px-1.5 py-1 mb-1">
-                      <span className="text-[8px] 2xl:text-[10px] text-green-600 leading-none">✓</span>
+                      <span className="text-[8px] 2xl:text-[10px] text-green-600 leading-none">
+                        ✓
+                      </span>
                       <span className="text-[8px] 2xl:text-[10px] font-light text-green-700 leading-snug">
-                        {t("coupon_applies_to_items", { count: discountedCount })}
+                        {t("coupon_applies_to_items", {
+                          count: discountedCount,
+                        })}
                       </span>
                     </div>
                   );
                 })()}
               {products?.map((item, index) => (
-                <div key={"checkout-item-" + index} className="group w-full py-0.5">
+                <div
+                  key={"checkout-item-" + index}
+                  className="group w-full py-0.5"
+                >
                   <div className="w-full flex flex-wrap items-center">
                     <div className="w-[30px] xl:w-[30px] 2xl:w-[40px] aspect-3/4 rounded-[4px] bg-white border border-gray-100 ">
                       <Image
@@ -394,12 +469,20 @@ const OrderSummary = ({
                         >
                           {item?.title} x {item?.quantity}
                         </Text>
-                        <Text as="div" size="none" className="text-[8px] 2xl:text-[10px] leading-none font-light truncate text-[#808080]">
+                        <Text
+                          as="div"
+                          size="none"
+                          className="text-[8px] 2xl:text-[10px] leading-none font-light truncate text-[#808080]"
+                        >
                           {item?.slug}
                         </Text>
                       </div>
                       <div className="w-[50px]">
-                        <Text as="div" size="text3" className="font-normal text-[#282828]">
+                        <Text
+                          as="div"
+                          size="text3"
+                          className="font-normal text-[#282828]"
+                        >
                           {tCommon("aed")} {item?.line_total}
                         </Text>
                       </div>
@@ -408,7 +491,9 @@ const OrderSummary = ({
                   {parseFloat(item?.discount_amount) > 0 && (
                     <div className="flex justify-end mt-0.5 pr-0.5">
                       <span className="text-[8px] 2xl:text-[10px] font-light text-green-600 bg-green-50 border border-green-200 rounded px-1 py-px leading-none">
-                        - {tCommon("aed")} {parseFloat(item.discount_amount).toFixed(2)} {t("coupon_discount").toLowerCase()}
+                        - {tCommon("aed")}{" "}
+                        {parseFloat(item.discount_amount).toFixed(2)}{" "}
+                        {t("coupon_discount").toLowerCase()}
                       </span>
                     </div>
                   )}
@@ -433,7 +518,11 @@ const OrderSummary = ({
               <span>{t("shipping_charge")}</span>
               {displayDeliveryCharge > 0 ? (
                 <>
-                  <Text as="div" size="text3" className="font-normal text-[#282828]">
+                  <Text
+                    as="div"
+                    size="text3"
+                    className="font-normal text-[#282828]"
+                  >
                     {tCommon("aed")} {displayDeliveryCharge}
                   </Text>
                 </>
@@ -450,7 +539,12 @@ const OrderSummary = ({
               >
                 <span>
                   {t("coupon_discount")}
-                  {couponDiscountType === "percentage" && couponDiscountValue && <span className="ml-1">({parseFloat(couponDiscountValue)}%)</span>}
+                  {couponDiscountType === "percentage" &&
+                    couponDiscountValue && (
+                      <span className="ml-1">
+                        ({parseFloat(couponDiscountValue)}%)
+                      </span>
+                    )}
                 </span>
                 - {couponDiscountValue}
               </Text>
@@ -482,7 +576,11 @@ const OrderSummary = ({
                 </div>
                 {appliedCoupon && (
                   <div className="flex justify-between gap-2 my-1">
-                    <Text as="div" size="none" className="text-[10px] 2xl:text-[12px] leading-normal font-normal text-[#8e8e8e]">
+                    <Text
+                      as="div"
+                      size="none"
+                      className="text-[10px] 2xl:text-[12px] leading-normal font-normal text-[#8e8e8e]"
+                    >
                       {tCheckout("coupon_applied", { code: appliedCoupon })}
                     </Text>
                     <button
@@ -497,11 +595,17 @@ const OrderSummary = ({
             )}
 
             {/* Total Price */}
-            <Text as="div" size="text3" className="font-normal text-[#282828] my-2 xl:my-3 2xl:my-4 flex justify-between max-sm:font-semibold">
+            <Text
+              as="div"
+              size="text3"
+              className="font-normal text-[#282828] my-2 xl:my-3 2xl:my-4 flex justify-between max-sm:font-semibold"
+            >
               <span>
                 {t("total_price")}
                 <br />
-                <span className="text-[8px] 2xl:text-[10px] font-light text-[#808080]">{tCommon("inc_tax")}</span>
+                <span className="text-[8px] 2xl:text-[10px] font-light text-[#808080]">
+                  {tCommon("inc_tax")}
+                </span>
               </span>
               AED {displayGrandTotal}
             </Text>
@@ -521,7 +625,9 @@ const OrderSummary = ({
                     <RadioGroupItem value={method?.slug} id={method?.slug} />
                     <Label
                       htmlFor={method?.slug}
-                      className={"text-[11px] lg:text-[10px] 2xl:text-[14px] 3xl:text-[16px] leading-tight font-light text-[#282828] cursor-pointer"}
+                      className={
+                        "text-[11px] lg:text-[10px] 2xl:text-[14px] 3xl:text-[16px] leading-tight font-light text-[#282828] cursor-pointer"
+                      }
                     >
                       {tCheckout(method.nameKey)}
                     </Label>
@@ -539,17 +645,36 @@ const OrderSummary = ({
           </div>
 
           {/* Privacy Policy */}
-          <Text as="div" size="text3" className="leading-tight text-[#808080] [&_a]:underline mb-2 xl:mb-4">
-            {tCheckout("privacy_notice")} <Link href={`/${locale}/privacy-policy`}>{tCheckout("privacy_policy")}</Link>
+          <Text
+            as="div"
+            size="text3"
+            className="leading-tight text-[#808080] [&_a]:underline mb-2 xl:mb-4"
+          >
+            {tCheckout("privacy_notice")}{" "}
+            <Link href={`/${locale}/privacy-policy`}>
+              {tCheckout("privacy_policy")}
+            </Link>
           </Text>
 
           {/* Terms and Conditions */}
           <div className="flex items-center gap-3 mb-2 xl:mb-4">
-            <Checkbox id="agree" checked={termsAccepted} onCheckedChange={setTermsAccepted} />
+            <Checkbox
+              id="agree"
+              checked={termsAccepted}
+              onCheckedChange={setTermsAccepted}
+            />
             <Label htmlFor="agree">
-              <Text as="span" size="text3" className="leading-tight text-[#282828] [&_a]:underline">
+              <Text
+                as="span"
+                size="text3"
+                className="leading-tight text-[#282828] [&_a]:underline"
+              >
                 {tCheckout("terms_agree")}{" "}
-                <Link href={`/${locale}/terms-and-conditions`} target="_blank" rel="noopener noreferrer">
+                <Link
+                  href={`/${locale}/terms-and-conditions`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {tCheckout("terms_and_conditions")}
                 </Link>
               </Text>
@@ -557,21 +682,34 @@ const OrderSummary = ({
           </div>
 
           {/* Place Order Button - Desktop */}
-          <Button variant={"black"} onClick={handlePlaceOrder} disabled={!canPlaceOrder} className="min-w-full mt-2">
+          <Button
+            variant={"black"}
+            onClick={handlePlaceOrder}
+            disabled={!canPlaceOrder}
+            className="min-w-full mt-2"
+          >
             {tCheckout("place_order")}
           </Button>
         </div>
       ) : (
         <div className="w-full lg:w-[320px] xl:w-[460px] 2xl:w-[540px] 3xl:w-[668px]">
-          <Text as="div" size="text3" className="leading-tight text-[#808080] mb-2 xl:mb-4 [&_a]:underline">
-            {tCheckout("session_unavailable")} <Link href={`/${locale}/cart`}>{tCheckout("go_back_to_cart")}</Link>
+          <Text
+            as="div"
+            size="text3"
+            className="leading-tight text-[#808080] mb-2 xl:mb-4 [&_a]:underline"
+          >
+            {tCheckout("session_unavailable")}{" "}
+            <Link href={`/${locale}/cart`}>{tCheckout("go_back_to_cart")}</Link>
           </Text>
         </div>
       )}
 
       {/* Order Confirmation Dialog */}
       <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-        <DialogContent showCloseButton={false} className="xl:max-w-[520px] 2xl:max-w-[600px] gap-0 p-5 xl:p-6 2xl:p-8">
+        <DialogContent
+          showCloseButton={false}
+          className="xl:max-w-[520px] 2xl:max-w-[600px] gap-0 p-5 xl:p-6 2xl:p-8"
+        >
           <DialogHeader className="mb-3 xl:mb-4">
             <DialogTitle className="text-[14px] xl:text-[16px] 2xl:text-[18px] font-semibold text-[#282828]">
               {tCheckout("confirm_title")}
@@ -581,70 +719,70 @@ const OrderSummary = ({
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-3 xl:space-y-4 mb-4 xl:mb-5">
-            {/* Payment Method */}
-            <div className="bg-[#f4f4f4] rounded-[4px] p-3 xl:p-4">
-              <Heading as="div" size="heading5" className="font-medium text-[#282828] mb-1">
-                {tCheckout("payment_method")}
-              </Heading>
-              <Text as="div" size="text3" className="text-[#282828]">
-                {getSelectedPaymentLabel()}
-              </Text>
-            </div>
+          <div className="w-full max-h-[60vh] xl:max-h-[70vh] mask-[linear-gradient(to_bottom,transparent_0%,white_2%,white_98%,transparent_100%)] overflow-y-auto">
+            <div className="space-y-3 xl:space-y-4 mb-4 xl:mb-5">
+              {/* Payment Method */}
+              <div className="bg-[#f4f4f4] rounded-[4px] p-3 xl:p-4">
+                <Heading
+                  as="div"
+                  size="heading5"
+                  className="font-medium text-[#282828] mb-1"
+                >
+                  {tCheckout("payment_method")}
+                </Heading>
+                <Text as="div" size="text3" className="text-[#282828]">
+                  {getSelectedPaymentLabel()}
+                </Text>
+              </div>
 
-            {/* Shipping Address */}
-            {(() => {
-              const { shippingId, billingId } = getFinalAddressIds();
-              const shippingAddr = findAddress(shippingId);
-              const billingAddr = findAddress(billingId);
-              const isSameAddress = shippingId === billingId;
+              {/* Shipping Address */}
+              {(() => {
+                const { shippingId, billingId } = getFinalAddressIds();
+                const shippingAddr = findAddress(shippingId);
+                const billingAddr = findAddress(billingId);
+                const isSameAddress = shippingId === billingId;
 
-              return (
-                <>
-                  <div className="bg-[#f4f4f4] rounded-[4px] p-3 xl:p-4">
-                    <Heading as="div" size="heading5" className="font-medium text-[#282828] mb-1">
-                      {tCheckout("shipping_address")}
-                      {isSameAddress && (
-                        <span className="text-[10px] xl:text-[11px] font-light text-[#808080] ml-2">{tCheckout("same_as_billing")}</span>
-                      )}
-                    </Heading>
-                    {shippingAddr ? (
-                      <div>
-                        <Text as="div" size="text3" className="font-medium text-[#282828]">
-                          {shippingAddr.full_name || shippingAddr.name}
-                        </Text>
-                        <Text as="div" size="text3" className="text-[#606060]">
-                          {shippingAddr.street_address || shippingAddr.address_line_1}
-                          {(shippingAddr.apartment || shippingAddr.address_line_2) && `, ${shippingAddr.apartment || shippingAddr.address_line_2}`}
-                        </Text>
-                        <Text as="div" size="text3" className="text-[#606060]">
-                          {shippingAddr.phone}
-                        </Text>
-                      </div>
-                    ) : (
-                      <Text as="div" size="text3" className="text-[#808080]">
-                        {tCheckout("no_address_selected")}
-                      </Text>
-                    )}
-                  </div>
-
-                  {/* Billing Address - only show separately if different */}
-                  {!isSameAddress && (
+                return (
+                  <>
                     <div className="bg-[#f4f4f4] rounded-[4px] p-3 xl:p-4">
-                      <Heading as="div" size="heading5" className="font-medium text-[#282828] mb-1">
-                        {tCheckout("billing_address")}
+                      <Heading
+                        as="div"
+                        size="heading5"
+                        className="font-medium text-[#282828] mb-1"
+                      >
+                        {tCheckout("shipping_address")}
+                        {isSameAddress && (
+                          <span className="text-[10px] xl:text-[11px] font-light text-[#808080] ml-2">
+                            {tCheckout("same_as_billing")}
+                          </span>
+                        )}
                       </Heading>
-                      {billingAddr ? (
+                      {shippingAddr ? (
                         <div>
-                          <Text as="div" size="text3" className="font-medium text-[#282828]">
-                            {billingAddr.full_name || billingAddr.name}
+                          <Text
+                            as="div"
+                            size="text3"
+                            className="font-medium text-[#282828]"
+                          >
+                            {shippingAddr.full_name || shippingAddr.name}
                           </Text>
-                          <Text as="div" size="text3" className="text-[#606060]">
-                            {billingAddr.street_address || billingAddr.address_line_1}
-                            {(billingAddr.apartment || billingAddr.address_line_2) && `, ${billingAddr.apartment || billingAddr.address_line_2}`}
+                          <Text
+                            as="div"
+                            size="text3"
+                            className="text-[#606060]"
+                          >
+                            {shippingAddr.street_address ||
+                              shippingAddr.address_line_1}
+                            {(shippingAddr.apartment ||
+                              shippingAddr.address_line_2) &&
+                              `, ${shippingAddr.apartment || shippingAddr.address_line_2}`}
                           </Text>
-                          <Text as="div" size="text3" className="text-[#606060]">
-                            {billingAddr.phone}
+                          <Text
+                            as="div"
+                            size="text3"
+                            className="text-[#606060]"
+                          >
+                            {shippingAddr.phone}
                           </Text>
                         </div>
                       ) : (
@@ -653,34 +791,91 @@ const OrderSummary = ({
                         </Text>
                       )}
                     </div>
-                  )}
 
-                  {/* Order Total */}
-                  <div className="flex justify-between items-center pt-2 border-t border-[#e0e0e0]">
-                    <Text as="div" size="text3" className="font-medium text-[#282828]">
-                      {tCheckout("total_amount")}
-                    </Text>
-                    <Text as="div" size="text3" className="font-semibold text-[#282828]">
-                      AED {displayGrandTotal}
-                    </Text>
-                  </div>
-                </>
-              );
-            })()}
+                    {/* Billing Address - only show separately if different */}
+                    {!isSameAddress && (
+                      <div className="bg-[#f4f4f4] rounded-[4px] p-3 xl:p-4">
+                        <Heading
+                          as="div"
+                          size="heading5"
+                          className="font-medium text-[#282828] mb-1"
+                        >
+                          {tCheckout("billing_address")}
+                        </Heading>
+                        {billingAddr ? (
+                          <div>
+                            <Text
+                              as="div"
+                              size="text3"
+                              className="font-medium text-[#282828]"
+                            >
+                              {billingAddr.full_name || billingAddr.name}
+                            </Text>
+                            <Text
+                              as="div"
+                              size="text3"
+                              className="text-[#606060]"
+                            >
+                              {billingAddr.street_address ||
+                                billingAddr.address_line_1}
+                              {(billingAddr.apartment ||
+                                billingAddr.address_line_2) &&
+                                `, ${billingAddr.apartment || billingAddr.address_line_2}`}
+                            </Text>
+                            <Text
+                              as="div"
+                              size="text3"
+                              className="text-[#606060]"
+                            >
+                              {billingAddr.phone}
+                            </Text>
+                          </div>
+                        ) : (
+                          <Text
+                            as="div"
+                            size="text3"
+                            className="text-[#808080]"
+                          >
+                            {tCheckout("no_address_selected")}
+                          </Text>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Order Total */}
+                    <div className="flex justify-between items-center pt-2 border-t border-[#e0e0e0]">
+                      <Text
+                        as="div"
+                        size="text3"
+                        className="font-medium text-[#282828]"
+                      >
+                        {tCheckout("total_amount")}
+                      </Text>
+                      <Text
+                        as="div"
+                        size="text3"
+                        className="font-semibold text-[#282828]"
+                      >
+                        AED {displayGrandTotal}
+                      </Text>
+                    </div>
+                  </>
+                );
+              })()}
+            </div>
           </div>
-
           <DialogFooter className="flex-row justify-end gap-2 sm:space-x-0">
             <Button
               variant="outline"
               onClick={() => setShowConfirmDialog(false)}
-              className="mt-0 px-4 py-2 h-auto text-sm font-medium border border-gray-300 hover:bg-gray-50 bg-white text-black"
+              className="mt-0 px-4 py-2 h-auto border border-gray-300 hover:bg-gray-50 bg-white text-black"
             >
               {tCommon("cancel")}
             </Button>
             <Button
               onClick={confirmPlaceOrder}
               disabled={isPlacingOrder}
-              className="mt-0 px-6 py-2 h-auto text-sm font-medium bg-black hover:bg-black/90 text-white border-0"
+              className="mt-0 px-6 py-2 h-auto bg-black hover:bg-black/90 text-white border-0"
             >
               {isPlacingOrder ? tCommon("loading") : tCheckout("confirm_order")}
             </Button>

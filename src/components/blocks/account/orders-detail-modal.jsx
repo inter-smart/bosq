@@ -302,8 +302,8 @@ export default function OrdersDetailModal({ children, order, locale }) {
           <DialogDescription className={"sr-only"}>{t("order_details")}</DialogDescription>
         </DialogHeader>
 
-        <div className="w-full max-h-[60vh] xl:max-h-[70vh] mask-[linear-gradient(to_bottom,transparent_0%,white_2%,white_98%,transparent_100%)]">
-          <div className="h-full overflow-auto flex flex-wrap -mx-1 xl:-mx-1.5 2xl:-mx-2.5 [&>*]:p-1 xl:[&>*]:p-1.5 2xl:[&>*]:p-2.5">
+        <div className="w-full max-h-[60vh] xl:max-h-[70vh] mask-[linear-gradient(to_bottom,transparent_0%,white_2%,white_98%,transparent_100%)] overflow-y-auto">
+          <div className="h-full overflow-auto flex flex-wrap [&>*]:p-1 xl:[&>*]:p-1.5 2xl:[&>*]:p-2.5">
             <div className="w-full sm:w-1/2">
               <div className="w-full h-full bg-[#f2f2f2] border border-[#dedede] p-2.5 xl:p-3.5 2xl:p-5">
                 <Heading
@@ -392,12 +392,12 @@ export default function OrdersDetailModal({ children, order, locale }) {
 
                 <Text as="div" size="text3" className={labelStyle}>
                   {tCart("shipping_charge")} {""}
-                  <span>{parseFloat(order?.shipping_total || 0) > 0 ? `${tCommon("aed")} ${order?.shipping_total}` : tCommon("free")}</span>
+                  <span className="whitespace-nowrap">{parseFloat(order?.shipping_total || 0) > 0 ? `${tCommon("aed")} ${order?.shipping_total}` : tCommon("free")}</span>
                 </Text>
 
                 <Text as="div" size="text3" className={cn(labelStyle, "font-bold mb-1! [&>span]:font-bold")}>
                   {t("total_amount")} {""}
-                  <span>{tCommon("aed")} {order?.grand_total}</span>
+                  <span className="whitespace-nowrap">{tCommon("aed")} {order?.grand_total}</span>
                 </Text>
               </div>
             </div>
