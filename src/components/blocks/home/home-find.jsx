@@ -47,7 +47,7 @@ export default function HomeFind({ data, locale, isEN }) {
                 <Text
                   as="div"
                   size="text1"
-                  className="line-clamp-6 font-light text-black mb-4 xl:mb-6 2xl:mb-6"
+                  className="font-light text-black mb-4 xl:mb-6 2xl:mb-6"
                 >
                   {parse(!isEN? data?.description_ar : data?.description)}
                 </Text>
