@@ -271,7 +271,7 @@ export default function Footer({
                           size="text3"
                           className="text-white transition [&>a]:hover:text-[#f17423] mb-1 xl:mb-3"
                         >
-                          <Link href={`/${locale}/office-chairs/${item?.slug}`}>
+                          <Link href={`/${locale}/${item?.slug}`}>
                             {isEn ? item?.title : item?.title_ar}
                           </Link>
                         </Text>
@@ -290,7 +290,7 @@ export default function Footer({
                           size="text3"
                           className="text-white transition [&>a]:hover:text-[#f17423] mb-2"
                         >
-                          <Link href={`/${locale}/office-chairs/${item?.slug}`}>
+                          <Link href={`/${locale}/${item?.slug}`}>
                             {isEn ? item?.title : item?.title_ar}
                           </Link>
                         </Text>

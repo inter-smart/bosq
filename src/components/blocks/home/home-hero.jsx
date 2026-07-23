@@ -188,7 +188,7 @@ export default function HomeHero({ data, locale }) {
                       <Text
                         as="div"
                         size="text1"
-                        className="line-clamp-2 font-light text-white max-w-[80%] mb-4 xl:mb-7 2xl:mb-10"
+                        className="font-light text-white max-w-[80%] mb-4 xl:mb-7 2xl:mb-10"
                       >
                         {item.parsedDesc}
                       </Text>
