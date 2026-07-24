@@ -438,7 +438,7 @@ export default function Footer({
           <Text as="div" size="text3" className="text-white">
             {t("copyright", { year: new Date().getFullYear() })}
           </Text>
-          <Text
+          {/* <Text
             as="div"
             size="text3"
             className="whitespace-nowrap text-end text-white flex"
@@ -454,7 +454,7 @@ export default function Footer({
                 className="w-[50px] xl:w-[70px] 3xl:w-[90px] inline ml-1"
               />
             </a>
-          </Text>
+          </Text> */}
         </div>
       </div>
     </footer>

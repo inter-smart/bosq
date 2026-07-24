@@ -9,6 +9,7 @@ import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { OrderEmpty } from "./order-empty";
 import { toast } from "sonner";
+import { formatOrderDate } from "@/lib/helper";
 
 export default function AccountCoupons({ locale, couponData }) {
   const t = useTranslations("account");
@@ -82,7 +83,7 @@ export default function AccountCoupons({ locale, couponData }) {
                       className="font-normal truncate text-[#282828]"
                     >
                       {t("expired_on")}{" "}
-                      {parse(item?.expired_on)}
+                      {formatOrderDate(item?.expired_on, isEn)}
                       {/* {item?.status === "used" && (
                         <span className="text-[10px] xl:text-[12px] leading-normal font-normal text-center text-white bg-[#f17423] rounded-lg horizontal-center origin-top-left px-2 xl:px-4 mx-2">
                           Used

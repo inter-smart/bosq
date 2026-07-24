@@ -294,7 +294,7 @@ export default function OrdersDetailModal({ children, order, locale }) {
   return (
     <Dialog dir={locale === "ar" ? "rtl" : "ltr"}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className={"xl:max-w-[576px] 2xl:max-w-[840px] gap-0"}>
+      <DialogContent locale={locale} className={"xl:max-w-[576px] 2xl:max-w-[840px] gap-0"}>
         <DialogHeader className={"flex-row items-center justify-between mb-1 2xl:mb-3"}>
           <DialogTitle className="text-[11px] lg:text-[11px] 2xl:text-[12px] 3xl:text-[16px] leading-normal font-semibold text-[#282828]">
             {t("order_details")}
