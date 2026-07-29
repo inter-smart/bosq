@@ -1,15 +1,34 @@
 import ProductDetailCopy from "@/components/blocks/product/product-detail copy";
 import ProductHero from "@/components/blocks/product/product-hero";
 import ProductSimilar from "@/components/blocks/product/product-similar";
-import { getMetaData } from "@/lib/api/metaApi";
+import DynamicMeta from "@/components/common/DynamicMeta";
+import { getMetaData, getProductMetaData } from "@/lib/api/metaApi";
 import { ProductData } from "@/lib/api/products/ResourcesApi";
+import { parseMetaTags, sanitizeMetadata } from "@/lib/helper";
 import { notFound } from "next/navigation";
 
-export async function generateMetadata({ params }) {
+export async function generateMetadata({ params, searchParams }) {
   const resolvedParams = await params;
-  const locale = resolvedParams.locale;
-  const slug = resolvedParams.slug;
-  const { title, description, keywords, twitter, openGraph, alternates, other } = await getMetaData(`product-${slug}`, locale, `products/${slug}`);
+  const resolvedSearchParams = await searchParams;
+  const { locale, slug } = resolvedParams;
+
+  const variantSku = resolvedSearchParams?.sku || null;
+  const model = resolvedSearchParams?.model || null;
+
+  const attributeFilters = {};
+  Object.entries(resolvedSearchParams || {}).forEach(([key, value]) => {
+    if (key.startsWith("attr_") && value) {
+      const attrSlug = key.replace("attr_", "");
+      attributeFilters[attrSlug] = value;
+    }
+  });
+
+  const queryString = new URLSearchParams(resolvedSearchParams).toString();
+  const currentUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/${locale}/products/${slug}${queryString ? `?${queryString}` : ""}`;
+
+  const metaData = await getProductMetaData(locale, currentUrl, slug, variantSku, model, attributeFilters);
+
+  const { title, description, keywords, twitter, openGraph, alternates, other } = metaData;
 
   return {
     title,
@@ -30,7 +49,6 @@ export default async function ProductDetailPage({ params, searchParams }) {
   const variantSku = resolvedSearchParams?.sku || null;
   const model = resolvedSearchParams?.model || null;
 
-  // Extract all attr_* params from the URL (e.g., attr_pattern=striped, attr_color=blue)
   const attributeFilters = {};
   Object.entries(resolvedSearchParams || {}).forEach(([key, value]) => {
     if (key.startsWith("attr_") && value) {
@@ -41,6 +59,19 @@ export default async function ProductDetailPage({ params, searchParams }) {
 
   const { data, error } = await ProductData.getProductDetailsBySlug(slug, variantSku, model, attributeFilters);
 
+  const otherMeta = data?.metaData;
+
+  console.log(otherMeta);
+  let structuredData = [];
+  let lineScripts = [];
+
+  if (otherMeta) {
+    const parsedMeta = parseMetaTags(locale == "en" ? otherMeta?.other_meta : otherMeta?.other_meta_ar) || {};
+    const { scripts = [], inlineScripts = [] } = sanitizeMetadata(parsedMeta);
+    structuredData = scripts.length ? scripts : [];
+    lineScripts = inlineScripts.length ? inlineScripts : [];
+  }
+
   if (error || !data) {
     return notFound();
   }
@@ -49,6 +80,7 @@ export default async function ProductDetailPage({ params, searchParams }) {
 
   return (
     <>
+      <DynamicMeta structuredData={structuredData} lineScripts={lineScripts} />
       <ProductHero locale={locale} data={data?.product} slug={heroSlug} type="product" />
       <ProductDetailCopy
         locale={locale}
