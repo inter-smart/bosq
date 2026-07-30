@@ -59,18 +59,18 @@ export default async function ProductDetailPage({ params, searchParams }) {
 
   const { data, error } = await ProductData.getProductDetailsBySlug(slug, variantSku, model, attributeFilters);
 
-  const otherMeta = data?.metaData;
+  // const otherMeta = data?.metaData;
 
-  console.log(otherMeta);
-  let structuredData = [];
-  let lineScripts = [];
+  // console.log(otherMeta);
+  // let structuredData = [];
+  // let lineScripts = [];
 
-  if (otherMeta) {
-    const parsedMeta = parseMetaTags(locale == "en" ? otherMeta?.other_meta : otherMeta?.other_meta_ar) || {};
-    const { scripts = [], inlineScripts = [] } = sanitizeMetadata(parsedMeta);
-    structuredData = scripts.length ? scripts : [];
-    lineScripts = inlineScripts.length ? inlineScripts : [];
-  }
+  // if (otherMeta) {
+  //   const parsedMeta = parseMetaTags(locale == "en" ? otherMeta?.other_meta : otherMeta?.other_meta_ar) || {};
+  //   const { scripts = [], inlineScripts = [] } = sanitizeMetadata(parsedMeta);
+  //   structuredData = scripts.length ? scripts : [];
+  //   lineScripts = inlineScripts.length ? inlineScripts : [];
+  // }
 
   if (error || !data) {
     return notFound();
@@ -80,7 +80,7 @@ export default async function ProductDetailPage({ params, searchParams }) {
 
   return (
     <>
-      <DynamicMeta structuredData={structuredData} lineScripts={lineScripts} />
+      {/* <DynamicMeta structuredData={structuredData} lineScripts={lineScripts} /> */}
       <ProductHero locale={locale} data={data?.product} slug={heroSlug} type="product" />
       <ProductDetailCopy
         locale={locale}
