@@ -62,7 +62,7 @@ export async function generateMetadata({ params }) {
         ],
         type: "article",
         authors: undefined,
-        url: `${process.env.NEXT_PUBLIC_SITE_URL}/${locale}/office-chairs/${slug}`,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL}/${locale}/${slug}`,
         locale: isEN ? "en_US" : "ar_AR",
       },
 
@@ -78,10 +78,10 @@ export async function generateMetadata({ params }) {
       },
 
       alternates: {
-        canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/${locale}/office-chairs/${slug}`,
+        canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/${locale}/${slug}`,
         languages: {
-          en: `${process.env.NEXT_PUBLIC_SITE_URL}/en/office-chairs/${slug}`,
-          ar: `${process.env.NEXT_PUBLIC_SITE_URL}/ar/office-chairs/${slug}`,
+          en: `${process.env.NEXT_PUBLIC_SITE_URL}/en/${slug}`,
+          ar: `${process.env.NEXT_PUBLIC_SITE_URL}/ar/${slug}`,
         },
       },
     };
