@@ -50,7 +50,7 @@ export default async function HomePage({ params }) {
 
   return (
     <>
-      <HomeHero data={data.sliders} locale={locale} />
+      <HomeHero data={data.sliders} locale={locale} dropdownData={data.enquiryDropdowns} state={data.state} />
       <HomeClient data={data} locale={locale} />
     </>
   );
