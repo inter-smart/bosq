@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import React, { useState, useEffect, useMemo, useCallback, useTransition } from "react";
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import Image from "@/components/utils/custom-image";
@@ -21,6 +21,7 @@ const ProductChooseDesign = ({
 }) => {
   const router = useRouter();
   const pathname = usePathname();
+  const [isPending, startTransition] = useTransition();
 
   const isEn = locale === "en";
 
@@ -103,55 +104,115 @@ const ProductChooseDesign = ({
   }, [data]);
 
   /* ----------------------------------------
+   * Resolve a clicked attribute value to the closest real variant
+   * combination, based on the model's variant_lookups. Every value
+   * stays clickable; if the click would otherwise produce a
+   * non-existent combination, the other attributes silently snap
+   * to the nearest variant that still honors the clicked value,
+   * preferring to keep as many of the current selections as possible.
+   * -------------------------------------- */
+  const resolveVariantForChange = useCallback(
+    (attributeSlug, valueSlug) => {
+      const candidates = (selectedModel?.variant_lookups || []).filter((lookup) => lookup.attributes?.[attributeSlug] === valueSlug);
+      if (candidates.length === 0) return null;
+
+      let best = candidates[0];
+      let bestScore = -1;
+      for (const candidate of candidates) {
+        const score = Object.entries(selectedFilters).filter(
+          ([slug, val]) => slug === attributeSlug || candidate.attributes?.[slug] === val,
+        ).length;
+        if (score > bestScore) {
+          best = candidate;
+          bestScore = score;
+        }
+      }
+      return best;
+    },
+    [selectedModel, selectedFilters],
+  );
+
+  /* ----------------------------------------
+   * Apply a filter/model selection immediately by pushing the
+   * shareable URL (?model=slug&attr_x=y...). Wrapped in a
+   * transition so the sheet can show a pending state and avoid
+   * racing overlapping navigations from rapid clicks.
+   * -------------------------------------- */
+  const navigateWithFilters = useCallback(
+    (filters, modelSlug) => {
+      const params = new URLSearchParams();
+
+      if (modelSlug) {
+        params.set("model", modelSlug);
+      }
+
+      Object.entries(filters).forEach(([attributeSlug, valueSlug]) => {
+        if (valueSlug) {
+          params.set(`attr_${attributeSlug}`, valueSlug);
+        }
+      });
+
+      const newUrl = `${pathname}?${params.toString()}`;
+
+      startTransition(() => {
+        router.push(newUrl, { scroll: false });
+      });
+    },
+    [pathname, router],
+  );
+
+  /* ----------------------------------------
    * Handlers
    * -------------------------------------- */
-  const handleModelClick = useCallback((model) => {
-    setSelectedModelId(model.id);
-  }, []);
+  const handleModelClick = useCallback(
+    (model) => {
+      if (isPending || String(model.id) === String(selectedModelId)) return;
+
+      setSelectedModelId(model.id);
+
+      // Default to the model's first real variant so switching models
+      // always resolves to an actual product, no attribute picks needed.
+      const defaultVariant = model.variant_lookups?.[0];
+      const defaultFilters = defaultVariant?.attributes || {};
+
+      setSelectedFilters(defaultFilters);
+      navigateWithFilters(defaultFilters, model.slug);
+    },
+    [isPending, selectedModelId, navigateWithFilters],
+  );
 
   const handleRadioChange = (attributeSlug, valueSlug) => {
-    setSelectedFilters((prev) => ({
-      ...prev,
-      [attributeSlug]: prev[attributeSlug] === valueSlug ? null : valueSlug,
-    }));
+    if (isPending) return;
+
+    const resolved = resolveVariantForChange(attributeSlug, valueSlug);
+    if (!resolved) return;
+
+    setSelectedFilters(resolved.attributes);
+    navigateWithFilters(resolved.attributes, selectedModel?.slug);
   };
 
-  const handleApplyFilters = useCallback(() => {
-    const params = new URLSearchParams();
-
-    if (selectedModel?.slug) {
-      params.set("model", selectedModel.slug);
-    }
-
-    Object.entries(selectedFilters).forEach(([attributeSlug, valueSlug]) => {
-      if (valueSlug) {
-        params.set(`attr_${attributeSlug}`, valueSlug);
-      }
-    });
-
-    const newUrl = `${pathname}?${params.toString()}`;
-
-    router.push(newUrl, { scroll: false });
-
-    setIsSheetOpen(false);
-    onOpenChange?.(false);
-  }, [pathname, router, selectedFilters, selectedModel, onOpenChange]);
-
   const handleClearFilters = useCallback(() => {
-    if (selectedModel?.attributes) {
-      const resetFilters = {};
-      selectedModel.attributes.forEach((attr) => {
+    const originalModel = models.find((m) => String(m.id) === String(currentModelId)) || selectedModel;
+
+    let resetFilters = {};
+
+    if (originalModel?.attributes) {
+      originalModel.attributes.forEach((attr) => {
         if (attr.values?.length) {
           resetFilters[attr.slug] = attr.values[0].slug;
         }
       });
-      setSelectedFilters(resetFilters);
-    } else {
-      setSelectedFilters({});
     }
 
+    // Prefer the originally-selected combination if we have one.
+    if (Object.keys(initialFilters).length > 0) {
+      resetFilters = initialFilters;
+    }
+
+    setSelectedFilters(resetFilters);
     setSelectedModelId(currentModelId);
-  }, [selectedModel, currentModelId]);
+    navigateWithFilters(resetFilters, originalModel?.slug);
+  }, [models, selectedModel, currentModelId, initialFilters, navigateWithFilters]);
 
   /* ----------------------------------------
    * Styles
@@ -203,6 +264,7 @@ const ProductChooseDesign = ({
                           className={cn(
                             "w-full h-full border rounded-[6px] p-1 2xl:p-2 cursor-pointer select-none",
                             String(selectedModelId) === String(item.id) ? "border-[#282828]" : "border-white",
+                            isPending && "opacity-50 pointer-events-none",
                           )}
                           onClick={() => handleModelClick(item)}
                         >
@@ -238,13 +300,14 @@ const ProductChooseDesign = ({
                     {attribute.values?.map((option) => (
                       <div
                         key={option.id}
-                        className="flex items-center gap-2 cursor-pointer"
-                        onClick={() => handleRadioChange(attribute.slug, option.slug)}
+                        className={cn("flex items-center gap-2", isPending ? "opacity-50 cursor-not-allowed" : "cursor-pointer")}
+                        onClick={() => !isPending && handleRadioChange(attribute.slug, option.slug)}
                       >
                         <RadioGroupItem
                           value={option.slug}
                           variant="checkbox"
                           checked={selectedFilters[attribute.slug] === option.slug}
+                          disabled={isPending}
                           className="pointer-events-none"
                         />
                         <Label className="text-[12px] text-[#666]">{locale === "ar" ? option.value_ar : option.value}</Label>
@@ -256,12 +319,6 @@ const ProductChooseDesign = ({
             ))}
           </Accordion>
         </div>
-
-        <SheetFooter className="flex justify-between gap-2">
-          <Button variant="black" onClick={handleApplyFilters} className="min-w-[45%]">
-            {locale === "ar" ? "تطبيق" : "Apply Filters"}
-          </Button>
-        </SheetFooter>
 
         <SheetClose
           className={cn(
