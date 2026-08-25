@@ -1,5 +1,6 @@
 import ChairsListing from "@/components/blocks/office-chair-landing/ChairsListing";
 import LandingHero from "@/components/blocks/office-chair-landing/LandingHero";
+import HomeEnquiry from "@/components/blocks/home/home-enquiry";
 import { getOfficeChairsData } from "@/lib/api/CMS/basicGet";
 import { notFound } from "next/navigation";
 
@@ -98,12 +99,24 @@ export default async function OfficeChairsPage({ params }) {
 
   if (!data || error) return notFound();
 
+  const isEN = locale === "en";
+  const formSection = data?.formSection;
+  const hasFormSection =
+    !!formSection?.media?.path &&
+    !!(isEN ? formSection?.title : formSection?.title_ar) &&
+    (isEN ? formSection?.title : formSection?.title_ar) !== "N/A" &&
+    !!(isEN ? formSection?.description : formSection?.description_ar) &&
+    (isEN ? formSection?.description : formSection?.description_ar) !== "N/A";
+
   return (
     <>
       <LandingHero data={data?.heroData} locale={locale} slug={slug} />
       {data?.listingData?.map((listing, index) => (
         <ChairsListing key={index} data={listing} locale={locale} />
       ))}
+      {hasFormSection && (
+        <HomeEnquiry data={formSection} locale={locale} isEN={isEN} />
+      )}
     </>
   );
 }
