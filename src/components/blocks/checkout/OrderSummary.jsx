@@ -23,7 +23,7 @@ import { resetCart } from "@/store/slices/cartSlice";
 import { useTranslations } from "next-intl";
 
 const paymentMethods = [
-  { id: 1, slug: "cod", nameKey: "cod", descKey: "cod_description" },
+  // { id: 1, slug: "cod", nameKey: "cod", descKey: "cod_description" },
   { id: 2, slug: "online", nameKey: "pay_online", descKey: "pay_online_description" },
 ];
 
